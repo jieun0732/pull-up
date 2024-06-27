@@ -4,7 +4,7 @@ import wrongQuestionIcon from "@/assets/icon/wrong-questions.png";
 import DepthIcon from "@/assets/icon/depthIcon";
 
 interface MyActivitiesProp {
-  testScore: number;
+  testScore: String;
 }
 
 export default function MyActivities({ testScore }: MyActivitiesProp) {

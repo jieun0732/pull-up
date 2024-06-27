@@ -4,6 +4,7 @@ import defaultProfileImg from "@/assets/defaultImages/profile.png";
 import kakaoIcon from "@/assets/defaultImages/kakao.png";
 import appleIcon from "@/assets/defaultImages/apple.png";
 import MyActivities from "@/component/profile/myActicities";
+import ProfileMenus from "@/component/profile/profileMenus";
 
 interface AuthIconType {
   [key: string]: StaticImageData;
@@ -21,11 +22,11 @@ export default function Page() {
     name: "이지은",
     email: "abc@naver.com",
     auth: "kakao",
-    testScore: 85,
+    testScore: "85",
   };
 
   return (
-    <div className="flex h-full flex-col justify-between bg-gray03 px-5 pb-[91px] pt-14">
+    <div className="flex h-full flex-col justify-around overflow-x-auto bg-gray03 px-5 pb-[91px] pt-14">
       {/* 상단 개인 정보 부분 */}
       <div className="gap flex gap-4">
         <Image
@@ -48,6 +49,8 @@ export default function Page() {
       </div>
 
       <MyActivities testScore={dummydata.testScore} />
+
+      <ProfileMenus />
     </div>
   );
 }
