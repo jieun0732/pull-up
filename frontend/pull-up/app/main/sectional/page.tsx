@@ -26,12 +26,12 @@ export default function Page() {
     },
   ];
   return (
-    <div className="">
-      <p className="text-black01 text-[19px] font-bold">내가 필요한 부분만</p>
-      <p className="text-black01 text-[19px] font-bold">
+    <div className="bg-white px-5 pb-[91px] pt-14">
+      <p className="text-[19px] font-bold text-black01">내가 필요한 부분만</p>
+      <p className="text-[19px] font-bold text-black01">
         골라서 풀어볼 수 있어요!
       </p>
-      <p className="text-gray01 mb-[26px] text-base">
+      <p className="mb-[26px] text-base text-gray01">
         나의 취약한 영역을 공략해 효율적으로 학습해요
       </p>
 
@@ -39,9 +39,9 @@ export default function Page() {
         return (
           <Link
             href={item.link}
-            className="border-white03 relative mb-4 flex h-[138px] w-full items-center justify-center rounded-md border border-solid bg-red-100"
+            className="relative mb-4 flex h-[138px] w-full items-center justify-center rounded-md border border-solid border-white03 bg-red-100"
           >
-            <p className="text-blue01 bg-blue03 absolute bottom-4 left-5 rounded-sm px-2 py-1">
+            <p className="absolute bottom-4 left-5 rounded-sm bg-blue03 px-2 py-1 text-blue01">
               {item.name}
             </p>
             {item.isClosed && <div>coming soon</div>}

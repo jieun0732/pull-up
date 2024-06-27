@@ -7,7 +7,7 @@ export default function Layout({
 }>) {
   return (
     <>
-      <main className="h-full w-full min-w-[320px] max-w-[450px] overflow-y-auto bg-white px-5 pb-[91px] pt-7">
+      <main className="h-full w-full min-w-[320px] max-w-[450px] overflow-y-auto text-black01">
         {children}
       </main>
       <BottomNavbar />
