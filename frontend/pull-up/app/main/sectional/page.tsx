@@ -39,7 +39,7 @@ export default function Page() {
         return (
           <Link
             href={item.link}
-            className="relative mb-4 flex h-[138px] w-full items-center justify-center rounded-md border border-solid border-white03 bg-red-100"
+            className="relative mb-4 flex h-[138px] w-full items-center justify-center rounded-md border border-solid border-white03 bg-white02"
           >
             <p className="absolute bottom-4 left-5 rounded-sm bg-blue03 px-2 py-1 text-blue01">
               {item.name}

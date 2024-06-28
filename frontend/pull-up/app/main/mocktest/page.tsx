@@ -1,5 +1,9 @@
+"use client";
+import { useRouter } from "next/navigation";
+
 export default function Page() {
   const isFinished = false;
+  const router = useRouter();
 
   return (
     <div className="flex h-full flex-col justify-between bg-white px-5 pb-[91px] pt-14">
@@ -24,9 +28,28 @@ export default function Page() {
         </div>
       )}
       <div className="self-center">아이콘</div>
-      <button className="mb-11 w-full rounded-md bg-blue01 py-4 text-white">
-        {isFinished ? "모의고사 결과" : "모의고사 풀기"}
-      </button>
+      {isFinished ? (
+        <div>
+          <p className="mb-3 w-full text-center text-[15px] leading-4 text-blue01">
+            ㅇㅇ님이 취약한 파트를 <br></br>알 수 있어요
+          </p>
+          <button className="mb-11 w-full rounded-md bg-blue01 py-4 text-white">
+            모의고사 결과 확인하기
+          </button>
+        </div>
+      ) : (
+        <div>
+          <p className="mb-3 w-full text-center text-[15px] leading-4 text-blue01">
+            총 20문제로<br></br>30분 동안 풀 수 있어요
+          </p>
+          <button
+            className="mb-11 w-full rounded-md bg-blue01 py-4 text-white"
+            onClick={() => router.push("/main/mocktest/1")}
+          >
+            모의고사 풀기
+          </button>
+        </div>
+      )}
     </div>
   );
 }
