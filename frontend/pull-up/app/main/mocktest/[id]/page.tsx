@@ -5,6 +5,7 @@ import CloseIcon from "@/assets/icon/closeIcon";
 import ToggleIcon from "@/assets/icon/toggleIcon";
 import { useState } from "react";
 import { dummyQ } from "./dummyq";
+import QuestionList from "@/component/mocktest/questionList";
 
 function formatNumber(num: number) {
   const numToString = String(num);
@@ -17,17 +18,27 @@ function formatNumber(num: number) {
 export default function Page() {
   const router = useRouter();
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [showQuestions, setShowQuestions] = useState<boolean>(false);
 
   return (
-    <div className="bg-whtie relative flex h-full flex-col pb-7 pt-14">
+    <div className="bg-whtie relative flex flex-col pb-7 pt-14">
+      <QuestionList
+        showQuestions={showQuestions}
+        setShowQuestions={setShowQuestions}
+      />
+
       <div className="px-5">
         <p className="relative mb-6 w-full text-center text-[17px] font-bold">
           <CloseIcon onClick={() => router.push("/main/mocktest")} />
           30:00
         </p>
-        <button className="mb-4 flex items-center gap-1">
+        <button
+          onClick={() => setShowQuestions(true)}
+          className="mb-4 flex items-center gap-1"
+        >
           문제 {formatNumber(dummyQ.id)} <ToggleIcon />
         </button>
+
         <p className="mb-4 text-[15px] font-medium">{dummyQ.question}</p>
         <div className="mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
           <p className="text-[15px] font-medium">{dummyQ.questionD}</p>
