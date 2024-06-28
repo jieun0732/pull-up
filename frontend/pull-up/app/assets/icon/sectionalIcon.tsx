@@ -3,8 +3,6 @@ interface IconPropType {
 }
 
 function SectionalIcon({ isClicked }: IconPropType) {
-  console.log(isClicked);
-
   return (
     <svg
       width="23"

@@ -33,6 +33,7 @@ export default function ProfileMenus() {
           return (
             <Link
               href={item.link}
+              key={item.name}
               className="flex items-center border border-b border-solid border-[#F4F3F8] px-6 py-5"
             >
               <div className="mr-3 h-6 w-6 rounded-sm bg-gray02"></div>

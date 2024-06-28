@@ -3,8 +3,6 @@ interface IconPropType {
 }
 
 function MockTestIcon({ isClicked }: IconPropType) {
-  console.log(isClicked);
-
   return (
     <svg
       width="22"

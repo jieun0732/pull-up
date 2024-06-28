@@ -26,7 +26,7 @@ export default function Page() {
   };
 
   return (
-    <div className="flex h-full flex-col justify-around overflow-x-auto bg-gray03 px-5 pb-[91px] pt-14">
+    <div className="flex h-full flex-col justify-around bg-gray03 px-5 pb-[91px] pt-14">
       {/* 상단 개인 정보 부분 */}
       <div className="gap flex gap-4">
         <Image

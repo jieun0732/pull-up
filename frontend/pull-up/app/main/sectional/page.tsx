@@ -26,7 +26,7 @@ export default function Page() {
     },
   ];
   return (
-    <div className="bg-white px-5 pb-[91px] pt-14">
+    <div className="bg-white pb-[91px]">
       <p className="text-[19px] font-bold text-black01">내가 필요한 부분만</p>
       <p className="text-[19px] font-bold text-black01">
         골라서 풀어볼 수 있어요!
