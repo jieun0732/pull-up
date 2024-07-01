@@ -1,15 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { StaticImageData } from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import BackIcon from "@/assets/icon/backIcon";
-import dummyIcon from "@/assets/defaultImages/profile.png";
 import report from "@/assets/logo/report.png";
 import notFinishedLogo from "@/assets/logo/logoWithPencil.png";
 import ProgressBar from "@/component/sectional/progressbar";
 import Button from "@/component/ui/Button";
 import Header from "@/component/ui/Header";
+import { sections } from "@/constants/constants";
 
 const dummydata = {
   isFinished: true,
@@ -35,35 +33,15 @@ const dummydata = {
   ],
 };
 export default function Page() {
-  interface SectionInfo {
-    name: string;
-    // icon: StaticImageData;
-  }
-
-  const sections: Record<string, SectionInfo> = {
-    language: {
-      name: "언어영역",
-    },
-    reasoning: {
-      name: "추리영역",
-    },
-    math: {
-      name: "수리영역",
-    },
-    spatial: {
-      name: "공간지각영역",
-    },
-  };
-
   const router = useRouter();
   const params = useParams<{ subject: string }>();
   const currentSection = sections[params.subject];
 
   return (
     <div className="flex flex-col items-center">
-      <Header type="back" content={currentSection?.name} />
+      <Header type="back" content={currentSection} />
       <p className="self-start text-[19px] font-bold">
-        {currentSection?.name}의 대표 예제를
+        {currentSection}의 대표 예제를
       </p>
       <p className="self-start text-[19px] font-bold">
         다양하게 만나보고 싶다면?

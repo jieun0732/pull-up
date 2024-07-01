@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Button from "@/component/ui/Button";
 
 export default function Page() {
   const sections = [
@@ -42,9 +43,13 @@ export default function Page() {
             href={item.link}
             className="relative mb-4 flex h-[138px] w-full items-center justify-center rounded-md border border-solid border-white03 bg-white02"
           >
-            <p className="absolute bottom-4 left-5 rounded-sm bg-blue03 px-2 py-1 text-blue01">
+            <Button
+              size="small"
+              color="activeLight"
+              customstyle="absolute bottom-4 left-5"
+            >
               {item.name}
-            </p>
+            </Button>
             {item.isClosed && <div>coming soon</div>}
           </Link>
         );

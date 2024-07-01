@@ -5,7 +5,7 @@ import CloseIcon from "@/assets/icon/closeIcon";
 import ToggleIcon from "@/assets/icon/toggleIcon";
 import Button from "@/component/ui/Button";
 import { useState } from "react";
-import { dummyQ } from "./dummyq";
+import { dummyQ } from "../../../constants/dummyq";
 import QuestionList from "@/component/mocktest/questionList";
 import useModal from "@/hooks/useModal";
 import WarningIcon from "@/assets/icon/warningIcon";

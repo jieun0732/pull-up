@@ -1,22 +1,29 @@
 export const ButtonSizes = {
   xsmall: 22,
-  small: 28,
-  medium: "w-[50%]",
-  large: "w-full",
+  small: "px-2 py-1 rounded-sm text-[13px]",
+  medium: "w-[50%] rounded-md py-3",
+  large: "w-full rounded-md font-semibold text-base",
 };
 
 export const ButtonStyles = {
   active:
-    "rounded-md bg-blue01 py-3 text-white flex items-center justify-center",
+    "whitespace-nowrap bg-blue01 text-white flex items-center justify-center",
   nonactive:
-    "whitespace-nowrap rounded-md bg-gray03 py-3 text-center text-gray02 flex items-center justify-center",
+    "whitespace-nowrap bg-gray03 text-center text-gray02 flex items-center justify-center",
   activeBorder:
-    "rounded-md border-2 border-solid border-blue01 bg-white py-3 text-center text-base font-semibold text-blue01",
+    "whitespace-nowrap border-2 border-solid border-blue01 bg-white text-blue01 flex items-center justify-center",
   activeLight:
-    "whitespace-nowrap rounded-md bg-blue03 py-3 text-center text-blue01",
+    "whitespace-nowrap bg-blue03 text-blue01 flex items-center justify-center",
   activeBlack:
-    "whitespace-nowrap rounded-md bg-gray03 py-3 text-center text-black01",
+    "whitespace-nowrap bg-gray03 text-black01 flex items-center justify-center",
   green:
     "group flex w-full items-center justify-center rounded-md border border-solid border-black bg-white text-black hover:bg-black/10 active:bg-black active:text-white",
   red: "group flex w-full items-center justify-center rounded-md border border-solid border-black bg-white text-black hover:bg-black/10 active:bg-black active:text-white",
+};
+
+export const sections: Record<string, string> = {
+  language: "언어영역",
+  reasoning: "추리영역",
+  math: "수리영역",
+  spatial: "공간지각영역",
 };
