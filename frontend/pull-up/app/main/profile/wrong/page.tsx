@@ -7,7 +7,7 @@ import { sections } from "@/constants/constants";
 
 export default function Page() {
   return (
-    <div className="flex h-full flex-col items-center">
+    <div className="flex h-full w-full flex-col items-center bg-white px-5 pb-[91px] pt-14">
       <Header type="back" content="내가 틀린 문제" />
       <div className="flex h-full w-full flex-col items-center justify-center overflow-x-auto">
         {dummywrong.length === 0 ? (

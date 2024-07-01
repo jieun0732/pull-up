@@ -14,12 +14,12 @@ const etcItems = [
   },
   {
     name: "로그아웃",
-    link: "/",
-    hasNextPage: false,
+    link: "/main/profile/cancel",
+    hasNextPage: true,
   },
   {
     name: "회원탈퇴",
-    link: "/",
+    link: "/main/profile/cancel",
     hasNextPage: true,
   },
 ];
