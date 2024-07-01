@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Button from "@/component/ui/Button";
 
 export default function Page() {
   const isFinished = false;
@@ -33,21 +34,23 @@ export default function Page() {
           <p className="mb-3 w-full text-center text-[15px] leading-4 text-blue01">
             ㅇㅇ님이 취약한 파트를 <br></br>알 수 있어요
           </p>
-          <button className="mb-11 w-full rounded-md bg-blue01 py-4 text-white">
+          <Button size="large" color="active">
             모의고사 결과 확인하기
-          </button>
+          </Button>
         </div>
       ) : (
         <div>
           <p className="mb-3 w-full text-center text-[15px] leading-4 text-blue01">
             총 20문제로<br></br>30분 동안 풀 수 있어요
           </p>
-          <button
-            className="mb-11 w-full rounded-md bg-blue01 py-4 text-white"
+          <Button
+            size="large"
+            color="active"
+            customstyle="mb-11"
             onClick={() => router.push("/main/mocktest/1")}
           >
             모의고사 풀기
-          </button>
+          </Button>
         </div>
       )}
     </div>

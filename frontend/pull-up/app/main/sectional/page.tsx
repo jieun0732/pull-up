@@ -38,6 +38,7 @@ export default function Page() {
       {sections.map((item) => {
         return (
           <Link
+            key={item.name}
             href={item.link}
             className="relative mb-4 flex h-[138px] w-full items-center justify-center rounded-md border border-solid border-white03 bg-white02"
           >

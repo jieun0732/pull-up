@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import BackIcon from "@/assets/icon/backIcon";
 import dummyIcon from "@/assets/defaultImages/profile.png";
 import ProgressBar from "@/component/sectional/progressbar";
+import Button from "@/component/ui/Button";
 
 const dummydata = {
   isFinished: true,
@@ -23,7 +24,7 @@ const dummydata = {
       hasWrong: false,
     },
     {
-      type: "유의어",
+      type: "유의어1",
       now: 0,
       total: 10,
       hasWrong: false,
@@ -78,9 +79,10 @@ export default function Page() {
           src={currentSection?.icon}
           alt="Profile Image"
         />
-        <button className="w-full rounded-md bg-blue01 py-3 text-white">
+        <Button size="large" color="active">
           골고루 학습하기
-        </button>
+        </Button>
+
         {dummydata.isFinished && (
           <button className="flex w-full items-center justify-center gap-2 text-blue01">
             남은 문제 이어서 풀기
@@ -92,8 +94,8 @@ export default function Page() {
               fill="none"
             >
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M5.03944 0.273312C5.33233 -0.019581 5.80721 -0.019581 6.1001 0.273312L9.67099 3.8442C9.7491 3.92231 9.7491 4.04894 9.67099 4.12704L8.7569 5.04113C8.75406 5.04398 8.74945 5.04398 8.7466 5.04113C8.74376 5.03829 8.73915 5.03829 8.73631 5.04113L6.05076 7.72668C5.75787 8.01957 5.28299 8.01957 4.9901 7.72668C4.69721 7.43379 4.69721 6.95891 4.9901 6.66602L7.10248 4.55364H0.570432C0.404746 4.55364 0.270432 4.41933 0.270432 4.25364V3.35364C0.270432 3.18796 0.404746 3.05364 0.570432 3.05364H6.75911L5.03944 1.33397C4.74655 1.04108 4.74655 0.566205 5.03944 0.273312Z"
                 fill="#4D70EC"
               />
@@ -109,7 +111,10 @@ export default function Page() {
 
       {dummydata.data.map((item) => {
         return (
-          <div className="mb-4 w-full rounded-md border border-solid border-white03 bg-green-200 px-6 py-4 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.07)]">
+          <div
+            key={item.type}
+            className="mb-4 w-full rounded-md border border-solid border-white03 bg-green-200 px-6 py-4 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.07)]"
+          >
             <p className="mb-1 self-start text-[15px] font-semibold">
               {item.type} {item.now}/{item.total}
             </p>
@@ -118,17 +123,18 @@ export default function Page() {
             )}
             <ProgressBar now={item.now} total={item.total} />
             <div className="mt-3 flex w-full gap-2">
-              <button className="w-[50%] whitespace-nowrap rounded-md bg-gray03 py-3 text-center text-gray02">
+              <Button size="medium" color="nonactive">
                 다시 풀기
-              </button>
+              </Button>
+
               {item.now ? (
-                <button className="w-[50%] whitespace-nowrap rounded-md bg-blue03 py-3 text-center text-blue01">
+                <Button size="medium" color="activeLight">
                   채점 결과 보기
-                </button>
+                </Button>
               ) : (
-                <button className="w-[50%] whitespace-nowrap rounded-md bg-gray03 py-3 text-center text-gray02">
+                <Button size="medium" color="nonactive">
                   채점 결과 보기
-                </button>
+                </Button>
               )}
             </div>
           </div>

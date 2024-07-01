@@ -1,5 +1,5 @@
 export const dummyQlist = {
-  isFinished: true,
+  isFinished: false,
   qlist: [
     {
       id: 1,

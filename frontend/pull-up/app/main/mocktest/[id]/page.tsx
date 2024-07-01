@@ -3,9 +3,11 @@
 import { useRouter } from "next/navigation";
 import CloseIcon from "@/assets/icon/closeIcon";
 import ToggleIcon from "@/assets/icon/toggleIcon";
+import Button from "@/component/ui/Button";
 import { useState } from "react";
 import { dummyQ } from "./dummyq";
 import QuestionList from "@/component/mocktest/questionList";
+import useModal from "@/hooks/useModal";
 
 function formatNumber(num: number) {
   const numToString = String(num);
@@ -19,6 +21,8 @@ export default function Page() {
   const router = useRouter();
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [showQuestions, setShowQuestions] = useState<boolean>(false);
+
+  const { openModal, closeModal, Modal } = useModal({ initialOpen: false });
 
   return (
     <div className="bg-whtie relative flex flex-col pb-7 pt-14">
@@ -68,24 +72,44 @@ export default function Page() {
       })}
 
       <div className="mb-11 flex w-full flex-col px-5 py-4">
-        <button className="ml-auto rounded-t-2xl rounded-bl-2xl bg-gray03 px-6 py-2 text-gray02 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]">
+        <button
+          onClick={openModal}
+          className="ml-auto rounded-t-2xl rounded-bl-2xl bg-gray03 px-6 py-2 text-gray02 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]"
+        >
           제출하기
         </button>
-        {dummyQ.id > 1 ? (
-          <div className="mt-4 flex gap-2">
-            <button className="w-1/2 rounded-lg border-2 border-solid border-blue01 bg-white py-3 text-center text-base font-semibold text-blue01">
-              이전 문제
-            </button>
-            <button className="w-1/2 rounded-lg border-2 border-solid border-blue01 bg-blue01 py-3 text-center text-base font-semibold text-white">
-              다음 문제
-            </button>
-          </div>
-        ) : (
-          <button className="mt-4 w-full rounded-lg border-2 border-solid border-blue01 bg-blue01 py-3 text-center text-base font-semibold text-white">
-            다음 문제
-          </button>
-        )}
+        {(() => {
+          if (dummyQ.id === 1) {
+            return (
+              <Button size="large" color="active" customstyle="mt-4">
+                다음 문제
+              </Button>
+            );
+          } else if (dummyQ.id > 1 && dummyQ.id < 20) {
+            return (
+              <div className="mt-4 flex gap-2">
+                <Button size="medium" color="activeBorder">
+                  이전 문제
+                </Button>
+                <Button size="medium" color="active">
+                  다음 문제
+                </Button>
+              </div>
+            );
+          } else if (dummyQ.id === 20) {
+            return (
+              <Button size="large" color="activeBorder" customstyle="mt-4">
+                이전 문제
+              </Button>
+            );
+          }
+        })()}
       </div>
+      <Modal>
+        <h2>Modal Content</h2>
+        <p>This is the content of the modal.</p>
+        <button onClick={closeModal}>Close</button>
+      </Modal>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { dummyQlist } from "./dummyQlist";
+import Button from "../ui/Button";
 
 interface QuestionListPropType {
   showQuestions: boolean;
@@ -43,34 +44,39 @@ function QuestionList({
           onClick={handleClick}
         >
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M13.1373 19.2645C13.3985 19.2687 13.661 19.1711 13.8603 18.9718L15.2745 17.5575L15.2586 17.5416L22.2394 10.5608C22.8252 9.97497 22.8252 9.02522 22.2394 8.43943C21.6536 7.85365 20.7039 7.85365 20.1181 8.43943L13.1373 15.4203L6.56066 8.84367C5.97487 8.25788 5.02513 8.25788 4.43934 8.84367C3.85355 9.42946 3.85355 10.3792 4.43934 10.965L11.0159 17.5416L11 17.5575L12.4142 18.9718C12.6135 19.1711 12.8761 19.2687 13.1373 19.2645Z"
             fill="#ACACAC"
           />
         </svg>
         <div className="grid w-full grid-cols-5 justify-items-center gap-y-4">
-          {dummyQlist.qlist.map((item) => (
-            <div
-              className={`flex h-11 w-11 items-center justify-center space-x-4 rounded-md border border-solid text-center text-[17px] font-semibold ${
-                item.isDone
-                  ? "border-blue01 bg-blue03 text-blue01"
-                  : "border-gray02 bg-gray03 text-gray02"
-              }`}
-            >
-              <p>{item.id}</p>
-            </div>
-          ))}
+          {dummyQlist.qlist.map(({ isDone, id }) => {
+            const boxStyle = isDone
+              ? "border-blue01 bg-blue03 text-blue01"
+              : "border-gray02 bg-gray03 text-gray02";
+
+            return (
+              <div
+                key={id}
+                className={`flex h-11 w-11 items-center justify-center space-x-4 rounded-md border border-solid text-center text-[17px] font-semibold ${
+                  boxStyle
+                }`}
+              >
+                <p>{id}</p>
+              </div>
+            );
+          })}
         </div>
 
         {dummyQlist.isFinished ? (
-          <button className="mt-9 h-10 w-full rounded-md bg-blue01 py-2 text-sm text-white">
+          <Button size="large" color="active" customstyle="mt-9">
             제출하기
-          </button>
+          </Button>
         ) : (
-          <button className="mt-9 h-10 w-full rounded-md bg-gray03 py-2 text-sm text-gray02">
+          <Button size="large" color="nonactive" customstyle="mt-9">
             제출하기
-          </button>
+          </Button>
         )}
       </div>
     </>
