@@ -8,6 +8,7 @@ interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
     | "nonactive"
     | "activeBorder"
     | "activeLight"
+    | "activeBlack"
     | "green"
     | "red";
   customstyle?: string;

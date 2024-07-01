@@ -8,6 +8,7 @@ import { useState } from "react";
 import { dummyQ } from "./dummyq";
 import QuestionList from "@/component/mocktest/questionList";
 import useModal from "@/hooks/useModal";
+import WarningIcon from "@/assets/icon/warningIcon";
 
 function formatNumber(num: number) {
   const numToString = String(num);
@@ -106,9 +107,21 @@ export default function Page() {
         })()}
       </div>
       <Modal>
-        <h2>Modal Content</h2>
-        <p>This is the content of the modal.</p>
-        <button onClick={closeModal}>Close</button>
+        <WarningIcon />
+        <h2 className="mt-5 text-lg font-bold text-black01">
+          정말로 학습을 종료하실 건가요?
+        </h2>
+        <p className="text-sm font-semibold text-gray02">
+          나가면 현재까지 푼 문제들만 저장돼요!
+        </p>
+        <div className="mt-5 flex w-full gap-4">
+          <Button size="medium" color="activeBlack" onClick={closeModal}>
+            종료할래요
+          </Button>
+          <Button size="medium" color="active" onClick={closeModal}>
+            계속 풀고 싶어요
+          </Button>
+        </div>
       </Modal>
     </div>
   );

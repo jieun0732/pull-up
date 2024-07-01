@@ -16,8 +16,6 @@ function QuestionList({
     setShowQuestions(false);
   };
 
-  console.log(showQuestions);
-
   return (
     <>
       {showQuestions && (
