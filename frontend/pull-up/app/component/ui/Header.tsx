@@ -5,7 +5,7 @@ import BackIcon from "@/assets/icon/backIcon";
 import CloseIcon from "@/assets/icon/closeIcon";
 
 interface HeaderPropType {
-  type: string;
+  type: "back" | "cancel";
   content: string;
   link?: string;
 }

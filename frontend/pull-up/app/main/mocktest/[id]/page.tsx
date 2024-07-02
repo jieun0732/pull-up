@@ -34,7 +34,7 @@ export default function Page() {
 
       <div className="px-5">
         <p className="relative mb-6 w-full text-center text-[17px] font-bold">
-          <CloseIcon onClick={() => router.push("/main/mocktest")} />
+          <CloseIcon onClick={openModal} />
           30:00
         </p>
         <button
@@ -74,7 +74,7 @@ export default function Page() {
 
       <div className="mb-11 flex w-full flex-col px-5 py-4">
         <button
-          onClick={openModal}
+          onClick={() => router.push("/main/mocktest/report")}
           className="ml-auto rounded-t-2xl rounded-bl-2xl bg-gray03 px-6 py-2 text-gray02 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]"
         >
           제출하기

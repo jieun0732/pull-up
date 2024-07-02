@@ -21,6 +21,20 @@ export const ButtonStyles = {
   red: "group flex w-full items-center justify-center rounded-md border border-solid border-black bg-white text-black hover:bg-black/10 active:bg-black active:text-white",
 };
 
+export const TextStyles = {
+  "head-01": "font-bold text-[21px]",
+  "head-02": "font-bold text-[19px]",
+  "head-03": "font-bold text-[17px]",
+  "head-04": "font-semibold text-[15px]",
+  "head-05": "font-medium text-[15px]",
+  "body-01": "font-semibold text-[17px]",
+  "body-02": "font-medium text-[17px]",
+  "body-03": "font-medium text-[15px]",
+  "body-04": "font-normal text-[15px]",
+  "caption-01": "font-normal text-[13px]",
+  "caption-02": "font-normal text-[11px]",
+};
+
 export const sections: Record<string, string> = {
   language: "언어영역",
   reasoning: "추리영역",

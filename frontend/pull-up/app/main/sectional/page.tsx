@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Button from "@/component/ui/Button";
+import Text from "@/component/ui/Text";
 
 export default function Page() {
   const sections = [
@@ -28,14 +29,11 @@ export default function Page() {
   ];
   return (
     <div className="bg-white pb-[91px]">
-      <p className="text-[19px] font-bold text-black01">내가 필요한 부분만</p>
-      <p className="text-[19px] font-bold text-black01">
-        골라서 풀어볼 수 있어요!
-      </p>
-      <p className="mb-[26px] text-base text-gray01">
+      <Text size="head-02">내가 필요한 부분만</Text>
+      <Text size="head-02"> 골라서 풀어볼 수 있어요!</Text>
+      <Text size="head-05" color="text-gray01" customstyle="mb-[26px]">
         나의 취약한 영역을 공략해 효율적으로 학습해요
-      </p>
-
+      </Text>
       {sections.map((item) => {
         return (
           <Link

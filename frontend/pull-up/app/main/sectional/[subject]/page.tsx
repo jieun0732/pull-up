@@ -7,6 +7,7 @@ import notFinishedLogo from "@/assets/logo/logoWithPencil.png";
 import ProgressBar from "@/component/sectional/progressbar";
 import Button from "@/component/ui/Button";
 import Header from "@/component/ui/Header";
+import Text from "@/component/ui/Text";
 import { sections } from "@/constants/constants";
 
 const dummydata = {
@@ -40,12 +41,12 @@ export default function Page() {
   return (
     <div className="flex flex-col items-center">
       <Header type="back" content={currentSection} />
-      <p className="self-start text-[19px] font-bold">
+      <Text size="head-02" customstyle="self-start ">
         {currentSection}의 대표 예제를
-      </p>
-      <p className="self-start text-[19px] font-bold">
+      </Text>
+      <Text size="head-02" customstyle="self-start ">
         다양하게 만나보고 싶다면?
-      </p>
+      </Text>
 
       <div className="flex w-full flex-col items-center gap-4 p-6">
         {dummydata.isFinished ? (
@@ -86,22 +87,25 @@ export default function Page() {
         )}
       </div>
 
-      <p className="mb-3 mt-14 self-start text-[17px]">
+      <Text size="head-03" customstyle="mb-3 mt-14 self-start">
         필요한 유형만 학습할 수 있어요!
-      </p>
-      <p className="mb-4 self-start text-[15px] text-gray01">문제 유형 2</p>
-
+      </Text>
+      <Text size="head-04" color="text-gray01" customstyle="mb-2 self-start">
+        문제 유형 2
+      </Text>
       {dummydata.data.map((item) => {
         return (
           <div
             key={item.type}
             className="mb-4 w-full rounded-md border border-solid border-white03 bg-green-200 px-6 py-4 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.07)]"
           >
-            <p className="mb-1 self-start text-[15px] font-semibold">
+            <Text size="head-04" customstyle="mb-1 self-start">
               {item.type} {item.now}/{item.total}
-            </p>
+            </Text>
             {item.hasWrong && (
-              <p className="text-xs text-red01">ㅇㅇ 님이 틀렸던 유형이에요!</p>
+              <Text size="caption-02" color="text-red01">
+                ㅇㅇ 님이 틀렸던 유형이에요!
+              </Text>
             )}
             <ProgressBar now={item.now} total={item.total} />
             <div className="mt-3 flex w-full gap-2">

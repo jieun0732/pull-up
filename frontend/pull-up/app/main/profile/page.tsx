@@ -5,6 +5,7 @@ import kakaoIcon from "@/assets/defaultImages/kakao.png";
 import appleIcon from "@/assets/defaultImages/apple.png";
 import MyActivities from "@/component/profile/myActicities";
 import ProfileMenus from "@/component/profile/profileMenus";
+import Text from "@/component/ui/Text";
 
 interface AuthIconType {
   [key: string]: StaticImageData;
@@ -36,14 +37,14 @@ export default function Page() {
         />
 
         <div className="flex flex-col justify-center">
-          <p className="font-lg font-semibold">{dummydata.name} 님</p>
+          <Text size="body-02">{dummydata.name} 님</Text>
           <div className="flex items-center gap-2">
             <Image
               className="h-4 w-4 rounded-full"
               src={authIcon[dummydata.auth]}
               alt="Profile Image"
             />
-            <p className="font-normal">{dummydata.email}</p>
+            <Text size="body-04">{dummydata.email}</Text>
           </div>
         </div>
       </div>
