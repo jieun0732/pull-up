@@ -1,6 +1,7 @@
 "use client";
 
 import Header from "@/component/ui/Header";
+import MyScoreAverage from "@/component/mocktest/MyScoreAverage";
 
 export default function Page() {
   return (
@@ -10,10 +11,7 @@ export default function Page() {
         content="이지은 님의 모의고사"
         link="/main/mocktest"
       />
-
-      <div className="flex w-full flex-col rounded-2xl bg-pink-100 p-6">
-        <p>우수한 합격권이예요!</p>
-      </div>
+      <MyScoreAverage />
     </div>
   );
 }
