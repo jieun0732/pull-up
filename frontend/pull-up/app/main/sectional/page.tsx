@@ -31,7 +31,7 @@ export default function Page() {
     <div className="bg-white pb-[91px]">
       <Text size="head-02">내가 필요한 부분만</Text>
       <Text size="head-02"> 골라서 풀어볼 수 있어요!</Text>
-      <Text size="head-05" color="text-gray01" customstyle="mb-[26px]">
+      <Text size="head-05" color="text-gray01" className="mb-[26px]">
         나의 취약한 영역을 공략해 효율적으로 학습해요
       </Text>
       {sections.map((item) => {
@@ -44,7 +44,7 @@ export default function Page() {
             <Button
               size="small"
               color="activeLight"
-              customstyle="absolute bottom-4 left-5"
+              className="absolute bottom-4 left-5"
             >
               {item.name}
             </Button>

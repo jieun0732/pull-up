@@ -77,7 +77,7 @@ export default function Page() {
       <Button
         size="large"
         color={activeCancel ? "active" : "nonactive"}
-        customstyle="mt-auto"
+        className="mt-auto"
       >
         탈퇴하기
       </Button>

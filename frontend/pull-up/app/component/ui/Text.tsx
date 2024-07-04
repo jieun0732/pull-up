@@ -15,19 +15,19 @@ interface TypographyProps extends ComponentPropsWithoutRef<"p"> {
     | "caption-01"
     | "caption-02";
   color?: string;
-  customstyle?: string;
+  className?: string;
 }
 
 const Text = (props: TypographyProps) => {
   const {
     size = "body-01",
     color = "black-01",
-    customstyle = "",
+    className = "",
     children,
     ...rest
   } = props;
 
-  const styles = `${TextStyles[size]} ${color} ${customstyle}`;
+  const styles = `${TextStyles[size]} ${color} ${className}`;
 
   return (
     <p {...rest} className={styles}>

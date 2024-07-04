@@ -11,14 +11,14 @@ interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
     | "activeBlack"
     | "green"
     | "red";
-  customstyle?: string;
+  className?: string;
 }
 
 const Button = (props: ButtonProps) => {
   const {
     size = "medium",
     color = "active",
-    customstyle = "",
+    className = "",
     disabled = false,
     children,
     ...rest
@@ -28,7 +28,7 @@ const Button = (props: ButtonProps) => {
     if (disabled) {
       return "whitespace-nowrap rounded-md bg-gray03 py-3 text-center text-gray02";
     } else {
-      return `${ButtonStyles[color]} ${ButtonSizes[size]} ${customstyle}`;
+      return `${ButtonStyles[color]} ${ButtonSizes[size]} ${className}`;
     }
   })();
 

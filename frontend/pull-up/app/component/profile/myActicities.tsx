@@ -11,7 +11,7 @@ interface MyActivitiesProp {
 export default function MyActivities({ testScore }: MyActivitiesProp) {
   return (
     <div>
-      <Text size="body-01" customstyle="mb-2">
+      <Text size="body-01" className="mb-2">
         나의 활동
       </Text>
       <div className="flex w-full gap-3">
@@ -21,7 +21,7 @@ export default function MyActivities({ testScore }: MyActivitiesProp) {
         >
           <Image src={wrongQuestionIcon} alt="틀린 문제 확인하기" />
           <div className="flex items-center justify-between text-base">
-            <Text size="head-04" customstyle="whitespace-nowrap">
+            <Text size="head-04" className="whitespace-nowrap">
               내가 틀린 문제 확인
             </Text>
             <DepthIcon />

@@ -28,7 +28,7 @@ const etcItems = [
 export default function ProfileMenus() {
   return (
     <div className="mb-4">
-      <Text size="body-01" customstyle="mb-2">
+      <Text size="body-01" className="mb-2">
         기타
       </Text>
       <div className="w-full rounded-lg bg-white shadow-[1px_1px_15px_0px_rgba(0,0,0,0.03)]">
@@ -40,7 +40,7 @@ export default function ProfileMenus() {
               className="flex items-center border border-b border-solid border-[#F4F3F8] px-6 py-5"
             >
               <div className="mr-3 h-6 w-6 rounded-sm bg-gray02"></div>
-              <Text size="body-03" customstyle="w-[80%]">
+              <Text size="body-03" className="w-[80%]">
                 {item.name}
               </Text>
               {item.hasNextPage && <DepthIcon />}
@@ -49,7 +49,7 @@ export default function ProfileMenus() {
         })}
         <div className="flex items-center px-6 py-5">
           <div className="mr-3 h-6 w-6 rounded-sm bg-gray02"></div>
-          <Text size="body-03" customstyle="w-[75%]">
+          <Text size="body-03" className="w-[75%]">
             버전 정보
           </Text>
           <p>1.0.0</p>

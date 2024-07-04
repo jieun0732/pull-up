@@ -12,7 +12,7 @@ export default function Page() {
       {isFinished ? (
         <div>
           <Text size="head-02">모의고사 진단이 완료되었어요!</Text>
-          <Text size="head-05" color="text-gray01" customstyle="mb-[26px]">
+          <Text size="head-05" color="text-gray01" className="mb-[26px]">
             리포트를 확인해보세요!
           </Text>
         </div>
@@ -20,7 +20,7 @@ export default function Page() {
         <div>
           <Text size="head-02">문제를 풀고</Text>
           <Text size="head-02">골라서 풀어볼 수 있어요!</Text>
-          <Text size="head-05" color="text-gray01" customstyle="mb-[26px]">
+          <Text size="head-05" color="text-gray01" className="mb-[26px]">
             나의 취약한 영역을 공략해 효율적으로 학습해요
           </Text>
         </div>
@@ -43,7 +43,7 @@ export default function Page() {
           <Button
             size="large"
             color="active"
-            customstyle="mb-11"
+            className="mb-11"
             onClick={() => router.push("/main/mocktest/1")}
           >
             모의고사 풀기

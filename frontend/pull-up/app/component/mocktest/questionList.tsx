@@ -68,11 +68,11 @@ function QuestionList({
         </div>
 
         {dummyQlist.isFinished ? (
-          <Button size="large" color="active" customstyle="mt-9">
+          <Button size="large" color="active" className="mt-9">
             제출하기
           </Button>
         ) : (
-          <Button size="large" color="nonactive" customstyle="mt-9">
+          <Button size="large" color="nonactive" className="mt-9">
             제출하기
           </Button>
         )}

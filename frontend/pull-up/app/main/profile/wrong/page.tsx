@@ -33,7 +33,7 @@ export default function Page() {
                   <Text
                     size="caption-01"
                     color="text-gray02"
-                    customstyle="ml-auto"
+                    className="ml-auto"
                   >
                     {item.date}
                   </Text>

@@ -82,7 +82,7 @@ export default function Page() {
         {(() => {
           if (dummyQ.id === 1) {
             return (
-              <Button size="large" color="active" customstyle="mt-4">
+              <Button size="large" color="active" className="mt-4">
                 다음 문제
               </Button>
             );
@@ -99,7 +99,7 @@ export default function Page() {
             );
           } else if (dummyQ.id === 20) {
             return (
-              <Button size="large" color="activeBorder" customstyle="mt-4">
+              <Button size="large" color="activeBorder" className="mt-4">
                 이전 문제
               </Button>
             );

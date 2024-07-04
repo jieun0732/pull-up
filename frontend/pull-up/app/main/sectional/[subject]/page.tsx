@@ -41,10 +41,10 @@ export default function Page() {
   return (
     <div className="flex flex-col items-center">
       <Header type="back" content={currentSection} />
-      <Text size="head-02" customstyle="self-start ">
+      <Text size="head-02" className="self-start">
         {currentSection}의 대표 예제를
       </Text>
-      <Text size="head-02" customstyle="self-start ">
+      <Text size="head-02" className="self-start">
         다양하게 만나보고 싶다면?
       </Text>
 
@@ -87,10 +87,10 @@ export default function Page() {
         )}
       </div>
 
-      <Text size="head-03" customstyle="mb-3 mt-14 self-start">
+      <Text size="head-03" className="mb-3 mt-14 self-start">
         필요한 유형만 학습할 수 있어요!
       </Text>
-      <Text size="head-04" color="text-gray01" customstyle="mb-2 self-start">
+      <Text size="head-04" color="text-gray01" className="mb-2 self-start">
         문제 유형 2
       </Text>
       {dummydata.data.map((item) => {
@@ -99,7 +99,7 @@ export default function Page() {
             key={item.type}
             className="mb-4 w-full rounded-md border border-solid border-white03 bg-green-200 px-6 py-4 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.07)]"
           >
-            <Text size="head-04" customstyle="mb-1 self-start">
+            <Text size="head-04" className="mb-1 self-start">
               {item.type} {item.now}/{item.total}
             </Text>
             {item.hasWrong && (
