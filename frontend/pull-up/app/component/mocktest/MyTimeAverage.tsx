@@ -15,7 +15,7 @@ function MyTimeAverage() {
     same: "평균이에요",
     lower: "평균보다 3분 빨라요!",
   };
-  console.log(size.width);
+
   return (
     <div className="mt-5 flex w-full flex-col rounded-2xl bg-white p-6">
       <Text size="head-03" className="mb-2">

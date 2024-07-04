@@ -10,8 +10,8 @@ import lowerlogo from "@/assets/logo/lowerLogo.png";
 import useComponentSize from "@/hooks/useComponentSize";
 
 function MyScoreAverage() {
-  const progress = 90;
-  const averageProgress = 80;
+  const progress = 50;
+  const averageProgress = 90;
   const status = compareScores(progress, averageProgress);
   const [componentRef, size] = useComponentSize();
 
@@ -86,7 +86,24 @@ function MyScoreAverage() {
               </div>
             </div>
           </div>
-          ㄴ ㄴ
+
+          <div className="absolute left-0 top-0">
+            <ProgressBar
+              progress={averageProgress}
+              radius={size.width / 2 - 15}
+              cut={200}
+              rotate={190}
+              initialAnimation={false}
+              strokeColor="#4d6fec0"
+              strokeWidth={18}
+              trackStrokeColor="#f2f3f60"
+              trackStrokeWidth={18}
+              strokeLinecap={"round"}
+              pointerRadius={1}
+              pointerStrokeWidth={10}
+              pointerStrokeColor={"#3d4150"}
+            />
+          </div>
         </div>
       </div>
     </div>

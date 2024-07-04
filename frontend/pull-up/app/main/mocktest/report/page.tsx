@@ -3,6 +3,8 @@
 import Header from "@/component/ui/Header";
 import MyScoreAverage from "@/component/mocktest/MyScoreAverage";
 import MyTimeAverage from "@/component/mocktest/MyTimeAverage";
+import MyWeakPart from "@/component/mocktest/MyWeakPart";
+import Button from "@/component/ui/Button";
 
 export default function Page() {
   return (
@@ -15,6 +17,12 @@ export default function Page() {
       <MyScoreAverage />
 
       <MyTimeAverage />
+
+      <MyWeakPart />
+
+      <Button size="large" color="active">
+        해설 확인하기
+      </Button>
     </div>
   );
 }
