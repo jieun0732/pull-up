@@ -9,14 +9,7 @@ import { dummyQ } from "../../../constants/dummyq";
 import QuestionList from "@/component/mocktest/questionList";
 import useModal from "@/hooks/useModal";
 import WarningIcon from "@/assets/icon/warningIcon";
-
-function formatNumber(num: number) {
-  const numToString = String(num);
-  if (numToString.length === 1) {
-    return `0${numToString}`;
-  }
-  return String(num);
-}
+import formatNumber from "@/utils/formatNumber";
 
 export default function Page() {
   const router = useRouter();

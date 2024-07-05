@@ -17,8 +17,8 @@ export const ButtonStyles = {
   activeBlack:
     "whitespace-nowrap bg-gray03 text-black01 flex items-center justify-center",
   green:
-    "group flex w-full items-center justify-center rounded-md border border-solid border-black bg-white text-black hover:bg-black/10 active:bg-black active:text-white",
-  red: "group flex w-full items-center justify-center rounded-md border border-solid border-black bg-white text-black hover:bg-black/10 active:bg-black active:text-white",
+    "whitespace-nowrap bg-green02 text-green01 flex items-center justify-center",
+  red: "whitespace-nowrap bg-red02 text-red01 flex items-center justify-center",
 };
 
 export const TextStyles = {

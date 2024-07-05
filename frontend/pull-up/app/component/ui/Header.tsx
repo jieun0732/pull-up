@@ -21,7 +21,7 @@ export default function Header({ type, content, link }: HeaderPropType) {
   };
 
   return (
-    <h1 className="relative mb-6 w-full text-center text-[17px] font-bold">
+    <h1 className="relative mb-6 h-[25px] w-full text-center text-[17px] font-bold">
       {type === "back" && <BackIcon onClick={handleIconClick} />}
       {type === "cancel" && link && <CloseIcon onClick={handleIconClick} />}
       {content}

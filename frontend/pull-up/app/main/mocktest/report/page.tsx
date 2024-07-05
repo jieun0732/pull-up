@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import Header from "@/component/ui/Header";
 import MyScoreAverage from "@/component/mocktest/MyScoreAverage";
 import MyTimeAverage from "@/component/mocktest/MyTimeAverage";
@@ -20,9 +20,11 @@ export default function Page() {
 
       <MyWeakPart />
 
-      <Button size="large" color="active">
-        해설 확인하기
-      </Button>
+      <Link href="/main/mocktest/result">
+        <Button size="large" color="active">
+          해설 확인하기
+        </Button>
+      </Link>
     </div>
   );
 }
