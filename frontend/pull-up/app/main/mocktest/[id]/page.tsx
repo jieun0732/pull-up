@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import CloseIcon from "@/assets/icon/closeIcon";
 import ToggleIcon from "@/assets/icon/toggleIcon";
+import Text from "@/component/ui/Text";
 import Button from "@/component/ui/Button";
 import { useState } from "react";
 import { dummyQ } from "../../../constants/dummyq";
@@ -37,9 +38,11 @@ export default function Page() {
           문제 {formatNumber(dummyQ.id)} <ToggleIcon />
         </button>
 
-        <p className="mb-4 text-[15px] font-medium">{dummyQ.question}</p>
+        <Text size="body-03" className="mb-4">
+          {dummyQ.question}
+        </Text>
         <div className="mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
-          <p className="text-[15px] font-medium">{dummyQ.questionD}</p>
+          <Text size="body-03">{dummyQ.questionD}</Text>
         </div>
       </div>
 
