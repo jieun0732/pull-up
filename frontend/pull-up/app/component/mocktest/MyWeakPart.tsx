@@ -5,7 +5,7 @@ const dummyWeak = [
     name: "언어영역",
     total: 10,
     correct: 5,
-    weakest: false,
+    weakest: true,
   },
   {
     name: "추리영역",
@@ -17,7 +17,7 @@ const dummyWeak = [
     name: "수리영역",
     total: 10,
     correct: 2,
-    weakest: true,
+    weakest: false,
   },
 ];
 

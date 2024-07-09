@@ -6,7 +6,7 @@ import useComponentSize from "@/hooks/useComponentSize";
 
 function MyTimeAverage() {
   const mytime = 15;
-  const averageTime = 15;
+  const averageTime = 20;
   const status = compareTime(mytime, averageTime);
   const [componentRef, size] = useComponentSize();
 

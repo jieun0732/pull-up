@@ -10,7 +10,7 @@ import lowerlogo from "@/assets/logo/lowerLogo.png";
 import useComponentSize from "@/hooks/useComponentSize";
 
 function MyScoreAverage() {
-  const progress = 50;
+  const progress = 40;
   const averageProgress = 90;
   const status = compareScores(progress, averageProgress);
   const [componentRef, size] = useComponentSize();
@@ -34,7 +34,7 @@ function MyScoreAverage() {
   };
 
   return (
-    <div className="flex aspect-square h-auto w-full flex-col rounded-2xl bg-white p-6">
+    <div className="flex h-[50%] w-full flex-col rounded-2xl bg-white p-6">
       <div className="w-full">
         <Text size="head-02" color="text-blue01">
           {scoreStatus[status].title}
@@ -76,7 +76,8 @@ function MyScoreAverage() {
               <Image
                 src={scoreStatus[status].logo}
                 alt="statusIcon"
-                className="mt-3 w-40"
+                className="mt-3 h-32 w-auto"
+                width={40}
               />
               <div className="mx-auto mt-5 flex w-full items-center justify-center gap-3">
                 <Button size="small" color="activeLight">
