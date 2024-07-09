@@ -22,6 +22,7 @@ public class MemberAnswerService {
 
     @Autowired
     private ProblemRepository problemRepository;
+
     @Autowired
     private MemberRepository memberRepository;
 

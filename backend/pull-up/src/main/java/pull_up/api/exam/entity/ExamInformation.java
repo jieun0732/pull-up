@@ -33,7 +33,15 @@ public class ExamInformation {
 
     @Setter
     @Column
+    private String entry;
+
+    @Setter
+    @Column
     private String category;
+
+    @Setter
+    @Column
+    private String type;
 
     @Setter
     @Column
@@ -56,9 +64,11 @@ public class ExamInformation {
     /**
      * 파라미터 생성자.
      */
-    private ExamInformation(Member member, String category, LocalDateTime date, LocalDateTime time, Integer score) {
+    private ExamInformation(Member member, String entry, String category, String type, LocalDateTime date, LocalDateTime time, Integer score) {
         this.member = member;
+        this.entry = entry;
         this.category = category;
+        this.type = type;
         this.date = date;
         this.time = time;
         this.score = score;
@@ -68,7 +78,7 @@ public class ExamInformation {
     /**
      * 파라미터로부터 ExamInformation 엔티티 객체를 생성하는 함수.
      */
-    public static ExamInformation of(Member member, String category, LocalDateTime date, LocalDateTime time, Integer score) {
-        return new ExamInformation(member, category, date, time, score);
+    public static ExamInformation of(Member member, String entry, String category, String type, LocalDateTime date, LocalDateTime time, Integer score) {
+        return new ExamInformation(member, entry, category, type, date, time, score);
     }
 }

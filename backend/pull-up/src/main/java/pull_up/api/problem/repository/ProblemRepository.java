@@ -6,4 +6,8 @@ import pull_up.api.problem.entity.Problem;
 
 public interface ProblemRepository extends JpaRepository<Problem, Long> {
     List<Problem> findByCategory(String category);
+
+    List<Problem> findByCategoryAndEntry(String category, String entry);
+
+    List<Problem> findByCategoryAndEntryAndType(String category, String entry, String type);
 }
