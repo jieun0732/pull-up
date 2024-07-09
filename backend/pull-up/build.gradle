@@ -1,0 +1,56 @@
+buildscript {
+	ext {
+		springBootVer = '3.3.1'
+		querydslVer = '5.0.0'
+		springDependencyMgmtVer = '1.1.5'
+	}
+}
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version "${springBootVer}"
+	id 'io.spring.dependency-management' version "${springDependencyMgmtVer}"
+}
+
+group = 'pull-up'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+	// query dsl
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	implementation "com.querydsl:querydsl-jpa:${querydslVer}:jakarta"
+	annotationProcessor "com.querydsl:querydsl-apt:${querydslVer}:jakarta"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
