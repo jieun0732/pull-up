@@ -7,7 +7,7 @@ import rankLogo from "@/assets/logo/rankLogo.png";
 import questionLogo from "@/assets/logo/questionLogo.png";
 
 export default function Page() {
-  const isFinished = false;
+  const isFinished = true;
   const router = useRouter();
 
   return (
@@ -38,7 +38,7 @@ export default function Page() {
             alt="모의고사 풀기 로고"
             className="self-center"
           />
-          <div className="flex gap-10">
+          {/* <div className="flex gap-10">
             <div className="text-center">
               <Text size="caption-01">제한시간</Text>
               <Text size="head-02">20분</Text>
@@ -47,7 +47,21 @@ export default function Page() {
               <Text size="caption-01">총 문제 수</Text>
               <Text size="head-02">20개</Text>
             </div>
+          </div> */}
+          <div className="flex w-full items-center justify-around rounded-xl bg-gray03 py-3">
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-4 rounded-sm bg-gray02"></div>
+              <Text size="caption-01">총 문제 수</Text>
+              <Text size="head-04">20개</Text>
+            </div>
+            <div className="h-3 w-[2px] rounded-xl bg-[#d9d9d9]"></div>
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-4 rounded-sm bg-gray02"></div>
+              <Text size="caption-01">제한시간</Text>
+              <Text size="head-04">20분</Text>
+            </div>
           </div>
+
           <Button
             size="large"
             color="active"

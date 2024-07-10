@@ -1,9 +1,11 @@
+"use client";
 import Image from "next/image";
 import Text from "./component/ui/Text";
+import { useRouter } from "next/navigation";
 import introLogo from "@/assets/logo/introLogo.png";
-
 export default function Home() {
   const totalPercent = 91;
+  const router = useRouter();
 
   return (
     <main className="flex h-full w-full flex-col items-center justify-center bg-white px-5">
@@ -17,7 +19,10 @@ export default function Home() {
       <Text size="body-04" color="text-gray01" className="mb-12">
         인적성 검사 준비는 풀업에서
       </Text>
-      <button className="relative mb-5 flex w-full items-center justify-center rounded-md bg-[#fee500] py-5">
+      <button
+        onClick={() => router.push("/main/sectional")}
+        className="relative mb-5 flex w-full items-center justify-center rounded-md bg-[#fee500] py-5"
+      >
         <svg
           className="absolute left-10"
           xmlns="http://www.w3.org/2000/svg"
