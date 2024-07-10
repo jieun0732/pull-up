@@ -9,11 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pull_up.api.exam.dto.AnswerResultDto;
+import pull_up.api.exam.dto.AnswerSubmissionDto;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.service.ExamService;
+import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.problem.dto.ProblemDto;
 import pull_up.global.common.response.BaseResponse;
 
@@ -74,5 +78,27 @@ public class ExamController {
     public BaseResponse<List<ProblemDto>> getMockExamProblems(@PathVariable Long memberId) {
         List<ProblemDto> problems = examService.getMockExamProblems(memberId);
         return BaseResponse.success(HttpStatus.OK.value(), "시험문제를 출력합니다.", problems);
+    }
+
+    /**
+     * 답안을 제출하고 채점 결과를 반환합니다.
+     * @param answerSubmissionDto 제출된 답안 정보.
+     * @return 채점 결과.
+     */
+    @PostMapping("/submitAnswer")
+    public BaseResponse<AnswerResultDto> submitAnswer(@RequestBody AnswerSubmissionDto answerSubmissionDto) {
+        AnswerResultDto answerResultDto = examService.submitAnswer(answerSubmissionDto);
+        return BaseResponse.success(HttpStatus.OK.value(), "답안이 제출되었습니다.", answerResultDto);
+    }
+
+    /**
+     * 주어진 시험 ID에 대한 최종 점수를 반환합니다.
+     * @param examId 시험 ID.
+     * @return 최종 점수.
+     */
+    @GetMapping("/calculateFinalScore/{examId}")
+    public BaseResponse<Integer> calculateFinalScore(@PathVariable Long examId) {
+        int finalScore = examService.calculateFinalScore(examId);
+        return BaseResponse.success(HttpStatus.OK.value(), "최종 점수가 계산되었습니다.", finalScore);
     }
 }

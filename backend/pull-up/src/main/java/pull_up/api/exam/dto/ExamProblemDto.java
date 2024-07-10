@@ -19,7 +19,7 @@ public record ExamProblemDto(Long id, ExamInformationDto examInformation, Proble
 
     public static ExamProblemDto from(ExamProblem entity) {
         return new ExamProblemDto(entity.getId(),
-            ExamInformationDto.from(entity.getExamInformation()),
+            ExamInformationDto.from(entity.getExamInformation(), problemDtos),
             ProblemDto.from(entity.getProblem()), entity.getDeletedAt());
     }
 
