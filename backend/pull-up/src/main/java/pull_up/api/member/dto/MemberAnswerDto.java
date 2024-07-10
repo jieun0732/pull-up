@@ -23,7 +23,7 @@ public record MemberAnswerDto(Long id, MemberDto member, ProblemDto problem,
     public static MemberAnswerDto from(MemberAnswer entity) {
         return new MemberAnswerDto(entity.getId(), MemberDto.from(entity.getMember()),
             ProblemDto.from(entity.getProblem()),
-            ExamInformationDto.from(entity.getExamInformation()), entity.getChosenAnswer(),
+            ExamInformationDto.from(entity.getExamInformation(), problemDtos), entity.getChosenAnswer(),
             entity.getIsCorrect(), entity.getDeletedAt());
     }
 
