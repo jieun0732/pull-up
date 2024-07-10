@@ -21,14 +21,14 @@ function QuestionList({
       {showQuestions && (
         <>
           <div
-            className="absolute left-0 top-0 h-full w-full bg-black opacity-55"
+            className="absolute left-0 top-0 z-30 h-full w-full bg-black opacity-55"
             onClick={handleClick}
           ></div>
         </>
       )}
 
       <div
-        className={`absolute bottom-9 ml-[16px] flex w-[calc(100%-32px)] flex-col items-center justify-between rounded-3xl bg-white px-5 pb-9 pt-3 duration-500 ease-out ${
+        className={`absolute bottom-9 z-50 ml-[16px] flex w-[calc(100%-32px)] flex-col items-center justify-between rounded-3xl bg-white px-5 pb-9 pt-3 duration-500 ease-out ${
           showQuestions ? "animate-fadeInUp" : "invisible animate-fadeOutDown"
         }`}
       >

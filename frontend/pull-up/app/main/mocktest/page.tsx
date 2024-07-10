@@ -7,7 +7,7 @@ import rankLogo from "@/assets/logo/rankLogo.png";
 import questionLogo from "@/assets/logo/questionLogo.png";
 
 export default function Page() {
-  const isFinished = true;
+  const isFinished = false;
   const router = useRouter();
 
   return (

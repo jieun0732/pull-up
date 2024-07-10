@@ -39,12 +39,8 @@ const useModal = ({
         className="z-1000 fixed top-0 mx-auto flex h-full w-full min-w-[320px] max-w-[450px] items-center justify-center bg-black bg-opacity-50"
         onClick={closeModal}
       >
-        {/* <div
-          className="max-w-90pc max-h-90pc flex flex-col items-center justify-center overflow-auto rounded-2xl bg-white p-5 px-5 py-8 shadow-md"
-          onClick={(e) => e.stopPropagation()}
-        > */}
         <div
-          className="max-w-95pc max-h-95pc mx-5 flex w-full flex-col items-center justify-center overflow-auto rounded-2xl bg-white px-5 py-8 shadow-md"
+          className="max-w-90pc max-h-90pc flex w-[90%] flex-col items-center justify-center overflow-auto rounded-2xl bg-white p-5 px-5 py-8 shadow-md"
           onClick={(e) => e.stopPropagation()}
         >
           {children}
