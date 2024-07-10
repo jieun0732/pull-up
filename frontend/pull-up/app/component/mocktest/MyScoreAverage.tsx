@@ -10,7 +10,7 @@ import lowerlogo from "@/assets/logo/lowerLogo.png";
 import useComponentSize from "@/hooks/useComponentSize";
 
 function MyScoreAverage() {
-  const progress = 40;
+  const progress = 100;
   const averageProgress = 90;
   const status = compareScores(progress, averageProgress);
   const [componentRef, size] = useComponentSize();
