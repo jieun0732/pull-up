@@ -1,25 +1,17 @@
 package pull_up.api.exam.controller;
 
-import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import pull_up.api.exam.dto.AnswerResultDto;
-import pull_up.api.exam.dto.AnswerSubmissionDto;
+import org.springframework.web.bind.annotation.*;
 import pull_up.api.exam.dto.ExamInformationDto;
+import pull_up.api.exam.dto.ExamProblemDto;
 import pull_up.api.exam.service.ExamService;
-import pull_up.api.member.dto.MemberAnswerDto;
-import pull_up.api.problem.dto.ProblemDto;
-import pull_up.global.common.response.BaseResponse;
+import pull_up.api.member.dto.MemberDto;
+
+import java.util.List;
 
 /**
  * 시험 관련 요청을 처리하는 컨트롤러.
@@ -33,72 +25,34 @@ public class ExamController {
     @Autowired
     private ExamService examService;
 
-    /**
-     * 주어진 카테고리와 entry에 따라 문제 목록을 반환합니다.
-     * @param category 문제의 카테고리.
-     * @param entry 문제의 entry.
-     * @param type 문제의 유형 (선택 사항).
-     * @return 문제 목록.
-     */
+    @Operation(summary = "시험 정보 생성", description = "회원 정보를 기반으로 새로운 시험 정보를 생성하고 관련 문제를 할당합니다.")
+    @PostMapping
+    public ResponseEntity<ExamInformationDto> createExam(@RequestBody MemberDto memberDto,
+                                                         @RequestParam String entry,
+                                                         @RequestParam String category,
+                                                         @RequestParam String type) {
+        ExamInformationDto examInformation = examService.createExamInformation(memberDto, entry, category, type);
+        return ResponseEntity.ok(examInformation);
+    }
+
+    @Operation(summary = "시험 문제 조회", description = "시험 ID를 기반으로 시험에 할당된 모든 문제를 조회합니다.")
+    @GetMapping("/{examId}/problems")
+    public ResponseEntity<List<ExamProblemDto>> getExamProblems(@PathVariable Long examId) {
+        List<ExamProblemDto> examProblems = examService.getExamProblems(examId);
+        return ResponseEntity.ok(examProblems);
+    }
+
+    @Operation(summary = "모든 시험 정보 조회", description = "모든 시험 정보를 조회합니다.")
     @GetMapping
-    public BaseResponse<List<ProblemDto>> getProblemsByCategoryAndEntry(
-        @RequestParam String category,
-        @RequestParam(required = false) String entry,
-        @RequestParam(required = false) String type
-    ) {
-        List<ProblemDto> problems = examService.getProblemsByCategoryAndEntry(category, entry, type);
-        return BaseResponse.success(HttpStatus.OK.value(), "시험문제를 출력합니다.", problems);
+    public ResponseEntity<List<ExamInformationDto>> getAllExams() {
+        List<ExamInformationDto> exams = examService.getAllExamInformation();
+        return ResponseEntity.ok(exams);
     }
 
-    /**
-     * 시험 생성 및 문제 할당.
-     * @param memberId 시험을 생성할 멤버의 ID.
-     * @param category 시험의 카테고리.
-     * @param entry 시험의 entry.
-     * @param type 시험의 유형 (선택 사항).
-     * @return 생성된 시험 정보.
-     */
-    @PostMapping("/createExam")
-    public BaseResponse<ExamInformationDto> createExam(
-        @RequestParam Long memberId,
-        @RequestParam String category,
-        @RequestParam(required = false) String entry,
-        @RequestParam(required = false) String type
-    ) {
-        ExamInformationDto examInformationDto = examService.createExam(memberId, category, entry, type);
-        return BaseResponse.success(HttpStatus.OK.value(), "시험을 생성하였습니다.", examInformationDto);
-    }
-
-    /**
-     * 모의고사 문제 리스트를 반환합니다.
-     * @param memberId 멤버의 ID.
-     * @return 모의고사 문제 목록.
-     */
-    @GetMapping("/mockExam/{memberId}")
-    public BaseResponse<List<ProblemDto>> getMockExamProblems(@PathVariable Long memberId) {
-        List<ProblemDto> problems = examService.getMockExamProblems(memberId);
-        return BaseResponse.success(HttpStatus.OK.value(), "시험문제를 출력합니다.", problems);
-    }
-
-    /**
-     * 답안을 제출하고 채점 결과를 반환합니다.
-     * @param answerSubmissionDto 제출된 답안 정보.
-     * @return 채점 결과.
-     */
-    @PostMapping("/submitAnswer")
-    public BaseResponse<AnswerResultDto> submitAnswer(@RequestBody AnswerSubmissionDto answerSubmissionDto) {
-        AnswerResultDto answerResultDto = examService.submitAnswer(answerSubmissionDto);
-        return BaseResponse.success(HttpStatus.OK.value(), "답안이 제출되었습니다.", answerResultDto);
-    }
-
-    /**
-     * 주어진 시험 ID에 대한 최종 점수를 반환합니다.
-     * @param examId 시험 ID.
-     * @return 최종 점수.
-     */
-    @GetMapping("/calculateFinalScore/{examId}")
-    public BaseResponse<Integer> calculateFinalScore(@PathVariable Long examId) {
-        int finalScore = examService.calculateFinalScore(examId);
-        return BaseResponse.success(HttpStatus.OK.value(), "최종 점수가 계산되었습니다.", finalScore);
+    @Operation(summary = "특정 시험 정보 조회", description = "특정 시험 ID를 기반으로 시험 정보를 조회합니다.")
+    @GetMapping("/{examId}")
+    public ResponseEntity<ExamInformationDto> getExam(@PathVariable Long examId) {
+        ExamInformationDto exam = examService.getExamInformation(examId);
+        return ResponseEntity.ok(exam);
     }
 }
