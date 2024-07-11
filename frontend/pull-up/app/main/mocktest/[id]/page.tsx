@@ -31,7 +31,7 @@ export default function Page() {
             onClick={() => {
               setStep((prevStep) => prevStep + 1);
             }}
-            className="absolute left-0 top-0 z-20 h-[100vh] w-full bg-black opacity-80"
+            className="absolute left-0 top-0 z-20 h-full w-full bg-black opacity-80"
           />
         )}
         {step == 0 && (
@@ -60,6 +60,17 @@ export default function Page() {
             >
               30:00
             </span>
+            {step == 1 && (
+              <>
+                <Text
+                  size="body-02"
+                  color="text-white"
+                  className="absolute left-20 top-14 z-20"
+                >
+                  몇 분 남았는 지 확인할 수 있어요!
+                </Text>
+              </>
+            )}
           </div>
           <span
             onClick={step > 1 ? () => setShowQuestions(true) : undefined}
@@ -118,7 +129,28 @@ export default function Page() {
           );
         })}
 
-        <div className="mb-11 flex w-full flex-col px-5 py-4">
+        <div className="relative mb-11 flex w-full flex-col px-5 py-4">
+          {step == 1 && (
+            <>
+              <div className="relative top-16 z-20 mr-5 flex w-fit items-center gap-3 self-end rounded-[0.4em] bg-blue03 px-5 py-3 text-blue01 after:absolute after:right-1 after:top-1/2 after:-mr-[15px] after:-mt-[15px] after:h-0 after:w-0 after:border-b-[15px] after:border-l-[15px] after:border-r-0 after:border-t-[15px] after:border-b-transparent after:border-l-blue03 after:border-t-transparent after:content-['']">
+                모의고사 풀러가기
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="9"
+                  height="16"
+                  viewBox="0 0 9 16"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M8.96438 8.16095C8.96734 7.90122 8.86973 7.64055 8.67155 7.44237L7.67512 6.44594L7.66229 6.45878L2.05636 0.852844C1.58594 0.382426 0.823242 0.382426 0.352824 0.852844C-0.117594 1.32326 -0.117595 2.08596 0.352823 2.55638L5.95876 8.16231L0.677413 13.4437C0.206995 13.9141 0.206995 14.6768 0.677413 15.1472C1.14783 15.6176 1.91053 15.6176 2.38095 15.1472L7.66229 9.86584L7.67516 9.87871L8.67158 8.88228C8.87046 8.6834 8.96806 8.42159 8.96438 8.16095Z"
+                    fill="#4D70EC"
+                  />
+                </svg>
+              </div>
+            </>
+          )}
           <button
             onClick={() => router.push("/main/mocktest/report")}
             className="ml-auto rounded-t-2xl rounded-bl-2xl bg-gray03 px-6 py-2 text-gray02 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]"
