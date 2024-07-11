@@ -10,4 +10,6 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
     List<Problem> findByCategoryAndEntry(String category, String entry);
 
     List<Problem> findByCategoryAndEntryAndType(String category, String entry, String type);
+
+    List<Problem> findByEntryAndCategoryAndType(String entry, String category, String type);
 }
