@@ -1,0 +1,44 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - frontend
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # Next 14에서는 이 액션을 제거합니다.
+      - name: Export
+        run: npm run export
+
+      - run: touch out/.nojekyll
+
+      - name: Deploy (Client)
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: frontend-pages # 배포될 브랜치
+          folder: out
+          clean: true
