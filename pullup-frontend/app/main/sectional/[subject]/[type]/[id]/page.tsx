@@ -1,72 +1,48 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CloseIcon from "@/assets/icon/closeIcon";
-import ToggleIcon from "@/assets/icon/toggleIcon";
 import Text from "@/component/ui/Text";
 import Button from "@/component/ui/Button";
 import { useState } from "react";
-import { dummyQ } from "../../../constants/dummyq";
-import QuestionList from "@/component/mocktest/questionList";
+import { dummyQ } from "@/constants/dummyq";
 import useModal from "@/hooks/useModal";
 import formatNumber from "@/utils/formatNumber";
 import { ConfirmModal } from "@/component/ui/ConfirmModal";
-import { TutorialOverlay } from "@/component/mocktest/tutorial";
 import ChoiceItem from "@/component/choiceItem";
-import {
-  TutorialStep0,
-  TutorialStep0Text,
-} from "@/component/mocktest/tutorial";
-import {
-  TutorialStep1,
-  TutorialStep1SpeechBubble,
-} from "@/component/mocktest/tutorial";
 
 export default function Page() {
   const router = useRouter();
+  const params = useParams<{ subject: string; type: string; id: string }>();
   const [selectedId, setSelectedId] = useState<string>("");
-  const [showQuestions, setShowQuestions] = useState<boolean>(false);
 
   const { openModal, closeModal, Modal } = useModal({ initialOpen: false });
-  const [step, setStep] = useState(0);
-  console.log(step);
+
   return (
     <>
       <div className="bg-whtie relative flex flex-col items-center pb-7 pt-14">
-        <TutorialOverlay step={step} setStep={setStep} />
-        <TutorialStep0 step={step} setStep={setStep} />
-        <QuestionList
-          showQuestions={showQuestions}
-          setShowQuestions={setShowQuestions}
-        />
-
         <div className="relative flex w-full flex-col px-5">
-          <div className="relative mb-8 w-full text-center">
+          <div className="relative mb-8 w-full">
             <CloseIcon onClick={openModal} />
-            <span
-              className={`relative rounded bg-white p-3 text-[17px] font-bold ${
-                step == 1 ? "z-20" : ""
-              }`}
-            >
-              30:00
+            <span className="ml-9 text-[13px] font-normal text-gray01">
+              8문제 남았어요!
             </span>
-            <TutorialStep1 step={step} />
           </div>
-          <span
-            onClick={step > 1 ? () => setShowQuestions(true) : undefined}
-            className={`relative mb-4 flex w-fit items-center gap-1 rounded bg-white text-[17px] ${
-              step == 0 ? "z-20 p-2" : ""
-            }`}
-          >
-            문제 {formatNumber(dummyQ.id)} <ToggleIcon />
-          </span>
+
+          <div className="flex w-full items-center justify-between">
+            <Text size="head-03" className="mb-4">
+              문제 {formatNumber(Number(params.id))}
+            </Text>
+            <Button size="small" color="nonactive">
+              유의어
+            </Button>
+          </div>
 
           <Text size="body-03" className="relative mb-4">
             {dummyQ.question}
           </Text>
           <div className="relative mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
             <Text size="body-03">{dummyQ.questionD}</Text>
-            <TutorialStep0Text step={step} />
           </div>
         </div>
 
@@ -80,19 +56,12 @@ export default function Page() {
           />
         ))}
 
-        <div className="relative mb-11 flex w-full flex-col px-5 py-4">
-          <TutorialStep1SpeechBubble step={step} />
-          <button
-            onClick={() => router.push("/main/mocktest/report")}
-            className="ml-auto rounded-t-2xl rounded-bl-2xl bg-gray03 px-6 py-2 text-gray02 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]"
-          >
-            제출하기
-          </button>
+        <div className="fixed bottom-0 mb-11 flex w-full flex-col px-5 py-4">
           {(() => {
             if (dummyQ.id === 1) {
               return (
                 <Button size="large" color="active" className="mt-4">
-                  다음 문제
+                  채점하기
                 </Button>
               );
             } else if (dummyQ.id > 1 && dummyQ.id < 20) {
@@ -102,7 +71,7 @@ export default function Page() {
                     이전 문제
                   </Button>
                   <Button size="medium" color="active">
-                    다음 문제
+                    채점하기
                   </Button>
                 </div>
               );
@@ -117,12 +86,16 @@ export default function Page() {
         </div>
         <Modal>
           <ConfirmModal
-            onLeft={() => router.push("/main/mocktest")}
+            onLeft={() =>
+              router.push(
+                `/main/sectional/${params.subject}/${params.type}/result`,
+              )
+            }
             onRight={closeModal}
-            title="모의고사를 그만 푸실 건가요?"
-            description="나가면 현재까지 푼 문제들은 저장되지 않아요!"
-            left="나갈래요"
-            right="계속 풀래요"
+            title="정말로 학습을 종료하실 건가요?"
+            description="나가면 현재까지 푼 문제만 저장돼요!"
+            left="종료할래요"
+            right="계속 풀고 싶어요."
           />
         </Modal>
       </div>

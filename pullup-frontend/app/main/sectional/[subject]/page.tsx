@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import report from "@/assets/logo/report.png";
-import notFinishedLogo from "@/assets/logo/logoWithPencil.png";
+import finishedLogo from "@/assets/logo/studyFinished.png";
+import notFinishedLogo from "@/assets/logo/studyNotFinished.png";
 import ProgressBar from "@/component/sectional/progressbar";
 import Button from "@/component/ui/Button";
 import Header from "@/component/ui/Header";
@@ -11,7 +11,7 @@ import Text from "@/component/ui/Text";
 import { sections } from "@/constants/constants";
 
 const dummydata = {
-  isFinished: true,
+  isFinished: false,
   data: [
     {
       type: "유의어",
@@ -39,7 +39,7 @@ export default function Page() {
   const currentSection = sections[params.subject];
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center px-5 pb-7 pt-14">
       <Header type="back" content={currentSection} />
       <Text size="head-02" className="self-start">
         {currentSection}의 대표 예제를
@@ -51,7 +51,11 @@ export default function Page() {
       <div className="flex w-full flex-col items-center gap-4 p-6">
         {dummydata.isFinished ? (
           <>
-            <Image className="w-[185px]" src={report} alt="Profile Image" />
+            <Image
+              className="w-[185px]"
+              src={finishedLogo}
+              alt="Profile Image"
+            />
             <Button size="large" color="active">
               골고루 학습 결과 보기
             </Button>
@@ -76,11 +80,17 @@ export default function Page() {
         ) : (
           <>
             <Image
-              className="h-28 w-28 rounded-full"
+              className="w-44 rounded-full"
               src={notFinishedLogo}
-              alt="Profile Image"
+              alt="icon"
             />
-            <Button size="large" color="active">
+            <Button
+              size="large"
+              color="active"
+              onClick={() =>
+                router.push(`/main/sectional/${params.subject}/mix/1`)
+              }
+            >
               골고루 학습하기
             </Button>
           </>
@@ -97,7 +107,7 @@ export default function Page() {
         return (
           <div
             key={item.type}
-            className="mb-4 w-full rounded-md border border-solid border-white03 bg-green-200 px-6 py-4 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.07)]"
+            className="mb-4 w-full rounded-md border border-solid border-white03 bg-white02 px-6 py-4 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.07)]"
           >
             <Text size="head-04" className="mb-1 self-start">
               {item.type} {item.now}/{item.total}
