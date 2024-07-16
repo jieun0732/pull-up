@@ -14,29 +14,27 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.api.problem.entity.Problem;
+import pull_up.global.common.entity.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "exam_problem")
-@SQLDelete(sql = "UPDATE exam_problem e SET e.deleted_at = current_timestamp WHERE e.id = ?")
-@SQLRestriction("deleted_at is NULL")
-public class ExamProblem {
+@SQLRestriction("is_deleted = false")
+public class ExamProblem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "exam_id")
+    @JoinColumn(name = "exam_information_id")
     private ExamInformation examInformation;
 
     @ManyToOne
     @JoinColumn(name = "problem_id")
     private Problem problem;
 
-    @Column
-    private LocalDateTime deletedAt; // 삭제 여부
 
     protected ExamProblem() {
     }
@@ -47,7 +45,6 @@ public class ExamProblem {
     private ExamProblem(ExamInformation examInformation, Problem problem) {
         this.examInformation = examInformation;
         this.problem = problem;
-        this.deletedAt = null;
     }
 
     /**

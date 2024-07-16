@@ -44,7 +44,7 @@ public class ExamService {
     public ExamInformationDto createExamInformation(MemberDto memberDTO, String entry, String category, String type) {
         Member member = MemberDto.toEntity(memberDTO);
         List<Problem> problems = problemRepository.findByEntryAndCategoryAndType(entry, category, type);
-        ExamInformation examInformation = ExamInformation.of(member, entry, category, type, LocalDateTime.now(), null, 0);
+        ExamInformation examInformation = ExamInformation.of(member, entry, category, type, null, null, null, 0);
         examInformationRepository.save(examInformation);
 
         for (Problem problem : problems) {
@@ -75,10 +75,10 @@ public class ExamService {
                 examInformation.getEntry(),
                 examInformation.getCategory(),
                 examInformation.getType(),
-                examInformation.getDate(),
-                examInformation.getTime(),
-                examInformation.getScore(),
-                examInformation.getDeletedAt()
+                examInformation.getCreatedDate(),
+                examInformation.getSolvedDate(),
+                examInformation.getRequiredTime(),
+                examInformation.getScore()
         );
     }
 
@@ -92,7 +92,7 @@ public class ExamService {
                         examProblem.getProblem().getCategory(),
                         examProblem.getProblem().getType(),
                         examProblem.getProblem().getQuestion(),
-                        examProblem.getProblem().getExplain(),
+                        examProblem.getProblem().getExplanation(),
                         examProblem.getProblem().getChoice1(),
                         examProblem.getProblem().getChoice2(),
                         examProblem.getProblem().getChoice3(),
@@ -102,10 +102,8 @@ public class ExamService {
                         examProblem.getProblem().getAnswerExplain(),
                         examProblem.getProblem().getTotalAttempts(),
                         examProblem.getProblem().getIncorrectAttempts(),
-                        examProblem.getProblem().getIncorrectRate(),
-                        examProblem.getProblem().getDeletedAt()
-                ),
-                examProblem.getDeletedAt()
+                        examProblem.getProblem().getIncorrectRate()
+                )
         );
     }
 }

@@ -11,14 +11,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import pull_up.global.common.entity.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "problem")
-@SQLDelete(sql = "UPDATE problem p SET p.deleted_at = current_timestamp WHERE p.id = ?")
-@SQLRestriction("deleted_at is NULL")
-public class Problem {
+@SQLRestriction("is_deleted = false")
+public class Problem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +42,7 @@ public class Problem {
 
     @Setter
     @Column
-    private String explain;
+    private String explanation;
 
     @Setter
     @Column
@@ -84,8 +84,6 @@ public class Problem {
     @Column
     private Double incorrectRate;
 
-    @Column
-    private LocalDateTime deletedAt; // 삭제 여부
 
     protected Problem() {
     }
@@ -93,12 +91,15 @@ public class Problem {
     /**
      * 파라미터 생성자.
      */
-    private Problem(String entry, String category, String type, String question, String explain, String choice1, String choice2, String choice3, String choice4, String choice5, String answer, String answerExplain, Integer totalAttempts, Integer incorrectAttempts, Double incorrectRate) {
+    private Problem(String entry, String category, String type, String question, String explanation,
+        String choice1, String choice2, String choice3, String choice4, String choice5,
+        String answer, String answerExplain, Integer totalAttempts, Integer incorrectAttempts,
+        Double incorrectRate) {
         this.entry = entry;
         this.category = category;
         this.type = type;
         this.question = question;
-        this.explain = explain;
+        this.explanation = explanation;
         this.choice1 = choice1;
         this.choice2 = choice2;
         this.choice3 = choice3;
@@ -109,13 +110,17 @@ public class Problem {
         this.totalAttempts = totalAttempts;
         this.incorrectAttempts = incorrectAttempts;
         this.incorrectRate = incorrectRate;
-        this.deletedAt = null;
     }
 
     /**
      * 파라미터로부터 Problem 엔티티 객체를 생성하는 함수.
      */
-    public static Problem of(String entry, String category, String type, String question, String explain, String choice1, String choice2, String choice3, String choice4, String choice5, String answer, String answerExplain, Integer totalAttempts, Integer incorrectAttempts, Double incorrectRate) {
-        return new Problem(entry, category, type, question, explain, choice1, choice2, choice3, choice4, choice5, answer, answerExplain, totalAttempts, incorrectAttempts, incorrectRate);
+    public static Problem of(String entry, String category, String type, String question,
+        String explanation, String choice1, String choice2, String choice3, String choice4,
+        String choice5, String answer, String answerExplain, Integer totalAttempts,
+        Integer incorrectAttempts, Double incorrectRate) {
+        return new Problem(entry, category, type, question, explanation, choice1, choice2, choice3,
+            choice4, choice5, answer, answerExplain, totalAttempts, incorrectAttempts,
+            incorrectRate);
     }
 }

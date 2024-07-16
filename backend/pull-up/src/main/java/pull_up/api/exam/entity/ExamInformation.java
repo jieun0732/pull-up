@@ -14,14 +14,14 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.api.member.entity.Member;
+import pull_up.global.common.entity.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "exam_information")
-@SQLDelete(sql = "UPDATE exam_information e SET e.deleted_at = current_timestamp WHERE e.id = ?")
-@SQLRestriction("deleted_at is NULL")
-public class ExamInformation {
+@SQLRestriction("is_deleted = false")
+public class ExamInformation extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,18 +45,20 @@ public class ExamInformation {
 
     @Setter
     @Column
-    private LocalDateTime date;  // 문제를 푼 날짜
+    private LocalDateTime createdDate;  // 문제 생성 날짜
 
     @Setter
     @Column
-    private LocalDateTime time;  // 문제 풀면서 걸린 소요시간
+    private LocalDateTime solvedDate; // 문제를 다 푼 시간
+
+    @Setter
+    @Column
+    private Long requiredTime;  // 문제 풀면서 걸린 소요시간
 
     @Setter
     @Column
     private Integer score;
 
-    @Column
-    private LocalDateTime deletedAt; // 삭제 여부
 
     protected ExamInformation() {
     }
@@ -64,21 +66,21 @@ public class ExamInformation {
     /**
      * 파라미터 생성자.
      */
-    private ExamInformation(Member member, String entry, String category, String type, LocalDateTime date, LocalDateTime time, Integer score) {
+    private ExamInformation(Member member, String entry, String category, String type, LocalDateTime createdDate, LocalDateTime solvedDate, Long requiredTime, Integer score) {
         this.member = member;
         this.entry = entry;
         this.category = category;
         this.type = type;
-        this.date = date;
-        this.time = time;
+        this.createdDate = createdDate;
+        this.solvedDate = solvedDate;
+        this.requiredTime = requiredTime;
         this.score = score;
-        this.deletedAt = null;
     }
 
     /**
      * 파라미터로부터 ExamInformation 엔티티 객체를 생성하는 함수.
      */
-    public static ExamInformation of(Member member, String entry, String category, String type, LocalDateTime date, LocalDateTime time, Integer score) {
-        return new ExamInformation(member, entry, category, type, date, time, score);
+    public static ExamInformation of(Member member, String entry, String category, String type, LocalDateTime createdDate, LocalDateTime solvedDate, Long requiredTime, Integer score) {
+        return new ExamInformation(member, entry, category, type, createdDate, solvedDate, requiredTime, score);
     }
 }
