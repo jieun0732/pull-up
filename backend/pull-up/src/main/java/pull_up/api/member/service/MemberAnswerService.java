@@ -88,7 +88,7 @@ public class MemberAnswerService {
                         memberAnswer.getProblem().getCategory(),
                         memberAnswer.getProblem().getType(),
                         memberAnswer.getProblem().getQuestion(),
-                        memberAnswer.getProblem().getExplain(),
+                        memberAnswer.getProblem().getExplanation(),
                         memberAnswer.getProblem().getChoice1(),
                         memberAnswer.getProblem().getChoice2(),
                         memberAnswer.getProblem().getChoice3(),
@@ -98,8 +98,7 @@ public class MemberAnswerService {
                         memberAnswer.getProblem().getAnswerExplain(),
                         memberAnswer.getProblem().getTotalAttempts(),
                         memberAnswer.getProblem().getIncorrectAttempts(),
-                        memberAnswer.getProblem().getIncorrectRate(),
-                        memberAnswer.getProblem().getDeletedAt()
+                        memberAnswer.getProblem().getIncorrectRate()
                 ),
                 new ExamInformationDto(
                         memberAnswer.getExamInformation().getId(),
@@ -107,14 +106,13 @@ public class MemberAnswerService {
                         memberAnswer.getExamInformation().getEntry(),
                         memberAnswer.getExamInformation().getCategory(),
                         memberAnswer.getExamInformation().getType(),
-                        memberAnswer.getExamInformation().getDate(),
-                        memberAnswer.getExamInformation().getTime(),
-                        memberAnswer.getExamInformation().getScore(),
-                        memberAnswer.getExamInformation().getDeletedAt()
+                        memberAnswer.getExamInformation().getCreatedDate(),
+                        memberAnswer.getExamInformation().getSolvedDate(),
+                        memberAnswer.getExamInformation().getRequiredTime(),
+                        memberAnswer.getExamInformation().getScore()
                 ),
                 memberAnswer.getChosenAnswer(),
-                memberAnswer.getIsCorrect(),
-                memberAnswer.getDeletedAt()
+                memberAnswer.getIsCorrect()
         );
     }
 }

@@ -7,19 +7,18 @@ import pull_up.api.member.entity.Member;
 /**
  * DTO for {@link Member}
  */
-public record MemberDto(Long id, String name, String email, boolean accessCheck,
-                        LocalDateTime deletedAt) implements
+public record MemberDto(Long id, String name, String email, boolean accessCheck) implements
     Serializable {
 
     public static MemberDto of(Long id, String name, String email, boolean accessCheck, LocalDateTime deletedAt) {
-        return new MemberDto(id, name, email, accessCheck, deletedAt);
+        return new MemberDto(id, name, email, accessCheck);
     }
 
     /**
      * Member 엔티티를 MemberDto로 변환하는 메소드.
      */
     public static MemberDto from(Member entity) {
-        return new MemberDto(entity.getId(), entity.getName(), entity.getEmail(), entity.isAccessCheck(), entity.getDeletedAt());
+        return new MemberDto(entity.getId(), entity.getName(), entity.getEmail(), entity.isAccessCheck());
     }
 
     /**

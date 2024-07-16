@@ -15,14 +15,14 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.api.exam.entity.ExamInformation;
 import pull_up.api.problem.entity.Problem;
+import pull_up.global.common.entity.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "user_answer")
-@SQLDelete(sql = "UPDATE user_answer u SET u.deleted_at = current_timestamp WHERE u.id = ?")
-@SQLRestriction("deleted_at is NULL")
-public class MemberAnswer {
+@SQLRestriction("is_deleted = false")
+public class MemberAnswer extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class MemberAnswer {
     private Problem problem;
 
     @ManyToOne
-    @JoinColumn(name = "exam_id")
+    @JoinColumn(name = "exam_information_id")
     private ExamInformation examInformation;
 
     @Setter
@@ -48,8 +48,6 @@ public class MemberAnswer {
     @Column
     private Boolean isCorrect;
 
-    @Column
-    private LocalDateTime deletedAt; // 삭제 여부
 
     protected MemberAnswer() {
     }
@@ -63,7 +61,6 @@ public class MemberAnswer {
         this.examInformation = examInformation;
         this.chosenAnswer = chosenAnswer;
         this.isCorrect = isCorrect;
-        this.deletedAt = null;
     }
 
     /**

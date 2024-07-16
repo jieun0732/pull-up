@@ -8,19 +8,16 @@ import pull_up.api.problem.dto.ProblemDto;
 /**
  * DTO for {@link ExamProblem}
  */
-public record ExamProblemDto(Long id, ExamInformationDto examInformation, ProblemDto problem,
-                             LocalDateTime deletedAt) implements
-    Serializable {
+public record ExamProblemDto(Long id, ExamInformationDto examInformation, ProblemDto problem) implements Serializable {
 
-    public static ExamProblemDto of(Long id, ExamInformationDto examInformation, ProblemDto problem,
-        LocalDateTime deletedAt) {
-        return new ExamProblemDto(id, examInformation, problem, deletedAt);
+    public static ExamProblemDto of(Long id, ExamInformationDto examInformation, ProblemDto problem) {
+        return new ExamProblemDto(id, examInformation, problem);
     }
 
     public static ExamProblemDto from(ExamProblem entity) {
         return new ExamProblemDto(entity.getId(),
-            ExamInformationDto.from(entity.getExamInformation(), problemDtos),
-            ProblemDto.from(entity.getProblem()), entity.getDeletedAt());
+            ExamInformationDto.from(entity.getExamInformation(), null),
+            ProblemDto.from(entity.getProblem()));
     }
 
     public static ExamProblem toEntity(ExamProblemDto dto) {

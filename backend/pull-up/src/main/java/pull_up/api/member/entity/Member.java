@@ -16,8 +16,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Setter
 @Entity
 @Table(name = "member")
-@SQLDelete(sql = "UPDATE member m SET m.deleted_at = current_timestamp WHERE m.id = ?")
-@SQLRestriction("deleted_at is NULL")
+@SQLRestriction("is_deleted = false")
 public class Member {
 
     @Id
@@ -36,9 +35,6 @@ public class Member {
     @Column
     private boolean accessCheck;
 
-    @Column
-    private LocalDateTime deletedAt; // 삭제 여부
-
     protected Member() {
     }
 
@@ -49,7 +45,6 @@ public class Member {
         this.name = name;
         this.email = email;
         this.accessCheck = accessCheck;
-        this.deletedAt = null;
     }
 
     /**

@@ -13,13 +13,12 @@ import pull_up.api.problem.dto.ProblemDto;
  */
 public record MemberAnswerDto(Long id, MemberDto member, ProblemDto problem,
                               ExamInformationDto examInformation, String chosenAnswer,
-                              Boolean isCorrect, LocalDateTime deletedAt) implements Serializable {
+                              Boolean isCorrect) implements Serializable {
 
     public static MemberAnswerDto of(Long id, MemberDto member, ProblemDto problem,
         ExamInformationDto examInformation, String chosenAnswer, Boolean isCorrect,
         LocalDateTime deletedAt) {
-        return new MemberAnswerDto(id, member, problem, examInformation, chosenAnswer, isCorrect,
-            deletedAt);
+        return new MemberAnswerDto(id, member, problem, examInformation, chosenAnswer, isCorrect);
     }
 
     public static MemberAnswerDto from(MemberAnswer entity) {
@@ -27,7 +26,7 @@ public record MemberAnswerDto(Long id, MemberDto member, ProblemDto problem,
         return new MemberAnswerDto(entity.getId(), MemberDto.from(entity.getMember()),
             ProblemDto.from(entity.getProblem()),
             ExamInformationDto.from(entity.getExamInformation(), problemDtos), entity.getChosenAnswer(),
-            entity.getIsCorrect(), entity.getDeletedAt());
+            entity.getIsCorrect());
     }
 
     public static MemberAnswer toEntity(MemberAnswerDto dto) {
