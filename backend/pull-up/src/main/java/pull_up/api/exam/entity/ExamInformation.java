@@ -8,10 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.api.member.entity.Member;
 import pull_up.global.common.entity.BaseEntity;
@@ -53,7 +53,7 @@ public class ExamInformation extends BaseEntity {
 
     @Setter
     @Column
-    private Long requiredTime;  // 문제 풀면서 걸린 소요시간
+    private Duration requiredTime;  // 문제 풀면서 걸린 소요시간
 
     @Setter
     @Column
@@ -66,7 +66,7 @@ public class ExamInformation extends BaseEntity {
     /**
      * 파라미터 생성자.
      */
-    private ExamInformation(Member member, String entry, String category, String type, LocalDateTime createdDate, LocalDateTime solvedDate, Long requiredTime, Integer score) {
+    private ExamInformation(Member member, String entry, String category, String type, LocalDateTime createdDate, LocalDateTime solvedDate, Duration requiredTime, Integer score) {
         this.member = member;
         this.entry = entry;
         this.category = category;
@@ -80,7 +80,7 @@ public class ExamInformation extends BaseEntity {
     /**
      * 파라미터로부터 ExamInformation 엔티티 객체를 생성하는 함수.
      */
-    public static ExamInformation of(Member member, String entry, String category, String type, LocalDateTime createdDate, LocalDateTime solvedDate, Long requiredTime, Integer score) {
+    public static ExamInformation of(Member member, String entry, String category, String type, LocalDateTime createdDate, LocalDateTime solvedDate, Duration requiredTime, Integer score) {
         return new ExamInformation(member, entry, category, type, createdDate, solvedDate, requiredTime, score);
     }
 }

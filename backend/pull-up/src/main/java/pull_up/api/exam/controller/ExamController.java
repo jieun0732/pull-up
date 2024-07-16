@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pull_up.api.exam.dto.ExamInformationDto;
@@ -54,5 +55,33 @@ public class ExamController {
     public ResponseEntity<ExamInformationDto> getExam(@PathVariable Long examId) {
         ExamInformationDto exam = examService.getExamInformation(examId);
         return ResponseEntity.ok(exam);
+    }
+
+    // 시험 시작 API
+    @Operation(summary = "시험 시작 시간 기록", description = "현재 시험을 시작하는 시간을 기록합니다.")
+    @PostMapping("/{examId}/start")
+    public ResponseEntity<?> startExam(@PathVariable Long examId) {
+        try {
+            examService.startExam(examId);
+            return ResponseEntity.ok("Exam started successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+    }
+
+    // 시험 종료 API
+    @Operation(summary = "시험 종료 시간 기록", description = "시험을 끝내고 소요된 시간을 기록합니다.")
+    @PostMapping("/{examId}/end")
+    public ResponseEntity<?> endExam(@PathVariable Long examId) {
+        try {
+            examService.endExam(examId);
+            return ResponseEntity.ok("Exam ended successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 }
