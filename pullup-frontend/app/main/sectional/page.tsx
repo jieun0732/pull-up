@@ -62,7 +62,7 @@ export default function Page() {
             <Button
               size="small"
               color="activeLight"
-              className="absolute bottom-4 left-5 z-10"
+              className="z-5 absolute bottom-4 left-5"
             >
               {item.name}
             </Button>

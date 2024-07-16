@@ -31,7 +31,7 @@ export default function BottomNavbar() {
   if (pathDepth !== 2) return;
 
   return (
-    <nav className="fixed bottom-0 flex h-[91px] w-full min-w-[320px] max-w-[450px] items-center justify-around bg-blue-100 pb-[30px] pt-[17px]">
+    <nav className="z-90 fixed bottom-0 flex h-[91px] w-full min-w-[320px] max-w-[450px] items-center justify-around bg-blue-100 pb-[30px] pt-[17px]">
       {navbarItem.map(({ name, Icon, link }) => {
         const isClicked = pathname.includes(link);
         return (
