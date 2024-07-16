@@ -1,6 +1,7 @@
 package pull_up.api.exam.dto;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import pull_up.api.exam.entity.ExamInformation;
@@ -12,11 +13,11 @@ import pull_up.api.problem.dto.ProblemDto;
  */
 public record ExamInformationDto(Long id, MemberDto member, String entry, String category,
                                  String type, LocalDateTime createdDate,
-                                 LocalDateTime solvedDate, Long requiredTime, Integer score) implements
+                                 LocalDateTime solvedDate, Duration requiredTime, Integer score) implements
     Serializable {
 
     public static ExamInformationDto of(Long id, MemberDto member, String entry, String category,
-        String type, LocalDateTime createdDate, LocalDateTime solvedDate, Long requiredTime, Integer score) {
+        String type, LocalDateTime createdDate, LocalDateTime solvedDate, Duration requiredTime, Integer score) {
         return new ExamInformationDto(id, member, entry, category, type, createdDate, solvedDate, requiredTime, score);
     }
 

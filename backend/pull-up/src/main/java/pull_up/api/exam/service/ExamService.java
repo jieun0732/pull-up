@@ -1,5 +1,6 @@
 package pull_up.api.exam.service;
 
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemDto;
 import pull_up.api.exam.entity.ExamInformation;
 import pull_up.api.exam.entity.ExamProblem;
+import pull_up.api.exam.exception.ExamErrorCode;
+import pull_up.api.exam.exception.ExamException;
 import pull_up.api.exam.repository.ExamInformationRepository;
 import pull_up.api.exam.repository.ExamProblemRepository;
 import pull_up.api.member.dto.MemberDto;
@@ -105,5 +108,41 @@ public class ExamService {
                         examProblem.getProblem().getIncorrectRate()
                 )
         );
+    }
+
+    // 시험 시작 시간 업데이트 및 푸는 데 걸린 시간 추가
+    public void startExam(Long examId) {
+        ExamInformation examInformation = examInformationRepository.findById(examId).orElseThrow(() -> new IllegalArgumentException("Invalid examId"));
+
+        // 이미 시작된 시험인지 확인
+        if (examInformation.getCreatedDate() != null) {
+            throw new IllegalStateException("Exam has already started.");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        examInformation.setCreatedDate(now);
+
+        // 시험 푸는 데 걸린 시간을 추가로 더할 경우 예시로 +30분을 추가
+        LocalDateTime solvedDate = now.plusMinutes(30);
+        examInformation.setSolvedDate(solvedDate);
+
+        examInformationRepository.save(examInformation);
+    }
+
+    public void endExam(Long examId) {
+        ExamInformation examInformation = examInformationRepository.findById(examId)
+            .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
+
+        LocalDateTime now = LocalDateTime.now();
+
+        // 소요된 시간 계산
+        if (examInformation.getCreatedDate() != null) {
+            Duration duration = Duration.between(examInformation.getCreatedDate(), now);
+            examInformation.setRequiredTime(duration);
+        } else {
+            throw new IllegalStateException("시작시간이 설정되지 않았습니다.");
+        }
+
+        examInformationRepository.save(examInformation);
     }
 }
