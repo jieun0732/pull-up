@@ -9,7 +9,7 @@ import Text from "@/component/ui/Text";
 export default function Page() {
   return (
     <div className="flex h-full w-full flex-col items-center bg-[#F4F3F8] px-5 pb-[91px] pt-14">
-      <Header type="back" content="내가 틀린 문제" />
+      <Header type="back" content="내가 틀린 문제" link="/main/profile" />
       <div className="flex h-full w-full flex-col items-center justify-center overflow-x-auto">
         {dummywrong.length === 0 ? (
           <p>아직 푼 문제가 없어요!</p>

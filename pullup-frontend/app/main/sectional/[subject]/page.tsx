@@ -9,23 +9,28 @@ import Button from "@/component/ui/Button";
 import Header from "@/component/ui/Header";
 import Text from "@/component/ui/Text";
 import { sections } from "@/constants/constants";
+import { ReplayIcon, ArrowIcon } from "@/assets/icon";
+import ReplaySpeechBubble from "@/component/sectional/ReplaySpeechBubble";
 
 const dummydata = {
   isFinished: false,
   data: [
     {
+      id: 0,
       type: "유의어",
       now: 4,
       total: 10,
       hasWrong: true,
     },
     {
+      id: 1,
       type: "반의어",
       now: 2,
       total: 10,
       hasWrong: false,
     },
     {
+      id: 2,
       type: "유의어1",
       now: 0,
       total: 10,
@@ -40,7 +45,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col items-center px-5 pb-7 pt-14">
-      <Header type="back" content={currentSection} />
+      <Header type="back" content={currentSection} link={`/main/sectional/`} />
       <Text size="head-02" className="self-start">
         {currentSection}의 대표 예제를
       </Text>
@@ -48,37 +53,32 @@ export default function Page() {
         다양하게 만나보고 싶다면?
       </Text>
 
-      <div className="relative flex w-full flex-col items-center gap-4 bg-green-400 p-6">
+      <div className="relative mt-4 flex w-full flex-col items-center gap-4 rounded-3xl bg-blue03 p-6">
         {dummydata.isFinished ? (
           <>
+            <ReplayIcon
+              className="absolute right-6"
+              onClick={() => console.log("replay")}
+            />
             <Image
               className="w-[185px]"
               src={finishedLogo}
               alt="Profile Image"
             />
             <Button size="large" color="active">
-              골고루 학습 결과 보기
-            </Button>
-            <button className="flex w-full items-center justify-center gap-2 text-blue01">
               남은 문제 이어서 풀기
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="10"
-                height="8"
-                viewBox="0 0 10 8"
-                fill="none"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M5.03944 0.273312C5.33233 -0.019581 5.80721 -0.019581 6.1001 0.273312L9.67099 3.8442C9.7491 3.92231 9.7491 4.04894 9.67099 4.12704L8.7569 5.04113C8.75406 5.04398 8.74945 5.04398 8.7466 5.04113C8.74376 5.03829 8.73915 5.03829 8.73631 5.04113L6.05076 7.72668C5.75787 8.01957 5.28299 8.01957 4.9901 7.72668C4.69721 7.43379 4.69721 6.95891 4.9901 6.66602L7.10248 4.55364H0.570432C0.404746 4.55364 0.270432 4.41933 0.270432 4.25364V3.35364C0.270432 3.18796 0.404746 3.05364 0.570432 3.05364H6.75911L5.03944 1.33397C4.74655 1.04108 4.74655 0.566205 5.03944 0.273312Z"
-                  fill="#4D70EC"
-                />
-              </svg>
+            </Button>
+            <button className="flex w-full items-center justify-center gap-2 font-semibold text-blue01">
+              골고루 학습 결과 보기
+              <ArrowIcon />
             </button>
           </>
         ) : (
           <>
+            <ReplayIcon
+              className="absolute right-6"
+              onClick={() => console.log("replay")}
+            />
             <Image
               className="w-44 rounded-full"
               src={notFinishedLogo}
@@ -109,9 +109,19 @@ export default function Page() {
             key={item.type}
             className="mb-4 w-full rounded-md border border-solid border-white03 bg-white02 px-6 py-4 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.07)]"
           >
-            <Text size="head-04" className="mb-1 self-start">
+            <Text
+              size="head-04"
+              className="mb-1 flex items-center gap-3 self-start"
+            >
               {item.type} {item.now}/{item.total}
+              <ReplayIcon
+                className="relative"
+                onClick={() => console.log("replay")}
+              >
+                {item.id === 0 && <ReplaySpeechBubble />}
+              </ReplayIcon>
             </Text>
+
             {item.hasWrong && (
               <Text size="caption-02" color="text-red01">
                 ㅇㅇ 님이 틀렸던 유형이에요!
@@ -119,18 +129,24 @@ export default function Page() {
             )}
             <ProgressBar now={item.now} total={item.total} />
             <div className="mt-3 flex w-full gap-2">
-              <Button size="medium" color="nonactive">
-                다시 풀기
-              </Button>
-
               {item.now ? (
-                <Button size="medium" color="activeLight">
-                  채점 결과 보기
-                </Button>
+                <>
+                  <Button size="medium" color="activeLight">
+                    학습하기
+                  </Button>
+                  <Button size="medium" color="activeBlack">
+                    채점 결과 보기
+                  </Button>
+                </>
               ) : (
-                <Button size="medium" color="nonactive">
-                  채점 결과 보기
-                </Button>
+                <>
+                  <Button size="medium" color="activeLight">
+                    이어서 풀기
+                  </Button>
+                  <Button size="medium" color="nonactive">
+                    채점 결과 보기
+                  </Button>
+                </>
               )}
             </div>
           </div>

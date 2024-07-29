@@ -14,7 +14,7 @@ export default function Page() {
   return (
     <div className="bg-whtie relative flex flex-col pb-7 pt-14">
       <div className="relative px-5">
-        <Header type="back" content={params.type} />
+        <Header type="back" content={params.type} link="채점결과표페이지로" />
         <div className="flex w-full items-center justify-between">
           <Text size="head-03" className="mb-4">
             문제 {formatNumber(Number(params.id))}

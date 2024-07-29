@@ -7,6 +7,11 @@ import ReplayIcon from "./ReplayIcon";
 import SectionalIcon from "./SectionalIcon";
 import ToggleIcon from "./ToggleIcon";
 import WarningIcon from "./WarningIcon";
+import ArrowIcon from "./ArrowIcon";
+import {
+  LimitTimeIcon,
+  TotalQuestionNumberIcon,
+} from "./MockTestDescriptionIcons";
 
 export {
   BackIcon,
@@ -18,4 +23,7 @@ export {
   SectionalIcon,
   ToggleIcon,
   WarningIcon,
+  ArrowIcon,
+  LimitTimeIcon,
+  TotalQuestionNumberIcon,
 };

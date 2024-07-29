@@ -7,17 +7,13 @@ import CloseIcon from "@/assets/icon/CloseIcon";
 interface HeaderPropType {
   type: "back" | "cancel";
   content: string;
-  link?: string;
+  link: string;
 }
 export default function Header({ type, content, link }: HeaderPropType) {
   const router = useRouter();
 
   const handleIconClick = () => {
-    if (type === "back") {
-      router.back();
-    } else if (type === "cancel" && link) {
-      router.push(link);
-    }
+    router.push(link);
   };
 
   return (

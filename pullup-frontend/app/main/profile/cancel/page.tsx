@@ -22,7 +22,7 @@ export default function Page() {
   ];
   return (
     <div className="flex h-full w-full flex-col items-center bg-white px-5 pb-[91px] pt-14">
-      <Header type="back" content="회원탈퇴" />
+      <Header type="back" content="회원탈퇴" link="/main/profile/" />
       <div className="w-full">
         <p className="mb-2 text-[19px] font-bold">
           정말 풀업을 탈퇴하실 건가요?

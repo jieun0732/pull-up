@@ -1,7 +1,7 @@
 import { ComponentPropsWithoutRef } from "react";
 import { TextStyles } from "@/constants/constants";
 
-interface TypographyProps extends ComponentPropsWithoutRef<"p"> {
+interface TypographyProps extends ComponentPropsWithoutRef<"div"> {
   size?:
     | "head-01"
     | "head-02"
@@ -30,9 +30,9 @@ const Text = (props: TypographyProps) => {
   const styles = `${TextStyles[size]} ${color} ${className}`;
 
   return (
-    <p {...rest} className={styles}>
+    <div {...rest} className={styles}>
       {children}
-    </p>
+    </div>
   );
 };
 
