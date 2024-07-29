@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import CloseIcon from "@/assets/icon/closeIcon";
-import ToggleIcon from "@/assets/icon/toggleIcon";
+import CloseIcon from "@/assets/icon/CloseIcon";
+import ToggleIcon from "@/assets/icon/ToggleIcon";
 import Text from "@/component/ui/Text";
 import Button from "@/component/ui/Button";
 import { useState } from "react";

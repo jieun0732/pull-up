@@ -48,7 +48,7 @@ export default function Page() {
         다양하게 만나보고 싶다면?
       </Text>
 
-      <div className="flex w-full flex-col items-center gap-4 p-6">
+      <div className="relative flex w-full flex-col items-center gap-4 bg-green-400 p-6">
         {dummydata.isFinished ? (
           <>
             <Image

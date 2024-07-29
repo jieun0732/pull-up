@@ -6,7 +6,7 @@ import { dummysolution } from "@/constants/dummyq";
 import Text from "@/component/ui/Text";
 import formatNumber from "@/utils/formatNumber";
 import { dummyQ } from "@/constants/dummyq";
-import BackIcon from "@/assets/icon/backIcon";
+import BackIcon from "@/assets/icon/BackIcon";
 import Header from "@/component/ui/Header";
 
 export default function Page({

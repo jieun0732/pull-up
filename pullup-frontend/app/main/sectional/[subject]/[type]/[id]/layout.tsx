@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import CloseIcon from "@/assets/icon/closeIcon";
+import CloseIcon from "@/assets/icon/CloseIcon";
 import Text from "@/component/ui/Text";
 import Button from "@/component/ui/Button";
 import { dummyQ } from "@/constants/dummyq";

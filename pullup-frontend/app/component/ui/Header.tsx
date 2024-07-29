@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import BackIcon from "@/assets/icon/backIcon";
-import CloseIcon from "@/assets/icon/closeIcon";
+import BackIcon from "@/assets/icon/BackIcon";
+import CloseIcon from "@/assets/icon/CloseIcon";
 
 interface HeaderPropType {
   type: "back" | "cancel";

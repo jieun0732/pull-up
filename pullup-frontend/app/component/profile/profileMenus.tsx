@@ -1,5 +1,5 @@
 import Link from "next/link";
-import DepthIcon from "@/assets/icon/depthIcon";
+import DepthIcon from "@/assets/icon/DepthIcon";
 import Text from "../ui/Text";
 
 const etcItems = [

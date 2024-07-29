@@ -4,7 +4,7 @@ import { dummyresult } from "@/constants/dummyresult";
 import SectionalResultItem from "@/component/sectional/sectionalResultItem";
 import SectionalResultHeader from "@/component/sectional/sectionalResultHeader";
 import { useRouter } from "next/navigation";
-import CloseIcon from "@/assets/icon/closeIcon";
+import CloseIcon from "@/assets/icon/CloseIcon";
 
 export default function Page({
   params,
