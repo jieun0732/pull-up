@@ -24,7 +24,7 @@ const dummyWeak = [
 function MyWeakPart() {
   const weakest = "수리영역";
   return (
-    <div className="mt-5 flex w-full flex-col rounded-2xl bg-white p-6">
+    <div className="my-5 flex w-full flex-col rounded-2xl bg-white p-6">
       <Text size="head-04">가장 취약한 파트는</Text>
       <Text size="head-02" className="inline">
         <span className="text-red01"> {weakest}</span>이에요!

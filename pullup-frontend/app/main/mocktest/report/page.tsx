@@ -20,7 +20,7 @@ export default function Page() {
 
       <MyWeakPart />
 
-      <Link href="/main/mocktest/result">
+      <Link href="/main/mocktest/result" className="mt-6">
         <Button size="large" color="active">
           해설 확인하기
         </Button>

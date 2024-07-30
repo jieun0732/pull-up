@@ -16,6 +16,8 @@ function MyTimeAverage() {
     lower: "평균보다 3분 빨라요!",
   };
 
+  const PROGRESSBAR_SIZE = size.width / 4 - 35 > 0 ? size.width / 4 - 35 : 0;
+
   return (
     <div className="mt-5 flex w-full flex-col rounded-2xl bg-white p-6">
       <Text size="head-03" className="mb-2">
@@ -35,7 +37,7 @@ function MyTimeAverage() {
           <div className="relative flex flex-col items-center">
             <ProgressBar
               progress={(mytime / 20) * 100}
-              radius={size.width / 4 - 35}
+              radius={PROGRESSBAR_SIZE}
               inverse={false}
               rotate={180 + 90}
               strokeColor="#4d70ec"
@@ -62,7 +64,7 @@ function MyTimeAverage() {
           <div className="relative flex flex-col items-center">
             <ProgressBar
               progress={(averageTime / 20) * 100}
-              radius={size.width / 4 - 35}
+              radius={PROGRESSBAR_SIZE}
               inverse={false}
               rotate={180 + 90}
               strokeColor="#3D4150"

@@ -8,7 +8,7 @@ import questionLogo from "@/assets/logo/questionLogo.png";
 import { TotalQuestionNumberIcon, LimitTimeIcon } from "@/assets/icon";
 
 export default function Page() {
-  const isFinished = true;
+  const isFinished = false;
   const router = useRouter();
 
   return (
@@ -28,8 +28,12 @@ export default function Page() {
             alt="모의고사 결과 로고"
             className="self-center"
           />
-          <Button size="large" color="active">
+
+          <Button size="large" color="active" className="relative">
             모의고사 결과 확인하기
+            <div className="absolute top-[-60px] whitespace-nowrap rounded-[0.4em] bg-black01 px-4 py-2 text-white after:absolute after:bottom-0 after:left-1/2 after:mb-[-9px] after:h-0 after:w-0 after:-translate-x-1/2 after:border-[9px] after:border-b-0 after:border-transparent after:border-t-black01 after:content-['']">
+              <Text size="caption-02">문제를 다시풀 수 있어요!</Text>
+            </div>
           </Button>
         </div>
       ) : (

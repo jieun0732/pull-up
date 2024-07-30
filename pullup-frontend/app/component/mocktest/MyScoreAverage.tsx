@@ -33,6 +33,8 @@ function MyScoreAverage() {
     },
   };
 
+  const PROGRESSBAR_SIZE = size.width > 0 ? size.width / 2 - 15 : 0;
+
   return (
     <div className="flex h-[50%] w-full flex-col rounded-2xl bg-white p-6">
       <div className="w-full">
@@ -49,7 +51,7 @@ function MyScoreAverage() {
           <div className="absolute left-0 top-0">
             <ProgressBar
               progress={progress}
-              radius={size.width / 2 - 15}
+              radius={PROGRESSBAR_SIZE}
               cut={200}
               rotate={190}
               initialAnimation={false}
@@ -91,7 +93,7 @@ function MyScoreAverage() {
           <div className="absolute left-0 top-0">
             <ProgressBar
               progress={averageProgress}
-              radius={size.width / 2 - 15}
+              radius={PROGRESSBAR_SIZE}
               cut={200}
               rotate={190}
               initialAnimation={false}
