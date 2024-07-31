@@ -12,6 +12,13 @@ import {
   LimitTimeIcon,
   TotalQuestionNumberIcon,
 } from "./MockTestDescriptionIcons";
+import {
+  ServiceUsageIcon,
+  VersionIcon,
+  LogoutIcon,
+  SignOutIcon,
+  PrivacyPolicyIcon,
+} from "./ProfileMenusIcons";
 
 export {
   BackIcon,
@@ -26,4 +33,9 @@ export {
   ArrowIcon,
   LimitTimeIcon,
   TotalQuestionNumberIcon,
+  ServiceUsageIcon,
+  VersionIcon,
+  LogoutIcon,
+  SignOutIcon,
+  PrivacyPolicyIcon,
 };

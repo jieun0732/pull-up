@@ -1,27 +1,38 @@
 import Link from "next/link";
 import DepthIcon from "@/assets/icon/DepthIcon";
 import Text from "../ui/Text";
+import {
+  ServiceUsageIcon,
+  PrivacyPolicyIcon,
+  LogoutIcon,
+  SignOutIcon,
+  VersionIcon,
+} from "@/assets/icon";
 
 const etcItems = [
   {
     name: "서비스 이용약관",
-    link: "#",
+    link: "www.google.co.kr",
     hasNextPage: true,
+    icon: ServiceUsageIcon,
   },
   {
     name: "개인정보처리방침",
     link: "#",
     hasNextPage: true,
+    icon: PrivacyPolicyIcon,
   },
   {
     name: "로그아웃",
-    link: "/main/profile/cancel",
+    link: "#",
     hasNextPage: true,
+    icon: LogoutIcon,
   },
   {
     name: "회원탈퇴",
-    link: "/main/profile/cancel",
+    link: "#",
     hasNextPage: true,
+    icon: SignOutIcon,
   },
 ];
 
@@ -35,11 +46,13 @@ export default function ProfileMenus() {
         {etcItems.map((item) => {
           return (
             <Link
-              href={item.link}
+              href={`https://${item.link}`} // 프로토콜을 추가
               key={item.name}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center border border-b border-solid border-[#F4F3F8] px-6 py-5"
             >
-              <div className="mr-3 h-6 w-6 rounded-sm bg-gray02"></div>
+              <item.icon />
               <Text size="body-03" className="w-[80%]">
                 {item.name}
               </Text>
@@ -48,7 +61,7 @@ export default function ProfileMenus() {
           );
         })}
         <div className="flex items-center px-6 py-5">
-          <div className="mr-3 h-6 w-6 rounded-sm bg-gray02"></div>
+          <VersionIcon />
           <Text size="body-03" className="w-[75%]">
             버전 정보
           </Text>
