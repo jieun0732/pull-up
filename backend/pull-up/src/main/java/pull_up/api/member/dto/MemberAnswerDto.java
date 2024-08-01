@@ -1,7 +1,6 @@
 package pull_up.api.member.dto;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import pull_up.api.exam.dto.ExamInformationDto;
@@ -16,8 +15,7 @@ public record MemberAnswerDto(Long id, MemberDto member, ProblemDto problem,
                               Boolean isCorrect) implements Serializable {
 
     public static MemberAnswerDto of(Long id, MemberDto member, ProblemDto problem,
-        ExamInformationDto examInformation, String chosenAnswer, Boolean isCorrect,
-        LocalDateTime deletedAt) {
+        ExamInformationDto examInformation, String chosenAnswer, Boolean isCorrect) {
         return new MemberAnswerDto(id, member, problem, examInformation, chosenAnswer, isCorrect);
     }
 
@@ -25,7 +23,7 @@ public record MemberAnswerDto(Long id, MemberDto member, ProblemDto problem,
         List<ProblemDto> problemDtos = List.of();
         return new MemberAnswerDto(entity.getId(), MemberDto.from(entity.getMember()),
             ProblemDto.from(entity.getProblem()),
-            ExamInformationDto.from(entity.getExamInformation(), problemDtos), entity.getChosenAnswer(),
+            ExamInformationDto.from(entity.getExamInformation()), entity.getChosenAnswer(),
             entity.getIsCorrect());
     }
 

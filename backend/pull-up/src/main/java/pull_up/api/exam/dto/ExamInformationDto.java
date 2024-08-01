@@ -21,7 +21,7 @@ public record ExamInformationDto(Long id, MemberDto member, String entry, String
         return new ExamInformationDto(id, member, entry, category, type, createdDate, solvedDate, requiredTime, score);
     }
 
-    public static ExamInformationDto from(ExamInformation entity, List<ProblemDto> problemDtos) {
+    public static ExamInformationDto from(ExamInformation entity) {
         return new ExamInformationDto(entity.getId(), MemberDto.from(entity.getMember()),
             entity.getEntry(),
             entity.getCategory(), entity.getType(), entity.getCreatedDate(), entity.getSolvedDate(),

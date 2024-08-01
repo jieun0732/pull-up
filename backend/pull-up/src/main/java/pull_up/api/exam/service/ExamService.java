@@ -1,11 +1,13 @@
 package pull_up.api.exam.service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemDto;
 import pull_up.api.exam.entity.ExamInformation;
@@ -14,16 +16,23 @@ import pull_up.api.exam.exception.ExamErrorCode;
 import pull_up.api.exam.exception.ExamException;
 import pull_up.api.exam.repository.ExamInformationRepository;
 import pull_up.api.exam.repository.ExamProblemRepository;
-import pull_up.api.member.dto.MemberDto;
+import pull_up.api.member.dto.IncorrectAnswerDto;
+import pull_up.api.member.dto.MemberAnswerDto;
+import pull_up.api.member.entity.IncorrectAnswer;
 import pull_up.api.member.entity.Member;
-import pull_up.api.member.service.MemberService;
+import pull_up.api.member.entity.MemberAnswer;
+import pull_up.api.member.exception.IncorrectAnswerErrorCode;
+import pull_up.api.member.exception.IncorrectAnswerException;
+import pull_up.api.member.exception.MemberErrorCode;
+import pull_up.api.member.exception.MemberException;
+import pull_up.api.member.repository.IncorrectAnswerRepository;
+import pull_up.api.member.repository.MemberAnswerRepository;
+import pull_up.api.member.repository.MemberRepository;
 import pull_up.api.problem.dto.ProblemDto;
 import pull_up.api.problem.entity.Problem;
+import pull_up.api.problem.exception.ProblemErrorCode;
+import pull_up.api.problem.exception.ProblemException;
 import pull_up.api.problem.repository.ProblemRepository;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 시험 관련 비즈니스 로직을 처리하는 서비스.
@@ -33,116 +42,187 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ExamService {
 
-    @Autowired
-    private ExamInformationRepository examInformationRepository;
+    private final ProblemRepository problemRepository;
+    private final MemberRepository memberRepository;
+    private final MemberAnswerRepository memberAnswerRepository;
+    private final IncorrectAnswerRepository incorrectAnswerRepository;
+    private final ExamInformationRepository examInformationRepository;
+    private final ExamProblemRepository examProblemRepository;
 
-    @Autowired
-    private ExamProblemRepository examProblemRepository;
+    /**
+     * 문제 리스트 조회 (골고루 풀기 및 유형별 풀기)
+     */
+    public List<MemberAnswerDto> getProblemList(Long memberId, String entry, String category, String type) {
+        List<MemberAnswer> memberAnswers;
+        if (type == null || type.isEmpty()) {
+            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategory(memberId, entry, category);
+        } else {
+            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategoryAndProblemType(memberId, entry, category, type);
+        }
+        return memberAnswers.stream().map(MemberAnswerDto::from).collect(Collectors.toList());
+    }
 
-    @Autowired
-    private ProblemRepository problemRepository;
+    /**
+     * 문제 답안 저장하기
+     */
+    public MemberAnswerDto saveAnswer(MemberAnswerDto memberAnswerDto) {
+        Member member = memberRepository.findById(memberAnswerDto.member().id())
+            .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
 
+        Problem problem = problemRepository.findById(memberAnswerDto.problem().id())
+            .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
 
-    @Transactional
-    public ExamInformationDto createExamInformation(MemberDto memberDTO, String entry, String category, String type) {
-        Member member = MemberDto.toEntity(memberDTO);
-        List<Problem> problems = problemRepository.findByEntryAndCategoryAndType(entry, category, type);
-        ExamInformation examInformation = ExamInformation.of(member, entry, category, type, null, null, null, 0);
-        examInformationRepository.save(examInformation);
+        MemberAnswer memberAnswer = memberAnswerRepository.findByMemberAndProblem(member, problem)
+            .orElseGet(() -> MemberAnswer.of(member, problem, null, null, null));
 
-        for (Problem problem : problems) {
-            ExamProblem examProblem = ExamProblem.of(examInformation, problem);
-            examProblemRepository.save(examProblem);
+        memberAnswer.setChosenAnswer(memberAnswerDto.chosenAnswer());
+
+        boolean isCorrect = checkAnswer(memberAnswerDto.problem().id(), memberAnswerDto.chosenAnswer());
+        memberAnswer.setIsCorrect(isCorrect);
+
+        memberAnswerRepository.save(memberAnswer);
+
+        if (!isCorrect) {
+            IncorrectAnswer incorrectAnswer = IncorrectAnswer.of(member, problem, null, memberAnswerDto.chosenAnswer());
+            incorrectAnswerRepository.save(incorrectAnswer);
         }
 
-        return toDTO(examInformation);
+        return MemberAnswerDto.from(memberAnswer);
     }
 
-    public List<ExamProblemDto> getExamProblems(Long examId) {
-        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(examId);
-        return examProblems.stream().map(this::toDTO).collect(Collectors.toList());
+    private boolean checkAnswer(Long problemId, String chosenAnswer) {
+        Problem problem = problemRepository.findById(problemId).orElseThrow();
+        return problem.getAnswer().equals(chosenAnswer);
     }
 
-    public List<ExamInformationDto> getAllExamInformation() {
-        return examInformationRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
-    }
-
-    public ExamInformationDto getExamInformation(Long examId) {
-        return examInformationRepository.findById(examId).map(this::toDTO).orElse(null);
-    }
-
-    private ExamInformationDto toDTO(ExamInformation examInformation) {
-        return new ExamInformationDto(
-                examInformation.getId(),
-                MemberDto.from(examInformation.getMember()),
-                examInformation.getEntry(),
-                examInformation.getCategory(),
-                examInformation.getType(),
-                examInformation.getCreatedDate(),
-                examInformation.getSolvedDate(),
-                examInformation.getRequiredTime(),
-                examInformation.getScore()
-        );
-    }
-
-    private ExamProblemDto toDTO(ExamProblem examProblem) {
-        return new ExamProblemDto(
-                examProblem.getId(),
-                toDTO(examProblem.getExamInformation()),
-                new ProblemDto(
-                        examProblem.getProblem().getId(),
-                        examProblem.getProblem().getEntry(),
-                        examProblem.getProblem().getCategory(),
-                        examProblem.getProblem().getType(),
-                        examProblem.getProblem().getQuestion(),
-                        examProblem.getProblem().getExplanation(),
-                        examProblem.getProblem().getChoice1(),
-                        examProblem.getProblem().getChoice2(),
-                        examProblem.getProblem().getChoice3(),
-                        examProblem.getProblem().getChoice4(),
-                        examProblem.getProblem().getChoice5(),
-                        examProblem.getProblem().getAnswer(),
-                        examProblem.getProblem().getAnswerExplain(),
-                        examProblem.getProblem().getTotalAttempts(),
-                        examProblem.getProblem().getIncorrectAttempts(),
-                        examProblem.getProblem().getIncorrectRate()
-                )
-        );
-    }
-
-    // 시험 시작 시간 업데이트 및 푸는 데 걸린 시간 추가
-    public void startExam(Long examId) {
-        ExamInformation examInformation = examInformationRepository.findById(examId).orElseThrow(() -> new IllegalArgumentException("Invalid examId"));
-
-        // 이미 시작된 시험인지 확인
-        if (examInformation.getCreatedDate() != null) {
-            throw new IllegalStateException("Exam has already started.");
+    /**
+     * 다시 풀기
+     */
+    public void resetAnswers(Long memberId, String entry, String category, String type) {
+        List<MemberAnswer> memberAnswers;
+        if (type == null || type.isEmpty()) {
+            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategory(memberId, entry, category);
+        } else {
+            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategoryAndProblemType(memberId, entry, category, type);
         }
+        for (MemberAnswer answer : memberAnswers) {
+            answer.setChosenAnswer(null);
+            answer.setIsCorrect(null);
+        }
+        memberAnswerRepository.saveAll(memberAnswers);
+    }
 
-        LocalDateTime now = LocalDateTime.now();
-        examInformation.setCreatedDate(now);
+    /**
+     * 이어 풀기
+     */
+    public MemberAnswerDto getNextUnanswered(Long memberId, String entry, String category, String type) {
+        List<MemberAnswer> memberAnswers;
+        if (type == null || type.isEmpty()) {
+            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategory(memberId, entry, category);
+        } else {
+            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategoryAndProblemType(memberId, entry, category, type);
+        }
+        for (MemberAnswer answer : memberAnswers) {
+            if (answer.getChosenAnswer() == null) {
+                return MemberAnswerDto.from(answer);
+            }
+        }
+        return null;
+    }
 
-        // 시험 푸는 데 걸린 시간을 추가로 더할 경우 예시로 +30분을 추가
-        LocalDateTime solvedDate = now.plusMinutes(30);
-        examInformation.setSolvedDate(solvedDate);
+    /**
+     * 모의고사 문제 리스트 조회
+     */
+    public List<ProblemDto> getMockExamProblems() {
+        List<Problem> problems = problemRepository.findByCategory("모의고사");
+        Collections.shuffle(problems);
+        return problems.stream().limit(20).map(ProblemDto::from).collect(Collectors.toList());
+    }
+
+    /**
+     * 모의고사 시작하기
+     */
+    public ExamInformationDto startMockExam(ExamInformationDto examInformationDto) {
+        Member member = memberRepository.findById(examInformationDto.member().id())
+            .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
+
+        ExamInformation examInformation = ExamInformation.of(
+            member,
+            examInformationDto.entry(),
+            examInformationDto.category(),
+            examInformationDto.type(),
+            LocalDateTime.now(),
+            null,
+            null,
+            0
+        );
 
         examInformationRepository.save(examInformation);
+        return ExamInformationDto.from(examInformation);
     }
 
-    public void endExam(Long examId) {
-        ExamInformation examInformation = examInformationRepository.findById(examId)
+    /**
+     * 모의고사 답안 저장하기
+     */
+    public ExamProblemDto saveMockExamAnswer(ExamProblemDto examProblemDto) {
+        Member member = memberRepository.findById(examProblemDto.examInformation().member().id())
+            .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
+
+        Problem problem = problemRepository.findById(examProblemDto.problem().id())
+            .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
+
+        ExamInformation examInformation = examInformationRepository.findById(examProblemDto.examInformation().id())
             .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
 
-        LocalDateTime now = LocalDateTime.now();
+        ExamProblem examProblem = examProblemRepository.findByExamInformationAndProblem(examInformation, problem)
+            .orElseGet(() -> ExamProblem.of(examInformation, problem, null, null));
 
-        // 소요된 시간 계산
-        if (examInformation.getCreatedDate() != null) {
-            Duration duration = Duration.between(examInformation.getCreatedDate(), now);
-            examInformation.setRequiredTime(duration);
-        } else {
-            throw new IllegalStateException("시작시간이 설정되지 않았습니다.");
+        examProblem.setChosenAnswer(examProblemDto.chosenAnswer());
+
+        boolean isCorrect = checkAnswer(examProblemDto.problem().id(), examProblemDto.chosenAnswer());
+        examProblem.setIsCorrect(isCorrect);
+
+        examProblemRepository.save(examProblem);
+
+        if (!isCorrect) {
+            IncorrectAnswer incorrectAnswer = IncorrectAnswer.of(member, problem, examInformation, examProblemDto.chosenAnswer());
+            incorrectAnswerRepository.save(incorrectAnswer);
         }
 
+        return ExamProblemDto.from(examProblem);
+    }
+
+    /**
+     * 모의고사 완료 및 점수 저장하기
+     */
+    public ExamInformationDto completeMockExam(ExamInformationDto examInformationDto) {
+        ExamInformation examInformation = examInformationRepository.findById(examInformationDto.id())
+            .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
+        examInformation.setSolvedDate(LocalDateTime.now());
+
+        List<ExamProblem> answers = examProblemRepository.findByExamInformationId(examInformationDto.id());
+        int score = (int) answers.stream().filter(ExamProblem::getIsCorrect).count() * 5;
+        examInformation.setScore(score);
+        examInformation.setRequiredTime(Duration.between(examInformation.getCreatedDate(), examInformation.getSolvedDate()));
+
         examInformationRepository.save(examInformation);
+        return ExamInformationDto.from(examInformation);
+    }
+
+    /**
+     * 틀린 문제 리스트 조회하기
+     */
+    public List<IncorrectAnswerDto> getIncorrectAnswers(Long memberId) {
+        List<IncorrectAnswer> incorrectAnswers = incorrectAnswerRepository.findByMemberId(memberId);
+        return incorrectAnswers.stream().map(IncorrectAnswerDto::from).collect(Collectors.toList());
+    }
+
+    /**
+     * 틀린 문제 상세 조회하기
+     */
+    public IncorrectAnswerDto getIncorrectAnswer(Long id) {
+        IncorrectAnswer incorrectAnswer = incorrectAnswerRepository.findById(id)
+            .orElseThrow(() -> new IncorrectAnswerException(IncorrectAnswerErrorCode.NOT_FOUND_INCORRECT_ANSWER));
+        return IncorrectAnswerDto.from(incorrectAnswer);
     }
 }
