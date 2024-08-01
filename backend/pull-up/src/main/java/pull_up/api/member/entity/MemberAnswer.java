@@ -20,7 +20,7 @@ import pull_up.global.common.entity.BaseEntity;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_answer")
+@Table(name = "member_answer")
 @SQLRestriction("is_deleted = false")
 public class MemberAnswer extends BaseEntity {
 
