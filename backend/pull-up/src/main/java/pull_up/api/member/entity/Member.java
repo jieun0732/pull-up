@@ -11,13 +11,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import pull_up.global.common.entity.BaseEntity;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "member")
 @SQLRestriction("is_deleted = false")
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +36,10 @@ public class Member {
     @Column
     private boolean accessCheck;
 
+    @Setter
+    @Column
+    private String role;
+
     protected Member() {
     }
 
@@ -45,6 +50,7 @@ public class Member {
         this.name = name;
         this.email = email;
         this.accessCheck = accessCheck;
+        this.role = "ROLE_USER";
     }
 
     /**
