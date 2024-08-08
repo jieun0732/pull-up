@@ -21,6 +21,7 @@ public enum MemberErrorCode {
     PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     NO_AUTHORITY(HttpStatus.BAD_REQUEST, "권한이 없습니다."),
     // 카카오 로그인 에러코드
+    ILLEGAL_OAUTH2CLIENT_NAME(HttpStatus.INTERNAL_SERVER_ERROR, "로그인 실패"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "카카오 로그인 실패");
 
     private final HttpStatus httpStatus;

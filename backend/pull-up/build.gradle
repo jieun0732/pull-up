@@ -36,6 +36,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'com.nimbusds:nimbus-jose-jwt:9.30.1'
+	implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
 	compileOnly 'org.projectlombok:lombok'
@@ -54,6 +56,11 @@ dependencies {
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 	implementation "com.querydsl:querydsl-jpa:${querydslVer}:jakarta"
 	annotationProcessor "com.querydsl:querydsl-apt:${querydslVer}:jakarta"
+
+	// jjwt (JSON Web Token)
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.5' // for Jackson JSON parser
 }
 
 tasks.named('test') {
