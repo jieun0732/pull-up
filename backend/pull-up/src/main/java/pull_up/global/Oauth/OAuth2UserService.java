@@ -20,6 +20,7 @@ import pull_up.api.member.entity.Member;
 import pull_up.api.member.repository.MemberRepository;
 
 // 172.30.1.39
+// http://43.203.236.62:8080/api/pull-up/oauth2/authorization/kakao
 // http://localhost:8080/api/pull-up/oauth2/authorization/kakao
 // http://localhost:8080/api/pull-up/oauth2/authorization/apple
 // http://localhost:8080/api/pull-up/swagger-ui/index.html

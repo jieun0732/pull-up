@@ -15,7 +15,7 @@ spring:
       enabled: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/pullup?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://43.203.236.62:3306/pullup?serverTimezone=Asia/Seoul
     username: root
     password: 1077
     hikari:
@@ -41,7 +41,8 @@ spring:
           kakao:
             client-id: f9165f4a6bb04401b296313ef583fb98
             client-secret: wt0MHHY0Dp9vTTUYX4w7M8yEDZUSebcg
-            redirect-uri: "http://localhost:8001/api/pull-up/oauth2/callback/kakao"
+            redirect-uri: "http://43.203.236.62:8080/api/pull-up/oauth2/callback/kakao"
+#            redirect-uri: "http://localhost:8080/api/pull-up/oauth2/callback/kakao"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
             scope:
@@ -51,7 +52,8 @@ spring:
           apple:
             client-id: com.pull-up.apps
             client-secret: AuthKey_SNHA348FS6.p8/7MKFVNQYN5/SNHA348FS6
-            redirect-uri: "http://localhost:8001/api/pull-up/oauth2/callback/apple"
+            redirect-uri: "http://43.203.236.62:8080/api/pull-up/oauth2/callback/apple"
+#            redirect-uri: "http://localhost:8080/api/pull-up/oauth2/callback/apple"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
             scope:
