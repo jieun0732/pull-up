@@ -15,7 +15,7 @@ spring:
       enabled: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/pullup?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://54.180.202.16:3306/pullup?serverTimezone=Asia/Seoul
     username: root
     password: 1077
     hikari:
@@ -25,7 +25,7 @@ spring:
     hibernate:
       naming:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
