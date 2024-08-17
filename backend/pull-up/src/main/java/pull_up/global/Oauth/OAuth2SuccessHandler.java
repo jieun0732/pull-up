@@ -24,7 +24,7 @@ import pull_up.api.member.repository.MemberRepository;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final MemberRepository memberRepository;
-    private static final String URI = "https://j10a604.p.ssafy.io/login";
+    private static final String URI = "http://43.203.236.62:8080/api/pull-up/login";
 
     @Override
     public void onAuthenticationSuccess(
