@@ -20,8 +20,9 @@ import pull_up.api.member.entity.Member;
 import pull_up.api.member.repository.MemberRepository;
 
 // 172.30.1.39
-// http://localhost:8001/api/pull-up/oauth2/authorization/kakao
-// http://localhost:8001/api/pull-up/oauth2/authorization/apple
+// http://localhost:8080/api/pull-up/oauth2/authorization/kakao
+// http://localhost:8080/api/pull-up/oauth2/authorization/apple
+// http://localhost:8080/api/pull-up/swagger-ui/index.html
 
 @Service
 @Slf4j

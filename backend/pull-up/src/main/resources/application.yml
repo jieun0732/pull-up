@@ -15,7 +15,7 @@ spring:
       enabled: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://43.203.236.62:3306/pullup?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/pullup?serverTimezone=Asia/Seoul
     username: root
     password: 1077
     hikari:
