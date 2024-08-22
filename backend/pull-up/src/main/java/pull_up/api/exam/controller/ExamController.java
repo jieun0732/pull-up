@@ -17,10 +17,12 @@ import pull_up.api.exam.dto.CreatedExamInformationResponseDto;
 import pull_up.api.exam.dto.CreatedExamInformationResultDto;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemDto;
+import pull_up.api.exam.dto.ExamProblemResponseDto;
 import pull_up.api.exam.dto.ExamProblemResultDto;
 import pull_up.api.exam.service.ExamService;
 import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.MemberAnswerDto;
+import pull_up.api.member.dto.MemberAnswerResponseDto;
 import pull_up.api.problem.dto.ProblemDto;
 import pull_up.api.problem.dto.ProblemResultDto;
 
@@ -49,8 +51,8 @@ public class ExamController {
 
     @Operation(summary = "문제 답안 저장하기", description = "회원의 문제 답안을 저장합니다.")
     @PostMapping("/answer")
-    public ResponseEntity<MemberAnswerDto> saveAnswer(@RequestBody MemberAnswerDto memberAnswerDto) {
-        MemberAnswerDto savedAnswer = examService.saveAnswer(memberAnswerDto);
+    public ResponseEntity<MemberAnswerDto> saveAnswer(@RequestBody MemberAnswerResponseDto memberAnswerResponseDto) {
+        MemberAnswerDto savedAnswer = examService.saveAnswer(memberAnswerResponseDto);
         return ResponseEntity.ok(savedAnswer);
     }
 
@@ -105,8 +107,8 @@ public class ExamController {
 
     @Operation(summary = "모의고사 답안 저장하기", description = "모의고사 문제의 답안을 저장합니다.")
     @PostMapping("/mock-exam/answer")
-    public ResponseEntity<ExamProblemResultDto> saveMockExamAnswer(@RequestBody ExamProblemDto examProblemDto) {
-        ExamProblemResultDto savedAnswer = examService.saveMockExamAnswer(examProblemDto);
+    public ResponseEntity<ExamProblemResultDto> saveMockExamAnswer(@RequestBody ExamProblemResponseDto examProblemResponseDto) {
+        ExamProblemResultDto savedAnswer = examService.saveMockExamAnswer(examProblemResponseDto);
         return ResponseEntity.ok(savedAnswer);
     }
 
