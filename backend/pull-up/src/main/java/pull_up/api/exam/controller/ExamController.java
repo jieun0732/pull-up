@@ -16,14 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import pull_up.api.exam.dto.CreatedExamInformationResponseDto;
 import pull_up.api.exam.dto.CreatedExamInformationResultDto;
 import pull_up.api.exam.dto.ExamInformationDto;
-import pull_up.api.exam.dto.ExamProblemDto;
 import pull_up.api.exam.dto.ExamProblemResponseDto;
 import pull_up.api.exam.dto.ExamProblemResultDto;
 import pull_up.api.exam.service.ExamService;
 import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
-import pull_up.api.problem.dto.ProblemDto;
 import pull_up.api.problem.dto.ProblemResultDto;
 
 /**
