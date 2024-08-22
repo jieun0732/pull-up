@@ -17,10 +17,12 @@ import pull_up.api.exam.dto.CreatedExamInformationResponseDto;
 import pull_up.api.exam.dto.CreatedExamInformationResultDto;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemDto;
+import pull_up.api.exam.dto.ExamProblemResultDto;
 import pull_up.api.exam.service.ExamService;
 import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.problem.dto.ProblemDto;
+import pull_up.api.problem.dto.ProblemResultDto;
 
 /**
  * 시험 관련 요청을 처리하는 컨트롤러.
@@ -76,8 +78,8 @@ public class ExamController {
 
     @Operation(summary = "모의고사 문제 리스트 조회", description = "모의고사 문제 리스트를 조회합니다.")
     @GetMapping("/mock-exam/problems")
-    public ResponseEntity<List<ProblemDto>> getMockExamProblems() {
-        List<ProblemDto> problems = examService.getMockExamProblems();
+    public ResponseEntity<List<ProblemResultDto>> getMockExamProblems() {
+        List<ProblemResultDto> problems = examService.getMockExamProblems();
         return ResponseEntity.ok(problems);
     }
 
@@ -96,15 +98,15 @@ public class ExamController {
      */
     @Operation(summary = "모의고사 문제 하나 조회", description = "모의고사 문제 하나를 조회합니다.")
     @GetMapping("/problem/{examProblemId}")
-    public ResponseEntity<ProblemDto> getProblemByExamProblemId(@PathVariable Long examProblemId) {
-        ProblemDto problemDto = examService.getProblemByExamProblemId(examProblemId);
-        return ResponseEntity.ok(problemDto);
+    public ResponseEntity<ProblemResultDto> getProblemByExamProblemId(@PathVariable Long examProblemId) {
+        ProblemResultDto problemResultDto = examService.getProblemByExamProblemId(examProblemId);
+        return ResponseEntity.ok(problemResultDto);
     }
 
     @Operation(summary = "모의고사 답안 저장하기", description = "모의고사 문제의 답안을 저장합니다.")
     @PostMapping("/mock-exam/answer")
-    public ResponseEntity<ExamProblemDto> saveMockExamAnswer(@RequestBody ExamProblemDto examProblemDto) {
-        ExamProblemDto savedAnswer = examService.saveMockExamAnswer(examProblemDto);
+    public ResponseEntity<ExamProblemResultDto> saveMockExamAnswer(@RequestBody ExamProblemDto examProblemDto) {
+        ExamProblemResultDto savedAnswer = examService.saveMockExamAnswer(examProblemDto);
         return ResponseEntity.ok(savedAnswer);
     }
 

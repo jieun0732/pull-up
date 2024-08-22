@@ -12,6 +12,7 @@ import pull_up.api.exam.dto.CreatedExamInformationResponseDto;
 import pull_up.api.exam.dto.CreatedExamInformationResultDto;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemDto;
+import pull_up.api.exam.dto.ExamProblemResultDto;
 import pull_up.api.exam.entity.ExamInformation;
 import pull_up.api.exam.entity.ExamProblem;
 import pull_up.api.exam.exception.ExamErrorCode;
@@ -31,6 +32,7 @@ import pull_up.api.member.repository.IncorrectAnswerRepository;
 import pull_up.api.member.repository.MemberAnswerRepository;
 import pull_up.api.member.repository.MemberRepository;
 import pull_up.api.problem.dto.ProblemDto;
+import pull_up.api.problem.dto.ProblemResultDto;
 import pull_up.api.problem.entity.Problem;
 import pull_up.api.problem.exception.ProblemErrorCode;
 import pull_up.api.problem.exception.ProblemException;
@@ -135,10 +137,10 @@ public class ExamService {
     /**
      * 모의고사 문제 리스트 조회
      */
-    public List<ProblemDto> getMockExamProblems() {
+    public List<ProblemResultDto> getMockExamProblems() {
         List<Problem> problems = problemRepository.findByCategory("모의고사");
         Collections.shuffle(problems);
-        return problems.stream().limit(20).map(ProblemDto::from).collect(Collectors.toList());
+        return problems.stream().limit(20).map(ProblemResultDto::from).collect(Collectors.toList());
     }
 
     /**
@@ -182,31 +184,31 @@ public class ExamService {
         examProblemRepository.saveAll(examProblems);
 
         // ExamProblemDto 리스트 생성
-        List<ExamProblemDto> examProblemDtos = examProblems.stream()
-            .map(ExamProblemDto::from)
+        List<ExamProblemResultDto> examProblemResultDtos = examProblems.stream()
+            .map(ExamProblemResultDto::from)
             .collect(Collectors.toList());
 
-        return CreatedExamInformationResultDto.from(examInformation, examProblemDtos);
+        return CreatedExamInformationResultDto.from(examInformation, examProblemResultDtos);
     }
 
 
     /**
      * 문제 ID를 통해 문제를 반환합니다.
      */
-    public ProblemDto getProblemByExamProblemId(Long examProblemId) {
+    public ProblemResultDto getProblemByExamProblemId(Long examProblemId) {
         // ExamProblem 엔티티를 찾음
         ExamProblem examProblem = examProblemRepository.findById(examProblemId)
             .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
 
         // ExamProblem에서 Problem을 추출하여 반환
         Problem problem = examProblem.getProblem();
-        return ProblemDto.from(problem);
+        return ProblemResultDto.from(problem);
     }
 
     /**
      * 모의고사 답안 저장하기
      */
-    public ExamProblemDto saveMockExamAnswer(ExamProblemDto examProblemDto) {
+    public ExamProblemResultDto saveMockExamAnswer(ExamProblemDto examProblemDto) {
         Member member = memberRepository.findById(examProblemDto.examInformation().member().id())
             .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
 
@@ -231,7 +233,7 @@ public class ExamService {
             incorrectAnswerRepository.save(incorrectAnswer);
         }
 
-        return ExamProblemDto.from(examProblem);
+        return ExamProblemResultDto.from(examProblem);
     }
 
     /**
