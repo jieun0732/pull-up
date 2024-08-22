@@ -1,21 +1,25 @@
 package pull_up.api.exam.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import java.util.Optional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import pull_up.api.exam.dto.CreatedExamInformationResponseDto;
+import pull_up.api.exam.dto.CreatedExamInformationResultDto;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemDto;
 import pull_up.api.exam.service.ExamService;
 import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.MemberAnswerDto;
-import pull_up.api.member.dto.MemberDto;
-
-import java.util.List;
 import pull_up.api.problem.dto.ProblemDto;
 
 /**
@@ -79,9 +83,21 @@ public class ExamController {
 
     @Operation(summary = "모의고사 시작하기", description = "모의고사를 시작합니다.")
     @PostMapping("/mock-exam/start")
-    public ResponseEntity<ExamInformationDto> startMockExam(@RequestBody ExamInformationDto examInformationDto) {
-        ExamInformationDto startedExam = examService.startMockExam(examInformationDto);
+    public ResponseEntity<CreatedExamInformationResultDto> startMockExam(@RequestBody CreatedExamInformationResponseDto createdExamInformationDto) {
+        CreatedExamInformationResultDto startedExam = examService.startMockExam(createdExamInformationDto);
         return ResponseEntity.ok(startedExam);
+    }
+
+    /**
+     * ExamProblem ID를 통해 문제를 조회합니다.
+     *
+     * @param examProblemId ExamProblem ID
+     * @return 문제 정보
+     */
+    @GetMapping("/problem/{examProblemId}")
+    public ResponseEntity<ProblemDto> getProblemByExamProblemId(@PathVariable Long examProblemId) {
+        ProblemDto problemDto = examService.getProblemByExamProblemId(examProblemId);
+        return ResponseEntity.ok(problemDto);
     }
 
     @Operation(summary = "모의고사 답안 저장하기", description = "모의고사 문제의 답안을 저장합니다.")

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import pull_up.api.exam.dto.CreatedExamInformationResponseDto;
+import pull_up.api.exam.dto.CreatedExamInformationResultDto;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemDto;
 import pull_up.api.exam.entity.ExamInformation;
@@ -142,15 +144,16 @@ public class ExamService {
     /**
      * 모의고사 시작하기
      */
-    public ExamInformationDto startMockExam(ExamInformationDto examInformationDto) {
-        Member member = memberRepository.findById(examInformationDto.member().id())
+    public CreatedExamInformationResultDto startMockExam(
+        CreatedExamInformationResponseDto createdExamInformationDto) {
+        Member member = memberRepository.findById(createdExamInformationDto.member().id())
             .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
 
         ExamInformation examInformation = ExamInformation.of(
             member,
-            examInformationDto.entry(),
-            examInformationDto.category(),
-            examInformationDto.type(),
+            createdExamInformationDto.entry(),
+            createdExamInformationDto.category(),
+            createdExamInformationDto.type(),
             LocalDateTime.now(),
             null,
             null,
@@ -158,7 +161,46 @@ public class ExamService {
         );
 
         examInformationRepository.save(examInformation);
-        return ExamInformationDto.from(examInformation);
+
+        // 문제들을 랜덤으로 선택하여 저장
+        List<Problem> problems = problemRepository.findByCategory("모의고사");
+
+        Collections.shuffle(problems); // 문제를 랜덤으로 섞음
+        List<Problem> selectedProblems = problems.stream()
+            .limit(20) // 20개의 문제를 선택
+            .toList();
+
+        List<ExamProblem> examProblems = selectedProblems.stream()
+            .map(problem -> ExamProblem.of(
+                examInformation,
+                problem,
+                null, // 선택 답변은 나중에 설정
+                null
+            ))
+            .collect(Collectors.toList());
+
+        examProblemRepository.saveAll(examProblems);
+
+        // ExamProblemDto 리스트 생성
+        List<ExamProblemDto> examProblemDtos = examProblems.stream()
+            .map(ExamProblemDto::from)
+            .collect(Collectors.toList());
+
+        return CreatedExamInformationResultDto.from(examInformation, examProblemDtos);
+    }
+
+
+    /**
+     * 문제 ID를 통해 문제를 반환합니다.
+     */
+    public ProblemDto getProblemByExamProblemId(Long examProblemId) {
+        // ExamProblem 엔티티를 찾음
+        ExamProblem examProblem = examProblemRepository.findById(examProblemId)
+            .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
+
+        // ExamProblem에서 Problem을 추출하여 반환
+        Problem problem = examProblem.getProblem();
+        return ProblemDto.from(problem);
     }
 
     /**

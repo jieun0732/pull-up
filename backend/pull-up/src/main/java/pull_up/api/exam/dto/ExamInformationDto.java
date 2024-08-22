@@ -3,10 +3,8 @@ package pull_up.api.exam.dto;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import pull_up.api.exam.entity.ExamInformation;
 import pull_up.api.member.dto.MemberDto;
-import pull_up.api.problem.dto.ProblemDto;
 
 /**
  * DTO for {@link ExamInformation}
