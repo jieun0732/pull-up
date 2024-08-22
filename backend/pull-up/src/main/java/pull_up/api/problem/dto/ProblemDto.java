@@ -1,7 +1,6 @@
 package pull_up.api.problem.dto;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import pull_up.api.problem.entity.Problem;
 
 /**
