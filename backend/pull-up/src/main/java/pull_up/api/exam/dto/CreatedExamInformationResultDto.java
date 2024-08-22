@@ -1,0 +1,26 @@
+package pull_up.api.exam.dto;
+
+import java.io.Serializable;
+import java.util.List;
+import pull_up.api.exam.entity.ExamInformation;
+import pull_up.api.member.dto.MemberDto;
+
+public record CreatedExamInformationResultDto(MemberDto member, String entry, String category, String type, List<ExamProblemDto> problemIds) implements
+    Serializable {
+
+    // 팩토리 메서드 for 간편 생성
+    public static CreatedExamInformationResultDto of(MemberDto member, String entry, String category, String type, List<ExamProblemDto> problemIds) {
+        return new CreatedExamInformationResultDto(member, entry, category, type, problemIds);
+    }
+
+    // Entity로부터 DTO를 생성하는 메서드
+    public static CreatedExamInformationResultDto from(ExamInformation entity, List<ExamProblemDto> problemIds) {
+        return new CreatedExamInformationResultDto(
+            MemberDto.from(entity.getMember()),
+            entity.getEntry(),
+            entity.getCategory(),
+            entity.getType(),
+            problemIds
+        );
+    }
+}
