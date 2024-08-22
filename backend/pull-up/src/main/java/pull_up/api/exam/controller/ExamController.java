@@ -94,6 +94,7 @@ public class ExamController {
      * @param examProblemId ExamProblem ID
      * @return 문제 정보
      */
+    @Operation(summary = "모의고사 문제 하나 조회", description = "모의고사 문제 하나를 조회합니다.")
     @GetMapping("/problem/{examProblemId}")
     public ResponseEntity<ProblemDto> getProblemByExamProblemId(@PathVariable Long examProblemId) {
         ProblemDto problemDto = examService.getProblemByExamProblemId(examProblemId);
