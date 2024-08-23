@@ -37,6 +37,10 @@ public class ExamProblem extends BaseEntity {
 
     @Setter
     @Column
+    private Long ProblemNumber;
+
+    @Setter
+    @Column
     private String chosenAnswer;
 
     @Setter
@@ -50,9 +54,10 @@ public class ExamProblem extends BaseEntity {
     /**
      * 파라미터 생성자.
      */
-    private ExamProblem(ExamInformation examInformation, Problem problem, String chosenAnswer, Boolean isCorrect) {
+    private ExamProblem(ExamInformation examInformation, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
         this.examInformation = examInformation;
         this.problem = problem;
+        this.ProblemNumber = ProblemNumber;
         this.chosenAnswer = chosenAnswer;
         this.isCorrect = isCorrect;
     }
@@ -60,7 +65,7 @@ public class ExamProblem extends BaseEntity {
     /**
      * 파라미터로부터 ExamProblem 엔티티 객체를 생성하는 함수.
      */
-    public static ExamProblem of(ExamInformation examInformation, Problem problem, String chosenAnswer, Boolean isCorrect) {
-        return new ExamProblem(examInformation, problem, chosenAnswer, isCorrect);
+    public static ExamProblem of(ExamInformation examInformation, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
+        return new ExamProblem(examInformation, problem, ProblemNumber, chosenAnswer, isCorrect);
     }
 }
