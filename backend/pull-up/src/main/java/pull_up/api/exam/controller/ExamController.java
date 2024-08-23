@@ -90,7 +90,7 @@ public class ExamController {
     }
 
     @Operation(summary = "모의고사 문제 리스트 조회", description = "모의고사 문제 리스트를 조회합니다.")
-    @GetMapping("/mock-exam/problems")
+    @GetMapping("/mock-exam/problemsList")
     public ResponseEntity<List<ProblemResultDto>> getMockExamProblems() {
         List<ProblemResultDto> problems = examService.getMockExamProblems();
         return ResponseEntity.ok(problems);
@@ -98,31 +98,37 @@ public class ExamController {
 
     @Operation(summary = "모의고사 시작하기", description = "모의고사를 시작합니다.")
     @PostMapping("/mock-exam/start")
-    public ResponseEntity<CreatedExamInformationResultDto> startMockExam(@RequestBody CreatedExamInformationResponseDto createdExamInformationDto) {
-        CreatedExamInformationResultDto startedExam = examService.startMockExam(createdExamInformationDto);
+    public ResponseEntity<CreatedExamInformationResultDto> startMockExam(@RequestBody Long memberId) {
+        CreatedExamInformationResultDto startedExam = examService.startMockExam(memberId);
         return ResponseEntity.ok(startedExam);
     }
 
-    @Operation(summary = "문제 푼 여부 조회", description = "시험 정보 ID를 기준으로 문제와 푼 여부를 조회합니다.")
-    @GetMapping("/problems/solved")
+    @Operation(summary = "모의고사 문제 푼 여부 조회", description = "시험 정보 ID를 기준으로 문제와 푼 여부를 조회합니다.")
+    @GetMapping("/mock-exam/solved")
     public ResponseEntity<List<ProblemSolvedDto>> getProblemsSolvedByExamInformation(
         @RequestParam Long examInformationId) {
         List<ProblemSolvedDto> problemsSolved = examService.getProblemsSolvedByExamInformation(examInformationId);
         return ResponseEntity.ok(problemsSolved);
     }
 
+    @Operation(summary = "모의고사 문제 리스트 조회", description = "시험 정보 ID를 기준으로 문제를 조회합니다.")
+    @GetMapping("/mock-exam/problems")
+    public ResponseEntity<List<ProblemSolvedDto>> getExamProblemByExamInformation(
+        @RequestParam Long examInformationId) {
+        List<ProblemSolvedDto> problemsSolved = examService.getExamProblemByExamInformation(examInformationId);
+        return ResponseEntity.ok(problemsSolved);
+    }
+
     /**
      * ExamProblem ID를 통해 문제를 조회합니다.
-     *
-     * @param examProblemId ExamProblem ID
-     * @return 문제 정보
      */
     @Operation(summary = "모의고사 문제 하나 조회", description = "모의고사 문제 하나를 조회합니다.")
-    @GetMapping("/problem/{examProblemId}")
+    @GetMapping("/mock-exam/{examProblemId}")
     public ResponseEntity<ProblemResultDto> getProblemByExamProblemId(@PathVariable Long examProblemId) {
         ProblemResultDto problemResultDto = examService.getProblemByExamProblemId(examProblemId);
         return ResponseEntity.ok(problemResultDto);
     }
+
 
     @Operation(summary = "모의고사 답안 저장하기", description = "모의고사 문제의 답안을 저장합니다.")
     @PostMapping("/mock-exam/answer")
