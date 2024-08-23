@@ -69,13 +69,13 @@ public class ExamService {
      * 문제 리스트 조회 (골고루 풀기 및 유형별 풀기).
      */
     public List<MemberAnswerDto> getProblemList(Long memberId, String entry, String category, String type) {
-        List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberIdAndOptionalFilters(
+        List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberAndOptionalFilters(
             memberId, entry, category, type);
         return memberAnswers.stream().map(MemberAnswerDto::from).collect(Collectors.toList());
     }
 
     public List<MemberAnswerSolvedDto> getProblemSolvedList(Long memberId, String entry, String category, String type) {
-        List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberIdAndOptionalFilters(memberId, entry, category, type);
+        List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberAndOptionalFilters(memberId, entry, category, type);
 
         return memberAnswers.stream()
             .map(MemberAnswerSolvedDto::from)

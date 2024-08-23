@@ -4,6 +4,6 @@ import java.util.List;
 import pull_up.api.member.entity.MemberAnswer;
 
 public interface MemberAnswerRepositoryCustom {
-    List<MemberAnswer> findByMemberIdAndOptionalFilters(Long memberId, String entry, String category, String type);
+    List<MemberAnswer> findByMemberAndOptionalFilters(Long memberId, String entry, String category, String type);
 }
 
