@@ -11,7 +11,5 @@ public interface ExamProblemRepository extends JpaRepository<ExamProblem, Long> 
 
     List<ExamProblem> findByExamInformationId(Long examId);
 
-    Optional<ExamProblem> findByExamInformationAndProblem(ExamInformation examInformation, Problem problem);
-
-    ExamProblem findByExamInformationIdAndProblemNumber(Long examInformation_id, Long problemNumber);
+    ExamProblem findByExamInformationIdAndProblemNumber(Long examInformationId, Long problemNumber);
 }
