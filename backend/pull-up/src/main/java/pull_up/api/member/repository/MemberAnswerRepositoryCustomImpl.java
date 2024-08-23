@@ -16,7 +16,7 @@ public class MemberAnswerRepositoryCustomImpl implements MemberAnswerRepositoryC
     private EntityManager entityManager;
 
     @Override
-    public List<MemberAnswer> findByMemberIdAndOptionalFilters(Long memberId, String entry,
+    public List<MemberAnswer> findByMemberAndOptionalFilters(Long memberId, String entry,
         String category, String type) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<MemberAnswer> query = cb.createQuery(MemberAnswer.class);
@@ -24,23 +24,24 @@ public class MemberAnswerRepositoryCustomImpl implements MemberAnswerRepositoryC
 
         List<Predicate> predicates = new ArrayList<>();
 
-        // memberId는 필수 조건이므로 항상 추가합니다.
-        predicates.add(cb.equal(root.get("memberId"), memberId));
+        // 'member' 객체의 'id'를 사용하여 memberId 필터링
+        predicates.add(cb.equal(root.get("member").get("id"), memberId));
 
         // 조건이 null이 아니고 빈 값이 아닐 경우에만 필터링
         if (entry != null && !entry.isEmpty()) {
-            predicates.add(cb.equal(root.get("problemEntry"), entry));
+            predicates.add(cb.equal(root.get("problem").get("entry"), entry));
         }
 
         if (category != null && !category.isEmpty()) {
-            predicates.add(cb.equal(root.get("problemCategory"), category));
+            predicates.add(cb.equal(root.get("problem").get("category"), category));
         }
 
         if (type != null && !type.isEmpty()) {
-            predicates.add(cb.equal(root.get("problemType"), type));
+            predicates.add(cb.equal(root.get("problem").get("type"), type));
         }
 
         query.where(cb.and(predicates.toArray(new Predicate[0])));
+
 
         return entityManager.createQuery(query).getResultList();
     }
