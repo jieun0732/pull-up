@@ -1,7 +1,14 @@
 package pull_up.api.exam.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +29,7 @@ import pull_up.api.exam.repository.ExamProblemRepository;
 import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
+import pull_up.api.member.dto.MemberAnswerSolvedDto;
 import pull_up.api.member.entity.IncorrectAnswer;
 import pull_up.api.member.entity.Member;
 import pull_up.api.member.entity.MemberAnswer;
@@ -53,17 +61,25 @@ public class ExamService {
     private final ExamInformationRepository examInformationRepository;
     private final ExamProblemRepository examProblemRepository;
 
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     /**
      * 문제 리스트 조회 (골고루 풀기 및 유형별 풀기).
      */
     public List<MemberAnswerDto> getProblemList(Long memberId, String entry, String category, String type) {
-        List<MemberAnswer> memberAnswers;
-        if (type == null || type.isEmpty()) {
-            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategory(memberId, entry, category);
-        } else {
-            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategoryAndProblemType(memberId, entry, category, type);
-        }
+        List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberIdAndOptionalFilters(
+            memberId, entry, category, type);
         return memberAnswers.stream().map(MemberAnswerDto::from).collect(Collectors.toList());
+    }
+
+    public List<MemberAnswerSolvedDto> getProblemSolvedList(Long memberId, String entry, String category, String type) {
+        List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberIdAndOptionalFilters(memberId, entry, category, type);
+
+        return memberAnswers.stream()
+            .map(MemberAnswerSolvedDto::from)
+            .collect(Collectors.toList());
     }
 
     /**

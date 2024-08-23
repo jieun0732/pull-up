@@ -22,6 +22,7 @@ import pull_up.api.exam.service.ExamService;
 import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
+import pull_up.api.member.dto.MemberAnswerSolvedDto;
 import pull_up.api.problem.dto.ProblemResultDto;
 
 /**
@@ -45,6 +46,17 @@ public class ExamController {
         @RequestParam(required = false) String type) {
         List<MemberAnswerDto> problems = examService.getProblemList(memberId, entry, category, type);
         return ResponseEntity.ok(problems);
+    }
+
+    @Operation(summary = "문제 정답 여부 및 선택된 답안 조회", description = "회원이 저장한 답안에 대한 문제의 정답 여부와 선택된 답안을 조회합니다.")
+    @GetMapping("/problems/correctness")
+    public ResponseEntity<List<MemberAnswerSolvedDto>> getProblemSolvedList(
+        @RequestParam Long memberId,
+        @RequestParam(required = false) String entry,
+        @RequestParam(required = false) String category,
+        @RequestParam(required = false) String type) {
+        List<MemberAnswerSolvedDto> correctnessList = examService.getProblemSolvedList(memberId, entry, category, type);
+        return ResponseEntity.ok(correctnessList);
     }
 
     @Operation(summary = "문제 답안 저장하기", description = "회원의 문제 답안을 저장합니다.")
