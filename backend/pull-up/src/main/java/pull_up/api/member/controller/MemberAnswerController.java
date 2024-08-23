@@ -2,6 +2,7 @@ package pull_up.api.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pull_up.api.exam.dto.ExamInformationDto;
@@ -37,5 +38,13 @@ public class MemberAnswerController {
                                                                      @RequestParam(required = false) String type) {
         List<MemberAnswerDto> incorrectAnswers = memberAnswerService.getIncorrectAnswers(memberDTO, category, entry, type);
         return ResponseEntity.ok(incorrectAnswers);
+    }
+
+
+    @Operation(summary = "모의고사 외 문제에 대한 답안 생성", description = "회원에 대해 category가 '모의고사'가 아닌 문제들에 대해 빈 답안을 생성합니다.")
+    @PostMapping("/problems/problem-answers")
+    public ResponseEntity<Void> createMemberAnswersForNonMockExamProblems(@RequestParam Long memberId) {
+        memberAnswerService.createMemberAnswersForNonMockExamProblems(memberId);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
