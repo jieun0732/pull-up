@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -86,7 +87,21 @@ public class ExamService {
             .collect(Collectors.toList());
     }
 
+    /**
+     * 모의고사 문제 푼 여부 조회.
+     */
     public List<ProblemSolvedDto> getProblemsSolvedByExamInformation(Long examInformationId) {
+        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(examInformationId);
+
+        return examProblems.stream()
+            .map(ProblemSolvedDto::from)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * 모의고사 문제 목록 조회.
+     */
+    public List<ProblemSolvedDto> getExamProblemByExamInformation(Long examInformationId) {
         List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(examInformationId);
 
         return examProblems.stream()
@@ -185,15 +200,15 @@ public class ExamService {
      * 모의고사 시작하기.
      */
     public CreatedExamInformationResultDto startMockExam(
-        CreatedExamInformationResponseDto createdExamInformationDto) {
-        Member member = memberRepository.findById(createdExamInformationDto.member().id())
+        Long memberId) {
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
 
         ExamInformation examInformation = ExamInformation.of(
             member,
-            createdExamInformationDto.entry(),
-            createdExamInformationDto.category(),
-            createdExamInformationDto.type(),
+            null,
+            "모의고사",
+            null,
             LocalDateTime.now(),
             null,
             null,
@@ -202,14 +217,37 @@ public class ExamService {
 
         examInformationRepository.save(examInformation);
 
-        // 문제들을 랜덤으로 선택하여 저장
-        List<Problem> problems = problemRepository.findByCategory("모의고사");
+        // 각 카테고리에서 선택할 문제 수 설정
+        Map<String, Integer> categoryLimits = Map.of(
+            "수리", 6,
+            "언어", 7,
+            "추론", 7
+        );
 
-        Collections.shuffle(problems); // 문제를 랜덤으로 섞음
-        List<Problem> selectedProblems = problems.stream()
-            .limit(20) // 20개의 문제를 선택
-            .toList();
+// 각 카테고리에서 문제를 랜덤으로 선택할 리스트
+        List<Problem> selectedProblems = new ArrayList<>();
 
+// 각 카테고리별로 문제를 선택
+        for (Map.Entry<String, Integer> entry : categoryLimits.entrySet()) {
+            String category = entry.getKey();
+            int limit = entry.getValue();
+
+            // 카테고리별로 문제를 필터링
+            List<Problem> problems = problemRepository.findByCategory(category);
+
+            // 문제를 랜덤으로 섞음
+            Collections.shuffle(problems);
+
+            // 지정된 개수만큼 문제를 선택
+            List<Problem> chosenProblems = problems.stream()
+                .limit(limit)
+                .collect(Collectors.toList());
+
+            // 선택된 문제를 리스트에 추가
+            selectedProblems.addAll(chosenProblems);
+        }
+
+// 선택된 문제를 기반으로 ExamProblem 객체 생성
         List<ExamProblem> examProblems = selectedProblems.stream()
             .map(problem -> ExamProblem.of(
                 examInformation,
@@ -219,13 +257,15 @@ public class ExamService {
             ))
             .collect(Collectors.toList());
 
+// ExamProblem 객체를 저장
         examProblemRepository.saveAll(examProblems);
 
-        // ExamProblemDto 리스트 생성
+// ExamProblemDto 리스트 생성
         List<ExamProblemResultDto> examProblemResultDtos = examProblems.stream()
             .map(ExamProblemResultDto::from)
             .collect(Collectors.toList());
 
+// 결과를 반환
         return CreatedExamInformationResultDto.from(examInformation, examProblemResultDtos);
     }
 
