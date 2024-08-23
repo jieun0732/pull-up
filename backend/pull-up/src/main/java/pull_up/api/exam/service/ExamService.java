@@ -41,6 +41,7 @@ import pull_up.api.member.repository.IncorrectAnswerRepository;
 import pull_up.api.member.repository.MemberAnswerRepository;
 import pull_up.api.member.repository.MemberRepository;
 import pull_up.api.problem.dto.ProblemResultDto;
+import pull_up.api.problem.dto.ProblemSolvedDto;
 import pull_up.api.problem.entity.Problem;
 import pull_up.api.problem.exception.ProblemErrorCode;
 import pull_up.api.problem.exception.ProblemException;
@@ -74,11 +75,22 @@ public class ExamService {
         return memberAnswers.stream().map(MemberAnswerDto::from).collect(Collectors.toList());
     }
 
+    /**
+     * 문제 푼 여부 조회.
+     */
     public List<MemberAnswerSolvedDto> getProblemSolvedList(Long memberId, String entry, String category, String type) {
         List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberAndOptionalFilters(memberId, entry, category, type);
 
         return memberAnswers.stream()
             .map(MemberAnswerSolvedDto::from)
+            .collect(Collectors.toList());
+    }
+
+    public List<ProblemSolvedDto> getProblemsSolvedByExamInformation(Long examInformationId) {
+        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(examInformationId);
+
+        return examProblems.stream()
+            .map(ProblemSolvedDto::from)
             .collect(Collectors.toList());
     }
 

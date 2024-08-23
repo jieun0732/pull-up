@@ -24,6 +24,7 @@ import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
 import pull_up.api.member.dto.MemberAnswerSolvedDto;
 import pull_up.api.problem.dto.ProblemResultDto;
+import pull_up.api.problem.dto.ProblemSolvedDto;
 
 /**
  * 시험 관련 요청을 처리하는 컨트롤러.
@@ -100,6 +101,14 @@ public class ExamController {
     public ResponseEntity<CreatedExamInformationResultDto> startMockExam(@RequestBody CreatedExamInformationResponseDto createdExamInformationDto) {
         CreatedExamInformationResultDto startedExam = examService.startMockExam(createdExamInformationDto);
         return ResponseEntity.ok(startedExam);
+    }
+
+    @Operation(summary = "문제 푼 여부 조회", description = "시험 정보 ID를 기준으로 문제와 푼 여부를 조회합니다.")
+    @GetMapping("/problems/solved")
+    public ResponseEntity<List<ProblemSolvedDto>> getProblemsSolvedByExamInformation(
+        @RequestParam Long examInformationId) {
+        List<ProblemSolvedDto> problemsSolved = examService.getProblemsSolvedByExamInformation(examInformationId);
+        return ResponseEntity.ok(problemsSolved);
     }
 
     /**

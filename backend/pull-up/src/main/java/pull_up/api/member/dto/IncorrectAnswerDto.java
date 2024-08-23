@@ -19,7 +19,6 @@ public record IncorrectAnswerDto(Long id, MemberDto member, ProblemDto problem,
     }
 
     public static IncorrectAnswerDto from(IncorrectAnswer entity) {
-        List<ProblemDto> problemDtos = List.of();
         return new IncorrectAnswerDto(entity.getId(), MemberDto.from(entity.getMember()),
             ProblemDto.from(entity.getProblem()),
             ExamInformationDto.from(entity.getExamInformation()),
