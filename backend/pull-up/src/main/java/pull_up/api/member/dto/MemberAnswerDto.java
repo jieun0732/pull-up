@@ -20,16 +20,23 @@ public record MemberAnswerDto(Long id, MemberDto member, ProblemDto problem,
     }
 
     public static MemberAnswerDto from(MemberAnswer entity) {
-        List<ProblemDto> problemDtos = List.of();
-        return new MemberAnswerDto(entity.getId(), MemberDto.from(entity.getMember()),
+        ExamInformationDto examInformationDto = (entity.getExamInformation() != null) ?
+            ExamInformationDto.from(entity.getExamInformation()) : null;
+
+        return new MemberAnswerDto(entity.getId(), MemberDto.from(
+            entity.getMember()),
             ProblemDto.from(entity.getProblem()),
-            ExamInformationDto.from(entity.getExamInformation()), entity.getChosenAnswer(),
+            examInformationDto,
+            entity.getChosenAnswer(),
             entity.getIsCorrect());
     }
 
     public static MemberAnswer toEntity(MemberAnswerDto dto) {
-        return MemberAnswer.of(MemberDto.toEntity(dto.member()), ProblemDto.toEntity(dto.problem()),
-            ExamInformationDto.toEntity(dto.examInformation()), dto.chosenAnswer(),
+        return MemberAnswer.of(MemberDto.toEntity(
+            dto.member()),
+            ProblemDto.toEntity(dto.problem()),
+            (dto.examInformation() != null) ? ExamInformationDto.toEntity(dto.examInformation()) : null,
+            dto.chosenAnswer(),
             dto.isCorrect());
     }
 }
