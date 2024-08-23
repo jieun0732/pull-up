@@ -122,10 +122,22 @@ public class ExamController {
     /**
      * ExamProblem ID를 통해 문제를 조회합니다.
      */
-    @Operation(summary = "모의고사 문제 하나 조회", description = "모의고사 문제 하나를 조회합니다.")
+    @Operation(summary = "모의고사 문제 하나 조회(ExamProblem Id 이용)", description = "모의고사 문제 하나를 조회합니다.")
     @GetMapping("/mock-exam/{examProblemId}")
     public ResponseEntity<ProblemResultDto> getProblemByExamProblemId(@PathVariable Long examProblemId) {
         ProblemResultDto problemResultDto = examService.getProblemByExamProblemId(examProblemId);
+        return ResponseEntity.ok(problemResultDto);
+    }
+
+    /**
+     * ExamInformation ID 및 문제 번호를 통해 문제를 조회합니다.
+     */
+    @Operation(summary = "모의고사 문제 하나 조회(모의고사Id + 문제 번호 이용)", description = "모의고사 문제 하나를 조회합니다.")
+    @GetMapping("/mock-exam/problem")
+    public ResponseEntity<ProblemResultDto> getProblemByExamInformationIdAndProblemNumber(
+        @RequestParam Long examInformationId,
+        @RequestParam Long problemNumber) {
+        ProblemResultDto problemResultDto = examService.getProblemByExamInformationIdAndProblemNumber(examInformationId, problemNumber);
         return ResponseEntity.ok(problemResultDto);
     }
 

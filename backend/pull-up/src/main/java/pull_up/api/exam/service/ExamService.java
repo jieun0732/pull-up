@@ -224,10 +224,10 @@ public class ExamService {
             "추론", 7
         );
 
-// 각 카테고리에서 문제를 랜덤으로 선택할 리스트
+        // 각 카테고리에서 문제를 랜덤으로 선택할 리스트
         List<Problem> selectedProblems = new ArrayList<>();
 
-// 각 카테고리별로 문제를 선택
+        // 각 카테고리별로 문제를 선택
         for (Map.Entry<String, Integer> entry : categoryLimits.entrySet()) {
             String category = entry.getKey();
             int limit = entry.getValue();
@@ -247,25 +247,31 @@ public class ExamService {
             selectedProblems.addAll(chosenProblems);
         }
 
-// 선택된 문제를 기반으로 ExamProblem 객체 생성
-        List<ExamProblem> examProblems = selectedProblems.stream()
-            .map(problem -> ExamProblem.of(
+        // 선택된 문제를 기반으로 ExamProblem 객체 생성
+        List<ExamProblem> examProblems = new ArrayList<>();
+        Long problemNumber = 1L; // 문제 번호를 1부터 시작
+
+        for (Problem problem : selectedProblems) {
+            ExamProblem examProblem = ExamProblem.of(
                 examInformation,
                 problem,
+                problemNumber, // 문제 번호를 추가
                 null, // 선택 답변은 나중에 설정
                 null
-            ))
-            .collect(Collectors.toList());
+            );
+            examProblems.add(examProblem);
+            problemNumber++; // 다음 문제의 번호를 증가
+        }
 
-// ExamProblem 객체를 저장
+        // ExamProblem 객체를 저장
         examProblemRepository.saveAll(examProblems);
 
-// ExamProblemDto 리스트 생성
+        // ExamProblemDto 리스트 생성
         List<ExamProblemResultDto> examProblemResultDtos = examProblems.stream()
             .map(ExamProblemResultDto::from)
             .collect(Collectors.toList());
 
-// 결과를 반환
+        // 결과를 반환
         return CreatedExamInformationResultDto.from(examInformation, examProblemResultDtos);
     }
 
@@ -279,6 +285,18 @@ public class ExamService {
             .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
 
         // ExamProblem에서 Problem을 추출하여 반환
+        Problem problem = examProblem.getProblem();
+        return ProblemResultDto.from(problem);
+    }
+
+    /**
+     * 모의고사 ID 및 문제 번호를 통해 문제를 반환합니다.
+     */
+    public ProblemResultDto getProblemByExamInformationIdAndProblemNumber(Long examInformationId, Long problemNumber) {
+        ExamProblem examProblem = examProblemRepository.findByExamInformationIdAndProblemNumber(examInformationId, problemNumber);
+        if (examProblem == null) {
+            throw new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM);
+        }
         Problem problem = examProblem.getProblem();
         return ProblemResultDto.from(problem);
     }
