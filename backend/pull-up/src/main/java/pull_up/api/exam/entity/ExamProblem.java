@@ -37,7 +37,7 @@ public class ExamProblem extends BaseEntity {
 
     @Setter
     @Column
-    private Long ProblemNumber;
+    private Long problemNumber;
 
     @Setter
     @Column
@@ -57,7 +57,7 @@ public class ExamProblem extends BaseEntity {
     private ExamProblem(ExamInformation examInformation, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
         this.examInformation = examInformation;
         this.problem = problem;
-        this.ProblemNumber = ProblemNumber;
+        this.problemNumber = ProblemNumber;
         this.chosenAnswer = chosenAnswer;
         this.isCorrect = isCorrect;
     }
