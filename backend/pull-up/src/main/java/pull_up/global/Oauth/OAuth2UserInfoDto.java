@@ -9,7 +9,7 @@ import pull_up.api.member.exception.MemberException;
 
 @Slf4j
 @Builder
-public record OAuth2UserInfoDto(String name, String email) {
+public record OAuth2UserInfoDto(String name, String email, String role) {
 
     public static OAuth2UserInfoDto of(String oauthClientName, Map<String, Object> attributes) {
         return switch (oauthClientName) {
@@ -27,6 +27,7 @@ public record OAuth2UserInfoDto(String name, String email) {
         return OAuth2UserInfoDto.builder()
             .name((String) response.get("name"))
             .email((String) response.get("email"))
+            .role("naver_user")
             .build();
     }
 
@@ -37,6 +38,7 @@ public record OAuth2UserInfoDto(String name, String email) {
         return OAuth2UserInfoDto.builder()
             .name((String) profile.get("nickname"))
             .email((String) account.get("email"))
+            .role("kakao_user")
             .build();
     }
 
@@ -45,10 +47,11 @@ public record OAuth2UserInfoDto(String name, String email) {
         return OAuth2UserInfoDto.builder()
             .name((String) attributes.get("name"))
             .email((String) attributes.get("email"))
+            .role("apple_user")
             .build();
     }
 
     public Member toEntity() {
-        return Member.of(name, email, false);
+        return Member.of(name, email, false, role);
     }
 }

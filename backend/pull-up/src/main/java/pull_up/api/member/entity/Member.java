@@ -53,17 +53,17 @@ public class Member extends BaseEntity {
     /**
      * 파라미터 생성자.
      */
-    private Member(String name, String email, boolean accessCheck) {
+    private Member(String name, String email, boolean accessCheck, String role) {
         this.name = name;
         this.email = email;
         this.accessCheck = accessCheck;
-        this.role = "ROLE_USER";
+        this.role = role;
     }
 
     /**
      * 파라미터로부터 멤버 엔티티 객체를 생성하는 함수.
      */
-    public static Member of(String name, String email, boolean accessCheck) {
-        return new Member(name, email, accessCheck);
+    public static Member of(String name, String email, boolean accessCheck, String role) {
+        return new Member(name, email, accessCheck, role);
     }
 }
