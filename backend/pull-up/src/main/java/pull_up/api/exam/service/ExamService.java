@@ -187,14 +187,14 @@ public class ExamService {
         return null;
     }
 
-    /**
-     * 모의고사 문제 리스트 조회.
-     */
-    public List<ProblemResultDto> getMockExamProblems() {
-        List<Problem> problems = problemRepository.findByCategory("모의고사");
-        Collections.shuffle(problems);
-        return problems.stream().limit(20).map(ProblemResultDto::from).collect(Collectors.toList());
-    }
+//    /**
+//     * 모의고사 문제 리스트 조회.
+//     */
+//    public List<ProblemResultDto> getMockExamProblems() {
+//        List<Problem> problems = problemRepository.findByCategory("모의고사");
+//        Collections.shuffle(problems);
+//        return problems.stream().limit(20).map(ProblemResultDto::from).collect(Collectors.toList());
+//    }
 
     /**
      * 모의고사 시작하기.
@@ -241,7 +241,7 @@ public class ExamService {
             // 지정된 개수만큼 문제를 선택
             List<Problem> chosenProblems = problems.stream()
                 .limit(limit)
-                .collect(Collectors.toList());
+                .toList();
 
             // 선택된 문제를 리스트에 추가
             selectedProblems.addAll(chosenProblems);
@@ -286,7 +286,8 @@ public class ExamService {
 
         // ExamProblem에서 Problem을 추출하여 반환
         Problem problem = examProblem.getProblem();
-        return ProblemResultDto.from(problem);
+        LocalDateTime createdDate = examProblem.getExamInformation().getCreatedDate(); // createdDate 가져오기
+        return ProblemResultDto.from(problem, createdDate);
     }
 
     /**
@@ -298,7 +299,8 @@ public class ExamService {
             throw new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM);
         }
         Problem problem = examProblem.getProblem();
-        return ProblemResultDto.from(problem);
+        LocalDateTime createdDate = examProblem.getExamInformation().getCreatedDate(); // createdDate 가져오기
+        return ProblemResultDto.from(problem, createdDate); // createdDate 함께 전달
     }
 
     /**

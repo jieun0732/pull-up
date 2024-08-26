@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pull_up.api.member.dto.MemberDto;
+import pull_up.api.member.dto.MemberScoreDto;
 import pull_up.api.member.service.MemberService;
 import pull_up.global.common.response.BaseResponse;
 
@@ -38,7 +39,7 @@ public class MemberController {
      */
     @Operation(summary = "멤버 조회", description = "멤버에 대해 조회합니다.")
     @GetMapping("/{id}")
-    public BaseResponse<MemberDto> getMemberById(@PathVariable Long id) {
+    public BaseResponse<MemberScoreDto> getMemberById(@PathVariable Long id) {
         return BaseResponse.success(HttpStatus.OK.value(), "멤버 조회에 성공하였습니다.", memberService.getMemberById(id));
     }
 

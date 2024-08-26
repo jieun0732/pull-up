@@ -2,15 +2,19 @@ package pull_up.api.member.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import pull_up.api.exam.entity.ExamInformation;
 import pull_up.global.common.entity.BaseEntity;
 
 @Getter
@@ -39,6 +43,9 @@ public class Member extends BaseEntity {
     @Setter
     @Column
     private String role;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<ExamInformation> examInformations; // Member와 연결된 ExamInformation 리스트
 
     protected Member() {
     }

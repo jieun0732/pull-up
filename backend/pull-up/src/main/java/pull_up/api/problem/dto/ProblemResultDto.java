@@ -1,6 +1,7 @@
 package pull_up.api.problem.dto;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import pull_up.api.problem.entity.Problem;
 
@@ -14,12 +15,13 @@ public record ProblemResultDto(
     String type,
     String question,
     String explanation,
-    List<String> choices, // choices as a list
+    List<String> choices,
     String answer,
     String answerExplain,
     Integer totalAttempts,
     Integer incorrectAttempts,
-    Double incorrectRate
+    Double incorrectRate,
+    LocalDateTime createdDate // createdDate 필드 추가
 ) implements Serializable {
 
     public static ProblemResultDto of(
@@ -29,19 +31,20 @@ public record ProblemResultDto(
         String type,
         String question,
         String explanation,
-        List<String> choices, // choices as a list
+        List<String> choices,
         String answer,
         String answerExplain,
         Integer totalAttempts,
         Integer incorrectAttempts,
-        Double incorrectRate
+        Double incorrectRate,
+        LocalDateTime createdDate // createdDate 파라미터 추가
     ) {
         return new ProblemResultDto(id, entry, category, type, question, explanation, choices,
             answer, answerExplain, totalAttempts, incorrectAttempts,
-            incorrectRate);
+            incorrectRate, createdDate);
     }
 
-    public static ProblemResultDto from(Problem entity) {
+    public static ProblemResultDto from(Problem entity, LocalDateTime createdDate) { // createdDate 파라미터 추가
         List<String> choices = List.of(
             entity.getChoice1(),
             entity.getChoice2(),
@@ -57,12 +60,13 @@ public record ProblemResultDto(
             entity.getType(),
             entity.getQuestion(),
             entity.getExplanation(),
-            choices, // choices as a list
+            choices,
             entity.getAnswer(),
             entity.getAnswerExplain(),
             entity.getTotalAttempts(),
             entity.getIncorrectAttempts(),
-            entity.getIncorrectRate()
+            entity.getIncorrectRate(),
+            createdDate // createdDate 값 설정
         );
     }
 }
