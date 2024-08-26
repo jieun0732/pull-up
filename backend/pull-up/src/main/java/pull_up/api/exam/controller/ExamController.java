@@ -67,7 +67,7 @@ public class ExamController {
         return ResponseEntity.ok(summaries);
     }
 
-    @Operation(summary = "추론 문제 요약 조회", description = "회원이 저장한 답안에 대한 추론 문제 요약을 조회합니다.")
+    @Operation(summary = "추리 문제 요약 조회", description = "회원이 저장한 답안에 대한 추리 문제 요약을 조회합니다.")
     @GetMapping("/problems/reasoning")
     public ResponseEntity<List<ProblemTypeSummaryDto>> getReasoningProblemsSummary(
         @RequestParam Long memberId) {
