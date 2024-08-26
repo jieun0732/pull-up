@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -102,16 +103,21 @@ public class ExamService {
     private List<ProblemTypeSummaryDto> getProblemSummaryByEntry(Long memberId, String entry,
         String category) {
         // 모든 문제를 entry와 category에 따라 조회
-        List<ProblemDto> problems = problemRepository.findByEntryAndCategory(entry, category);
+        List<ProblemDto> problemDtos = problemRepository.findByEntryAndCategory(entry, category);
 
         // 각 type별로 문제 개수를 세고, 선택된 답변의 개수도 세기
-        Map<String, Long> totalProblemsByType = problems.stream()
+        Map<String, Long> totalProblemsByType = problemDtos.stream()
             .collect(Collectors.groupingBy(ProblemDto::type, Collectors.counting()));
 
-        Map<String, Long> answeredProblemsByType = problems.stream()
-            .filter(problem -> memberAnswerRepository.existsByMemberIdAndProblemId(memberId,
-                problem.id()))
-            .collect(Collectors.groupingBy(ProblemDto::type, Collectors.counting()));
+        Map<String, Long> answeredProblemsByType = new HashMap<>();
+        for (ProblemDto problemDto : problemDtos) {
+            boolean hasAnswer =
+                memberAnswerRepository.countAnsweredProblemsByMemberAndProblem(memberId,
+                    problemDto.id()) > 0;
+            if (hasAnswer) {
+                answeredProblemsByType.merge(problemDto.type(), 1L, Long::sum);
+            }
+        }
 
         // 각 타입별로 요약 정보 생성
         return totalProblemsByType.entrySet().stream()
@@ -290,6 +296,8 @@ public class ExamService {
         for (Map.Entry<String, Integer> entry : categoryLimits.entrySet()) {
             String category = entry.getKey();
             int limit = entry.getValue();
+            log.info("category" + category);
+            log.info("limit" + limit);
 
             // 카테고리별로 문제를 필터링
             List<Problem> problems = problemRepository.findByCategory(category);

@@ -22,4 +22,7 @@ public interface MemberAnswerRepository extends JpaRepository<MemberAnswer, Long
     Optional<MemberAnswer> findByMemberAndProblem(Member member, Problem problem);
 
     boolean existsByMemberIdAndProblemId(Long memberId, Long id);
+
+    @Query("SELECT COUNT(ma) FROM MemberAnswer ma WHERE ma.member.id = :memberId AND ma.problem.id = :problemId AND ma.chosenAnswer IS NOT NULL")
+    Long countAnsweredProblemsByMemberAndProblem(@Param("memberId") Long memberId, @Param("problemId") Long problemId);
 }
