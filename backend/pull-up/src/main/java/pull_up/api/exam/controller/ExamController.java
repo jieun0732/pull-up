@@ -89,16 +89,16 @@ public class ExamController {
         return ResponseEntity.ok(nextUnanswered);
     }
 
-    @Operation(summary = "모의고사 문제 리스트 조회", description = "모의고사 문제 리스트를 조회합니다.")
-    @GetMapping("/mock-exam/problemsList")
-    public ResponseEntity<List<ProblemResultDto>> getMockExamProblems() {
-        List<ProblemResultDto> problems = examService.getMockExamProblems();
-        return ResponseEntity.ok(problems);
-    }
+//    @Operation(summary = "모의고사 문제 전체 조회", description = "모의고사 문제 리스트를 조회합니다.")
+//    @GetMapping("/mock-exam/problemsList")
+//    public ResponseEntity<List<ProblemResultDto>> getMockExamProblems() {
+//        List<ProblemResultDto> problems = examService.getMockExamProblems();
+//        return ResponseEntity.ok(problems);
+//    }
 
     @Operation(summary = "모의고사 시작하기", description = "모의고사를 시작합니다.")
     @PostMapping("/mock-exam/start")
-    public ResponseEntity<CreatedExamInformationResultDto> startMockExam(@RequestBody Long memberId) {
+    public ResponseEntity<CreatedExamInformationResultDto> startMockExam(@RequestParam Long memberId) {
         CreatedExamInformationResultDto startedExam = examService.startMockExam(memberId);
         return ResponseEntity.ok(startedExam);
     }
