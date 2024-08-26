@@ -25,6 +25,7 @@ import pull_up.api.member.dto.MemberAnswerResponseDto;
 import pull_up.api.member.dto.MemberAnswerSolvedDto;
 import pull_up.api.problem.dto.ProblemResultDto;
 import pull_up.api.problem.dto.ProblemSolvedDto;
+import pull_up.api.problem.dto.ProblemTimeResultDto;
 
 /**
  * 시험 관련 요청을 처리하는 컨트롤러.
@@ -89,12 +90,12 @@ public class ExamController {
         return ResponseEntity.ok(nextUnanswered);
     }
 
-//    @Operation(summary = "모의고사 문제 전체 조회", description = "모의고사 문제 리스트를 조회합니다.")
-//    @GetMapping("/mock-exam/problemsList")
-//    public ResponseEntity<List<ProblemResultDto>> getMockExamProblems() {
-//        List<ProblemResultDto> problems = examService.getMockExamProblems();
-//        return ResponseEntity.ok(problems);
-//    }
+    @Operation(summary = "보유 모의고사 문제 전체 조회", description = "보유하고 있는 모의고사 문제를 모두 조회합니다.")
+    @GetMapping("/mock-exam/problemsList")
+    public ResponseEntity<List<ProblemResultDto>> getMockExamProblems() {
+        List<ProblemResultDto> problems = examService.getMockExamProblems();
+        return ResponseEntity.ok(problems);
+    }
 
     @Operation(summary = "모의고사 시작하기", description = "모의고사를 시작합니다.")
     @PostMapping("/mock-exam/start")
@@ -124,8 +125,8 @@ public class ExamController {
      */
     @Operation(summary = "모의고사 문제 하나 조회(ExamProblem Id 이용)", description = "모의고사 문제 하나를 조회합니다.")
     @GetMapping("/mock-exam/{examProblemId}")
-    public ResponseEntity<ProblemResultDto> getProblemByExamProblemId(@PathVariable Long examProblemId) {
-        ProblemResultDto problemResultDto = examService.getProblemByExamProblemId(examProblemId);
+    public ResponseEntity<ProblemTimeResultDto> getProblemByExamProblemId(@PathVariable Long examProblemId) {
+        ProblemTimeResultDto problemResultDto = examService.getProblemByExamProblemId(examProblemId);
         return ResponseEntity.ok(problemResultDto);
     }
 
@@ -134,10 +135,10 @@ public class ExamController {
      */
     @Operation(summary = "모의고사 문제 하나 조회(모의고사Id + 문제 번호 이용)", description = "모의고사 문제 하나를 조회합니다.")
     @GetMapping("/mock-exam/problem")
-    public ResponseEntity<ProblemResultDto> getProblemByExamInformationIdAndProblemNumber(
+    public ResponseEntity<ProblemTimeResultDto> getProblemByExamInformationIdAndProblemNumber(
         @RequestParam Long examInformationId,
         @RequestParam Long problemNumber) {
-        ProblemResultDto problemResultDto = examService.getProblemByExamInformationIdAndProblemNumber(examInformationId, problemNumber);
+        ProblemTimeResultDto problemResultDto = examService.getProblemByExamInformationIdAndProblemNumber(examInformationId, problemNumber);
         return ResponseEntity.ok(problemResultDto);
     }
 

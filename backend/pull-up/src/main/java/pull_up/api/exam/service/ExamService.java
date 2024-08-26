@@ -43,6 +43,7 @@ import pull_up.api.member.repository.MemberAnswerRepository;
 import pull_up.api.member.repository.MemberRepository;
 import pull_up.api.problem.dto.ProblemResultDto;
 import pull_up.api.problem.dto.ProblemSolvedDto;
+import pull_up.api.problem.dto.ProblemTimeResultDto;
 import pull_up.api.problem.entity.Problem;
 import pull_up.api.problem.exception.ProblemErrorCode;
 import pull_up.api.problem.exception.ProblemException;
@@ -187,14 +188,14 @@ public class ExamService {
         return null;
     }
 
-//    /**
-//     * 모의고사 문제 리스트 조회.
-//     */
-//    public List<ProblemResultDto> getMockExamProblems() {
-//        List<Problem> problems = problemRepository.findByCategory("모의고사");
-//        Collections.shuffle(problems);
-//        return problems.stream().limit(20).map(ProblemResultDto::from).collect(Collectors.toList());
-//    }
+    /**
+     * 모의고사 문제 리스트 조회.
+     */
+    public List<ProblemResultDto> getMockExamProblems() {
+        List<Problem> problems = problemRepository.findByCategory("모의고사");
+        Collections.shuffle(problems);
+        return problems.stream().limit(20).map(ProblemResultDto::from).collect(Collectors.toList());
+    }
 
     /**
      * 모의고사 시작하기.
@@ -279,7 +280,7 @@ public class ExamService {
     /**
      * 문제 ID를 통해 문제를 반환합니다.
      */
-    public ProblemResultDto getProblemByExamProblemId(Long examProblemId) {
+    public ProblemTimeResultDto getProblemByExamProblemId(Long examProblemId) {
         // ExamProblem 엔티티를 찾음
         ExamProblem examProblem = examProblemRepository.findById(examProblemId)
             .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
@@ -287,20 +288,20 @@ public class ExamService {
         // ExamProblem에서 Problem을 추출하여 반환
         Problem problem = examProblem.getProblem();
         LocalDateTime createdDate = examProblem.getExamInformation().getCreatedDate(); // createdDate 가져오기
-        return ProblemResultDto.from(problem, createdDate);
+        return ProblemTimeResultDto.from(problem, createdDate);
     }
 
     /**
      * 모의고사 ID 및 문제 번호를 통해 문제를 반환합니다.
      */
-    public ProblemResultDto getProblemByExamInformationIdAndProblemNumber(Long examInformationId, Long problemNumber) {
+    public ProblemTimeResultDto getProblemByExamInformationIdAndProblemNumber(Long examInformationId, Long problemNumber) {
         ExamProblem examProblem = examProblemRepository.findByExamInformationIdAndProblemNumber(examInformationId, problemNumber);
         if (examProblem == null) {
             throw new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM);
         }
         Problem problem = examProblem.getProblem();
         LocalDateTime createdDate = examProblem.getExamInformation().getCreatedDate(); // createdDate 가져오기
-        return ProblemResultDto.from(problem, createdDate); // createdDate 함께 전달
+        return ProblemTimeResultDto.from(problem, createdDate); // createdDate 함께 전달
     }
 
     /**
