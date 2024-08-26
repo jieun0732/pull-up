@@ -11,8 +11,9 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
     List<ProblemDto> findByEntryAndCategory(String entry, String category);
 
-    @Query("SELECT p FROM Problem p WHERE p.category = :category AND p.isDeleted = false")
-    List<Problem> findByCategory(@Param("category") String category);
+    List<Problem> findByCategory(String category);
 
     List<Problem> findByCategoryNot(String category);
+
+    List<Problem> findByCategoryAndEntry(String category, String entryName);
 }

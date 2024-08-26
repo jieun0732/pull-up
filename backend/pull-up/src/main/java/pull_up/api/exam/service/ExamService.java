@@ -282,26 +282,26 @@ public class ExamService {
 
         examInformationRepository.save(examInformation);
 
-        // 각 카테고리에서 선택할 문제 수 설정
-        Map<String, Integer> categoryLimits = Map.of(
+        // 각 entry에서 선택할 문제 수 설정
+        Map<String, Integer> entryLimits = Map.of(
             "수리", 6,
             "언어", 7,
             "추리", 7
         );
 
-        // 각 카테고리에서 문제를 랜덤으로 선택할 리스트
+        // 각 entry에서 문제를 랜덤으로 선택할 리스트
         List<Problem> selectedProblems = new ArrayList<>();
 
-        // 각 카테고리별로 문제를 선택
-        for (Map.Entry<String, Integer> entry : categoryLimits.entrySet()) {
-            String category = entry.getKey();
+        // 각 entry별로 문제를 선택
+        for (Map.Entry<String, Integer> entry : entryLimits.entrySet()) {
+            String entryName = entry.getKey();
             int limit = entry.getValue();
-            log.info("category" + category);
-            log.info("limit" + limit);
+            log.info("entry: " + entryName);
+            log.info("limit: " + limit);
 
-            // 카테고리별로 문제를 필터링
-            List<Problem> problems = problemRepository.findByCategory(category);
-            log.info("problems1" + problems);
+            // "모의고사" 카테고리와 entry별로 문제를 필터링
+            List<Problem> problems = problemRepository.findByCategoryAndEntry("모의고사", entryName);
+            log.info("problems1: " + problems);
 
             // 문제를 랜덤으로 섞음
             Collections.shuffle(problems);
@@ -310,7 +310,8 @@ public class ExamService {
             List<Problem> chosenProblems = problems.stream()
                 .limit(limit)
                 .toList();
-            log.info("problems2" + chosenProblems);
+            log.info("problems2: " + chosenProblems);
+
             // 선택된 문제를 리스트에 추가
             selectedProblems.addAll(chosenProblems);
         }
@@ -327,9 +328,9 @@ public class ExamService {
                 null, // 선택 답변은 나중에 설정
                 null
             );
-            log.info("examProblem3" + examProblem);
+            log.info("examProblem3: " + examProblem);
             examProblems.add(examProblem);
-            log.info("examProblem4" + examProblems);
+            log.info("examProblem4: " + examProblems);
             problemNumber++; // 다음 문제의 번호를 증가
         }
 
@@ -340,7 +341,8 @@ public class ExamService {
         List<ExamProblemResultDto> examProblemResultDtos = examProblems.stream()
             .map(ExamProblemResultDto::from)
             .collect(Collectors.toList());
-        log.info("examProblems5" + examProblemResultDtos);
+        log.info("examProblems5: " + examProblemResultDtos);
+
         // 결과를 반환
         return CreatedExamInformationResultDto.from(examInformation, examProblemResultDtos);
     }
