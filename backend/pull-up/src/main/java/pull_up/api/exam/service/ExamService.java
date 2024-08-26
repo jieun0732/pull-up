@@ -85,7 +85,7 @@ public class ExamService {
     }
 
     public List<ProblemTypeSummaryDto> getReasoningProblemsSummary(Long memberId) {
-        return getCombinedProblemSummary(memberId, "추론");
+        return getCombinedProblemSummary(memberId, "추리");
     }
 
     private List<ProblemTypeSummaryDto> getCombinedProblemSummary(Long memberId, String entry) {
@@ -286,7 +286,7 @@ public class ExamService {
         Map<String, Integer> categoryLimits = Map.of(
             "수리", 6,
             "언어", 7,
-            "추론", 7
+            "추리", 7
         );
 
         // 각 카테고리에서 문제를 랜덤으로 선택할 리스트
