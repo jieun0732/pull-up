@@ -30,9 +30,6 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     /**
      * 특정 ID를 가진 Member를 조회하는 엔드포인트.
