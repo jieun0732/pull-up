@@ -20,4 +20,6 @@ public interface MemberAnswerRepository extends JpaRepository<MemberAnswer, Long
         String type);
 
     Optional<MemberAnswer> findByMemberAndProblem(Member member, Problem problem);
+
+    boolean existsByMemberIdAndProblemId(Long memberId, Long id);
 }

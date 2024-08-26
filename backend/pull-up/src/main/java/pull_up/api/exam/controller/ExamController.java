@@ -26,6 +26,7 @@ import pull_up.api.member.dto.MemberAnswerSolvedDto;
 import pull_up.api.problem.dto.ProblemResultDto;
 import pull_up.api.problem.dto.ProblemSolvedDto;
 import pull_up.api.problem.dto.ProblemTimeResultDto;
+import pull_up.api.problem.dto.ProblemTypeSummaryDto;
 
 /**
  * 시험 관련 요청을 처리하는 컨트롤러.
@@ -48,6 +49,30 @@ public class ExamController {
         @RequestParam(required = false) String type) {
         List<MemberAnswerDto> problems = examService.getProblemList(memberId, entry, category, type);
         return ResponseEntity.ok(problems);
+    }
+
+    @Operation(summary = "수리 문제 요약 조회", description = "회원이 저장한 답안에 대한 수리 문제 요약을 조회합니다.")
+    @GetMapping("/problems/math")
+    public ResponseEntity<List<ProblemTypeSummaryDto>> getMathProblemsSummary(
+        @RequestParam Long memberId) {
+        List<ProblemTypeSummaryDto> summaries = examService.getMathProblemsSummary(memberId);
+        return ResponseEntity.ok(summaries);
+    }
+
+    @Operation(summary = "언어 문제 요약 조회", description = "회원이 저장한 답안에 대한 언어 문제 요약을 조회합니다.")
+    @GetMapping("/problems/language")
+    public ResponseEntity<List<ProblemTypeSummaryDto>> getLanguageProblemsSummary(
+        @RequestParam Long memberId) {
+        List<ProblemTypeSummaryDto> summaries = examService.getLanguageProblemsSummary(memberId);
+        return ResponseEntity.ok(summaries);
+    }
+
+    @Operation(summary = "추론 문제 요약 조회", description = "회원이 저장한 답안에 대한 추론 문제 요약을 조회합니다.")
+    @GetMapping("/problems/reasoning")
+    public ResponseEntity<List<ProblemTypeSummaryDto>> getReasoningProblemsSummary(
+        @RequestParam Long memberId) {
+        List<ProblemTypeSummaryDto> summaries = examService.getReasoningProblemsSummary(memberId);
+        return ResponseEntity.ok(summaries);
     }
 
     @Operation(summary = "문제 정답 여부 및 선택된 답안 조회", description = "회원이 저장한 답안에 대한 문제의 정답 여부와 선택된 답안을 조회합니다.")

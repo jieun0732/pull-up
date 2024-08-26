@@ -2,10 +2,6 @@ package pull_up.api.exam.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,7 +12,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pull_up.api.exam.dto.CreatedExamInformationResponseDto;
 import pull_up.api.exam.dto.CreatedExamInformationResultDto;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemResponseDto;
@@ -41,9 +36,11 @@ import pull_up.api.member.exception.MemberException;
 import pull_up.api.member.repository.IncorrectAnswerRepository;
 import pull_up.api.member.repository.MemberAnswerRepository;
 import pull_up.api.member.repository.MemberRepository;
+import pull_up.api.problem.dto.ProblemDto;
 import pull_up.api.problem.dto.ProblemResultDto;
 import pull_up.api.problem.dto.ProblemSolvedDto;
 import pull_up.api.problem.dto.ProblemTimeResultDto;
+import pull_up.api.problem.dto.ProblemTypeSummaryDto;
 import pull_up.api.problem.entity.Problem;
 import pull_up.api.problem.exception.ProblemErrorCode;
 import pull_up.api.problem.exception.ProblemException;
@@ -71,17 +68,69 @@ public class ExamService {
     /**
      * 문제 리스트 조회 (골고루 풀기 및 유형별 풀기).
      */
-    public List<MemberAnswerDto> getProblemList(Long memberId, String entry, String category, String type) {
+    public List<MemberAnswerDto> getProblemList(Long memberId, String entry, String category,
+        String type) {
         List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberAndOptionalFilters(
             memberId, entry, category, type);
         return memberAnswers.stream().map(MemberAnswerDto::from).collect(Collectors.toList());
     }
 
+    public List<ProblemTypeSummaryDto> getMathProblemsSummary(Long memberId) {
+        return getCombinedProblemSummary(memberId, "수리");
+    }
+
+    public List<ProblemTypeSummaryDto> getLanguageProblemsSummary(Long memberId) {
+        return getCombinedProblemSummary(memberId, "언어");
+    }
+
+    public List<ProblemTypeSummaryDto> getReasoningProblemsSummary(Long memberId) {
+        return getCombinedProblemSummary(memberId, "추론");
+    }
+
+    private List<ProblemTypeSummaryDto> getCombinedProblemSummary(Long memberId, String entry) {
+        // 골고루 학습과 유형별에 대해 각각 요약 정보를 조회
+        List<ProblemTypeSummaryDto> balancedLearningSummary = getProblemSummaryByEntry(memberId, entry, "골고루 학습");
+        List<ProblemTypeSummaryDto> typeBasedSummary = getProblemSummaryByEntry(memberId, entry, "유형별");
+
+        // 두 요약 정보를 합쳐서 반환
+        List<ProblemTypeSummaryDto> combinedSummary = new ArrayList<>();
+        combinedSummary.addAll(balancedLearningSummary);
+        combinedSummary.addAll(typeBasedSummary);
+
+        return combinedSummary;
+    }
+    private List<ProblemTypeSummaryDto> getProblemSummaryByEntry(Long memberId, String entry,
+        String category) {
+        // 모든 문제를 entry와 category에 따라 조회
+        List<ProblemDto> problems = problemRepository.findByEntryAndCategory(entry, category);
+
+        // 각 type별로 문제 개수를 세고, 선택된 답변의 개수도 세기
+        Map<String, Long> totalProblemsByType = problems.stream()
+            .collect(Collectors.groupingBy(ProblemDto::type, Collectors.counting()));
+
+        Map<String, Long> answeredProblemsByType = problems.stream()
+            .filter(problem -> memberAnswerRepository.existsByMemberIdAndProblemId(memberId,
+                problem.id()))
+            .collect(Collectors.groupingBy(ProblemDto::type, Collectors.counting()));
+
+        // 각 타입별로 요약 정보 생성
+        return totalProblemsByType.entrySet().stream()
+            .map(entrySet -> {
+                String type = entrySet.getKey();
+                Long totalProblems = entrySet.getValue();
+                Long answeredProblems = answeredProblemsByType.getOrDefault(type, 0L);
+                return ProblemTypeSummaryDto.of(type, totalProblems, answeredProblems);
+            })
+            .collect(Collectors.toList());
+    }
+
     /**
      * 문제 푼 여부 조회.
      */
-    public List<MemberAnswerSolvedDto> getProblemSolvedList(Long memberId, String entry, String category, String type) {
-        List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberAndOptionalFilters(memberId, entry, category, type);
+    public List<MemberAnswerSolvedDto> getProblemSolvedList(Long memberId, String entry,
+        String category, String type) {
+        List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberAndOptionalFilters(
+            memberId, entry, category, type);
 
         return memberAnswers.stream()
             .map(MemberAnswerSolvedDto::from)
@@ -92,7 +141,8 @@ public class ExamService {
      * 모의고사 문제 푼 여부 조회.
      */
     public List<ProblemSolvedDto> getProblemsSolvedByExamInformation(Long examInformationId) {
-        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(examInformationId);
+        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(
+            examInformationId);
 
         return examProblems.stream()
             .map(ProblemSolvedDto::from)
@@ -103,7 +153,8 @@ public class ExamService {
      * 모의고사 문제 목록 조회.
      */
     public List<ProblemSolvedDto> getExamProblemByExamInformation(Long examInformationId) {
-        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(examInformationId);
+        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(
+            examInformationId);
 
         return examProblems.stream()
             .map(ProblemSolvedDto::from)
@@ -129,7 +180,8 @@ public class ExamService {
         memberAnswer.setChosenAnswer(memberAnswerResponseDto.chosenAnswer());
 
         // 4. 정답 여부를 판별
-        boolean isCorrect = checkAnswer(memberAnswerResponseDto.problemId(), memberAnswerResponseDto.chosenAnswer());
+        boolean isCorrect = checkAnswer(memberAnswerResponseDto.problemId(),
+            memberAnswerResponseDto.chosenAnswer());
         memberAnswer.setIsCorrect(isCorrect);
 
         // 5. MemberAnswer를 저장
@@ -137,7 +189,8 @@ public class ExamService {
 
         // 6. 오답인 경우, IncorrectAnswer를 기록
         if (!isCorrect) {
-            IncorrectAnswer incorrectAnswer = IncorrectAnswer.of(member, problem, null, memberAnswerResponseDto.chosenAnswer());
+            IncorrectAnswer incorrectAnswer = IncorrectAnswer.of(member, problem, null,
+                memberAnswerResponseDto.chosenAnswer());
             incorrectAnswerRepository.save(incorrectAnswer);
         }
 
@@ -159,9 +212,11 @@ public class ExamService {
     public void resetAnswers(Long memberId, String entry, String category, String type) {
         List<MemberAnswer> memberAnswers;
         if (type == null || type.isEmpty()) {
-            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategory(memberId, entry, category);
+            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategory(
+                memberId, entry, category);
         } else {
-            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategoryAndProblemType(memberId, entry, category, type);
+            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategoryAndProblemType(
+                memberId, entry, category, type);
         }
         for (MemberAnswer answer : memberAnswers) {
             answer.setChosenAnswer(null);
@@ -173,12 +228,15 @@ public class ExamService {
     /**
      * 이어 풀기.
      */
-    public MemberAnswerDto getNextUnanswered(Long memberId, String entry, String category, String type) {
+    public MemberAnswerDto getNextUnanswered(Long memberId, String entry, String category,
+        String type) {
         List<MemberAnswer> memberAnswers;
         if (type == null || type.isEmpty()) {
-            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategory(memberId, entry, category);
+            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategory(
+                memberId, entry, category);
         } else {
-            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategoryAndProblemType(memberId, entry, category, type);
+            memberAnswers = memberAnswerRepository.findByMemberIdAndProblemEntryAndProblemCategoryAndProblemType(
+                memberId, entry, category, type);
         }
         for (MemberAnswer answer : memberAnswers) {
             if (answer.getChosenAnswer() == null) {
@@ -235,6 +293,7 @@ public class ExamService {
 
             // 카테고리별로 문제를 필터링
             List<Problem> problems = problemRepository.findByCategory(category);
+            log.info("problems1" + problems);
 
             // 문제를 랜덤으로 섞음
             Collections.shuffle(problems);
@@ -243,7 +302,7 @@ public class ExamService {
             List<Problem> chosenProblems = problems.stream()
                 .limit(limit)
                 .toList();
-
+            log.info("problems2" + chosenProblems);
             // 선택된 문제를 리스트에 추가
             selectedProblems.addAll(chosenProblems);
         }
@@ -260,7 +319,9 @@ public class ExamService {
                 null, // 선택 답변은 나중에 설정
                 null
             );
+            log.info("examProblem3" + examProblem);
             examProblems.add(examProblem);
+            log.info("examProblem4" + examProblems);
             problemNumber++; // 다음 문제의 번호를 증가
         }
 
@@ -271,7 +332,7 @@ public class ExamService {
         List<ExamProblemResultDto> examProblemResultDtos = examProblems.stream()
             .map(ExamProblemResultDto::from)
             .collect(Collectors.toList());
-
+        log.info("examProblems5" + examProblemResultDtos);
         // 결과를 반환
         return CreatedExamInformationResultDto.from(examInformation, examProblemResultDtos);
     }
@@ -287,20 +348,24 @@ public class ExamService {
 
         // ExamProblem에서 Problem을 추출하여 반환
         Problem problem = examProblem.getProblem();
-        LocalDateTime createdDate = examProblem.getExamInformation().getCreatedDate(); // createdDate 가져오기
+        LocalDateTime createdDate = examProblem.getExamInformation()
+            .getCreatedDate(); // createdDate 가져오기
         return ProblemTimeResultDto.from(problem, createdDate);
     }
 
     /**
      * 모의고사 ID 및 문제 번호를 통해 문제를 반환합니다.
      */
-    public ProblemTimeResultDto getProblemByExamInformationIdAndProblemNumber(Long examInformationId, Long problemNumber) {
-        ExamProblem examProblem = examProblemRepository.findByExamInformationIdAndProblemNumber(examInformationId, problemNumber);
+    public ProblemTimeResultDto getProblemByExamInformationIdAndProblemNumber(
+        Long examInformationId, Long problemNumber) {
+        ExamProblem examProblem = examProblemRepository.findByExamInformationIdAndProblemNumber(
+            examInformationId, problemNumber);
         if (examProblem == null) {
             throw new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM);
         }
         Problem problem = examProblem.getProblem();
-        LocalDateTime createdDate = examProblem.getExamInformation().getCreatedDate(); // createdDate 가져오기
+        LocalDateTime createdDate = examProblem.getExamInformation()
+            .getCreatedDate(); // createdDate 가져오기
         return ProblemTimeResultDto.from(problem, createdDate); // createdDate 함께 전달
     }
 
@@ -309,7 +374,8 @@ public class ExamService {
      */
     public ExamProblemResultDto saveMockExamAnswer(ExamProblemResponseDto examProblemResponseDto) {
         // 1. ExamProblem을 찾음
-        ExamProblem examProblem = examProblemRepository.findById(examProblemResponseDto.examProblemId())
+        ExamProblem examProblem = examProblemRepository.findById(
+                examProblemResponseDto.examProblemId())
             .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM_PROBLEM));
 
         // 2. 사용자가 제출한 답안을 설정
@@ -328,7 +394,8 @@ public class ExamService {
         // 6. 오답인 경우, IncorrectAnswer를 기록
         if (!isCorrect) {
             Member member = examProblem.getExamInformation().getMember();
-            IncorrectAnswer incorrectAnswer = IncorrectAnswer.of(member, problem, examProblem.getExamInformation(), examProblemResponseDto.chosenAnswer());
+            IncorrectAnswer incorrectAnswer = IncorrectAnswer.of(member, problem,
+                examProblem.getExamInformation(), examProblemResponseDto.chosenAnswer());
             incorrectAnswerRepository.save(incorrectAnswer);
         }
 
@@ -340,14 +407,17 @@ public class ExamService {
      * 모의고사 완료 및 점수 저장하기.
      */
     public ExamInformationDto completeMockExam(ExamInformationDto examInformationDto) {
-        ExamInformation examInformation = examInformationRepository.findById(examInformationDto.id())
+        ExamInformation examInformation = examInformationRepository.findById(
+                examInformationDto.id())
             .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
         examInformation.setSolvedDate(LocalDateTime.now());
 
-        List<ExamProblem> answers = examProblemRepository.findByExamInformationId(examInformationDto.id());
+        List<ExamProblem> answers = examProblemRepository.findByExamInformationId(
+            examInformationDto.id());
         int score = (int) answers.stream().filter(ExamProblem::getIsCorrect).count() * 5;
         examInformation.setScore(score);
-        examInformation.setRequiredTime(Duration.between(examInformation.getCreatedDate(), examInformation.getSolvedDate()));
+        examInformation.setRequiredTime(
+            Duration.between(examInformation.getCreatedDate(), examInformation.getSolvedDate()));
 
         examInformationRepository.save(examInformation);
         return ExamInformationDto.from(examInformation);
@@ -366,7 +436,8 @@ public class ExamService {
      */
     public IncorrectAnswerDto getIncorrectAnswer(Long id) {
         IncorrectAnswer incorrectAnswer = incorrectAnswerRepository.findById(id)
-            .orElseThrow(() -> new IncorrectAnswerException(IncorrectAnswerErrorCode.NOT_FOUND_INCORRECT_ANSWER));
+            .orElseThrow(() -> new IncorrectAnswerException(
+                IncorrectAnswerErrorCode.NOT_FOUND_INCORRECT_ANSWER));
         return IncorrectAnswerDto.from(incorrectAnswer);
     }
 }

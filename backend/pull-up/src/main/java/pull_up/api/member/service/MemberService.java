@@ -53,7 +53,8 @@ public class MemberService {
             Member member = memberOptional.get();
             member.setAccessCheck(true);
             memberRepository.save(member);
-            return new MemberDto(member.getId(), member.getName(), member.getEmail(), member.isAccessCheck());
+            return new MemberDto(member.getId(), member.getName(), member.getEmail(), member.isAccessCheck(),
+                member.getRole());
         }
         return null; // 또는 예외를 던지도록 처리할 수 있음
     }
