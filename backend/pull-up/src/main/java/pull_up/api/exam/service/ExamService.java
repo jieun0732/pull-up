@@ -109,13 +109,19 @@ public class ExamService {
         Map<String, Long> totalProblemsByType = problemDtos.stream()
             .collect(Collectors.groupingBy(ProblemDto::type, Collectors.counting()));
 
+        // 선택된 답변의 개수를 세고, 정답 여부 확인
         Map<String, Long> answeredProblemsByType = new HashMap<>();
+        Map<String, Boolean> isCorrectByType = new HashMap<>();
+
         for (ProblemDto problemDto : problemDtos) {
-            boolean hasAnswer =
-                memberAnswerRepository.countAnsweredProblemsByMemberAndProblem(memberId,
-                    problemDto.id()) > 0;
+            boolean hasAnswer = memberAnswerRepository.countAnsweredProblemsByMemberAndProblem(memberId, problemDto.id()) > 0;
+            boolean isCorrect = memberAnswerRepository.existsByMemberIdAndProblemIdAndIsCorrect(memberId, problemDto.id(), true);
+
             if (hasAnswer) {
                 answeredProblemsByType.merge(problemDto.type(), 1L, Long::sum);
+                isCorrectByType.merge(problemDto.type(), isCorrect, (oldValue, newValue) -> oldValue && newValue);
+            } else {
+                isCorrectByType.putIfAbsent(problemDto.type(), true); // 초기값을 true로 설정
             }
         }
 
@@ -125,7 +131,8 @@ public class ExamService {
                 String type = entrySet.getKey();
                 Long totalProblems = entrySet.getValue();
                 Long answeredProblems = answeredProblemsByType.getOrDefault(type, 0L);
-                return ProblemTypeSummaryDto.of(type, totalProblems, answeredProblems);
+                Boolean isCorrect = isCorrectByType.getOrDefault(type, true);
+                return ProblemTypeSummaryDto.of(type, totalProblems, answeredProblems, isCorrect);
             })
             .collect(Collectors.toList());
     }
