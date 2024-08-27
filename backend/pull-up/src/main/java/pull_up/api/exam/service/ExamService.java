@@ -25,6 +25,7 @@ import pull_up.api.exam.repository.ExamInformationRepository;
 import pull_up.api.exam.repository.ExamProblemRepository;
 import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.MemberAnswerDto;
+import pull_up.api.member.dto.MemberAnswerIndexDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
 import pull_up.api.member.dto.MemberAnswerSolvedDto;
 import pull_up.api.member.entity.IncorrectAnswer;
@@ -76,6 +77,28 @@ public class ExamService {
         return memberAnswers.stream().map(MemberAnswerDto::from).collect(Collectors.toList());
     }
 
+    /**
+     * 문제 index 리스트 조회 ( 골고루 , 유형별 )
+     */
+    public List<MemberAnswerIndexDto> getProblemIndexList(Long memberId, String entry, String category,
+        String type) {
+        List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberAndOptionalFilters(
+            memberId, entry, category, type);
+        return memberAnswers.stream().map(MemberAnswerIndexDto::from).collect(Collectors.toList());
+    }
+
+    public MemberAnswerDto getProblemByMemberAnswerId(Long memberAnswerId) {
+
+        return memberAnswerRepository.findById(memberAnswerId)
+            .map(MemberAnswerDto::from)
+            .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
+
+    }
+
+
+    /**
+     * 문제 요약 정보 조회 메서드들.
+     */
     public List<ProblemTypeSummaryDto> getMathProblemsSummary(Long memberId) {
         return getCombinedProblemSummary(memberId, "수리");
     }
@@ -90,8 +113,10 @@ public class ExamService {
 
     private List<ProblemTypeSummaryDto> getCombinedProblemSummary(Long memberId, String entry) {
         // 골고루 학습과 유형별에 대해 각각 요약 정보를 조회
-        List<ProblemTypeSummaryDto> balancedLearningSummary = getProblemSummaryByEntry(memberId, entry, "골고루 학습");
-        List<ProblemTypeSummaryDto> typeBasedSummary = getProblemSummaryByEntry(memberId, entry, "유형별");
+        List<ProblemTypeSummaryDto> balancedLearningSummary = getProblemSummaryByEntry(memberId,
+            entry, "골고루");
+        List<ProblemTypeSummaryDto> typeBasedSummary = getProblemSummaryByEntry(memberId, entry,
+            "유형별");
 
         // 두 요약 정보를 합쳐서 반환
         List<ProblemTypeSummaryDto> combinedSummary = new ArrayList<>();
@@ -100,6 +125,7 @@ public class ExamService {
 
         return combinedSummary;
     }
+
     private List<ProblemTypeSummaryDto> getProblemSummaryByEntry(Long memberId, String entry,
         String category) {
         // 모든 문제를 entry와 category에 따라 조회
@@ -114,12 +140,16 @@ public class ExamService {
         Map<String, Boolean> isCorrectByType = new HashMap<>();
 
         for (ProblemDto problemDto : problemDtos) {
-            boolean hasAnswer = memberAnswerRepository.countAnsweredProblemsByMemberAndProblem(memberId, problemDto.id()) > 0;
-            boolean isCorrect = memberAnswerRepository.existsByMemberIdAndProblemIdAndIsCorrect(memberId, problemDto.id(), true);
+            boolean hasAnswer =
+                memberAnswerRepository.countAnsweredProblemsByMemberAndProblem(memberId,
+                    problemDto.id()) > 0;
+            boolean isCorrect = memberAnswerRepository.existsByMemberIdAndProblemIdAndIsCorrect(
+                memberId, problemDto.id(), true);
 
             if (hasAnswer) {
                 answeredProblemsByType.merge(problemDto.type(), 1L, Long::sum);
-                isCorrectByType.merge(problemDto.type(), isCorrect, (oldValue, newValue) -> oldValue && newValue);
+                isCorrectByType.merge(problemDto.type(), isCorrect,
+                    (oldValue, newValue) -> oldValue && newValue);
             } else {
                 isCorrectByType.putIfAbsent(problemDto.type(), true); // 초기값을 true로 설정
             }
