@@ -53,7 +53,7 @@ public class ExamController {
     }
 
     @Operation(summary = "문제 리스트 id값 조회(골고루 및 유형별)", description = "회원이 저장한 답안에 대한 문제 id 리스트를 조회합니다.")
-    @GetMapping("/problems")
+    @GetMapping("/problemsIndex")
     public ResponseEntity<List<MemberAnswerIndexDto>> getProblemIndexList(
         @RequestParam Long memberId,
         @RequestParam(required = false) String entry,
