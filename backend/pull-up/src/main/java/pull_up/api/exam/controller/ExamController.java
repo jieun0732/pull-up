@@ -21,6 +21,7 @@ import pull_up.api.exam.dto.ExamProblemResultDto;
 import pull_up.api.exam.service.ExamService;
 import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.MemberAnswerDto;
+import pull_up.api.member.dto.MemberAnswerIndexDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
 import pull_up.api.member.dto.MemberAnswerSolvedDto;
 import pull_up.api.problem.dto.ProblemResultDto;
@@ -40,7 +41,7 @@ public class ExamController {
     @Autowired
     private ExamService examService;
 
-    @Operation(summary = "문제 리스트 조회", description = "회원이 저장한 답안에 대한 문제 리스트를 조회합니다.")
+    @Operation(summary = "문제 리스트 조회(골고루 및 유형별)", description = "회원이 저장한 답안에 대한 문제 리스트를 조회합니다.")
     @GetMapping("/problems")
     public ResponseEntity<List<MemberAnswerDto>> getProblemList(
         @RequestParam Long memberId,
@@ -49,6 +50,25 @@ public class ExamController {
         @RequestParam(required = false) String type) {
         List<MemberAnswerDto> problems = examService.getProblemList(memberId, entry, category, type);
         return ResponseEntity.ok(problems);
+    }
+
+    @Operation(summary = "문제 리스트 id값 조회(골고루 및 유형별)", description = "회원이 저장한 답안에 대한 문제 id 리스트를 조회합니다.")
+    @GetMapping("/problems")
+    public ResponseEntity<List<MemberAnswerIndexDto>> getProblemIndexList(
+        @RequestParam Long memberId,
+        @RequestParam(required = false) String entry,
+        @RequestParam(required = false) String category,
+        @RequestParam(required = false) String type) {
+        List<MemberAnswerIndexDto> problems = examService.getProblemIndexList(memberId, entry, category, type);
+        return ResponseEntity.ok(problems);
+    }
+
+    @Operation(summary = "문제 조회(골고루 및 유형별)", description = "MemberAnswer의 id를 이용하여 문제를 조회합니다.")
+    @GetMapping("/problem")
+    public ResponseEntity<MemberAnswerDto> getProblemByMemberAnswerId(
+        @RequestParam Long memberAnswerId) {
+        MemberAnswerDto memberAnswerDto = examService.getProblemByMemberAnswerId(memberAnswerId);
+        return ResponseEntity.ok(memberAnswerDto);
     }
 
     @Operation(summary = "수리 문제 요약 조회", description = "회원이 저장한 답안에 대한 수리 문제 요약을 조회합니다.")

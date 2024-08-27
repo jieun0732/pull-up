@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -36,10 +37,12 @@ public class Problem extends BaseEntity {
     @Column
     private String type;
 
+    @Lob
     @Setter
     @Column
     private String question;
 
+    @Lob
     @Setter
     @Column
     private String explanation;
@@ -68,6 +71,7 @@ public class Problem extends BaseEntity {
     @Column
     private String answer;
 
+    @Lob
     @Setter
     @Column
     private String answerExplain;
