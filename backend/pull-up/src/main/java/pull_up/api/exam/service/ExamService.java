@@ -162,7 +162,7 @@ public class ExamService {
                 Long totalProblems = entrySet.getValue();
                 Long answeredProblems = answeredProblemsByType.getOrDefault(type, 0L);
                 Boolean isCorrect = isCorrectByType.getOrDefault(type, true);
-                return ProblemTypeSummaryDto.of(type, totalProblems, answeredProblems, isCorrect);
+                return ProblemTypeSummaryDto.of(category, type, totalProblems, answeredProblems, isCorrect);
             })
             .collect(Collectors.toList());
     }
