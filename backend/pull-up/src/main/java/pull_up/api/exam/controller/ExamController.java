@@ -23,6 +23,7 @@ import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.member.dto.MemberAnswerIndexDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
+import pull_up.api.member.dto.MemberAnswerResultDto;
 import pull_up.api.member.dto.MemberAnswerSolvedDto;
 import pull_up.api.problem.dto.ProblemResultDto;
 import pull_up.api.problem.dto.ProblemSolvedDto;
@@ -43,12 +44,12 @@ public class ExamController {
 
     @Operation(summary = "문제 리스트 조회(골고루 및 유형별)", description = "회원이 저장한 답안에 대한 문제 리스트를 조회합니다.")
     @GetMapping("/problems")
-    public ResponseEntity<List<MemberAnswerDto>> getProblemList(
+    public ResponseEntity<List<MemberAnswerResultDto>> getProblemList(
         @RequestParam Long memberId,
         @RequestParam(required = false) String entry,
         @RequestParam(required = false) String category,
         @RequestParam(required = false) String type) {
-        List<MemberAnswerDto> problems = examService.getProblemList(memberId, entry, category, type);
+        List<MemberAnswerResultDto> problems = examService.getProblemList(memberId, entry, category, type);
         return ResponseEntity.ok(problems);
     }
 
