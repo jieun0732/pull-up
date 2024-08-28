@@ -27,6 +27,7 @@ import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.member.dto.MemberAnswerIndexDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
+import pull_up.api.member.dto.MemberAnswerResultDto;
 import pull_up.api.member.dto.MemberAnswerSolvedDto;
 import pull_up.api.member.entity.IncorrectAnswer;
 import pull_up.api.member.entity.Member;
@@ -70,11 +71,11 @@ public class ExamService {
     /**
      * 문제 리스트 조회 (골고루 풀기 및 유형별 풀기).
      */
-    public List<MemberAnswerDto> getProblemList(Long memberId, String entry, String category,
+    public List<MemberAnswerResultDto> getProblemList(Long memberId, String entry, String category,
         String type) {
         List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberAndOptionalFilters(
             memberId, entry, category, type);
-        return memberAnswers.stream().map(MemberAnswerDto::from).collect(Collectors.toList());
+        return memberAnswers.stream().map(MemberAnswerResultDto::from).collect(Collectors.toList());
     }
 
     /**
