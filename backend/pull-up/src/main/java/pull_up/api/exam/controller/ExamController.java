@@ -66,9 +66,9 @@ public class ExamController {
 
     @Operation(summary = "문제 조회(골고루 및 유형별)", description = "MemberAnswer의 id를 이용하여 문제를 조회합니다.")
     @GetMapping("/problem")
-    public ResponseEntity<MemberAnswerDto> getProblemByMemberAnswerId(
+    public ResponseEntity<MemberAnswerResultDto> getProblemByMemberAnswerId(
         @RequestParam Long memberAnswerId) {
-        MemberAnswerDto memberAnswerDto = examService.getProblemByMemberAnswerId(memberAnswerId);
+        MemberAnswerResultDto memberAnswerDto = examService.getProblemByMemberAnswerId(memberAnswerId);
         return ResponseEntity.ok(memberAnswerDto);
     }
 

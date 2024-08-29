@@ -91,10 +91,13 @@ public class ExamService {
         return memberAnswers.stream().map(MemberAnswerIndexDto::from).collect(Collectors.toList());
     }
 
-    public MemberAnswerDto getProblemByMemberAnswerId(Long memberAnswerId) {
+    /**
+     * MemberAnswerId를 이용한 문제 조회.
+     */
+    public MemberAnswerResultDto getProblemByMemberAnswerId(Long memberAnswerId) {
 
         return memberAnswerRepository.findById(memberAnswerId)
-            .map(MemberAnswerDto::from)
+            .map(MemberAnswerResultDto::from)
             .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
 
     }
