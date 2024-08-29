@@ -34,6 +34,8 @@ import pull_up.api.member.entity.Member;
 import pull_up.api.member.entity.MemberAnswer;
 import pull_up.api.member.exception.IncorrectAnswerErrorCode;
 import pull_up.api.member.exception.IncorrectAnswerException;
+import pull_up.api.member.exception.MemberAnswerErrorCode;
+import pull_up.api.member.exception.MemberAnswerException;
 import pull_up.api.member.exception.MemberErrorCode;
 import pull_up.api.member.exception.MemberException;
 import pull_up.api.member.repository.IncorrectAnswerRepository;
@@ -81,7 +83,8 @@ public class ExamService {
     /**
      * 문제 index 리스트 조회 ( 골고루 , 유형별 )
      */
-    public List<MemberAnswerIndexDto> getProblemIndexList(Long memberId, String entry, String category,
+    public List<MemberAnswerIndexDto> getProblemIndexList(Long memberId, String entry,
+        String category,
         String type) {
         List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberAndOptionalFilters(
             memberId, entry, category, type);
@@ -163,7 +166,8 @@ public class ExamService {
                 Long totalProblems = entrySet.getValue();
                 Long answeredProblems = answeredProblemsByType.getOrDefault(type, 0L);
                 Boolean isCorrect = isCorrectByType.getOrDefault(type, true);
-                return ProblemTypeSummaryDto.of(category, type, totalProblems, answeredProblems, isCorrect);
+                return ProblemTypeSummaryDto.of(category, type, totalProblems, answeredProblems,
+                    isCorrect);
             })
             .collect(Collectors.toList());
     }
@@ -209,22 +213,17 @@ public class ExamService {
      * 문제 답안 저장하기.
      */
     public MemberAnswerResultDto saveAnswer(MemberAnswerResponseDto memberAnswerResponseDto) {
-        // 1. Member와 Problem을 찾음
-        Member member = memberRepository.findById(memberAnswerResponseDto.memberId())
-            .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
-
-        Problem problem = problemRepository.findById(memberAnswerResponseDto.problemId())
-            .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
-
-        // 2. MemberAnswer를 찾거나 새로 생성
-        MemberAnswer memberAnswer = memberAnswerRepository.findByMemberAndProblem(member, problem)
-            .orElseGet(() -> MemberAnswer.of(member, problem, null, null, null));
+        MemberAnswer memberAnswer = memberAnswerRepository.findById(memberAnswerResponseDto.id())
+            .orElseThrow(() -> new MemberAnswerException(MemberAnswerErrorCode.NOT_FOUND_MEMBERANSWER));
 
         // 3. 사용자가 제출한 답안을 설정
         memberAnswer.setChosenAnswer(memberAnswerResponseDto.chosenAnswer());
 
+        Problem problem = memberAnswer.getProblem();
+        Member member = memberAnswer.getMember();
+
         // 4. 정답 여부를 판별
-        boolean isCorrect = checkAnswer(memberAnswerResponseDto.problemId(),
+        boolean isCorrect = checkAnswer(problem.getId(),
             memberAnswerResponseDto.chosenAnswer());
         memberAnswer.setIsCorrect(isCorrect);
 
@@ -237,6 +236,13 @@ public class ExamService {
                 memberAnswerResponseDto.chosenAnswer());
             incorrectAnswerRepository.save(incorrectAnswer);
         }
+
+        problem.setTotalAttempts(problem.getTotalAttempts() + 1);
+        if (!isCorrect) {
+            problem.setIncorrectAttempts(problem.getIncorrectAttempts() + 1);
+        }
+        problem.setIncorrectRate((double) problem.getIncorrectAttempts() / problem.getTotalAttempts() * 100);
+        problemRepository.save(problem);
 
         // 7. 결과를 DTO로 변환하여 반환
         return MemberAnswerResultDto.from(memberAnswer);

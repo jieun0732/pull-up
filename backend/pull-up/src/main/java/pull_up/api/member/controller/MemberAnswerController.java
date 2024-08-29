@@ -21,7 +21,7 @@ public class MemberAnswerController {
     @Autowired
     private MemberAnswerService memberAnswerService;
 
-    @Operation(summary = "사용자 답변 저장", description = "사용자의 문제에 대한 답변을 저장하고 정답 여부를 확인합니다.")
+    @Operation(summary = "사용자 답변 저장(사용X)", description = "사용자의 문제에 대한 답변을 저장하고 정답 여부를 확인합니다.")
     @PostMapping
     public ResponseEntity<MemberAnswerResultDto> saveAnswer(@RequestBody MemberDto memberDTO,
                                                       @RequestBody ProblemDto problemDTO,
@@ -42,7 +42,7 @@ public class MemberAnswerController {
     }
 
 
-    @Operation(summary = "모의고사 외 문제에 대한 답안 생성", description = "회원에 대해 category가 '모의고사'가 아닌 문제들에 대해 빈 답안을 생성합니다.")
+    @Operation(summary = "모의고사 외 문제에 대한 사용자 답안 생성(회원가입 시 1회 필요)", description = "회원에 대해 category가 '모의고사'가 아닌 문제들에 대해 빈 답안을 생성합니다.")
     @PostMapping("/problems/problem-answers")
     public ResponseEntity<Void> createMemberAnswersForNonMockExamProblems(@RequestParam Long memberId) {
         memberAnswerService.createMemberAnswersForNonMockExamProblems(memberId);

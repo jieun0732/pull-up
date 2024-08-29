@@ -1,7 +1,10 @@
 package pull_up.api.problem.exception;
 
-import pull_up.api.member.exception.MemberErrorCode;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class ProblemException extends RuntimeException {
 
     private ProblemErrorCode errorCode;
