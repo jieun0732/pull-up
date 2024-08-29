@@ -208,7 +208,7 @@ public class ExamService {
     /**
      * 문제 답안 저장하기.
      */
-    public MemberAnswerDto saveAnswer(MemberAnswerResponseDto memberAnswerResponseDto) {
+    public MemberAnswerResultDto saveAnswer(MemberAnswerResponseDto memberAnswerResponseDto) {
         // 1. Member와 Problem을 찾음
         Member member = memberRepository.findById(memberAnswerResponseDto.memberId())
             .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
@@ -239,7 +239,7 @@ public class ExamService {
         }
 
         // 7. 결과를 DTO로 변환하여 반환
-        return MemberAnswerDto.from(memberAnswer);
+        return MemberAnswerResultDto.from(memberAnswer);
     }
 
     /**
@@ -272,7 +272,7 @@ public class ExamService {
     /**
      * 이어 풀기.
      */
-    public MemberAnswerDto getNextUnanswered(Long memberId, String entry, String category,
+    public MemberAnswerResultDto getNextUnanswered(Long memberId, String entry, String category,
         String type) {
         List<MemberAnswer> memberAnswers;
         if (type == null || type.isEmpty()) {
@@ -284,7 +284,7 @@ public class ExamService {
         }
         for (MemberAnswer answer : memberAnswers) {
             if (answer.getChosenAnswer() == null) {
-                return MemberAnswerDto.from(answer);
+                return MemberAnswerResultDto.from(answer);
             }
         }
         return null;
