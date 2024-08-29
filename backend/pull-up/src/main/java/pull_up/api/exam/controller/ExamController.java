@@ -109,8 +109,8 @@ public class ExamController {
 
     @Operation(summary = "문제 답안 저장하기", description = "회원의 문제 답안을 저장합니다.")
     @PostMapping("/answer")
-    public ResponseEntity<MemberAnswerDto> saveAnswer(@RequestBody MemberAnswerResponseDto memberAnswerResponseDto) {
-        MemberAnswerDto savedAnswer = examService.saveAnswer(memberAnswerResponseDto);
+    public ResponseEntity<MemberAnswerResultDto> saveAnswer(@RequestBody MemberAnswerResponseDto memberAnswerResponseDto) {
+        MemberAnswerResultDto savedAnswer = examService.saveAnswer(memberAnswerResponseDto);
         return ResponseEntity.ok(savedAnswer);
     }
 
@@ -127,12 +127,12 @@ public class ExamController {
 
     @Operation(summary = "이어 풀기", description = "회원이 아직 풀지 않은 문제를 조회합니다.")
     @GetMapping("/next")
-    public ResponseEntity<MemberAnswerDto> getNextUnanswered(
+    public ResponseEntity<MemberAnswerResultDto> getNextUnanswered(
         @RequestParam Long memberId,
         @RequestParam(required = false) String entry,
         @RequestParam(required = false) String category,
         @RequestParam(required = false) String type) {
-        MemberAnswerDto nextUnanswered = examService.getNextUnanswered(memberId, entry, category, type);
+        MemberAnswerResultDto nextUnanswered = examService.getNextUnanswered(memberId, entry, category, type);
         return ResponseEntity.ok(nextUnanswered);
     }
 
