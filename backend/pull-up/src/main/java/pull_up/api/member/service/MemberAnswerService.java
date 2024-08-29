@@ -7,6 +7,7 @@ import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.entity.ExamInformation;
 import pull_up.api.exam.repository.ExamInformationRepository;
 import pull_up.api.member.dto.MemberAnswerDto;
+import pull_up.api.member.dto.MemberAnswerResultDto;
 import pull_up.api.member.dto.MemberDto;
 import pull_up.api.member.entity.Member;
 import pull_up.api.member.entity.MemberAnswer;
@@ -53,7 +54,7 @@ public class MemberAnswerService {
     }
 
     @Transactional
-    public MemberAnswerDto saveMemberAnswer(MemberDto memberDTO, ProblemDto problemDTO, ExamInformationDto examInformationDTO, String chosenAnswer) {
+    public MemberAnswerResultDto saveMemberAnswer(MemberDto memberDTO, ProblemDto problemDTO, ExamInformationDto examInformationDTO, String chosenAnswer) {
         Member member = MemberDto.toEntity(memberDTO);
         Problem problem = problemRepository.findById(problemDTO.id()).orElseThrow();
         ExamInformation examInformation = examInformationRepository.findById(examInformationDTO.id()).orElseThrow();
@@ -69,51 +70,13 @@ public class MemberAnswerService {
         MemberAnswer memberAnswer = MemberAnswer.of(member, problem, examInformation, chosenAnswer, isCorrect);
         memberAnswerRepository.save(memberAnswer);
 
-        return toDTO(memberAnswer);
+        return MemberAnswerResultDto.from(memberAnswer);
     }
 
-    public List<MemberAnswerDto> getIncorrectAnswers(MemberDto memberDTO, String category, String entry, String type) {
+    public List<MemberAnswerResultDto> getIncorrectAnswers(MemberDto memberDTO, String category, String entry, String type) {
         Member member = MemberDto.toEntity(memberDTO);
         List<MemberAnswer> incorrectAnswers = memberAnswerRepository.findIncorrectAnswers(member, category, entry, type);
-        return incorrectAnswers.stream().map(this::toDTO).collect(Collectors.toList());
-    }
-
-    private MemberAnswerDto toDTO(MemberAnswer memberAnswer) {
-        return new MemberAnswerDto(
-                memberAnswer.getId(),
-                MemberDto.from(memberAnswer.getMember()),
-                new ProblemDto(
-                        memberAnswer.getProblem().getId(),
-                        memberAnswer.getProblem().getEntry(),
-                        memberAnswer.getProblem().getCategory(),
-                        memberAnswer.getProblem().getType(),
-                        memberAnswer.getProblem().getQuestion(),
-                        memberAnswer.getProblem().getExplanation(),
-                        memberAnswer.getProblem().getChoice1(),
-                        memberAnswer.getProblem().getChoice2(),
-                        memberAnswer.getProblem().getChoice3(),
-                        memberAnswer.getProblem().getChoice4(),
-                        memberAnswer.getProblem().getChoice5(),
-                        memberAnswer.getProblem().getAnswer(),
-                        memberAnswer.getProblem().getAnswerExplain(),
-                        memberAnswer.getProblem().getTotalAttempts(),
-                        memberAnswer.getProblem().getIncorrectAttempts(),
-                        memberAnswer.getProblem().getIncorrectRate()
-                ),
-                new ExamInformationDto(
-                        memberAnswer.getExamInformation().getId(),
-                        MemberDto.from(memberAnswer.getExamInformation().getMember()),
-                        memberAnswer.getExamInformation().getEntry(),
-                        memberAnswer.getExamInformation().getCategory(),
-                        memberAnswer.getExamInformation().getType(),
-                        memberAnswer.getExamInformation().getCreatedDate(),
-                        memberAnswer.getExamInformation().getSolvedDate(),
-                        memberAnswer.getExamInformation().getRequiredTime(),
-                        memberAnswer.getExamInformation().getScore()
-                ),
-                memberAnswer.getChosenAnswer(),
-                memberAnswer.getIsCorrect()
-        );
+        return incorrectAnswers.stream().map(MemberAnswerResultDto::from).collect(Collectors.toList());
     }
 
     public void createMemberAnswersForNonMockExamProblems(Long memberId) {
