@@ -7,7 +7,6 @@ export default function ThinProgressBar({
   total,
 }: ThinProgressBarPropsType) {
   const progressWidth = `${(now / total) * 100}%`;
-
   return (
     <div className="relative mt-4 h-[2px] w-full rounded-3xl bg-blue02">
       <div

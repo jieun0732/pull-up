@@ -12,25 +12,25 @@ import {
 const etcItems = [
   {
     name: "서비스 이용약관",
-    link: "www.google.co.kr",
-    hasNextPage: true,
+    link: "https://www.notion.so/a6b5e171acc54c35a7b22ee439c4de4a",
+    hasNextPage: false,
     icon: ServiceUsageIcon,
   },
   {
     name: "개인정보처리방침",
-    link: "#",
-    hasNextPage: true,
+    link: "https://www.notion.so/acb60693bb66458faa62f3e57792e756",
+    hasNextPage: false,
     icon: PrivacyPolicyIcon,
   },
   {
     name: "로그아웃",
-    link: "#",
+    link: "/",
     hasNextPage: true,
     icon: LogoutIcon,
   },
   {
     name: "회원탈퇴",
-    link: "#",
+    link: "/main/profile/cancel",
     hasNextPage: true,
     icon: SignOutIcon,
   },
@@ -46,17 +46,17 @@ export default function ProfileMenus() {
         {etcItems.map((item) => {
           return (
             <Link
-              href={`https://${item.link}`} // 프로토콜을 추가
+              href={item.link}
               key={item.name}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={item.hasNextPage ? undefined : "_blank"}
+              rel={item.hasNextPage ? undefined : "noopener noreferrer"}
               className="flex items-center border border-b border-solid border-[#F4F3F8] px-6 py-5"
             >
               <item.icon />
               <Text size="body-03" className="w-[80%]">
                 {item.name}
               </Text>
-              {item.hasNextPage && <DepthIcon />}
+              <DepthIcon />
             </Link>
           );
         })}

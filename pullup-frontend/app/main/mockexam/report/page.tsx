@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import Header from "@/component/ui/Header";
-import MyScoreAverage from "@/component/mocktest/MyScoreAverage";
-import MyTimeAverage from "@/component/mocktest/MyTimeAverage";
-import MyWeakPart from "@/component/mocktest/MyWeakPart";
+import MyScoreAverage from "@/component/mockexam/MyScoreAverage";
+import MyTimeAverage from "@/component/mockexam/MyTimeAverage";
+import MyWeakPart from "@/component/mockexam/MyWeakPart";
 import Button from "@/component/ui/Button";
 
 export default function Page() {
@@ -12,7 +12,7 @@ export default function Page() {
       <Header
         type="cancel"
         content="이지은 님의 모의고사"
-        link="/main/mocktest"
+        link="/main/mockexam"
       />
       <MyScoreAverage />
 
@@ -20,7 +20,7 @@ export default function Page() {
 
       <MyWeakPart />
 
-      <Link href="/main/mocktest/result" className="mt-6">
+      <Link href="/main/mockexam/result" className="mt-6">
         <Button size="large" color="active">
           해설 확인하기
         </Button>

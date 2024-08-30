@@ -2,41 +2,74 @@
 
 import Button from "../ui/Button";
 import { useRouter } from "next/navigation";
+import { API } from "@/lib/API";
+import { ProblemInfo } from "@/types/problemType";
 
 interface QuestionProps {
-  questionId: number;
-  selectedId: string;
+  problemInfo: ProblemInfo;
+  selectedId: number;
   params: {
     subject: string;
     type: string;
     id: string;
   };
+  problemsCnt: number;
 }
 
 const QuestionFooterButton: React.FC<QuestionProps> = ({
-  questionId,
+  problemInfo,
   selectedId,
   params,
+  problemsCnt,
 }) => {
   const router = useRouter();
   const { subject, type, id } = params;
 
-  if (id === "1") {
-    if (selectedId !== "") {
+  console.log(problemInfo.id, problemsCnt);
+
+  const handleNextProblem = async () => {
+    try {
+      const response = await fetch(`${API}/exams/answer`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chosenAnswer: String(selectedId + 1),
+          id: problemInfo.problem.id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json(); // 응답 JSON 파싱
+      console.log("Response:", result);
+
+      // 성공적으로 응답을 받으면 라우팅
+      router.push(`/main/sectional/${subject}/${type}/${id}/solution`);
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+    }
+  };
+
+  // console.log(problemInfo);
+  // console.log(selectedId);
+  if (problemInfo.id === 1) {
+    if (selectedId !== -1) {
       return (
         <Button
           size="large"
           color="active"
           className="mt-4"
-          onClick={() =>
-            router.push(`/main/sectional/${subject}/${type}/${id}/solution`)
-          }
+          onClick={handleNextProblem}
         >
           채점하기
         </Button>
       );
     }
-    if (selectedId === "") {
+    if (selectedId === -1) {
       return (
         <Button size="large" color="nonactive" className="mt-4">
           채점하기
@@ -44,8 +77,8 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
       );
     }
   }
-  if (id != "1" && id != "20") {
-    if (selectedId === "") {
+  if (problemInfo.id != 1 && problemInfo.id != problemsCnt) {
+    if (selectedId === -1) {
       return (
         <div className="mt-4 flex gap-2">
           <Button
@@ -57,21 +90,15 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
               )
             }
           >
-            이전 문제
+            이전 문제 중간
           </Button>
-          <Button
-            size="medium"
-            color="nonactive"
-            onClick={() =>
-              router.push(`/main/sectional/${subject}/${type}/${id}/solution`)
-            }
-          >
+          <Button size="medium" color="nonactive">
             채점하기
           </Button>
         </div>
       );
     }
-    if (selectedId !== "") {
+    if (selectedId !== -1) {
       return (
         <div className="mt-4 flex gap-2">
           <Button
@@ -83,24 +110,18 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
               )
             }
           >
-            이전 문제
+            이전 문제 중간
           </Button>
-          <Button
-            size="medium"
-            color="active"
-            onClick={() =>
-              router.push(`/main/sectional/${subject}/${type}/result`)
-            }
-          >
-            채점하기
+          <Button size="medium" color="active" onClick={handleNextProblem}>
+            채점하기 중간
           </Button>
         </div>
       );
     }
   }
 
-  if (id == "20") {
-    if (selectedId === "") {
+  if (problemInfo.id === problemsCnt) {
+    if (selectedId === -1) {
       return (
         <div className="mt-4 flex gap-2">
           <Button
@@ -120,7 +141,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
         </div>
       );
     }
-    if (selectedId !== "") {
+    if (selectedId !== -1) {
       return (
         <div className="mt-4 flex gap-2">
           <Button
@@ -141,7 +162,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
               router.push(`/main/sectional/${subject}/${type}/result`)
             }
           >
-            채점하기
+            채점하기 마지막
           </Button>
         </div>
       );

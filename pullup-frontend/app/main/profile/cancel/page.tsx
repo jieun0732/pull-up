@@ -66,8 +66,8 @@ export default function Page() {
           <path
             d="M7 11L12.1333 17L18 8"
             stroke={activeCancel ? "white" : "#ACACAC"}
-            stroke-width="3.2"
-            stroke-linecap="round"
+            strokeWidth="3.2"
+            strokeLinecap="round"
           />
         </svg>
 

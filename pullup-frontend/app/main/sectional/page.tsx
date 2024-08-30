@@ -33,11 +33,12 @@ export default function Page() {
     },
     {
       name: "공간지각영역",
-      link: "/main/sectional/spatial",
+      link: "/main/sectional",
       isClosed: true,
       img: spatial,
     },
   ];
+
   return (
     <div className="bg-white px-5 pb-[91px] pt-14">
       <Text size="head-02">내가 필요한 부분만</Text>

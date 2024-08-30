@@ -4,10 +4,12 @@ import { Dispatch, SetStateAction } from "react";
 import Text from "@/component/ui/Text";
 
 interface TutorialStep1Props {
+  problemId: string;
   step: number;
 }
 
-export const TutorialStep1 = ({ step }: TutorialStep1Props) => {
+export const TutorialStep1 = ({ problemId, step }: TutorialStep1Props) => {
+  if (problemId !== "1") return;
   if (step != 1) return;
   return (
     <>
@@ -25,7 +27,7 @@ export const TutorialStep1 = ({ step }: TutorialStep1Props) => {
 export const TutorialStep1SpeechBubble = ({ step }: TutorialStep1Props) => {
   if (step != 1) return;
   return (
-    <div className="relative top-16 z-20 mr-5 flex w-fit items-center gap-3 self-end rounded-[0.4em] bg-blue03 px-5 py-3 text-blue01 after:absolute after:right-1 after:top-1/2 after:-mr-[15px] after:-mt-[15px] after:h-0 after:w-0 after:border-b-[15px] after:border-l-[15px] after:border-r-0 after:border-t-[15px] after:border-b-transparent after:border-l-blue03 after:border-t-transparent after:content-['']">
+    <div className="relative top-10 z-20 mr-5 flex w-fit items-center gap-3 self-end rounded-[0.4em] bg-blue03 px-5 py-3 text-blue01 after:absolute after:right-1 after:top-1/2 after:-mr-[15px] after:-mt-[15px] after:h-0 after:w-0 after:border-b-[15px] after:border-l-[15px] after:border-r-0 after:border-t-[15px] after:border-b-transparent after:border-l-blue03 after:border-t-transparent after:content-['']">
       모의고사 풀러가기
       <svg
         xmlns="http://www.w3.org/2000/svg"

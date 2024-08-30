@@ -3,7 +3,7 @@
 import Header from "@/component/ui/Header";
 import { dummywrong } from "@/constants/dummywrong";
 import Button from "@/component/ui/Button";
-import { sections } from "@/constants/constants";
+import { entryMap } from "@/constants/constants";
 import Text from "@/component/ui/Text";
 
 export default function Page() {
@@ -22,7 +22,7 @@ export default function Page() {
               >
                 <div className="mb-4 flex w-full items-center gap-[7px]">
                   <Button size="small" color="activeLight">
-                    {sections[item.section]}
+                    {entryMap[item.section]}
                   </Button>
                   <Button size="small" color="nonactive">
                     골고루 학습

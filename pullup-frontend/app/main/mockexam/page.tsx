@@ -61,7 +61,7 @@ export default function Page() {
             size="large"
             color="active"
             className="mb-11"
-            onClick={() => router.push("/main/mocktest/1")}
+            onClick={() => router.push("/main/mockexam/1")}
           >
             모의고사 풀기
           </Button>

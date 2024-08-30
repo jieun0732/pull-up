@@ -23,25 +23,25 @@ const getItemStyle = (id: number, type: QuestionType) => {
     wrong: {
       icon: WrongIcon,
       buttontype: "red",
-      link: `/main/solution/mocktest/${id}`,
+      link: `/main/solution/mockexam/${id}`,
       text: "해설 확인하기",
     },
     right: {
       icon: CorrectIcon,
       buttontype: "green",
-      link: `/main/solution/mocktest/${id}`,
+      link: `/main/solution/mockexam/${id}`,
       text: "해설 확인하기",
     },
     active: {
       icon: ActiveQIcon,
       buttontype: "active",
-      link: "/main/mocktest",
+      link: "/main/mockexam",
       text: "이어서 풀기",
     },
     nonactive: {
       icon: NonActiveQIcon,
       buttontype: "nonactive",
-      link: "/main/mocktest/report",
+      link: "/main/mockexam/report",
       text: "이어서 풀기",
     },
   };

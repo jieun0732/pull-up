@@ -8,64 +8,111 @@ import ProgressBar from "@/component/sectional/progressbar";
 import Button from "@/component/ui/Button";
 import Header from "@/component/ui/Header";
 import Text from "@/component/ui/Text";
-import { sections } from "@/constants/constants";
 import { ReplayIcon, ArrowIcon } from "@/assets/icon";
 import ReplaySpeechBubble from "@/component/sectional/ReplaySpeechBubble";
+import useSWR from "swr";
+import { Category } from "@/types/sectionalType";
+import { API, fetcher } from "@/lib/API";
+import { useState } from "react";
+import { entryMap } from "@/constants/constants";
+import { ProblemInfo } from "@/types/problemType";
 
-const dummydata = {
-  isFinished: false,
-  data: [
-    {
-      id: 0,
-      type: "유의어",
-      now: 4,
-      total: 10,
-      hasWrong: true,
-    },
-    {
-      id: 1,
-      type: "반의어",
-      now: 2,
-      total: 10,
-      hasWrong: false,
-    },
-    {
-      id: 2,
-      type: "유의어1",
-      now: 0,
-      total: 10,
-      hasWrong: false,
-    },
-  ],
-};
 export default function Page() {
   const router = useRouter();
   const params = useParams<{ subject: string }>();
-  const currentSection = sections[params.subject];
+
+  const entry = entryMap[params.subject];
+  const [category, setCategory] = useState<string>("골고루");
+  const memberID = 1;
+
+  const { data, error } = useSWR<Category[]>(
+    `${API}/exams/problems/${params.subject}?memberId=1`,
+    fetcher,
+  );
+
+  const isFinished = data?.some(
+    (item) => item.category === "골고루" && item.answeredProblems !== 0,
+  );
+
+  if (!data) return;
 
   return (
     <div className="flex flex-col items-center px-5 pb-7 pt-14">
-      <Header type="back" content={currentSection} link={`/main/sectional/`} />
+      <Header type="back" content={`${entry}영역`} link={`/main/sectional/`} />
       <Text size="head-02" className="self-start">
-        {currentSection}의 대표 예제를
+        {entry}영역의 대표 예제를
       </Text>
       <Text size="head-02" className="self-start">
         다양하게 만나보고 싶다면?
       </Text>
 
       <div className="relative mt-4 flex w-full flex-col items-center gap-4 rounded-3xl bg-blue03 p-6">
-        {dummydata.isFinished ? (
+        {isFinished ? (
           <>
             <ReplayIcon
               className="absolute right-6"
-              onClick={() => console.log("replay")}
+              onClick={() => {
+                const queryString = new URLSearchParams({
+                  memberId: memberID.toString(),
+                  entry,
+                  category,
+                }).toString();
+                fetch(`${API}/exams/reset?${queryString}`, {
+                  method: "POST",
+                })
+                  .then((response) => {
+                    console.log("============");
+                    router.push(`/main/sectional/${params.subject}/mix/1`);
+
+                    // response.json();
+                  })
+                  .then((result) => console.log(result));
+              }}
             />
             <Image
               className="w-[185px]"
               src={finishedLogo}
               alt="Profile Image"
             />
-            <Button size="large" color="active">
+            <Button
+              size="large"
+              color="active"
+              onClick={() => {
+                const queryString = new URLSearchParams({
+                  memberId: memberID.toString(),
+                  entry,
+                  category,
+                }).toString();
+
+                const fetchNextProblem = async () => {
+                  try {
+                    const response = await fetch(
+                      `${API}/exams/next?${queryString}`,
+                      {
+                        method: "GET",
+                      },
+                    );
+
+                    if (!response.ok) {
+                      throw new Error("Network response was not ok");
+                    }
+
+                    const res: ProblemInfo = await response.json(); // 타입 지정
+                    const nextProblemId = res.id;
+
+                    router.push(
+                      `/main/sectional/${params.subject}/mix/${nextProblemId}`,
+                    );
+                  } catch (error) {
+                    console.error(
+                      "There was a problem with the fetch operation:",
+                      error,
+                    );
+                  }
+                };
+                fetchNextProblem();
+              }}
+            >
               남은 문제 이어서 풀기
             </Button>
             <button className="flex w-full items-center justify-center gap-2 font-semibold text-blue01">
@@ -77,7 +124,23 @@ export default function Page() {
           <>
             <ReplayIcon
               className="absolute right-6"
-              onClick={() => console.log("replay")}
+              onClick={() => {
+                const queryString = new URLSearchParams({
+                  memberId: memberID.toString(),
+                  entry,
+                  category,
+                }).toString();
+                fetch(`${API}/exams/reset?${queryString}`, {
+                  method: "POST",
+                })
+                  .then((response) => {
+                    console.log("============");
+                    router.push(`/main/sectional/${params.subject}/mix/1`);
+
+                    // response.json();
+                  })
+                  .then((result) => console.log(result));
+              }}
             />
             <Image
               className="w-44 rounded-full"
@@ -103,8 +166,9 @@ export default function Page() {
       <Text size="head-04" color="text-gray01" className="mb-2 self-start">
         문제 유형 2
       </Text>
-      {dummydata.data.map((item) => {
-        return (
+      {data
+        ?.filter((item) => item.category === "유형별")
+        .map((item, idx) => (
           <div
             key={item.type}
             className="mb-4 w-full rounded-md border border-solid border-white03 bg-white02 px-6 py-4 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.07)]"
@@ -113,23 +177,26 @@ export default function Page() {
               size="head-04"
               className="mb-1 flex items-center gap-3 self-start"
             >
-              {item.type} {item.now}/{item.total}
+              {item.type} {item.answeredProblems}/{item.totalProblems}
               <ReplayIcon
                 className="relative"
                 onClick={() => console.log("replay")}
               >
-                {item.id === 0 && <ReplaySpeechBubble />}
+                {idx === 0 && <ReplaySpeechBubble />}
               </ReplayIcon>
             </Text>
 
-            {item.hasWrong && (
+            {!item.isCorrect && (
               <Text size="caption-02" color="text-red01">
                 ㅇㅇ 님이 틀렸던 유형이에요!
               </Text>
             )}
-            <ProgressBar now={item.now} total={item.total} />
+            <ProgressBar
+              now={item.answeredProblems}
+              total={item.totalProblems}
+            />
             <div className="mt-3 flex w-full gap-2">
-              {item.now ? (
+              {item.answeredProblems ? (
                 <>
                   <Button size="medium" color="activeLight">
                     학습하기
@@ -150,8 +217,7 @@ export default function Page() {
               )}
             </div>
           </div>
-        );
-      })}
+        ))}
     </div>
   );
 }

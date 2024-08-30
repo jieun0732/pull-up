@@ -1,21 +1,23 @@
 interface ChoiceItemProps {
-  item: { id: number; name: string };
+  idx: number;
+  choice: string;
   isSelected: boolean;
-  selectedId: string | null;
-  setSelectedId: (id: string) => void;
+  selectedId: number;
+  setSelectedId: (id: number) => void;
 }
 
 const ChoiceItem = ({
-  item,
+  idx,
+  choice,
   isSelected,
   selectedId,
   setSelectedId,
 }: ChoiceItemProps) => {
   const handleClick = () => {
-    if (selectedId === String(item.id)) {
-      setSelectedId("");
+    if (selectedId === idx) {
+      setSelectedId(-1);
     } else {
-      setSelectedId(String(item.id));
+      setSelectedId(idx);
     }
   };
 
@@ -31,9 +33,9 @@ const ChoiceItem = ({
           isSelected ? "bg-black01 text-white" : "bg-white text-black01"
         }`}
       >
-        {item.id}
+        {idx + 1}
       </div>
-      <div>{item.name}</div>
+      <div>{choice}</div>
     </div>
   );
 };

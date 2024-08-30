@@ -6,11 +6,18 @@ import Image from "next/image";
 import pop from "@/assets/defaultImages/pop.png";
 
 interface TutorialStep0Props {
+  problemId: string;
   step: number;
   setStep: Dispatch<SetStateAction<number>>;
 }
 
-export const TutorialStep0 = ({ step, setStep }: TutorialStep0Props) => {
+export const TutorialStep0 = ({
+  problemId,
+  step,
+  setStep,
+}: TutorialStep0Props) => {
+  if (problemId !== "1") return;
+
   if (step != 0) return;
   return (
     <Image

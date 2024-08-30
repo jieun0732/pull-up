@@ -2,6 +2,10 @@
 
 import { dummyQlist } from "./dummyQlist";
 import Button from "../ui/Button";
+import { API } from "@/lib/API";
+import { useRouter } from "next/navigation";
+import { ProblemBeingSolved } from "@/types/mockexam/mockexamQuestion";
+import useSWR from "swr";
 
 interface QuestionListPropType {
   showQuestions: boolean;
@@ -12,10 +16,24 @@ function QuestionList({
   showQuestions,
   setShowQuestions,
 }: QuestionListPropType) {
+  const router = useRouter();
+
   const handleClick = () => {
     setShowQuestions(false);
   };
 
+  const handleMoveQuestion = (id: number) => {
+    setShowQuestions(false);
+    router.push(`/main/mockexam/${id}`);
+  };
+
+  const { data, error } = useSWR<ProblemBeingSolved[]>(
+    showQuestions ? `${API}/exams/mock-exam/solved?examInformationId=1` : null,
+  );
+
+  if (error) return <div>Failed to load questions</div>;
+
+  console.log(data);
   return (
     <>
       {showQuestions && (
@@ -26,9 +44,8 @@ function QuestionList({
           ></div>
         </>
       )}
-
       <div
-        className={`absolute bottom-9 z-50 ml-[16px] flex w-[calc(100%-32px)] flex-col items-center justify-between rounded-3xl bg-white px-5 pb-9 pt-3 duration-500 ease-out ${
+        className={`absolute bottom-9 z-50 flex w-[calc(100%-32px)] flex-col items-center justify-between rounded-3xl bg-white px-5 pb-9 pt-3 duration-500 ease-out ${
           showQuestions ? "animate-fadeInUp" : "invisible animate-fadeOutDown"
         }`}
       >
@@ -49,15 +66,16 @@ function QuestionList({
           />
         </svg>
         <div className="grid w-full grid-cols-5 justify-items-center gap-y-4">
-          {dummyQlist.qlist.map(({ isDone, id }) => {
-            const boxStyle = isDone
+          {data?.map(({ id, chosenAnswer }) => {
+            const boxStyle = chosenAnswer
               ? "border-blue01 bg-blue03 text-blue01"
               : "border-gray02 bg-gray03 text-gray02";
 
             return (
               <div
+                onClick={() => handleMoveQuestion(id)}
                 key={id}
-                className={`flex h-11 w-11 items-center justify-center space-x-4 rounded-md border border-solid text-center text-[17px] font-semibold ${
+                className={`flex h-11 w-11 cursor-pointer items-center justify-center space-x-4 rounded-md border border-solid text-center text-[17px] font-semibold ${
                   boxStyle
                 }`}
               >

@@ -2,7 +2,7 @@ export const ButtonSizes = {
   xsmall: 22,
   small: "px-2 py-1 rounded-sm text-[13px]",
   medium: "w-[50%] rounded-md py-3",
-  large: "w-full rounded-md font-semibold text-base py-[17.5px]",
+  large: "w-full rounded-md font-semibold text-base py-[17px]",
 };
 
 export const ButtonStyles = {
@@ -35,9 +35,14 @@ export const TextStyles = {
   "caption-02": "font-normal text-[11px]",
 };
 
-export const sections: Record<string, string> = {
-  language: "언어영역",
-  reasoning: "추리영역",
-  math: "수리영역",
-  spatial: "공간지각영역",
+export const entryMap: Record<string, string> = {
+  language: "언어",
+  reasoning: "추리",
+  math: "수리",
+  spatial: "공간지각",
+};
+
+export const categoryMap: Record<string, string> = {
+  mix: "골고루",
+  type: "유형별",
 };

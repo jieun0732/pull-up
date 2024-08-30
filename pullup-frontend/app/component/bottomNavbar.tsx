@@ -8,7 +8,7 @@ const navbarItem = [
   {
     name: "모의고사",
     Icon: MockTestIcon,
-    link: "/main/mocktest",
+    link: "/main/mockexam",
   },
   {
     name: "영역별",
