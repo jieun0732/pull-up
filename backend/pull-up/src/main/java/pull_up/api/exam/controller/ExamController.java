@@ -20,6 +20,7 @@ import pull_up.api.exam.dto.ExamProblemResponseDto;
 import pull_up.api.exam.dto.ExamProblemResultDto;
 import pull_up.api.exam.service.ExamService;
 import pull_up.api.member.dto.IncorrectAnswerDto;
+import pull_up.api.member.dto.IncorrectAnswerResultDto;
 import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.member.dto.MemberAnswerIndexDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
@@ -205,15 +206,15 @@ public class ExamController {
 
     @Operation(summary = "틀린 문제 리스트 조회하기", description = "회원이 틀린 문제 리스트를 조회합니다.")
     @GetMapping("/incorrect-answers")
-    public ResponseEntity<List<IncorrectAnswerDto>> getIncorrectAnswers(@RequestParam Long memberId) {
-        List<IncorrectAnswerDto> incorrectAnswers = examService.getIncorrectAnswers(memberId);
+    public ResponseEntity<List<IncorrectAnswerResultDto>> getIncorrectAnswers(@RequestParam Long memberId) {
+        List<IncorrectAnswerResultDto> incorrectAnswers = examService.getIncorrectAnswers(memberId);
         return ResponseEntity.ok(incorrectAnswers);
     }
 
     @Operation(summary = "틀린 문제 상세 조회하기", description = "회원이 틀린 문제의 상세 정보를 조회합니다.")
     @GetMapping("/incorrect-answers/{id}")
-    public ResponseEntity<IncorrectAnswerDto> getIncorrectAnswer(@PathVariable Long id) {
-        IncorrectAnswerDto incorrectAnswer = examService.getIncorrectAnswer(id);
+    public ResponseEntity<IncorrectAnswerResultDto> getIncorrectAnswer(@PathVariable Long id) {
+        IncorrectAnswerResultDto incorrectAnswer = examService.getIncorrectAnswer(id);
         return ResponseEntity.ok(incorrectAnswer);
     }
 }

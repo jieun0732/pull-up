@@ -24,6 +24,7 @@ import pull_up.api.exam.exception.ExamException;
 import pull_up.api.exam.repository.ExamInformationRepository;
 import pull_up.api.exam.repository.ExamProblemRepository;
 import pull_up.api.member.dto.IncorrectAnswerDto;
+import pull_up.api.member.dto.IncorrectAnswerResultDto;
 import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.member.dto.MemberAnswerIndexDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
@@ -483,18 +484,21 @@ public class ExamService {
     /**
      * 틀린 문제 리스트 조회하기.
      */
-    public List<IncorrectAnswerDto> getIncorrectAnswers(Long memberId) {
+    public List<IncorrectAnswerResultDto> getIncorrectAnswers(Long memberId) {
         List<IncorrectAnswer> incorrectAnswers = incorrectAnswerRepository.findByMemberId(memberId);
-        return incorrectAnswers.stream().map(IncorrectAnswerDto::from).collect(Collectors.toList());
+        if (incorrectAnswers == null || incorrectAnswers.isEmpty()) {
+            return null;
+        }
+        return incorrectAnswers.stream().map(IncorrectAnswerResultDto::from).collect(Collectors.toList());
     }
 
     /**
      * 틀린 문제 상세 조회하기.
      */
-    public IncorrectAnswerDto getIncorrectAnswer(Long id) {
+    public IncorrectAnswerResultDto getIncorrectAnswer(Long id) {
         IncorrectAnswer incorrectAnswer = incorrectAnswerRepository.findById(id)
             .orElseThrow(() -> new IncorrectAnswerException(
                 IncorrectAnswerErrorCode.NOT_FOUND_INCORRECT_ANSWER));
-        return IncorrectAnswerDto.from(incorrectAnswer);
+        return IncorrectAnswerResultDto.from(incorrectAnswer);
     }
 }
