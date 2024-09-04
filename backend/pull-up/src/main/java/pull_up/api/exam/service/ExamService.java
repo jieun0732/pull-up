@@ -1,7 +1,5 @@
 package pull_up.api.exam.service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,12 +7,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pull_up.api.exam.dto.CreatedExamInformationResultDto;
+import pull_up.api.exam.dto.ExamInformationAverageScoreDto;
+import pull_up.api.exam.dto.ExamInformationDetailDto;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemResponseDto;
 import pull_up.api.exam.dto.ExamProblemResultDto;
@@ -45,6 +48,7 @@ import pull_up.api.problem.dto.ProblemDto;
 import pull_up.api.problem.dto.ProblemResultDto;
 import pull_up.api.problem.dto.ProblemSolvedDto;
 import pull_up.api.problem.dto.ProblemTimeResultDto;
+import pull_up.api.problem.dto.ProblemTypeResultDto;
 import pull_up.api.problem.dto.ProblemTypeSummaryDto;
 import pull_up.api.problem.entity.Problem;
 import pull_up.api.problem.exception.ProblemErrorCode;
@@ -528,4 +532,139 @@ public class ExamService {
                 IncorrectAnswerErrorCode.NOT_FOUND_INCORRECT_ANSWER));
         return IncorrectAnswerResultDto.from(incorrectAnswer);
     }
+
+    /**
+     * 전체 모의고사의 평균 점수 및 평균 소요 시간 구하기.
+     */
+    public ExamInformationAverageScoreDto calculateAverageScore() {
+        List<ExamInformation> examInformations = examInformationRepository.findAll();
+
+        if (examInformations.isEmpty()) {
+            return ExamInformationAverageScoreDto.of(0.0, Duration.ZERO); // 조회된 데이터가 없을 경우, 평균 점수는 0
+        }
+
+        Duration totalDuration = examInformations.stream()
+            .map(ExamInformation::getRequiredTime)
+            .filter(Objects::nonNull)
+            .reduce(Duration.ZERO, Duration::plus);
+
+        double totalScore = examInformations.stream()
+            .mapToInt(ExamInformation::getScore)
+            .sum();
+
+        double averageScore = totalScore / examInformations.size();
+        return ExamInformationAverageScoreDto.of(averageScore, totalDuration);
+    }
+
+    /**
+     * 모의고사 문제 유형별로 총 문제 수와 맞힌 문제 수를 반환합니다.
+     */
+    public List<ProblemTypeResultDto> getProblemTypeResults(Long examInformationId) {
+        ExamInformation examInformation = examInformationRepository.findById(examInformationId)
+            .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
+
+        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(examInformationId);
+
+        Map<String, List<ExamProblem>> groupedByEntry = examProblems.stream()
+            .collect(Collectors.groupingBy(examProblem -> examProblem.getProblem().getEntry()));
+
+        return groupedByEntry.entrySet().stream()
+            .map(entry -> {
+                String entryName = entry.getKey();
+                List<ExamProblem> problems = entry.getValue();
+                int totalProblems = problems.size();
+                int correctProblems = (int) problems.stream().filter(ExamProblem::getIsCorrect).count();
+
+                return ProblemTypeResultDto.of(entryName, totalProblems, correctProblems);
+            })
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * 멤버의 가장 최근 ExamInformation 가져오기.
+     */
+    public ExamInformationDetailDto getRecentExamInformation(Long memberId) {
+        ExamInformation recentExamInformation = examInformationRepository.findTopByMemberIdOrderByCreatedDateDesc(memberId)
+            .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
+
+        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(recentExamInformation.getId());
+
+        Map<String, List<ExamProblem>> groupedByEntry = examProblems.stream()
+            .collect(Collectors.groupingBy(examProblem -> examProblem.getProblem().getEntry()));
+
+        List<ProblemTypeResultDto> problemTypeResults = groupedByEntry.entrySet().stream()
+            .map(entry -> {
+                String entryName = entry.getKey();
+                List<ExamProblem> problems = entry.getValue();
+                int totalProblems = problems.size();
+                int correctProblems = (int) problems.stream().filter(ExamProblem::getIsCorrect).count();
+
+                return ProblemTypeResultDto.of(entryName, totalProblems, correctProblems);
+            })
+            .collect(Collectors.toList());
+
+        int totalCorrectAnswers = (int) examProblems.stream().filter(ExamProblem::getIsCorrect).count();
+        String rankPercent = calculateRankPercent(totalCorrectAnswers);
+
+        List<ExamInformation> allExams = examInformationRepository.findAll();
+
+        OptionalDouble averageScoreOpt = allExams.stream()
+            .mapToInt(ExamInformation::getScore)
+            .average();
+
+        double averageScore = averageScoreOpt.orElse(0.0);
+
+        Duration totalDuration = allExams.stream()
+            .map(ExamInformation::getRequiredTime)
+            .filter(Objects::nonNull)
+            .reduce(Duration.ZERO, Duration::plus);
+
+        Duration averageTime = totalDuration.isZero() ? null : totalDuration.dividedBy(allExams.size());
+
+        return ExamInformationDetailDto.of(
+            recentExamInformation.getId(),
+            recentExamInformation.getCreatedDate(),
+            recentExamInformation.getSolvedDate(),
+            recentExamInformation.getRequiredTime(),
+            recentExamInformation.getScore(),
+            problemTypeResults,
+            averageScore,
+            averageTime,
+            totalCorrectAnswers,
+            rankPercent
+        );
+    }
+
+
+    /**
+     * 맞힌 문제 수에 따라 상위 퍼센트 계산.
+     */
+    private String calculateRankPercent(int correctAnswers) {
+        Map<Integer, String> rankMap = Map.ofEntries(
+            Map.entry(20, "상위 3%"),
+            Map.entry(19, "상위 7%"),
+            Map.entry(18, "상위 11%"),
+            Map.entry(17, "상위 15%"),
+            Map.entry(16, "상위 18%"),
+            Map.entry(15, "상위 21%"),
+            Map.entry(14, "상위 24%"),
+            Map.entry(13, "상위 29%"),
+            Map.entry(12, "상위 31%"),
+            Map.entry(11, "상위 35%"),
+            Map.entry(10, "상위 39%"),
+            Map.entry(9, "상위 44%"),
+            Map.entry(8, "상위 50%"),
+            Map.entry(7, "상위 56%"),
+            Map.entry(6, "상위 63%"),
+            Map.entry(5, "상위 68%"),
+            Map.entry(4, "상위 74%"),
+            Map.entry(3, "상위 82%"),
+            Map.entry(2, "상위 88%"),
+            Map.entry(1, "상위 91%"),
+            Map.entry(0, "상위 96%")
+        );
+
+        return rankMap.getOrDefault(correctAnswers, "순위 정보 없음");
+    }
+
 }

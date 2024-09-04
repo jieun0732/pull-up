@@ -59,4 +59,13 @@ public class MemberService {
         return null; // 또는 예외를 던지도록 처리할 수 있음
     }
 
+    /**
+     * 멤버 탈퇴.
+     */
+    public void deleteMember(Long id) {
+        Member member = memberRepository.findById(id)
+            .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER)); // 예외 던지기
+        member.softDelete();
+    }
+
 }

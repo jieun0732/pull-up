@@ -42,7 +42,7 @@ public class MemberAnswerController {
     }
 
 
-    @Operation(summary = "모의고사 외 문제에 대한 사용자 답안 생성(회원가입 시 1회 필요)", description = "회원에 대해 category가 '모의고사'가 아닌 문제들에 대해 빈 답안을 생성합니다.")
+    @Operation(summary = "모의고사 외 문제에 대한 사용자 답안 생성(회원가입 시 1회 필요)", description = "회원에 대해 category가 '모의고사'가 아닌 문제들에 대해 빈 답안을 생성합니다.", tags = "멤버")
     @PostMapping("/problems/problem-answers")
     public ResponseEntity<Void> createMemberAnswersForNonMockExamProblems(@RequestParam Long memberId) {
         memberAnswerService.createMemberAnswersForNonMockExamProblems(memberId);
