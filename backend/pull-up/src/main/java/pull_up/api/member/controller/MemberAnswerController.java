@@ -31,7 +31,7 @@ public class MemberAnswerController {
         return ResponseEntity.ok(memberAnswer);
     }
 
-    @Operation(summary = "틀린 문제 조회", description = "사용자가 푼 문제 중 틀린 문제를 조회합니다.")
+    @Operation(summary = "틀린 문제 조회(사용x)", description = "사용자가 푼 문제 중 틀린 문제를 조회합니다.")
     @GetMapping("/incorrect")
     public ResponseEntity<List<MemberAnswerResultDto>> getIncorrectAnswers(@RequestBody MemberDto memberDTO,
                                                                      @RequestParam(required = false) String category,

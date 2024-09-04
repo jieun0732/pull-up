@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +24,7 @@ import pull_up.api.exam.exception.ExamErrorCode;
 import pull_up.api.exam.exception.ExamException;
 import pull_up.api.exam.repository.ExamInformationRepository;
 import pull_up.api.exam.repository.ExamProblemRepository;
-import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.IncorrectAnswerResultDto;
-import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.member.dto.MemberAnswerIndexDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
 import pull_up.api.member.dto.MemberAnswerResultDto;
@@ -51,6 +50,7 @@ import pull_up.api.problem.entity.Problem;
 import pull_up.api.problem.exception.ProblemErrorCode;
 import pull_up.api.problem.exception.ProblemException;
 import pull_up.api.problem.repository.ProblemRepository;
+import pull_up.global.common.entity.BaseEntity;
 
 /**
  * 시험 관련 비즈니스 로직을 처리하는 서비스.
@@ -67,9 +67,6 @@ public class ExamService {
     private final ExamInformationRepository examInformationRepository;
     private final ExamProblemRepository examProblemRepository;
 
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     /**
      * 문제 리스트 조회 (골고루 풀기 및 유형별 풀기).
@@ -234,11 +231,26 @@ public class ExamService {
         // 5. MemberAnswer를 저장
         memberAnswerRepository.save(memberAnswer);
 
-        // 6. 오답인 경우, IncorrectAnswer를 기록
-        if (!isCorrect) {
-            IncorrectAnswer incorrectAnswer = IncorrectAnswer.of(member, problem, null,
-                memberAnswerResponseDto.chosenAnswer());
-            incorrectAnswerRepository.save(incorrectAnswer);
+        // 6. IncorrectAnswer 처리
+        Optional<IncorrectAnswer> existingIncorrectAnswer = incorrectAnswerRepository.findByMemberAndProblem(
+            member, problem);
+
+        if (isCorrect) {
+            // 정답일 경우 기존 오답 기록이 있으면 삭제
+            existingIncorrectAnswer.ifPresent(BaseEntity::softDelete);
+        } else {
+            if (existingIncorrectAnswer.isPresent()) {
+                // 오답일 경우 기존 오답 기록이 있으면 LocalDateTime 업데이트
+                IncorrectAnswer incorrectAnswer = existingIncorrectAnswer.get();
+                incorrectAnswer.setIncorrectTime(LocalDateTime.now());
+                incorrectAnswer.setChosenAnswer(memberAnswerResponseDto.chosenAnswer());
+                incorrectAnswerRepository.save(incorrectAnswer);
+            } else {
+                // 오답일 경우 기존 오답 기록이 없으면 새로 저장
+                IncorrectAnswer incorrectAnswer = IncorrectAnswer.of(member, problem, null,
+                    memberAnswerResponseDto.chosenAnswer(), LocalDateTime.now());
+                incorrectAnswerRepository.save(incorrectAnswer);
+            }
         }
 
         problem.setTotalAttempts(problem.getTotalAttempts() + 1);
@@ -449,12 +461,27 @@ public class ExamService {
         // 5. ExamProblem을 저장
         examProblemRepository.save(examProblem);
 
-        // 6. 오답인 경우, IncorrectAnswer를 기록
-        if (!isCorrect) {
-            Member member = examProblem.getExamInformation().getMember();
-            IncorrectAnswer incorrectAnswer = IncorrectAnswer.of(member, problem,
-                examProblem.getExamInformation(), examProblemResponseDto.chosenAnswer());
-            incorrectAnswerRepository.save(incorrectAnswer);
+        // 6. IncorrectAnswer 처리
+        Member member = examProblem.getExamInformation().getMember();
+        Optional<IncorrectAnswer> existingIncorrectAnswer = incorrectAnswerRepository.findByMemberAndProblemAndExamInformation(
+            member, problem, examProblem.getExamInformation());
+
+        if (isCorrect) {
+            // 정답일 경우 기존 오답 기록이 있으면 삭제
+            existingIncorrectAnswer.ifPresent(BaseEntity::softDelete);
+        } else {
+            if (existingIncorrectAnswer.isPresent()) {
+                // 오답일 경우 기존 오답 기록이 있으면 LocalDateTime 업데이트
+                IncorrectAnswer incorrectAnswer = existingIncorrectAnswer.get();
+                incorrectAnswer.setIncorrectTime(LocalDateTime.now());
+                incorrectAnswer.setChosenAnswer(examProblemResponseDto.chosenAnswer());
+                incorrectAnswerRepository.save(incorrectAnswer);
+            } else {
+                // 오답일 경우 기존 오답 기록이 없으면 새로 저장
+                IncorrectAnswer incorrectAnswer = IncorrectAnswer.of(member, problem,
+                    examProblem.getExamInformation(), examProblemResponseDto.chosenAnswer(), LocalDateTime.now());
+                incorrectAnswerRepository.save(incorrectAnswer);
+            }
         }
 
         // 7. 결과를 DTO로 변환하여 반환
