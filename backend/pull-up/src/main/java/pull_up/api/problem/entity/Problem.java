@@ -27,15 +27,15 @@ public class Problem extends BaseEntity {
 
     @Setter
     @Column
-    private String entry;
+    private String entry; // 수리 언어 추리
 
     @Setter
     @Column
-    private String category;
+    private String category; // 모의고사 유형별 골고루
 
     @Setter
     @Column
-    private String type;
+    private String type; // 이외 분류
 
     @Lob
     @Setter
