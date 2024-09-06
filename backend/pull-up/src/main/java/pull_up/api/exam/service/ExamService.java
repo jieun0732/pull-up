@@ -424,7 +424,7 @@ public class ExamService {
         Problem problem = examProblem.getProblem();
         LocalDateTime createdDate = examProblem.getExamInformation()
             .getCreatedDate(); // createdDate 가져오기
-        return ProblemTimeResultDto.from(problem, createdDate);
+        return ProblemTimeResultDto.from(problem, createdDate, examProblem.getProblemNumber());
     }
 
     /**
@@ -440,7 +440,7 @@ public class ExamService {
         Problem problem = examProblem.getProblem();
         LocalDateTime createdDate = examProblem.getExamInformation()
             .getCreatedDate(); // createdDate 가져오기
-        return ProblemTimeResultDto.from(problem, createdDate); // createdDate 함께 전달
+        return ProblemTimeResultDto.from(problem, createdDate, examProblem.getProblemNumber()); // createdDate 함께 전달
     }
 
     /**
@@ -448,9 +448,8 @@ public class ExamService {
      */
     public ExamProblemResultDto saveMockExamAnswer(ExamProblemResponseDto examProblemResponseDto) {
         // 1. ExamProblem을 찾음
-        ExamProblem examProblem = examProblemRepository.findById(
-                examProblemResponseDto.examProblemId())
-            .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM_PROBLEM));
+        ExamProblem examProblem = examProblemRepository.findByExamInformationIdAndProblemNumber(
+                examProblemResponseDto.examInformationId(), examProblemResponseDto.problemNumber());
 
         // 2. 사용자가 제출한 답안을 설정
         examProblem.setChosenAnswer(examProblemResponseDto.chosenAnswer());
