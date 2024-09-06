@@ -10,6 +10,7 @@ import pull_up.api.problem.entity.Problem;
  */
 public record ProblemTimeResultDto(
     Long id,
+    Long problemNumber,
     String entry,
     String category,
     String type,
@@ -26,6 +27,7 @@ public record ProblemTimeResultDto(
 
     public static ProblemTimeResultDto of(
         Long id,
+        Long problemNumber,
         String entry,
         String category,
         String type,
@@ -39,12 +41,12 @@ public record ProblemTimeResultDto(
         Double incorrectRate,
         LocalDateTime createdDate // createdDate 파라미터 추가
     ) {
-        return new ProblemTimeResultDto(id, entry, category, type, question, explanation, choices,
+        return new ProblemTimeResultDto(id, problemNumber, entry, category, type, question, explanation, choices,
             answer, answerExplain, totalAttempts, incorrectAttempts,
             incorrectRate, createdDate);
     }
 
-    public static ProblemTimeResultDto from(Problem entity, LocalDateTime createdDate) { // createdDate 파라미터 추가
+    public static ProblemTimeResultDto from(Problem entity, LocalDateTime createdDate, Long problemNumber) { // createdDate 파라미터 추가
         List<String> choices = List.of(
             entity.getChoice1(),
             entity.getChoice2(),
@@ -55,6 +57,7 @@ public record ProblemTimeResultDto(
 
         return new ProblemTimeResultDto(
             entity.getId(),
+            problemNumber,
             entity.getEntry(),
             entity.getCategory(),
             entity.getType(),
