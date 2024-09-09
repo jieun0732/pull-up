@@ -1,14 +1,13 @@
 "use client";
 
-import Header from "@/component/ui/Header";
 import Button from "@/component/ui/Button";
 import { useRouter } from "next/navigation";
-import { dummysolution } from "@/constants/dummyq";
+import useSWR, { mutate } from "swr";
 import Text from "@/component/ui/Text";
-import formatNumber from "@/utils/formatNumber";
-import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
-import { ProblemInfo } from "@/types/problemType";
+import { ProblemInfo, Problem } from "@/types/problemType";
+import { roundUpNumber } from "@/utils/roundUpNumber";
+import { categoryMap, entryMap } from "@/constants/constants";
 
 export default function Page({
   params,
@@ -23,8 +22,8 @@ export default function Page({
   const { subject, type, id } = params;
 
   const memberID = 1;
-  const entry = "수리";
-  const category = "골고루";
+  const entry = entryMap[params.subject];
+  const category = categoryMap[params.type];
 
   const queryString = new URLSearchParams({
     memberId: memberID.toString(),
@@ -39,9 +38,7 @@ export default function Page({
 
   if (!data) return;
 
-  const nowProblem = data.find((item) => String(item.id) === params.id);
-
-  console.log("solutionpage 문제", nowProblem);
+  const nowProblem: ProblemInfo = data[Number(params.id) - 1];
 
   return (
     <>
@@ -75,7 +72,7 @@ export default function Page({
 
       <div className="relative w-full px-5 pb-[91px]">
         <Text size="caption-01" className="mb-3 text-end">
-          정답률 {nowProblem?.problem.incorrectRate || 0}%
+          정답률 {roundUpNumber(nowProblem?.problem.incorrectRate || 0)}%
         </Text>
         <div className="w-full rounded-lg bg-[#f2f3f6] px-5 py-7">
           <Text size="body-03" className="mb-3">
@@ -119,11 +116,19 @@ export default function Page({
               size="medium"
               color="active"
               className="backdrop-blur-sm"
-              onClick={() =>
-                router.push(
-                  `/main/sectional/${subject}/${type}/${Number(id) + 1}/`,
-                )
-              }
+              onClick={() => {
+                const previousPath = document.referrer;
+                console.log("previousPath", previousPath);
+                if (previousPath.includes("solution")) {
+                  router.push(
+                    `/main/sectional/${params.subject}/${params.type}/${Number(id) - 1}/solution`,
+                  );
+                } else {
+                  router.push(
+                    `/main/sectional/${subject}/${type}/${Number(id) + 1}/`,
+                  );
+                }
+              }}
             >
               다음 문제
             </Button>

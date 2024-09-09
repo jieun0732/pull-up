@@ -10,13 +10,19 @@ import useSWR from "swr";
 interface QuestionListPropType {
   showQuestions: boolean;
   setShowQuestions: React.Dispatch<React.SetStateAction<boolean>>;
+  handleExamResult : () => Promise<void>
 }
 
 function QuestionList({
   showQuestions,
   setShowQuestions,
+  handleExamResult,
 }: QuestionListPropType) {
   const router = useRouter();
+  const examId = localStorage.getItem('examId')
+  const { data :problemList, error:questionListError } = useSWR<ProblemBeingSolved[]>(
+    showQuestions ? `${API}/exams/mock-exam/problems?examInformationId=${examId}` : null,
+  );
 
   const handleClick = () => {
     setShowQuestions(false);
@@ -27,13 +33,9 @@ function QuestionList({
     router.push(`/main/mockexam/${id}`);
   };
 
-  const { data, error } = useSWR<ProblemBeingSolved[]>(
-    showQuestions ? `${API}/exams/mock-exam/solved?examInformationId=1` : null,
-  );
+  const isFinished = problemList?.every(item => item.chosenAnswer !== null);
 
-  if (error) return <div>Failed to load questions</div>;
-
-  console.log(data);
+  
   return (
     <>
       {showQuestions && (
@@ -66,27 +68,26 @@ function QuestionList({
           />
         </svg>
         <div className="grid w-full grid-cols-5 justify-items-center gap-y-4">
-          {data?.map(({ id, chosenAnswer }) => {
-            const boxStyle = chosenAnswer
+          {problemList?.map((item, idx) => {
+            const boxStyle = item.chosenAnswer
               ? "border-blue01 bg-blue03 text-blue01"
               : "border-gray02 bg-gray03 text-gray02";
-
             return (
               <div
-                onClick={() => handleMoveQuestion(id)}
-                key={id}
+                onClick={() => handleMoveQuestion(idx + 1)}
+                key={idx}
                 className={`flex h-11 w-11 cursor-pointer items-center justify-center space-x-4 rounded-md border border-solid text-center text-[17px] font-semibold ${
                   boxStyle
                 }`}
               >
-                <p>{id}</p>
+                <p>{idx + 1}</p>
               </div>
             );
           })}
         </div>
 
-        {dummyQlist.isFinished ? (
-          <Button size="large" color="active" className="mt-9">
+        {isFinished ? (
+          <Button size="large" color="active" className="mt-9" onClick={handleExamResult}>
             제출하기
           </Button>
         ) : (

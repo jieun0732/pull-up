@@ -32,6 +32,8 @@ export default function Layout({
   const entry = entryMap[params.subject];
   const category = categoryMap[params.type];
 
+  console.log(entry, category);
+
   const queryString = new URLSearchParams({
     memberId: memberID.toString(),
     entry,
@@ -59,9 +61,10 @@ export default function Layout({
     (item: ProblemInfo) => item.id === Number(params.id),
   );
 
-  const nowProblem: ProblemInfo = data[0].find(
-    (item: ProblemInfo) => item.id === Number(params.id),
-  );
+  const nowProblem: ProblemInfo = data[0][Number(params.id) - 1];
+  // .find(
+  //   (item: ProblemInfo) => item.id === Number(params.id),
+  // );
 
   return (
     <>
@@ -70,7 +73,7 @@ export default function Layout({
           <div className="relative mx-5 w-full">
             <CloseIcon onClick={openModal} />
             <span className="ml-9 text-[13px] font-normal text-gray01">
-              {data[0].length - nowIndex}문제 남았어요!
+              {data[0].length - Number(params.id)}문제 남았어요!
             </span>
           </div>
 
@@ -78,7 +81,7 @@ export default function Layout({
 
           <div className="mt-11 flex w-full items-center justify-between px-5">
             <Text size="head-03" className="mb-4">
-              문제 {formatNumber(nowProblem.id)}
+              문제 {formatNumber(params.id)}
             </Text>
             <Button size="small" color="nonactive">
               {nowProblem.problem.type}

@@ -24,8 +24,10 @@ const authIcon: AuthIconType = {
 };
 
 export default function Page() {
-  const { data, error } = useSWR<User>(`${API}/members/1`, fetcher);
+  const { data, error } = useSWR<User>(`${API}/members/${localStorage.getItem("memberId")}`, fetcher);
 
+  if (!data) return
+  
   return (
     <div className="flex h-full flex-col justify-around bg-gray03 px-5 pb-[91px] pt-14">
       {/* 상단 개인 정보 부분 */}
@@ -41,7 +43,7 @@ export default function Page() {
           <div className="flex items-center gap-2">
             <Image
               className="h-4 w-4 rounded-full"
-              src={authIcon["kakao_user"]}
+              src={authIcon[data?.data.role]}
               alt="Profile Image"
             />
             <Text size="body-04">{data?.data.email}</Text>

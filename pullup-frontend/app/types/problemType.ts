@@ -3,9 +3,19 @@ export interface ProblemInfo {
   member: Member;
   problem: Problem;
   examInformation: null;
-  chosenAnswer: null;
+  chosenAnswer: string | null;
   isCorrect: null;
 }
+
+export interface IncorrectAnswers {
+  id: number;
+  member: Member;
+  problem: Problem;
+  examInformation: null;
+  chosenAnswer: string;
+  incorrectTime: string;
+}
+
 
 export interface Problem {
   id: number;

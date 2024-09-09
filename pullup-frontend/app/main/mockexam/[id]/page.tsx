@@ -6,7 +6,6 @@ import ToggleIcon from "@/assets/icon/ToggleIcon";
 import Text from "@/component/ui/Text";
 import Button from "@/component/ui/Button";
 import { useState, useEffect } from "react";
-import { dummyQ } from "../../../constants/dummyq";
 import QuestionList from "@/component/mockexam/questionList";
 import useModal from "@/hooks/useModal";
 import formatNumber from "@/utils/formatNumber";
@@ -23,29 +22,109 @@ import {
 } from "@/component/mockexam/tutorial";
 import useSWR from "swr";
 import { API } from "@/lib/API";
-import { mockexamQuestionType } from "@/types/mockexam/mockexamQuestion";
+import { MockExamProblemType, ProblemBeingSolved } from "@/types/mockexam/mockexamQuestion";
 
 export default function Page() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
-  const [selectedId, setSelectedId] = useState<number | null>();
+  const [selectedId, setSelectedId] = useState<number>(-1);
   const [showQuestions, setShowQuestions] = useState<boolean>(false);
 
   const { openModal, closeModal, Modal } = useModal({ initialOpen: false });
-  const [step, setStep] = useState(0);
-
-  const { data, error } = useSWR<mockexamQuestionType>(
-    `${API}/exams/mock-exam/1`,
+  const [step, setStep] = useState(4);
+  const examId = localStorage.getItem('examId')
+  const { data : nowProblem , error } = useSWR<MockExamProblemType>(
+    `${API}/exams/mock-exam/problem?examInformationId=${examId}&problemNumber=${params.id}`,
   );
 
-  const handleNextQuestion = () => {
-    router.push(`/main/mockexam/${Number(params.id) + 1}`);
+  useEffect(() => {
+    const checkAccess = async () => {
+      if (params.id !== '1') return
+      if (params.id === '1') { 
+        try {
+          const response = await fetch(`${API}/members/${localStorage.getItem('memberId')}/access-check`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          if (result.data.accessCheck) {
+            setStep(4); 
+          } else {
+            setStep(0); 
+          }
+        } catch (error) {
+          console.error('Error fetching access check:', error);
+          setStep(0); 
+        }
+      }
+    };
+    checkAccess();
+  }, [params.id]); // id가 변경될 때마다 useEffect가 실행됩니다.
+
+
+
+  const handleNextQuestion = async () => {
+    if (selectedId !== -1) {
+      try {
+        const response = await fetch(`${API}/exams/mock-exam/answer`, {
+          method: 'POST',
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            examInformationId: Number(localStorage.getItem('examId')),
+            problemNumber: Number(nowProblem?.problemNumber),
+            chosenAnswer: String(selectedId + 1),
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log(result)
+        localStorage.setItem('createdDate', result.examInformation.createdDate)
+        console.log(result.examInformation.createdDate)
+      } catch (error) {
+        console.error(error);
+      } finally {
+        router.push(`/main/mockexam/${Number(params.id) + 1}`);
+      }
+
+    } else {
+      router.push(`/main/mockexam/${Number(params.id) + 1}`);
+
+    }
   };
 
-  console.log(error);
-  if (error) return <div>/exams/problem/ error</div>;
+  const handleExamResult = async () => {
+    console.log("handleExamResult")
+    try {
+      const response = await fetch(`${API}/exams/mock-exam/complete`, {
+        method: 'POST',
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      router.push("/main/mockexam/report")
 
-  console.log(data);
+    } catch (error) {
+      console.error('Error fetching access check:', error);
+    }
+
+  }
+  if (!nowProblem) return;
+  
 
   return (
     <>
@@ -55,6 +134,7 @@ export default function Page() {
         <QuestionList
           showQuestions={showQuestions}
           setShowQuestions={setShowQuestions}
+          handleExamResult={handleExamResult}
         />
 
         <div className="relative flex w-full flex-col overflow-x-auto px-5 pt-14">
@@ -79,32 +159,32 @@ export default function Page() {
           </span>
 
           <Text size="body-03" className="relative mb-4">
-            {data?.question}
+            {nowProblem.question}
           </Text>
 
-          {data?.explanation && data.explanation.length > 0 && (
+          {nowProblem.explanation && nowProblem.explanation.length > 0 && (
             <div className="relative mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
-              <Text size="body-03">{data.explanation}</Text>
+              <Text size="body-03">{nowProblem.explanation}</Text>
               <TutorialStep0Text step={step} />
             </div>
           )}
         </div>
 
-        {data?.choices.map((item, idx) => (
+        {nowProblem.choices.map((item, idx) => (
           <ChoiceItem
             key={item}
-            item={item}
+            choice={item}
             idx={idx}
             isSelected={selectedId === idx}
             selectedId={selectedId}
             setSelectedId={setSelectedId}
-          />
+            />
         ))}
 
         <div className="absolute bottom-0 mb-11 flex w-full flex-col px-5 py-4">
           <TutorialStep1SpeechBubble step={step} problemId={params.id} />
           <button
-            onClick={() => router.push("/main/mockexam/report")}
+            onClick={handleExamResult}
             className="ml-auto rounded-t-2xl rounded-bl-2xl bg-gray03 px-6 py-2 text-gray02 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]"
           >
             제출하기
@@ -124,7 +204,9 @@ export default function Page() {
             } else if (params.id !== "1" && params.id !== "20") {
               return (
                 <div className="mt-4 flex gap-2">
-                  <Button size="medium" color="activeBorder">
+                  <Button size="medium" color="activeBorder"
+                onClick={(() => router.push(`/main/mockexam/${Number(params.id) - 1}`))}
+                >
                     이전 문제
                   </Button>
                   <Button
@@ -138,7 +220,9 @@ export default function Page() {
               );
             } else if (params.id === "20") {
               return (
-                <Button size="large" color="activeBorder" className="mt-4">
+                <Button size="large" color="activeBorder" className="mt-4"
+                onClick={(() => router.push(`/main/mockexam/${Number(params.id) - 1}`))}
+                >
                   이전 문제
                 </Button>
               );

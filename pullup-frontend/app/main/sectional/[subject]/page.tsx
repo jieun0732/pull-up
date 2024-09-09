@@ -61,7 +61,6 @@ export default function Page() {
                   method: "POST",
                 })
                   .then((response) => {
-                    console.log("============");
                     router.push(`/main/sectional/${params.subject}/mix/1`);
 
                     // response.json();
@@ -87,7 +86,7 @@ export default function Page() {
                 const fetchNextProblem = async () => {
                   try {
                     const response = await fetch(
-                      `${API}/exams/next?${queryString}`,
+                      `${API}/exams/problems?${queryString}`,
                       {
                         method: "GET",
                       },
@@ -97,12 +96,18 @@ export default function Page() {
                       throw new Error("Network response was not ok");
                     }
 
-                    const res: ProblemInfo = await response.json(); // 타입 지정
-                    const nextProblemId = res.id;
-
-                    router.push(
-                      `/main/sectional/${params.subject}/mix/${nextProblemId}`,
-                    );
+                    const res: ProblemInfo[] = await response.json(); // 타입 지정
+                    const nextProblemId = res.findIndex(problem => problem.chosenAnswer === null);
+                                          // 결과 확인
+                      if (nextProblemId !== -1) {
+                        router.push(
+                          `/main/sectional/${params.subject}/mix/${nextProblemId + 1}`,
+                        );
+                      } else {
+                        console.log("No problem with null chosenAnswer found.");
+                      }
+                                          
+                  
                   } catch (error) {
                     console.error(
                       "There was a problem with the fetch operation:",
@@ -115,7 +120,12 @@ export default function Page() {
             >
               남은 문제 이어서 풀기
             </Button>
-            <button className="flex w-full items-center justify-center gap-2 font-semibold text-blue01">
+            <button
+              className="flex w-full items-center justify-center gap-2 font-semibold text-blue01"
+              onClick={() => {
+                router.push(`/main/sectional/${params.subject}/mix/result`);
+              }}
+            >
               골고루 학습 결과 보기
               <ArrowIcon />
             </button>
@@ -134,7 +144,6 @@ export default function Page() {
                   method: "POST",
                 })
                   .then((response) => {
-                    console.log("============");
                     router.push(`/main/sectional/${params.subject}/mix/1`);
 
                     // response.json();
@@ -199,7 +208,7 @@ export default function Page() {
               {item.answeredProblems ? (
                 <>
                   <Button size="medium" color="activeLight">
-                    학습하기
+                    이어서 풀기
                   </Button>
                   <Button size="medium" color="activeBlack">
                     채점 결과 보기
@@ -208,7 +217,7 @@ export default function Page() {
               ) : (
                 <>
                   <Button size="medium" color="activeLight">
-                    이어서 풀기
+                  학습하기
                   </Button>
                   <Button size="medium" color="nonactive">
                     채점 결과 보기

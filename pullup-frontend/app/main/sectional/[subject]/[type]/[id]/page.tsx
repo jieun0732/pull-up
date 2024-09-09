@@ -6,7 +6,7 @@ import ChoiceItem from "@/component/choiceItem";
 import QuestionFooterButton from "@/component/sectional/questionFooterButton";
 import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
-import { ProblemInfo } from "@/types/problemType";
+import { ProblemInfo, Problem } from "@/types/problemType";
 import { entryMap, categoryMap } from "@/constants/constants";
 
 export default function Page({
@@ -40,8 +40,9 @@ export default function Page({
   );
 
   if (!data || !problems) return;
-  const nowProblem = data.problem;
-  console.log(nowProblem);
+
+  const nowProblem: Problem = problems[Number(params.id) - 1].problem;
+
   return (
     <>
       {nowProblem.choices.map((item, idx) => (

@@ -25,38 +25,39 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
   const router = useRouter();
   const { subject, type, id } = params;
 
-  console.log(problemInfo.id, problemsCnt);
-
   const handleNextProblem = async () => {
     try {
-      const response = await fetch(`${API}/exams/answer`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chosenAnswer: String(selectedId + 1),
-          id: problemInfo.problem.id,
-        }),
-      });
+      let chosenAnswer;
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json(); // 응답 JSON 파싱
-      console.log("Response:", result);
-
-      // 성공적으로 응답을 받으면 라우팅
+      do {
+        const response = await fetch(`${API}/exams/answer`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chosenAnswer: String(selectedId + 1),
+            id: problemInfo.id,
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+  
+        const result = await response.json();
+        chosenAnswer = result.chosenAnswer;
+        console.log("Response:", result);
+  
+      } while (chosenAnswer === undefined); 
       router.push(`/main/sectional/${subject}/${type}/${id}/solution`);
     } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
+      console.error("fetch operation:", error);
     }
   };
+    
 
-  // console.log(problemInfo);
-  // console.log(selectedId);
-  if (problemInfo.id === 1) {
+  if (params.id === "1") {
     if (selectedId !== -1) {
       return (
         <Button
@@ -77,7 +78,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
       );
     }
   }
-  if (problemInfo.id != 1 && problemInfo.id != problemsCnt) {
+  if (params.id !== "1" && Number(params.id) !== problemsCnt) {
     if (selectedId === -1) {
       return (
         <div className="mt-4 flex gap-2">
@@ -120,7 +121,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
     }
   }
 
-  if (problemInfo.id === problemsCnt) {
+  if (Number(params.id) === problemsCnt) {
     if (selectedId === -1) {
       return (
         <div className="mt-4 flex gap-2">
@@ -158,9 +159,36 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
           <Button
             size="medium"
             color="active"
-            onClick={() =>
-              router.push(`/main/sectional/${subject}/${type}/result`)
-            }
+            onClick={async () => {
+              try {
+                let chosenAnswer;
+          
+                do {
+                  const response = await fetch(`${API}/exams/answer`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      chosenAnswer: String(selectedId + 1),
+                      id: problemInfo.id,
+                    }),
+                  });
+            
+                  if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                  }
+            
+                  const result = await response.json();
+                  chosenAnswer = result.chosenAnswer;
+                  console.log("Response:", result);
+            
+                } while (chosenAnswer === undefined); 
+                router.push(`/main/sectional/${subject}/${type}/result`);
+              } catch (error) {
+                console.error("fetch operation:", error);
+              }
+            }}
           >
             채점하기 마지막
           </Button>

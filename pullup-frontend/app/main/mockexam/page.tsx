@@ -6,10 +6,16 @@ import Image from "next/image";
 import rankLogo from "@/assets/logo/rankLogo.png";
 import questionLogo from "@/assets/logo/questionLogo.png";
 import { TotalQuestionNumberIcon, LimitTimeIcon } from "@/assets/icon";
-
+import useSWR from "swr";
+import { API, fetcher } from "@/lib/API";
+import { User } from "@/types/userType";
+import { MockExamResponseType } from "@/types/mockexam/mockexamQuestion";
 export default function Page() {
   const isFinished = false;
   const router = useRouter();
+  const { data, error } = useSWR<User>(`${API}/members/${localStorage.getItem("memberId")}`, fetcher);
+
+  if (!data) return
 
   return (
     <div className="flex h-full flex-col bg-white px-5 pb-[91px] pt-14">
@@ -21,7 +27,7 @@ export default function Page() {
         </Text>
       </div>
 
-      {isFinished ? (
+      {data.data.latestScore !== 0 ? (
         <div className="flex h-full flex-col items-center justify-around">
           <Image
             src={questionLogo}
@@ -61,7 +67,26 @@ export default function Page() {
             size="large"
             color="active"
             className="mb-11"
-            onClick={() => router.push("/main/mockexam/1")}
+            onClick={async () => { 
+              try {
+                const response = await fetch(`${API}/exams/mock-exam/start?memberId=${localStorage.getItem('memberId')}`, {
+                  method: "POST",
+                });
+            
+                if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            
+                const result:MockExamResponseType = await response.json();
+                const examId = String(result.id); 
+                console.log(result)
+                localStorage.setItem("examId", examId)            
+                router.push("/main/mockexam/1");
+              } catch (err) {
+                console.error("Error:", err);
+              }
+            }}
+            
           >
             모의고사 풀기
           </Button>
