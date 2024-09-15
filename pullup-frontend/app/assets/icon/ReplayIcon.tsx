@@ -1,8 +1,9 @@
 import { IconProp } from "@/types/IconProp";
 
-interface ReplayIconProps extends IconProp {
+interface ReplayIconProps  {
   className?: string;
   children?: React.ReactNode;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void; 
 }
 
 function ReplayIcon({ onClick, className, children }: ReplayIconProps) {

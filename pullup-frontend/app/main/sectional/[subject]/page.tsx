@@ -14,7 +14,7 @@ import useSWR from "swr";
 import { Category } from "@/types/sectionalType";
 import { API, fetcher } from "@/lib/API";
 import { useState } from "react";
-import { entryMap } from "@/constants/constants";
+import { entryMap, reversedCategoryMap } from "@/constants/constants";
 import { ProblemInfo } from "@/types/problemType";
 
 export default function Page() {
@@ -36,6 +36,41 @@ export default function Page() {
 
   if (!data) return;
 
+  const handleReplay = (type: string) => (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault(); // 기본 동작 방지
+    
+    let paramCategory = "골고루"
+    
+    if (type.length) {
+      localStorage.setItem('type', type)
+      paramCategory = "유형별"
+    }
+    
+    const queryString = new URLSearchParams({
+      memberId: memberID.toString(),
+      entry,
+      category,
+      type,
+    }).toString();
+
+    fetch(`${API}/exams/reset?${queryString}`, {
+      method: "POST",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json(); // JSON 응답을 반환
+      })
+      .then((result) => {
+        console.log(result);
+        router.push(`/main/sectional/${params.subject}/${paramCategory}/1`);
+      })
+      .catch((error) => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+  };
+
   return (
     <div className="flex flex-col items-center px-5 pb-7 pt-14">
       <Header type="back" content={`${entry}영역`} link={`/main/sectional/`} />
@@ -51,22 +86,7 @@ export default function Page() {
           <>
             <ReplayIcon
               className="absolute right-6"
-              onClick={() => {
-                const queryString = new URLSearchParams({
-                  memberId: memberID.toString(),
-                  entry,
-                  category,
-                }).toString();
-                fetch(`${API}/exams/reset?${queryString}`, {
-                  method: "POST",
-                })
-                  .then((response) => {
-                    router.push(`/main/sectional/${params.subject}/mix/1`);
-
-                    // response.json();
-                  })
-                  .then((result) => console.log(result));
-              }}
+              onClick={handleReplay("")}
             />
             <Image
               className="w-[185px]"
@@ -189,7 +209,7 @@ export default function Page() {
               {item.type} {item.answeredProblems}/{item.totalProblems}
               <ReplayIcon
                 className="relative"
-                onClick={() => console.log("replay")}
+                onClick={handleReplay(item.type)}
               >
                 {idx === 0 && <ReplaySpeechBubble />}
               </ReplayIcon>

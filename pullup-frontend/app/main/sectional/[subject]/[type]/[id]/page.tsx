@@ -18,15 +18,21 @@ export default function Page({
     id: string;
   };
 }) {
-  const memberID = 1;
+  const memberId = localStorage.getItem('memberId') || "";
   const [selectedId, setSelectedId] = useState<number>(-1);
   const entry = entryMap[params.subject];
   const category = categoryMap[params.type];
+  let type = ""
+  
+  if (category !== "골고루") {
+    type = localStorage.getItem('type') || ""
+  }
 
   const queryString = new URLSearchParams({
-    memberId: memberID.toString(),
+    memberId,
     entry,
     category,
+    type
   }).toString();
 
   const { data, error } = useSWR<ProblemInfo>(

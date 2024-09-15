@@ -16,7 +16,6 @@ const SectionalResultHeader: React.FC<QuestionProps> = ({
   params,
 }) => {
   const { subject, type } = params;
-  console.log(problems);
   const totalProblemsCount = problems.length;
   const isFinished = problems.every((item) => item.chosenAnswer !== null);
   const solvedCount = problems.filter(

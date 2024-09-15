@@ -31,7 +31,6 @@ export default function SectionalResultItem({
 }: SectionalResultItemProp) {
   const router = useRouter();
   const { subject, type } = params;
-  console.log(problemNum);
 
   if (item.chosenAnswer && item.isCorrect) {
     return (

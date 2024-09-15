@@ -28,16 +28,22 @@ export default function Layout({
 
   const { openModal, closeModal, Modal } = useModal({ initialOpen: false });
 
-  const memberID = 1;
+  const memberId = localStorage.getItem('memberId') || "";
   const entry = entryMap[params.subject];
   const category = categoryMap[params.type];
+  let type = ""
+  
+  if (category !== "골고루") {
+    type = localStorage.getItem('type') || ""
+  }
 
   console.log(entry, category);
 
   const queryString = new URLSearchParams({
-    memberId: memberID.toString(),
+    memberId,
     entry,
     category,
+    type,
   }).toString();
 
   const { data } = useSWR(

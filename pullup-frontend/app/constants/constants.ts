@@ -46,3 +46,9 @@ export const categoryMap: Record<string, string> = {
   mix: "골고루",
   type: "유형별",
 };
+
+export const reversedCategoryMap: Record<string, string> = {
+  "골고루" : "mix",
+  "유형별": "type",
+};
+

@@ -78,9 +78,11 @@ export default function Page() {
                 }
             
                 const result:MockExamResponseType = await response.json();
-                const examId = String(result.id); 
+                const examId = String(result.id);
                 console.log(result)
-                localStorage.setItem("examId", examId)            
+                localStorage.setItem("examId", examId)     
+                const currentTimeISO = new Date().toISOString(); // 현재 시간을 ISO 형식으로 저장
+                localStorage.setItem('time', currentTimeISO); // localStorage에 현재 시간 저장       
                 router.push("/main/mockexam/1");
               } catch (err) {
                 console.error("Error:", err);

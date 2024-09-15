@@ -22,17 +22,22 @@ import {
 } from "@/component/mockexam/tutorial";
 import useSWR from "swr";
 import { API } from "@/lib/API";
-import { MockExamProblemType, ProblemBeingSolved } from "@/types/mockexam/mockexamQuestion";
+import { MockExamProblemType } from "@/types/mockexam/mockexamQuestion";
+import useTimer from "@/hooks/useTimer";
 
 export default function Page() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const [selectedId, setSelectedId] = useState<number>(-1);
   const [showQuestions, setShowQuestions] = useState<boolean>(false);
-
   const { openModal, closeModal, Modal } = useModal({ initialOpen: false });
   const [step, setStep] = useState(4);
+  
+  
+  const timeLeft = useTimer(params.id, 30); 
   const examId = localStorage.getItem('examId')
+
+
   const { data : nowProblem , error } = useSWR<MockExamProblemType>(
     `${API}/exams/mock-exam/problem?examInformationId=${examId}&problemNumber=${params.id}`,
   );
@@ -125,7 +130,6 @@ export default function Page() {
   }
   if (!nowProblem) return;
   
-
   return (
     <>
       <div className="bg-whtie relative flex h-full flex-col items-center overflow-x-auto">
@@ -145,7 +149,7 @@ export default function Page() {
                 params.id === "1" && step == 1 ? "z-20" : ""
               }`}
             >
-              30:00
+              {timeLeft}
             </span>
             <TutorialStep1 problemId={params.id} step={step} />
           </div>
