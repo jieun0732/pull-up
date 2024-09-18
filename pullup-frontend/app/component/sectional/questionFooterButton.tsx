@@ -10,7 +10,7 @@ interface QuestionProps {
   selectedId: number;
   params: {
     subject: string;
-    type: string;
+    category: string;
     id: string;
   };
   problemsCnt: number;
@@ -23,7 +23,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
   problemsCnt,
 }) => {
   const router = useRouter();
-  const { subject, type, id } = params;
+  const { subject, category, id } = params;
 
   const handleNextProblem = async () => {
     try {
@@ -50,7 +50,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
         console.log("Response:", result);
   
       } while (chosenAnswer === undefined); 
-      router.push(`/main/sectional/${subject}/${type}/${id}/solution`);
+      router.push(`/main/sectional/${subject}/${category}/${id}/solution`);
     } catch (error) {
       console.error("fetch operation:", error);
     }
@@ -87,7 +87,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
             color="activeBorder"
             onClick={() =>
               router.push(
-                `/main/sectional/${subject}/${type}/${Number(id) - 1}/solution`,
+                `/main/sectional/${subject}/${category}/${Number(id) - 1}/solution`,
               )
             }
           >
@@ -107,7 +107,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
             color="activeBorder"
             onClick={() =>
               router.push(
-                `/main/sectional/${subject}/${type}/${Number(id) - 1}/solution`,
+                `/main/sectional/${subject}/${category}/${Number(id) - 1}/solution`,
               )
             }
           >
@@ -130,7 +130,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
             color="activeBorder"
             onClick={() =>
               router.push(
-                `/main/sectional/${subject}/${type}/${Number(id) - 1}/solution`,
+                `/main/sectional/${subject}/${category}/${Number(id) - 1}/solution`,
               )
             }
           >
@@ -150,7 +150,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
             color="activeBorder"
             onClick={() =>
               router.push(
-                `/main/sectional/${subject}/${type}/${Number(id) - 1}/solution`,
+                `/main/sectional/${subject}/${category}/${Number(id) - 1}/solution`,
               )
             }
           >
@@ -184,7 +184,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
                   console.log("Response:", result);
             
                 } while (chosenAnswer === undefined); 
-                router.push(`/main/sectional/${subject}/${type}/result`);
+                router.push(`/main/sectional/${subject}/${category}/result`);
               } catch (error) {
                 console.error("fetch operation:", error);
               }

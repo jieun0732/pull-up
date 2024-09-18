@@ -38,21 +38,21 @@ export default function Page() {
 
   const handleReplay = (type: string) => (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault(); // 기본 동작 방지
-    
-    let paramCategory = "골고루"
-    
+  
+    let paramCategory = "골고루";
+  
     if (type.length) {
-      localStorage.setItem('type', type)
-      paramCategory = "유형별"
+      localStorage.setItem('type', type);
+      paramCategory = "유형별";
     }
-    
+  
     const queryString = new URLSearchParams({
       memberId: memberID.toString(),
       entry,
       category,
       type,
     }).toString();
-
+  
     fetch(`${API}/exams/reset?${queryString}`, {
       method: "POST",
     })
@@ -60,16 +60,58 @@ export default function Page() {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        return response.json(); // JSON 응답을 반환
       })
       .then((result) => {
         console.log(result);
-        router.push(`/main/sectional/${params.subject}/${paramCategory}/1`);
+        // 리다이렉트
+        router.push(`/main/sectional/${params.subject}/${reversedCategoryMap[paramCategory]}/1`);
       })
       .catch((error) => {
         console.error('There was a problem with the fetch operation:', error);
       });
   };
+  
+  const fetchNextProblem = (type: string) => async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault(); // 기본 동작 방지
+  
+
+    let paramCategory = "골고루";
+  
+    if (type.length) {
+      localStorage.setItem('type', type);
+      paramCategory = "유형별";
+    }
+  
+    const queryString = new URLSearchParams({
+      memberId: memberID.toString(),
+      entry,
+      category,
+      type,
+    }).toString();
+  
+    try {
+      const response = await fetch(`${API}/exams/problems?${queryString}`, {
+        method: "GET",
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const result: ProblemInfo[] = await response.json(); 
+      const nextProblemId = result.findIndex(problem => problem.chosenAnswer === null);
+
+      if (nextProblemId !== -1) {
+        router.push(`/main/sectional/${params.subject}/${reversedCategoryMap[paramCategory]}/${nextProblemId + 1}`);
+      } else {
+        console.log("No problem with null chosenAnswer found.");
+      }
+  
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
+  };
+  
 
   return (
     <div className="flex flex-col items-center px-5 pb-7 pt-14">
@@ -96,47 +138,7 @@ export default function Page() {
             <Button
               size="large"
               color="active"
-              onClick={() => {
-                const queryString = new URLSearchParams({
-                  memberId: memberID.toString(),
-                  entry,
-                  category,
-                }).toString();
-
-                const fetchNextProblem = async () => {
-                  try {
-                    const response = await fetch(
-                      `${API}/exams/problems?${queryString}`,
-                      {
-                        method: "GET",
-                      },
-                    );
-
-                    if (!response.ok) {
-                      throw new Error("Network response was not ok");
-                    }
-
-                    const res: ProblemInfo[] = await response.json(); // 타입 지정
-                    const nextProblemId = res.findIndex(problem => problem.chosenAnswer === null);
-                                          // 결과 확인
-                      if (nextProblemId !== -1) {
-                        router.push(
-                          `/main/sectional/${params.subject}/mix/${nextProblemId + 1}`,
-                        );
-                      } else {
-                        console.log("No problem with null chosenAnswer found.");
-                      }
-                                          
-                  
-                  } catch (error) {
-                    console.error(
-                      "There was a problem with the fetch operation:",
-                      error,
-                    );
-                  }
-                };
-                fetchNextProblem();
-              }}
+              onClick={fetchNextProblem("")}
             >
               남은 문제 이어서 풀기
             </Button>
@@ -165,8 +167,6 @@ export default function Page() {
                 })
                   .then((response) => {
                     router.push(`/main/sectional/${params.subject}/mix/1`);
-
-                    // response.json();
                   })
                   .then((result) => console.log(result));
               }}
@@ -227,7 +227,9 @@ export default function Page() {
             <div className="mt-3 flex w-full gap-2">
               {item.answeredProblems ? (
                 <>
-                  <Button size="medium" color="activeLight">
+                  <Button size="medium" color="activeLight"
+                    onClick={fetchNextProblem(item.type)}
+                    >
                     이어서 풀기
                   </Button>
                   <Button size="medium" color="activeBlack">

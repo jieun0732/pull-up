@@ -20,7 +20,7 @@ export default function Layout({
   children: React.ReactNode;
   params: {
     subject: string;
-    type: string;
+    category: string;
     id: string;
   };
 }) {
@@ -30,14 +30,14 @@ export default function Layout({
 
   const memberId = localStorage.getItem('memberId') || "";
   const entry = entryMap[params.subject];
-  const category = categoryMap[params.type];
-  let type = ""
+  const category = categoryMap[params.category];
   
+  let type = ""
+
   if (category !== "골고루") {
     type = localStorage.getItem('type') || ""
   }
 
-  console.log(entry, category);
 
   const queryString = new URLSearchParams({
     memberId,
@@ -110,7 +110,7 @@ export default function Layout({
           <ConfirmModal
             onLeft={() =>
               router.push(
-                `/main/sectional/${params.subject}/${params.type}/result`,
+                `/main/sectional/${params.subject}/${params.category}/result`,
               )
             }
             onRight={closeModal}

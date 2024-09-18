@@ -14,14 +14,14 @@ export default function Page({
 }: {
   params: {
     subject: string;
-    type: string;
+    category: string;
     id: string;
   };
 }) {
   const memberId = localStorage.getItem('memberId') || "";
   const [selectedId, setSelectedId] = useState<number>(-1);
   const entry = entryMap[params.subject];
-  const category = categoryMap[params.type];
+  const category = categoryMap[params.category];
   let type = ""
   
   if (category !== "골고루") {
@@ -49,6 +49,7 @@ export default function Page({
 
   const nowProblem: Problem = problems[Number(params.id) - 1].problem;
 
+  
   return (
     <>
       {nowProblem.choices.map((item, idx) => (

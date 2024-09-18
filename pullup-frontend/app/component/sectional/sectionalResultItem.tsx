@@ -18,7 +18,7 @@ interface SectionalResultItemProp {
   item: ProblemInfo;
   params: {
     subject: string;
-    type: string;
+    category: string;
   };
   isNonActive: boolean;
 }
@@ -30,7 +30,7 @@ export default function SectionalResultItem({
   isNonActive,
 }: SectionalResultItemProp) {
   const router = useRouter();
-  const { subject, type } = params;
+  const { subject, category } = params;
 
   if (item.chosenAnswer && item.isCorrect) {
     return (
@@ -49,7 +49,7 @@ export default function SectionalResultItem({
           color="green"
           onClick={() =>
             router.push(
-              `/main/sectional/${subject}/${type}/result/${problemNum}`,
+              `/main/sectional/${subject}/${category}/result/${problemNum}`,
             )
           }
         >
@@ -74,7 +74,7 @@ export default function SectionalResultItem({
           color="red"
           onClick={() =>
             router.push(
-              `/main/sectional/${subject}/${type}/result/${problemNum}`,
+              `/main/sectional/${subject}/${category}/result/${problemNum}`,
             )
           }
         >
@@ -99,7 +99,7 @@ export default function SectionalResultItem({
           color="red"
           onClick={() =>
             router.push(
-              `/main/sectional/${subject}/${type}/result/${problemNum}`,
+              `/main/sectional/${subject}/${category}/result/${problemNum}`,
             )
           }
         >
@@ -123,7 +123,7 @@ export default function SectionalResultItem({
           size="large"
           color="active"
           onClick={() =>
-            router.push(`/main/sectional/${subject}/${type}/${problemNum}`)
+            router.push(`/main/sectional/${subject}/${category}/${problemNum}`)
           }
         >
           이어서 풀기

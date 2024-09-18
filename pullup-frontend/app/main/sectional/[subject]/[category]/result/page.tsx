@@ -14,20 +14,28 @@ export default function Page({
 }: {
   params: {
     subject: string;
-    type: string;
+    category: string;
   };
 }) {
   const router = useRouter();
-  const { subject, type } = params;
+  const { subject, category } = params;
 
   const memberID = 1;
   const entry = entryMap[params.subject];
-  const category = categoryMap[params.type];
+  const categoryKor = categoryMap[params.category];
+
+  let type = ""
+
+  if (categoryKor !== "골고루") {
+    type = localStorage.getItem('type') || ""
+  }
+
 
   const queryString = new URLSearchParams({
     memberId: memberID.toString(),
     entry,
-    category,
+    category: categoryKor,
+    type,
   }).toString();
 
   const { data: problems } = useSWR<ProblemInfo[]>(
