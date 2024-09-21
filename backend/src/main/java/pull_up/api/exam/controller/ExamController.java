@@ -202,8 +202,8 @@ public class ExamController {
 
     @Operation(summary = "모의고사 완료 및 점수 저장하기", description = "모의고사를 완료하고 점수를 저장합니다.", tags = "모의고사")
     @PostMapping("/mock-exam/complete")
-    public ResponseEntity<ExamInformationDto> completeMockExam(@RequestBody ExamInformationDto examInformationDto) {
-        ExamInformationDto completedExam = examService.completeMockExam(examInformationDto);
+    public ResponseEntity<ExamInformationDto> completeMockExam(@RequestParam Long examInformationId) {
+        ExamInformationDto completedExam = examService.completeMockExam(examInformationId);
         return ResponseEntity.ok(completedExam);
     }
 
