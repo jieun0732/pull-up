@@ -423,8 +423,9 @@ public class ExamService {
         // ExamProblem에서 Problem을 추출하여 반환
         Problem problem = examProblem.getProblem();
         LocalDateTime createdDate = examProblem.getExamInformation()
-            .getCreatedDate(); // createdDate 가져오기
-        return ProblemTimeResultDto.from(problem, createdDate, examProblem.getProblemNumber());
+            .getCreatedDate();
+        String chosenAnswer = examProblem.getChosenAnswer();
+        return ProblemTimeResultDto.from(problem, createdDate, examProblem.getProblemNumber(), chosenAnswer);
     }
 
     /**
@@ -439,8 +440,9 @@ public class ExamService {
         }
         Problem problem = examProblem.getProblem();
         LocalDateTime createdDate = examProblem.getExamInformation()
-            .getCreatedDate(); // createdDate 가져오기
-        return ProblemTimeResultDto.from(problem, createdDate, examProblem.getProblemNumber()); // createdDate 함께 전달
+            .getCreatedDate();
+        String chosenAnswer = examProblem.getChosenAnswer();
+        return ProblemTimeResultDto.from(problem, createdDate, examProblem.getProblemNumber(), chosenAnswer); // createdDate 함께 전달
     }
 
     /**
@@ -494,14 +496,14 @@ public class ExamService {
     /**
      * 모의고사 완료 및 점수 저장하기.
      */
-    public ExamInformationDto completeMockExam(ExamInformationDto examInformationDto) {
+    public ExamInformationDto completeMockExam(Long examInformationId) {
         ExamInformation examInformation = examInformationRepository.findById(
-                examInformationDto.id())
+                examInformationId)
             .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
         examInformation.setSolvedDate(LocalDateTime.now());
 
         List<ExamProblem> answers = examProblemRepository.findByExamInformationId(
-            examInformationDto.id());
+            examInformationId);
         int score = (int) answers.stream().filter(ExamProblem::getIsCorrect).count() * 5;
         examInformation.setScore(score);
         examInformation.setRequiredTime(

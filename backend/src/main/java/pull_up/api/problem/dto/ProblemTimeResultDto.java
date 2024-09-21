@@ -22,7 +22,8 @@ public record ProblemTimeResultDto(
     Integer totalAttempts,
     Integer incorrectAttempts,
     Double incorrectRate,
-    LocalDateTime createdDate // createdDate 필드 추가
+    LocalDateTime createdDate, // createdDate 필드 추가
+    String ChosenAnswer
 ) implements Serializable {
 
     public static ProblemTimeResultDto of(
@@ -39,14 +40,15 @@ public record ProblemTimeResultDto(
         Integer totalAttempts,
         Integer incorrectAttempts,
         Double incorrectRate,
-        LocalDateTime createdDate // createdDate 파라미터 추가
+        LocalDateTime createdDate, // createdDate 파라미터 추가
+        String ChosenAnswer
     ) {
         return new ProblemTimeResultDto(id, problemNumber, entry, category, type, question, explanation, choices,
             answer, answerExplain, totalAttempts, incorrectAttempts,
-            incorrectRate, createdDate);
+            incorrectRate, createdDate, ChosenAnswer);
     }
 
-    public static ProblemTimeResultDto from(Problem entity, LocalDateTime createdDate, Long problemNumber) { // createdDate 파라미터 추가
+    public static ProblemTimeResultDto from(Problem entity, LocalDateTime createdDate, Long problemNumber, String chosenAnswer) { // createdDate 파라미터 추가
         List<String> choices = List.of(
             entity.getChoice1(),
             entity.getChoice2(),
@@ -69,7 +71,8 @@ public record ProblemTimeResultDto(
             entity.getTotalAttempts(),
             entity.getIncorrectAttempts(),
             entity.getIncorrectRate(),
-            createdDate // createdDate 값 설정
+            createdDate, // createdDate 값 설정
+            chosenAnswer
         );
     }
 }
