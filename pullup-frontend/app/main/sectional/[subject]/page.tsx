@@ -23,10 +23,10 @@ export default function Page() {
 
   const entry = entryMap[params.subject];
   const [category, setCategory] = useState<string>("골고루");
-  const memberID = 1;
+  const memberID = localStorage.getItem("memberId") || "";
 
   const { data, error } = useSWR<Category[]>(
-    `${API}/exams/problems/${params.subject}?memberId=1`,
+    `${API}/exams/problems/${params.subject}?memberId=${memberID}`,
     fetcher,
   );
 
@@ -47,9 +47,9 @@ export default function Page() {
     }
   
     const queryString = new URLSearchParams({
-      memberId: memberID.toString(),
+      memberId: memberID,
       entry,
-      category,
+      category : paramCategory,
       type,
     }).toString();
   
@@ -83,7 +83,7 @@ export default function Page() {
     }
   
     const queryString = new URLSearchParams({
-      memberId: memberID.toString(),
+      memberId: memberID,
       entry,
       category,
       type,
@@ -158,7 +158,7 @@ export default function Page() {
               className="absolute right-6"
               onClick={() => {
                 const queryString = new URLSearchParams({
-                  memberId: memberID.toString(),
+                  memberId: memberID,
                   entry,
                   category,
                 }).toString();
@@ -238,7 +238,12 @@ export default function Page() {
                 </>
               ) : (
                 <>
-                  <Button size="medium" color="activeLight">
+                  <Button size="medium" color="activeLight"
+                  onClick={() => {
+                    localStorage.setItem('type', item.type)
+                    router.push(`/main/sectional/${params.subject}/type/1`)
+                  }
+                  }>
                   학습하기
                   </Button>
                   <Button size="medium" color="nonactive">

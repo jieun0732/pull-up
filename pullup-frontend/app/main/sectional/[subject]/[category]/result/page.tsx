@@ -20,7 +20,8 @@ export default function Page({
   const router = useRouter();
   const { subject, category } = params;
 
-  const memberID = 1;
+  const memberID = localStorage.getItem("memberId") || "";
+
   const entry = entryMap[params.subject];
   const categoryKor = categoryMap[params.category];
 
@@ -32,7 +33,7 @@ export default function Page({
 
 
   const queryString = new URLSearchParams({
-    memberId: memberID.toString(),
+    memberId: memberID,
     entry,
     category: categoryKor,
     type,

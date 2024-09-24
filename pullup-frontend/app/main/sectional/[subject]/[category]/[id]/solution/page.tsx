@@ -14,21 +14,30 @@ export default function Page({
 }: {
   params: {
     subject: string;
-    type: string;
+    category: string;
     id: string;
   };
 }) {
   const router = useRouter();
-  const { subject, type, id } = params;
+  const { subject, category, id } = params;
 
-  const memberID = 1;
+  const memberID = localStorage.getItem("memberId") || "";
+
   const entry = entryMap[params.subject];
-  const category = categoryMap[params.type];
+  const categoryKor = categoryMap[params.category];
+
+  let type = ""
+
+  if (categoryKor !== "골고루") {
+    type = localStorage.getItem('type') || ""
+  }
+
 
   const queryString = new URLSearchParams({
     memberId: memberID.toString(),
     entry,
-    category,
+    category: categoryKor,
+    type,
   }).toString();
 
   const { data, error } = useSWR<ProblemInfo[]>(
@@ -92,7 +101,7 @@ export default function Page({
             className="backdrop-blur-sm"
             onClick={() =>
               router.push(
-                `/main/sectional/${subject}/${type}/${Number(id) + 1}/`,
+                `/main/sectional/${subject}/${category}/${Number(id) + 1}/`,
               )
             }
           >
@@ -106,7 +115,7 @@ export default function Page({
               className="backdrop-blur-sm"
               onClick={() =>
                 router.push(
-                  `/main/sectional/${params.subject}/${params.type}/${Number(id) - 1}/solution`,
+                  `/main/sectional/${params.subject}/${params.category}/${Number(id) - 1}/solution`,
                 )
               }
             >
@@ -117,17 +126,33 @@ export default function Page({
               color="active"
               className="backdrop-blur-sm"
               onClick={() => {
-                const previousPath = document.referrer;
-                console.log("previousPath", previousPath);
-                if (previousPath.includes("solution")) {
+
+                if (data.length == Number(id)) {
+                  console.log("여기1")
+                  router.push(`/main/sectional/${subject}/${category}/result`);
+                } else if (data[Number(id)].chosenAnswer) {
                   router.push(
-                    `/main/sectional/${params.subject}/${params.type}/${Number(id) - 1}/solution`,
-                  );
+                    `/main/sectional/${subject}/${category}/${Number(id) + 1}/solution`,
+                  )
                 } else {
                   router.push(
-                    `/main/sectional/${subject}/${type}/${Number(id) + 1}/`,
-                  );
-                }
+                    `/main/sectional/${subject}/${category}/${Number(id) + 1}/`,
+                  )
+                } 
+                
+                const previousPath = document.referrer;
+                console.log(previousPath)
+                console.log(window.history)
+                console.log(router.forward())
+                // if (!previousPath.includes("solution")) {
+                //   router.push(
+                //     `/main/sectional/${params.subject}/${params.category}/${Number(id) - 1}/solution`,
+                //   );
+                // } else {
+                //   router.push(
+                //     `/main/sectional/${subject}/${category}/${Number(id) + 1}/`,
+                //   );
+                // }
               }}
             >
               다음 문제

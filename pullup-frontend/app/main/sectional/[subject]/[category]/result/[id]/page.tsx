@@ -22,7 +22,8 @@ export default function Page({
 }) {
   const router = useRouter();
   const { subject, type, id } = params;
-  const memberID = 1;
+  const memberID = localStorage.getItem("memberId") || "";
+
   const entry = entryMap[params.subject];
   const category = categoryMap[params.type];
 
