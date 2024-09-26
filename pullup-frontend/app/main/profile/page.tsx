@@ -11,7 +11,7 @@ import Text from "@/component/ui/Text";
 import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
 import { User } from "@/types/userType";
-import LocalStorage from "@/utils/localStorage";
+import LocalStorage from "@/utils/LocalStorage";
 
 interface AuthIconType {
   [key: string]: StaticImageData;

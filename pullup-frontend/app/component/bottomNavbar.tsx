@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import MockTestIcon from "@/assets/icon/MockTestIcon";
-import { ProfileIcon, SectionalIcon } from "@/assets/icon/Icons";
+import { ProfileIcon, SectionalIcon, MockTestIcon } from "@/assets/icon/Icons";
 
 
 const navbarItem = [

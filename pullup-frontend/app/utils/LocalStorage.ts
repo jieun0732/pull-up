@@ -1,3 +1,4 @@
+"use client"
 
 class LocalStorage {
     constructor() {}

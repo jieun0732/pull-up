@@ -5,7 +5,7 @@ import Image from "next/image";
 import Text from "./component/ui/Text";
 import { useRouter } from "next/navigation";
 import introLogo from "@/assets/logo/introLogo.png";
-import LocalStorage from "@/utils/localStorage";
+import LocalStorage from "@/utils/LocalStorage";
 
 export default function Home() {
   const totalPercent = 91;

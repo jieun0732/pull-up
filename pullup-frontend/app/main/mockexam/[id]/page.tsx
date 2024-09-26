@@ -23,7 +23,7 @@ import useSWR from "swr";
 import { API } from "@/lib/API";
 import { MockExamProblemType } from "@/types/mockexam/mockexamQuestion";
 import useTimer from "@/hooks/useTimer";
-import LocalStorage from "@/utils/localStorage";
+import LocalStorage from "@/utils/LocalStorage";
 
 export default function Page() {
   const router = useRouter();

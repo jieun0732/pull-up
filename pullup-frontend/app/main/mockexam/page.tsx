@@ -10,7 +10,7 @@ import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
 import { User } from "@/types/userType";
 import { MockExamResponseType } from "@/types/mockexam/mockexamQuestion";
-import LocalStorage from "@/utils/localStorage";
+import LocalStorage from "@/utils/LocalStorage";
 
 export default function Page() {
   const router = useRouter();
