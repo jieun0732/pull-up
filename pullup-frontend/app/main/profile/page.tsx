@@ -11,6 +11,7 @@ import Text from "@/component/ui/Text";
 import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
 import { User } from "@/types/userType";
+import LocalStorage from "@/utils/LocalStorage";
 
 interface AuthIconType {
   [key: string]: StaticImageData;
@@ -24,7 +25,7 @@ const authIcon: AuthIconType = {
 };
 
 export default function Page() {
-  const { data, error } = useSWR<User>(`${API}/members/${localStorage.getItem("memberId")}`, fetcher);
+  const { data, error } = useSWR<User>(`${API}/members/${LocalStorage.getItem("memberId")}`, fetcher);
 
   if (!data) return
   

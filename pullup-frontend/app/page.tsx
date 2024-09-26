@@ -1,4 +1,5 @@
 "use client";
+import LocalStorage from "./utils/LocalStorage";
 import Image from "next/image";
 import Text from "./component/ui/Text";
 import { useRouter } from "next/navigation";
@@ -21,7 +22,7 @@ export default function Home() {
       </Text>
       <button
         onClick={() => {
-          localStorage.setItem("memberId", "1")
+          LocalStorage.setItem("memberId", "1")
           router.push("/main/sectional")
         }}
         className="relative mb-5 flex w-full items-center justify-center rounded-md bg-[#fee500] py-5"

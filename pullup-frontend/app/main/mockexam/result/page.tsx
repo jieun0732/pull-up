@@ -1,5 +1,4 @@
 "use client";
-import { dummyresult } from "@/constants/dummyresult";
 import SectionalResultItem from "@/component/sectional/sectionalResultItem";
 import SectionalResultHeader from "@/component/sectional/sectionalResultHeader";
 import { useRouter } from "next/navigation";
@@ -21,14 +20,14 @@ export default function Page({
       <div className="relative mb-6 h-[25px] w-full text-center text-[17px] font-bold">
         <CloseIcon onClick={() => router.push(`/main/sectional/${subject}`)} />
       </div>
-      <SectionalResultHeader isFinished={false} params={params} />
-      {dummyresult.map((item) => {
+      {/* <SectionalResultHeader isFinished={false} params={params} /> */}
+      {/* {dummyresult.map((item) => {
         return (
           <div key={item.id}>
             <SectionalResultItem item={item} params={params} />
           </div>
         );
-      })}
+      })} */}
     </div>
   );
 }

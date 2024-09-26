@@ -8,10 +8,12 @@ import { IncorrectAnswers } from "@/types/problemType";
 import { API, fetcher } from "@/lib/API";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/utils/formatDate";
+import LocalStorage from "@/utils/LocalStorage";
 
 export default function Page() {
-  const { data , error } = useSWR<IncorrectAnswers[]>(`${API}/exams/incorrect-answers?memberId=${localStorage.getItem("memberId")}`, fetcher);
+  const { data , error } = useSWR<IncorrectAnswers[]>(`${API}/exams/incorrect-answers?memberId=${LocalStorage.getItem("memberId")}`, fetcher);
   const router = useRouter()
+  
   if (!data) return
   console.log(data)
   return (

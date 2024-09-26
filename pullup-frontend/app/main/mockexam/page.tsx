@@ -1,4 +1,5 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import Button from "@/component/ui/Button";
 import Text from "@/component/ui/Text";
@@ -10,10 +11,12 @@ import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
 import { User } from "@/types/userType";
 import { MockExamResponseType } from "@/types/mockexam/mockexamQuestion";
+import LocalStorage from "@/utils/LocalStorage";
+
 export default function Page() {
   const isFinished = false;
   const router = useRouter();
-  const { data, error } = useSWR<User>(`${API}/members/${localStorage.getItem("memberId")}`, fetcher);
+  const { data, error } = useSWR<User>(`${API}/members/${LocalStorage.getItem("memberId")}`, fetcher);
 
   if (!data) return
 
