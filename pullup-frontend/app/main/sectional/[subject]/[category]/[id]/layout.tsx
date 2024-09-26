@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import CloseIcon from "@/assets/icon/CloseIcon";
+import { CloseIcon } from "@/assets/icon/Icons";
 import Text from "@/component/ui/Text";
 import Button from "@/component/ui/Button";
 import useModal from "@/hooks/useModal";

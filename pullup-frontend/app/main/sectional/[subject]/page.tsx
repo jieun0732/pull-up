@@ -8,7 +8,7 @@ import ProgressBar from "@/component/sectional/progressbar";
 import Button from "@/component/ui/Button";
 import Header from "@/component/ui/Header";
 import Text from "@/component/ui/Text";
-import { ReplayIcon, ArrowIcon } from "@/assets/icon";
+import { ReplayIcon, ArrowIcon } from "@/assets/icon/Icons";
 import ReplaySpeechBubble from "@/component/sectional/ReplaySpeechBubble";
 import useSWR from "swr";
 import { Category } from "@/types/sectionalType";

@@ -1,8 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import CloseIcon from "@/assets/icon/CloseIcon";
-import ToggleIcon from "@/assets/icon/ToggleIcon";
+import { CloseIcon, ToggleIcon } from "@/assets/icon/Icons";
 import Text from "@/component/ui/Text";
 import Button from "@/component/ui/Button";
 import { useState, useEffect } from "react";
@@ -24,6 +23,7 @@ import useSWR from "swr";
 import { API } from "@/lib/API";
 import { MockExamProblemType } from "@/types/mockexam/mockexamQuestion";
 import useTimer from "@/hooks/useTimer";
+import LocalStorage from "@/utils/localStorage";
 
 export default function Page() {
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function Page() {
   
   
   const timeLeft = useTimer(params.id, 30); 
-  const examId = localStorage.getItem('examId')
+  const examId = LocalStorage.getItem('examId')
 
 
   const { data : nowProblem , error } = useSWR<MockExamProblemType>(
@@ -47,7 +47,7 @@ export default function Page() {
       if (params.id !== '1') return
       if (params.id === '1') { 
         try {
-          const response = await fetch(`${API}/members/${localStorage.getItem('memberId')}/access-check`, {
+          const response = await fetch(`${API}/members/${LocalStorage.getItem('memberId')}/access-check`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ export default function Page() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            examInformationId: Number(localStorage.getItem('examId')),
+            examInformationId: Number(LocalStorage.getItem('examId')),
             problemNumber: Number(nowProblem?.problemNumber),
             chosenAnswer: String(selectedId + 1),
           })
@@ -97,7 +97,7 @@ export default function Page() {
 
         const result = await response.json();
         console.log(result)
-        localStorage.setItem('createdDate', result.examInformation.createdDate)
+        LocalStorage.setItem('createdDate', result.examInformation.createdDate)
         console.log(result.examInformation.createdDate)
       } catch (error) {
         console.error(error);

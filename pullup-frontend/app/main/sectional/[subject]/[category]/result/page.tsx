@@ -3,7 +3,7 @@ import Text from "@/component/ui/Text";
 import SectionalResultItem from "@/component/sectional/sectionalResultItem";
 import SectionalResultHeader from "@/component/sectional/sectionalResultHeader";
 import { useRouter } from "next/navigation";
-import CloseIcon from "@/assets/icon/CloseIcon";
+import { CloseIcon } from "@/assets/icon/Icons";
 import { entryMap, categoryMap } from "@/constants/constants";
 import useSWR from "swr";
 import { ProblemInfo } from "@/types/problemType";

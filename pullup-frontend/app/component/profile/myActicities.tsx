@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import wrongQuestionIcon from "@/assets/icon/wrong-questions.png";
-import DepthIcon from "@/assets/icon/DepthIcon";
+import { DepthIcon } from "@/assets/icon/Icons";
 import Text from "../ui/Text";
 
 interface MyActivitiesProp {

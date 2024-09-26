@@ -2,7 +2,7 @@
 import SectionalResultItem from "@/component/sectional/sectionalResultItem";
 import SectionalResultHeader from "@/component/sectional/sectionalResultHeader";
 import { useRouter } from "next/navigation";
-import CloseIcon from "@/assets/icon/CloseIcon";
+import { CloseIcon } from "@/assets/icon/Icons";
 
 export default function Page({
   params,

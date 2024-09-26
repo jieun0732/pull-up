@@ -2,7 +2,7 @@
 
 import Button from "./Button";
 import Text from "./Text";
-import WarningIcon from "@/assets/icon/WarningIcon";
+import { WarningIcon } from "@/assets/icon/Icons";
 
 interface ConfirmModalProps {
   onLeft: () => void;

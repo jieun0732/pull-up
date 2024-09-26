@@ -1,20 +1,18 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import Button from "@/component/ui/Button";
 import Text from "@/component/ui/Text";
 import Image from "next/image";
 import rankLogo from "@/assets/logo/rankLogo.png";
 import questionLogo from "@/assets/logo/questionLogo.png";
-import { TotalQuestionNumberIcon, LimitTimeIcon } from "@/assets/icon";
+import { TotalQuestionNumberIcon, LimitTimeIcon } from "@/assets/icon/MockTestDescriptionIcons";
 import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
 import { User } from "@/types/userType";
 import { MockExamResponseType } from "@/types/mockexam/mockexamQuestion";
-import LocalStorage from "@/utils/LocalStorage";
+import LocalStorage from "@/utils/localStorage";
 
 export default function Page() {
-  const isFinished = false;
   const router = useRouter();
   const { data, error } = useSWR<User>(`${API}/members/${LocalStorage.getItem("memberId")}`, fetcher);
 
@@ -83,7 +81,7 @@ export default function Page() {
                 const result:MockExamResponseType = await response.json();
                 const examId = String(result.id);
                 console.log(result)
-                localStorage.setItem("examId", examId)     
+                LocalStorage.setItem("examId", examId)     
                 const currentTimeISO = new Date().toISOString(); // 현재 시간을 ISO 형식으로 저장
                 localStorage.setItem('time', currentTimeISO); // localStorage에 현재 시간 저장       
                 router.push("/main/mockexam/1");

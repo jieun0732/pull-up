@@ -8,7 +8,7 @@ import { IncorrectAnswers } from "@/types/problemType";
 import { API, fetcher } from "@/lib/API";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/utils/formatDate";
-import LocalStorage from "@/utils/LocalStorage";
+import LocalStorage from "@/utils/localStorage";
 
 export default function Page() {
   const { data , error } = useSWR<IncorrectAnswers[]>(`${API}/exams/incorrect-answers?memberId=${LocalStorage.getItem("memberId")}`, fetcher);

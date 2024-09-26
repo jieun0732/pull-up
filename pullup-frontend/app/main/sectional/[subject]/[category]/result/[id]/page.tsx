@@ -4,7 +4,7 @@ import Button from "@/component/ui/Button";
 import { useRouter } from "next/navigation";
 import Text from "@/component/ui/Text";
 import formatNumber from "@/utils/formatNumber";
-import BackIcon from "@/assets/icon/BackIcon";
+import { BackIcon } from "@/assets/icon/Icons";
 import { categoryMap, entryMap } from "@/constants/constants";
 import useSWR from "swr";
 import { ProblemInfo } from "@/types/problemType";

@@ -1,13 +1,12 @@
 import Link from "next/link";
-import DepthIcon from "@/assets/icon/DepthIcon";
 import Text from "../ui/Text";
-import {
-  ServiceUsageIcon,
+import { DepthIcon } from "@/assets/icon/Icons";
+import {  ServiceUsageIcon,
   PrivacyPolicyIcon,
   LogoutIcon,
   SignOutIcon,
-  VersionIcon,
-} from "@/assets/icon";
+  VersionIcon, } from "@/assets/icon/ProfileMenusIcons";
+
 
 const etcItems = [
   {
