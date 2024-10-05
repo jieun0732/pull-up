@@ -36,7 +36,7 @@ function MyScoreAverage() {
   const PROGRESSBAR_SIZE = size.width > 0 ? size.width / 2 - 15 : 0;
 
   return (
-    <div className="flex h-[50%] w-full flex-col rounded-2xl bg-white p-6">
+    <div className="flex h-[370px] w-full flex-col rounded-2xl bg-white p-6">
       <div className="w-full">
         <Text size="head-02" color="text-blue01">
           {scoreStatus[status].title}
