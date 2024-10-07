@@ -73,6 +73,7 @@ export default function Page() {
     checkAccess();
   }, [params.id]); // id가 변경될 때마다 useEffect가 실행됩니다.
 
+  
 
 
   const handleNextQuestion = async () => {
@@ -128,7 +129,19 @@ export default function Page() {
     }
 
   }
+
+
+  useEffect(() => {
+    console.log("((((((((((((((((")
+    console.log(nowProblem)
+    if (nowProblem && nowProblem.ChosenAnswer !== null) {
+      setSelectedId(Number(nowProblem.ChosenAnswer))
+    }
+  }, [nowProblem])
   if (!nowProblem) return;
+
+ 
+
   
   return (
     <>
@@ -167,7 +180,7 @@ export default function Page() {
           </Text>
 
           {nowProblem.explanation && nowProblem.explanation.length > 0 && (
-            <div className="relative mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
+            <div className="relative mb-12 px-5 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
               <Text size="body-03">{nowProblem.explanation}</Text>
               <TutorialStep0Text step={step} />
             </div>
