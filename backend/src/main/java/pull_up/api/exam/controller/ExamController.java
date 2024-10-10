@@ -39,7 +39,7 @@ import pull_up.api.problem.dto.ProblemTypeSummaryDto;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/pull-up/exams")
+@RequestMapping("/exams")
 @RequiredArgsConstructor
 public class ExamController {
 
