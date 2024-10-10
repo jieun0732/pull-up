@@ -67,7 +67,7 @@ public class SecurityConfig {
             // 카카오 로그인 추가
             .oauth2Login(oauth2 -> oauth2
                 .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig.accessTokenResponseClient(accessTokenResponseClient(customRequestEntityConverter())))
-//                .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
+                .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
                 .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
                 .successHandler(oAuth2SuccessHandler)
             )
