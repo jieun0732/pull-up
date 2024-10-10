@@ -41,8 +41,8 @@ spring:
           kakao:
             client-id: f9165f4a6bb04401b296313ef583fb98
             client-secret: wt0MHHY0Dp9vTTUYX4w7M8yEDZUSebcg
-            redirect-uri: "http://43.203.236.62:8080/api/pull-up/oauth2/callback/kakao"
-#            redirect-uri: "http://localhost:8080/api/pull-up/oauth2/callback/kakao"
+#            redirect-uri: "https://pullup-api.shop/api/pull-up/oauth2/callback/kakao"
+            redirect-uri: "http://localhost:8080/api/pull-up/oauth2/callback/kakao"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
             scope:
@@ -53,14 +53,14 @@ spring:
             client-id: com.pull-up.services
             #client-secret: AuthKey_SNHA348FS6.p8/7MKFVNQYN5/SNHA348FS6
             client-secret: AuthKey_SNHA348FS6.p8
-#            redirect-uri: "https://pullup-api.shop/api/pull-up/oauth2/callback/apple"
-            redirect-uri: "https://pullup-api.shop/login/oauth2/code/apple"
+            redirect-uri: "https://pullup-api.shop/api/pull-up/oauth2/callback/apple"
+#            redirect-uri: "https://pullup-api.shop/login/oauth2/code/apple"
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             scope:
               - name
               - email
-            clientName: Apple
+            clientName: apple
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
