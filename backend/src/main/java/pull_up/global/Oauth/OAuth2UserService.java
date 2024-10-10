@@ -34,7 +34,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         log.info(registrationId);
-        
+
         // 어떤 로그인인지 구분
         Map<String, Object> attributes;
         if ("apple".equals(registrationId)) {
@@ -47,6 +47,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             OAuth2User oAuth2User = super.loadUser(userRequest);
             attributes =  new HashMap<>(oAuth2User.getAttributes());
         }
+
 
         // 해석된 정보 Dto를 통해 필터링
         String oauthClientName = userRequest.getClientRegistration().getClientName();
