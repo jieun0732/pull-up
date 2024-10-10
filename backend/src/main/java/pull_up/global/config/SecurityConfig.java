@@ -72,7 +72,7 @@ public class SecurityConfig {
             )
 
             .authorizeHttpRequests(request -> request
-                .requestMatchers("/api/pull-up/oauth2/**", "/api/pull-up/login", "/login/**")
+                .requestMatchers("/api/pull-up/oauth2/**", "/api/pull-up/login")
                 .permitAll()
                 .requestMatchers("/api/pull-up/swagger-ui/**").permitAll()
                 .requestMatchers("/api/pull-up/swagger-ui/index.html").permitAll()

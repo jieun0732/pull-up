@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-#    contextPath: "/api/pull-up/"
+    contextPath: "/api/pull-up/"
     encoding:
       charset: UTF-8
       enabled: true
@@ -53,8 +53,8 @@ spring:
             client-id: com.pull-up.services
             #client-secret: AuthKey_SNHA348FS6.p8/7MKFVNQYN5/SNHA348FS6
             client-secret: AuthKey_SNHA348FS6.p8
-            #redirect-uri: "https://43.203.236.62.nip.io/api/pull-up/oauth2/callback/apple"
-            redirect-uri: "https://43.203.236.62.nip.io/login/oauth2/code/apple"
+            redirect-uri: "https://pullup-api.shop/api/pull-up/oauth2/callback/apple"
+#            redirect-uri: "https://pullup-api.shop/login/oauth2/code/apple"
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             scope:
@@ -73,6 +73,12 @@ spring:
 #            jwk-set-uri: https://appleid.apple.com/auth/keys
 #            user-name-attribute: sub
 
+apple:
+  url: https://appleid.apple.com
+  path: static/apple/AuthKey_SNHA348FS6.p8
+  cid: com.pull-up.services
+  tid: 7MKFVNQYN5
+  kid: SNHA348FS6
 
 #logging
 logging:
