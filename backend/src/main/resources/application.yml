@@ -73,6 +73,12 @@ spring:
 #            jwk-set-uri: https://appleid.apple.com/auth/keys
 #            user-name-attribute: sub
 
+apple:
+  url: https://appleid.apple.com
+  path: static/apple/AuthKey_SNHA348FS6.p8
+  cid: com.pull-up.services
+  tid: 7MKFVNQYN5
+  kid: SNHA348FS6
 
 #logging
 logging:
