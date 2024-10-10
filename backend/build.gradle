@@ -39,6 +39,9 @@ dependencies {
 	implementation 'com.nimbusds:nimbus-jose-jwt:9.30.1'
 	implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.bouncycastle:bcpkix-jdk18on:1.72'
+	implementation 'commons-io:commons-io:2.17.0'
+
 	testImplementation 'org.springframework.security:spring-security-test'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
