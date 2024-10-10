@@ -29,6 +29,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import pull_up.global.Oauth.AppleProperties;
 import pull_up.global.Oauth.OAuth2SuccessHandler;
 import pull_up.global.Oauth.OAuth2UserService;
 import pull_up.global.Oauth.CustomRequestEntityConverter;
@@ -40,10 +41,10 @@ public class SecurityConfig {
 
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
-
+    private final AppleProperties appleProperties;
     @Bean
     public CustomRequestEntityConverter customRequestEntityConverter() {
-        return new CustomRequestEntityConverter();
+        return new CustomRequestEntityConverter(appleProperties);
     }
 
     @Bean
