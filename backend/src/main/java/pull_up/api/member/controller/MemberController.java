@@ -23,7 +23,7 @@ import pull_up.global.common.response.BaseResponse;
  * 멤버 controller.
  */
 @Slf4j
-@RequestMapping("/members")
+@RequestMapping("/api/pull-up/members")
 @RestController
 @RequiredArgsConstructor
 public class MemberController {

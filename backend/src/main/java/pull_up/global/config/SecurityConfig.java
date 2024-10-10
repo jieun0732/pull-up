@@ -42,6 +42,11 @@ public class SecurityConfig {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
+    public CustomRequestEntityConverter customRequestEntityConverter() {
+        return new CustomRequestEntityConverter();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             // cors 허용
@@ -60,13 +65,14 @@ public class SecurityConfig {
 
             // 카카오 로그인 추가
             .oauth2Login(oauth2 -> oauth2
-                .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
+                .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig.accessTokenResponseClient(accessTokenResponseClient(customRequestEntityConverter())))
+//                .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
                 .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
                 .successHandler(oAuth2SuccessHandler)
             )
 
             .authorizeHttpRequests(request -> request
-                .requestMatchers("/api/pull-up/oauth2/**", "/api/pull-up/login")
+                .requestMatchers("/api/pull-up/oauth2/**", "/api/pull-up/login", "/login/**")
                 .permitAll()
                 .requestMatchers("/api/pull-up/swagger-ui/**").permitAll()
                 .requestMatchers("/api/pull-up/swagger-ui/index.html").permitAll()
@@ -104,9 +110,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
+    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient(CustomRequestEntityConverter customRequestEntityConverter) {
         DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
-        accessTokenResponseClient.setRequestEntityConverter(new CustomRequestEntityConverter());
+        accessTokenResponseClient.setRequestEntityConverter(customRequestEntityConverter);
 
         return accessTokenResponseClient;
     }
