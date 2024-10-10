@@ -15,7 +15,7 @@ import pull_up.api.problem.dto.ProblemDto;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/pull-up/memberAnswers")
+@RequestMapping("/memberAnswers")
 public class MemberAnswerController {
 
     @Autowired
