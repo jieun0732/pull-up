@@ -6,10 +6,15 @@ import Text from "./component/ui/Text";
 import { useRouter } from "next/navigation";
 import introLogo from "@/assets/logo/introLogo.png";
 import LocalStorage from "@/utils/LocalStorage";
+import { useEffect } from "react";
 
 export default function Home() {
   const totalPercent = 91;
   const router = useRouter();
+
+  useEffect(() => {
+    localStorage.clear()
+  }, [])
 
   return (
     <main className="flex h-full w-full flex-col items-center justify-center bg-white px-5">

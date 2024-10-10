@@ -52,6 +52,7 @@ export interface Problem {
 export interface MockExamProblemType {
   id: number;
   problemNumber: number;
+  ChosenAnswer : number;
   entry: string;
   category: string;
   type: string;

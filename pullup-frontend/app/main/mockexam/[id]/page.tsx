@@ -28,31 +28,32 @@ import LocalStorage from "@/utils/LocalStorage";
 export default function Page() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
-  const [selectedId, setSelectedId] = useState<number>(-1);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [showQuestions, setShowQuestions] = useState<boolean>(false);
   const { openModal, closeModal, Modal } = useModal({ initialOpen: false });
   const [step, setStep] = useState(4);
-  
-  
-  const timeLeft = useTimer(params.id, 30); 
-  const examId = LocalStorage.getItem('examId')
 
+  const timeLeft = useTimer(params.id, 30);
+  const examId = LocalStorage.getItem("examId");
 
-  const { data : nowProblem , error } = useSWR<MockExamProblemType>(
+  const { data: nowProblem, error } = useSWR<MockExamProblemType>(
     `${API}/exams/mock-exam/problem?examInformationId=${examId}&problemNumber=${params.id}`,
   );
 
   useEffect(() => {
     const checkAccess = async () => {
-      if (params.id !== '1') return
-      if (params.id === '1') { 
+      if (params.id !== "1") return;
+      if (params.id === "1") {
         try {
-          const response = await fetch(`${API}/members/${LocalStorage.getItem('memberId')}/access-check`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
+          const response = await fetch(
+            `${API}/members/${LocalStorage.getItem("memberId")}/access-check`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
             },
-          });
+          );
 
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -60,89 +61,78 @@ export default function Page() {
 
           const result = await response.json();
           if (result.data.accessCheck) {
-            setStep(4); 
+            setStep(4);
           } else {
-            setStep(0); 
+            setStep(0);
           }
         } catch (error) {
-          console.error('Error fetching access check:', error);
-          setStep(0); 
+          console.error("Error fetching access check:", error);
+          setStep(0);
         }
       }
     };
     checkAccess();
-  }, [params.id]); // id가 변경될 때마다 useEffect가 실행됩니다.
-
-  
-
+  }, [params.id]);
 
   const handleNextQuestion = async () => {
-    if (selectedId !== -1) {
-      try {
-        const response = await fetch(`${API}/exams/mock-exam/answer`, {
-          method: 'POST',
-          headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            examInformationId: Number(LocalStorage.getItem('examId')),
-            problemNumber: Number(nowProblem?.problemNumber),
-            chosenAnswer: String(selectedId + 1),
-          })
-        });
+    let postSelectedId = selectedId;
+    if (postSelectedId !== null) {
+      String(postSelectedId + 1);
+    }
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+    try {
+      const response = await fetch(`${API}/exams/mock-exam/answer`, {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          examInformationId: Number(LocalStorage.getItem("examId")),
+          problemNumber: Number(nowProblem?.problemNumber),
+          chosenAnswer: postSelectedId,
+        }),
+      });
 
-        const result = await response.json();
-        console.log(result)
-        LocalStorage.setItem('createdDate', result.examInformation.createdDate)
-        console.log(result.examInformation.createdDate)
-      } catch (error) {
-        console.error(error);
-      } finally {
-        router.push(`/main/mockexam/${Number(params.id) + 1}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-    } else {
+      const result = await response.json();
+      console.log(result);
+      LocalStorage.setItem("createdDate", result.examInformation.createdDate);
+      console.log(result.examInformation.createdDate);
+    } catch (error) {
+      console.error(error);
+    } finally {
       router.push(`/main/mockexam/${Number(params.id) + 1}`);
-
     }
   };
 
   const handleExamResult = async () => {
-    console.log("handleExamResult")
+    console.log("handleExamResult");
     try {
       const response = await fetch(`${API}/exams/mock-exam/complete`, {
-        method: 'POST',
+        method: "POST",
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      router.push("/main/mockexam/report")
-
+      router.push("/main/mockexam/report");
     } catch (error) {
-      console.error('Error fetching access check:', error);
+      console.error("Error fetching access check:", error);
     }
+  };
 
-  }
-
-
+  // 사용자가 기존에 선택한 값이 있다면 null로 보내기
   useEffect(() => {
-    console.log("((((((((((((((((")
-    console.log(nowProblem)
     if (nowProblem && nowProblem.ChosenAnswer !== null) {
-      setSelectedId(Number(nowProblem.ChosenAnswer))
+      setSelectedId(Number(nowProblem.ChosenAnswer));
     }
-  }, [nowProblem])
+  }, [nowProblem]);
   if (!nowProblem) return;
 
- 
-
-  
   return (
     <>
       <div className="bg-whtie relative flex h-full flex-col items-center overflow-x-auto">
@@ -180,7 +170,7 @@ export default function Page() {
           </Text>
 
           {nowProblem.explanation && nowProblem.explanation.length > 0 && (
-            <div className="relative mb-12 px-5 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
+            <div className="relative mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 px-5 py-5">
               <Text size="body-03">{nowProblem.explanation}</Text>
               <TutorialStep0Text step={step} />
             </div>
@@ -195,7 +185,7 @@ export default function Page() {
             isSelected={selectedId === idx}
             selectedId={selectedId}
             setSelectedId={setSelectedId}
-            />
+          />
         ))}
 
         <div className="absolute bottom-0 mb-11 flex w-full flex-col px-5 py-4">
@@ -221,9 +211,13 @@ export default function Page() {
             } else if (params.id !== "1" && params.id !== "20") {
               return (
                 <div className="mt-4 flex gap-2">
-                  <Button size="medium" color="activeBorder"
-                onClick={(() => router.push(`/main/mockexam/${Number(params.id) - 1}`))}
-                >
+                  <Button
+                    size="medium"
+                    color="activeBorder"
+                    onClick={() =>
+                      router.push(`/main/mockexam/${Number(params.id) - 1}`)
+                    }
+                  >
                     이전 문제
                   </Button>
                   <Button
@@ -237,8 +231,13 @@ export default function Page() {
               );
             } else if (params.id === "20") {
               return (
-                <Button size="large" color="activeBorder" className="mt-4"
-                onClick={(() => router.push(`/main/mockexam/${Number(params.id) - 1}`))}
+                <Button
+                  size="large"
+                  color="activeBorder"
+                  className="mt-4"
+                  onClick={() =>
+                    router.push(`/main/mockexam/${Number(params.id) - 1}`)
+                  }
                 >
                   이전 문제
                 </Button>

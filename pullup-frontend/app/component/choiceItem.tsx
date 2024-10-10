@@ -2,8 +2,8 @@ interface ChoiceItemProps {
   idx: number;
   choice: string;
   isSelected: boolean;
-  selectedId: number;
-  setSelectedId: (id: number) => void;
+  selectedId: number | null;
+  setSelectedId: (id: number | null) => void;
 }
 
 const ChoiceItem = ({
@@ -15,7 +15,7 @@ const ChoiceItem = ({
 }: ChoiceItemProps) => {
   const handleClick = () => {
     if (selectedId === idx) {
-      setSelectedId(-1);
+      setSelectedId(null);
     } else {
       setSelectedId(idx);
     }
