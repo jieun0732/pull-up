@@ -60,7 +60,7 @@ public class SecurityConfig {
             .httpBasic(HttpBasicConfigurer::disable)
             // 서버를 Stateless 하게 유지.
             .sessionManagement(sessionManagement -> sessionManagement
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             )
             .formLogin(AbstractHttpConfigurer::disable)
 
