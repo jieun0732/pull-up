@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -192,7 +193,6 @@ public class ExamController {
         return ResponseEntity.ok(problemResultDto);
     }
 
-
     @Operation(summary = "모의고사 답안 저장하기", description = "모의고사 문제의 답안을 저장합니다.", tags = "모의고사")
     @PostMapping("/mock-exam/answer")
     public ResponseEntity<ExamProblemResultDto> saveMockExamAnswer(@RequestBody ExamProblemResponseDto examProblemResponseDto) {
@@ -205,6 +205,13 @@ public class ExamController {
     public ResponseEntity<ExamInformationDto> completeMockExam(@RequestParam Long examInformationId) {
         ExamInformationDto completedExam = examService.completeMockExam(examInformationId);
         return ResponseEntity.ok(completedExam);
+    }
+
+    @Operation(summary = "모의고사 삭제하기", description = "모의고사를 삭제합니다.", tags = "모의고사")
+    @DeleteMapping("/mock-exam/{examInformationId}")
+    public ResponseEntity<?> deleteMockExam(@PathVariable Long examInformationId) {
+         examService.deleteMockExam(examInformationId);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "틀린 문제 리스트 조회하기", description = "회원이 틀린 문제 리스트를 조회합니다.", tags = "틀린문제")
