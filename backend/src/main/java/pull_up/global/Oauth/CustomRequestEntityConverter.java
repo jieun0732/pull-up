@@ -44,6 +44,7 @@ public class CustomRequestEntityConverter implements Converter<OAuth2Authorizati
         RequestEntity<?> entity = defaultConverter.convert(req);
         String registrationId = req.getClientRegistration().getRegistrationId();
         MultiValueMap<String, String> params = (MultiValueMap<String, String>) entity.getBody();
+        log.info("user_name: {}", params.get("user"));
 
         if (registrationId.contains("apple")) {
             try {
