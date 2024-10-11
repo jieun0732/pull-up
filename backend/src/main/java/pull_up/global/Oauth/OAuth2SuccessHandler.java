@@ -7,6 +7,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -56,6 +57,14 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     // 사용자 인증 정보에서 memberId 추출하는 메서드
     private Long getMemberId(Authentication authentication) {
         log.info("authentication = " + authentication);
+
+        if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+            return userDetails.getMemberId();
+        } else if (authentication.getPrincipal() instanceof DefaultOAuth2User defaultOAuth2User) {
+            Member member = (Member) defaultOAuth2User.getAttributes().get("member");
+            return member.getId();
+        }
+
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         log.info("authentication.Principle = " + authentication.getPrincipal());
         log.info("userDetails = " + userDetails);
