@@ -50,6 +50,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 //            OAuth2User oAuth2User = super.loadUser(userRequest);
 //            attributes =  new HashMap<>(oAuth2User.getAttributes());
 //        }
+
         if(registrationId.contains("apple")){
             log.info("Processing Apple OAuth2 login");
             String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
