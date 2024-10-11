@@ -85,6 +85,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             userAttributes.put("resultcode", "00");
             userAttributes.put("message", "success");
             userAttributes.put("response", attributes);
+            userAttributes.put("member", member);
 
             return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), userAttributes, "response");
         }
