@@ -1,5 +1,6 @@
 package pull_up.api.exam.service;
 
+import jakarta.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -666,6 +667,16 @@ public class ExamService {
         );
 
         return rankMap.getOrDefault(correctAnswers, "순위 정보 없음");
+    }
+
+    @Transactional
+    public void deleteMockExam(Long examInformationId) {
+        ExamInformation examInformation = examInformationRepository.findById(examInformationId)
+                .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
+
+        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(examInformationId);
+        examProblemRepository.deleteAll(examProblems);
+        examInformationRepository.delete(examInformation);
     }
 
 }
