@@ -4,10 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -39,17 +40,26 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         // 어떤 로그인인지 구분
         Map<String, Object> attributes;
-        if ("apple".equals(registrationId)) {
+//        if ("apple".equals(registrationId)) {
+//            log.info("Processing Apple OAuth2 login");
+//            String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
+//            attributes = new HashMap<>(decodeJwtTokenPayload(idToken));
+//            attributes.put("id_token", idToken);
+//        } else {
+//            log.info("Processing OAuth2 login for provider: {}", registrationId);
+//            OAuth2User oAuth2User = super.loadUser(userRequest);
+//            attributes =  new HashMap<>(oAuth2User.getAttributes());
+//        }
+        if(registrationId.contains("apple")){
             log.info("Processing Apple OAuth2 login");
             String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
             attributes = new HashMap<>(decodeJwtTokenPayload(idToken));
             attributes.put("id_token", idToken);
-        } else {
+        }else{
             log.info("Processing OAuth2 login for provider: {}", registrationId);
             OAuth2User oAuth2User = super.loadUser(userRequest);
-            attributes =  new HashMap<>(oAuth2User.getAttributes());
+            attributes = oAuth2User.getAttributes();
         }
-
 
         // 해석된 정보 Dto를 통해 필터링
         String oauthClientName = userRequest.getClientRegistration().getClientName();
@@ -69,7 +79,17 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             .getUserNameAttributeName();
 
         log.info("principle " + new CustomUserDetails(member, attributes, userNameAttributeName));
-        return new CustomUserDetails(member, attributes, Objects.requireNonNullElse(userNameAttributeName, "APPLE_NULL"));
+
+        if ("apple".equals(registrationId)) {
+            Map<String, Object> userAttributes = new HashMap<>();
+            userAttributes.put("resultcode", "00");
+            userAttributes.put("message", "success");
+            userAttributes.put("response", attributes);
+
+            return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), userAttributes, "response");
+        }
+
+        return new CustomUserDetails(member, attributes, userNameAttributeName);
     }
 
     //JWT Payload부분 decode 메서드
