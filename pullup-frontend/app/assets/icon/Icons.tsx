@@ -1,5 +1,5 @@
+"use client";
 import { IconProp } from "@/types/IconProp";
-
 
 export function ArrowIcon() {
   return (
@@ -116,7 +116,6 @@ export function ProfileIcon({ isClicked }: IconPropType) {
   );
 }
 
-
 export function SectionalIcon({ isClicked }: IconPropType) {
   return (
     <svg
@@ -165,10 +164,10 @@ export function ToggleIcon() {
   );
 }
 
-interface ReplayIconProps  {
+interface ReplayIconProps {
   className?: string;
   children?: React.ReactNode;
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void; 
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export function ReplayIcon({ onClick, className, children }: ReplayIconProps) {
@@ -192,7 +191,6 @@ export function ReplayIcon({ onClick, className, children }: ReplayIconProps) {
     </div>
   );
 }
-
 
 export function WarningIcon() {
   return (
