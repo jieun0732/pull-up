@@ -18,21 +18,21 @@ export default function Page({
     id: string;
   };
 }) {
-  const memberId = localStorage.getItem('memberId') || "";
-  const [selectedId, setSelectedId] = useState<number>(-1);
+  const memberId = localStorage.getItem("memberId") || "";
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const entry = entryMap[params.subject];
   const category = categoryMap[params.category];
-  let type = ""
-  
+  let type = "";
+
   if (category !== "골고루") {
-    type = localStorage.getItem('type') || ""
+    type = localStorage.getItem("type") || "";
   }
 
   const queryString = new URLSearchParams({
     memberId,
     entry,
     category,
-    type
+    type,
   }).toString();
 
   const { data, error } = useSWR<ProblemInfo>(
@@ -49,7 +49,6 @@ export default function Page({
 
   const nowProblem: Problem = problems[Number(params.id) - 1].problem;
 
-  
   return (
     <>
       {nowProblem.choices.map((item, idx) => (
