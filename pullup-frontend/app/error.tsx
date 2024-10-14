@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Text from "./component/ui/Text";
 
 export default function Error({
@@ -10,6 +11,7 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const router = useRouter();
   useEffect(() => {
     // Log the error to an error reporting service
     console.error("Error page error입니다", error);
@@ -34,7 +36,7 @@ export default function Error({
           잠시 연결이 불안해요
         </h1>
         <Text size="body-04" className="text-gray01">
-          네트워크 설정을 확인해주세요ㄴ
+          네트워크 설정을 확인해주세요
         </Text>
         <button
           className="mt-7 rounded-xl bg-blue01 px-5 py-2 text-white"
@@ -68,7 +70,7 @@ export default function Error({
       </Text>
       <button
         className="mt-7 rounded-xl bg-blue01 px-5 py-2 text-white"
-        onClick={() => window.location.reload()}
+        onClick={() => router.push("/")}
       >
         이전으로 돌아가기
       </button>

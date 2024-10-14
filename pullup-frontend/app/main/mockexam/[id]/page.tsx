@@ -112,9 +112,16 @@ export default function Page() {
   const handleExamResult = async () => {
     console.log("handleExamResult");
     try {
-      const response = await fetch(`${API}/exams/mock-exam/complete`, {
-        method: "POST",
-      });
+      const response = await fetch(
+        `${API}/exams/mock-exam/complete?examInformationId=${LocalStorage.getItem("examId")}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
