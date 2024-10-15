@@ -12,6 +12,8 @@ import { API } from "@/lib/API";
 import useSWR from "swr";
 import { ProblemInfo } from "@/types/problemType";
 import { entryMap, categoryMap } from "@/constants/constants";
+import { FormatQuestion } from "@/utils/FormatQuestion";
+import LocalStorage from "@/utils/LocalStorage";
 
 export default function Layout({
   children,
@@ -28,16 +30,15 @@ export default function Layout({
 
   const { openModal, closeModal, Modal } = useModal({ initialOpen: false });
 
-  const memberId = localStorage.getItem('memberId') || "";
+  const memberId = LocalStorage.getItem("memberId") || "";
   const entry = entryMap[params.subject];
   const category = categoryMap[params.category];
-  
-  let type = ""
+
+  let type = "";
 
   if (category !== "골고루") {
-    type = localStorage.getItem('type') || ""
+    type = LocalStorage.getItem("type") || "";
   }
-
 
   const queryString = new URLSearchParams({
     memberId,
@@ -72,7 +73,7 @@ export default function Layout({
   //   (item: ProblemInfo) => item.id === Number(params.id),
   // );
 
-  console.log(nowProblem)
+  console.log(nowProblem);
   return (
     <>
       <div className="bg-whtie relative flex flex-col items-center pb-7 pt-14">
@@ -101,7 +102,9 @@ export default function Layout({
 
           {nowProblem.problem.explanation && (
             <div className="relative mx-5 mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
-              <Text size="body-03">{nowProblem.problem.explanation}</Text>
+              <Text size="body-03">
+                {FormatQuestion(nowProblem.problem.explanation)}
+              </Text>
             </div>
           )}
         </div>

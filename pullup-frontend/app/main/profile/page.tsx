@@ -25,10 +25,13 @@ const authIcon: AuthIconType = {
 };
 
 export default function Page() {
-  const { data, error } = useSWR<User>(`${API}/members/${LocalStorage.getItem("memberId")}`, fetcher);
+  const { data, error } = useSWR<User>(
+    `${API}/members/${LocalStorage.getItem("memberId")}`,
+    fetcher,
+  );
 
-  if (!data) return
-  
+  if (!data) return;
+
   return (
     <div className="flex h-full flex-col justify-around bg-gray03 px-5 pb-[91px] pt-14">
       {/* 상단 개인 정보 부분 */}
