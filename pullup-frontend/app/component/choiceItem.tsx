@@ -1,3 +1,4 @@
+import { FormatQuestion } from "@/utils/FormatQuestion";
 interface ChoiceItemProps {
   idx: number;
   choice: string;
@@ -35,7 +36,9 @@ const ChoiceItem = ({
       >
         {idx + 1}
       </div>
-      <div>{choice}</div>
+      <div className="min-h-[40px] min-w-0 flex-1">
+        {FormatQuestion(choice)}
+      </div>
     </div>
   );
 };
