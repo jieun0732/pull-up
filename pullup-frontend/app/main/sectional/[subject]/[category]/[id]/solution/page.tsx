@@ -8,6 +8,9 @@ import { API, fetcher } from "@/lib/API";
 import { ProblemInfo, Problem } from "@/types/problemType";
 import { roundUpNumber } from "@/utils/roundUpNumber";
 import { categoryMap, entryMap } from "@/constants/constants";
+import { FormatQuestion } from "@/utils/FormatQuestion";
+import useModal from "@/hooks/useModal";
+import { ConfirmModal } from "@/component/ui/ConfirmModal";
 
 export default function Page({
   params,
@@ -18,6 +21,8 @@ export default function Page({
     id: string;
   };
 }) {
+  const { openModal, closeModal, Modal } = useModal({ initialOpen: false });
+
   const router = useRouter();
   const { subject, category, id } = params;
 
@@ -26,12 +31,11 @@ export default function Page({
   const entry = entryMap[params.subject];
   const categoryKor = categoryMap[params.category];
 
-  let type = ""
+  let type = "";
 
   if (categoryKor !== "골고루") {
-    type = localStorage.getItem('type') || ""
+    type = localStorage.getItem("type") || "";
   }
-
 
   const queryString = new URLSearchParams({
     memberId: memberID.toString(),
@@ -74,7 +78,9 @@ export default function Page({
             >
               {idx + 1}
             </div>
-            <div> {choice}</div>
+            <div className="min-h-[40px] min-w-0 flex-1">
+              {FormatQuestion(choice)}
+            </div>
           </div>
         );
       })}
@@ -94,6 +100,13 @@ export default function Page({
       </div>
 
       <div className="fixed bottom-0 mb-11 flex w-full flex-col px-5">
+        <button
+          onClick={openModal}
+          className="ml-auto rounded-t-2xl rounded-bl-2xl bg-blue03 px-6 py-2 text-[13px] text-blue01 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]"
+        >
+          학습 종료하기
+        </button>
+
         {params.id == "1" ? (
           <Button
             size="large"
@@ -126,24 +139,23 @@ export default function Page({
               color="active"
               className="backdrop-blur-sm"
               onClick={() => {
-
                 if (data.length == Number(id)) {
-                  console.log("여기1")
+                  console.log("여기1");
                   router.push(`/main/sectional/${subject}/${category}/result`);
                 } else if (data[Number(id)].chosenAnswer) {
                   router.push(
                     `/main/sectional/${subject}/${category}/${Number(id) + 1}/solution`,
-                  )
+                  );
                 } else {
                   router.push(
                     `/main/sectional/${subject}/${category}/${Number(id) + 1}/`,
-                  )
-                } 
-                
+                  );
+                }
+
                 const previousPath = document.referrer;
-                console.log(previousPath)
-                console.log(window.history)
-                console.log(router.forward())
+                console.log(previousPath);
+                console.log(window.history);
+                console.log(router.forward());
                 // if (!previousPath.includes("solution")) {
                 //   router.push(
                 //     `/main/sectional/${params.subject}/${params.category}/${Number(id) - 1}/solution`,
@@ -160,6 +172,20 @@ export default function Page({
           </div>
         )}
       </div>
+      <Modal>
+        <ConfirmModal
+          onLeft={() =>
+            router.push(
+              `/main/sectional/${params.subject}/${params.category}/result`,
+            )
+          }
+          onRight={closeModal}
+          title="정말로 학습을 종료하실 건가요?"
+          description="나가면 현재까지 푼 문제만 저장돼요!"
+          left="종료할래요"
+          right="계속 풀고 싶어요."
+        />
+      </Modal>
     </>
   );
 }

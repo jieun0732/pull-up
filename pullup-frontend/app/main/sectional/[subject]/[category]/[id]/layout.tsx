@@ -101,7 +101,7 @@ export default function Layout({
           </Text>
 
           {nowProblem.problem.explanation && (
-            <div className="relative mx-5 mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
+            <div className="relative mx-5 mb-7 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
               <Text size="body-03">
                 {FormatQuestion(nowProblem.problem.explanation)}
               </Text>
