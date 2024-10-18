@@ -10,10 +10,10 @@ export function compareScores(average: number, myscore: number) {
 
 export function compareTime(average: number, mytime: number) {
   if (mytime > average) {
-    return "higher";
+    return "lower";
   } else if (mytime === average) {
     return "same";
   } else {
-    return "lower";
+    return "higher";
   }
 }

@@ -8,35 +8,53 @@ import higherlogo from "@/assets/logo/higherLogo.png";
 import samelogo from "@/assets/logo/sameLogo.png";
 import lowerlogo from "@/assets/logo/lowerLogo.png";
 import useComponentSize from "@/hooks/useComponentSize";
+import { API, fetcher } from "@/lib/API";
+import useSWR from "swr";
+import { MockExamAverageType } from "@/types/mockexam/mockexamReport";
 
 function MyScoreAverage() {
-  const progress = 100;
-  const averageProgress = 90;
-  const status = compareScores(progress, averageProgress);
+
+  
   const [componentRef, size] = useComponentSize();
+  const memberID = localStorage.getItem("memberId") || "";
+
+  const { data: averageScore } = useSWR<MockExamAverageType>(
+    `${API}/exams/mock-exam/recent/${memberID}`,
+    fetcher,
+  );
+
+  if (!averageScore) {
+    return <div>데이터를 불러오는 중입니다...</div>;
+  }
+
+  const progress = averageScore.score;
+  const averageProgress = averageScore.averageScore;
+  const status = compareScores(averageProgress, progress);
+
+  
 
   const scoreStatus = {
     lower: {
-      title: "우수한 합격권이에요!",
-      subtitle: "님의 점수는 평균보다 10점 높아요.",
-      logo: higherlogo,
+      title: "더 많이 노력해야 해요!",
+      subtitle: `님의 점수는 평균보다 ${(averageProgress)-(progress)}점 낮아요.`,
+      logo: lowerlogo,
     },
     same: {
       title: "조금만 더 노력하면 합격권이에요!",
-      subtitle: "님의 점수는 평균보다 10점 높아요.",
+      subtitle: "님의 점수는 평균이랑 같아요.",
       logo: samelogo,
     },
     higher: {
-      title: "더 많이 노력해야 해요!",
-      subtitle: "님의 점수는 평균보다 10점 높아요.",
-      logo: lowerlogo,
+      title: "우수한 합격권이에요!",
+      subtitle: `님의 점수는 평균보다 ${(progress)-(averageProgress)}점 높아요.`,
+      logo: higherlogo,
     },
   };
 
   const PROGRESSBAR_SIZE = size.width > 0 ? size.width / 2 - 15 : 0;
 
   return (
-    <div className="flex h-[50%] w-full flex-col rounded-2xl bg-white p-6">
+    <div className="flex h-[370px] w-full flex-col rounded-2xl bg-white p-6">
       <div className="w-full">
         <Text size="head-02" color="text-blue01">
           {scoreStatus[status].title}
@@ -83,9 +101,9 @@ function MyScoreAverage() {
               />
               <div className="mx-auto mt-5 flex w-full items-center justify-center gap-3">
                 <Button size="small" color="activeLight">
-                  상위 12%
+                {averageScore.rankPercent}
                 </Button>
-                <Text size="head-02">85점</Text>
+                <Text size="head-02">{averageScore.score}점</Text>
               </div>
             </div>
           </div>

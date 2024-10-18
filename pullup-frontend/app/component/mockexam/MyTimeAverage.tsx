@@ -3,17 +3,34 @@ import Button from "../ui/Button";
 import ProgressBar from "react-customizable-progressbar";
 import { compareTime } from "@/utils/compareFunc";
 import useComponentSize from "@/hooks/useComponentSize";
+import { MockExamTimeAverageType } from "@/types/mockexam/mockexamReport";
+import useSWR from "swr";
+import { API, fetcher } from "@/lib/API";
+
 
 function MyTimeAverage() {
-  const mytime = 15;
-  const averageTime = 20;
-  const status = compareTime(mytime, averageTime);
+
+  
   const [componentRef, size] = useComponentSize();
+  const memberID = localStorage.getItem("memberId") || "";
+
+  const { data: averageScore } = useSWR<MockExamTimeAverageType>(
+    `${API}/exams/mock-exam/recent/${memberID}`,
+    fetcher,
+  );
+
+  if (!averageScore) {
+    return <div>데이터를 불러오는 중입니다...</div>;
+  }
+
+  const mytime = 10;
+  const averageTime = 15;
+  const status = compareTime(averageTime, mytime);
 
   const scoreStatus = {
-    higher: "평균보다 3분 느려요",
+    higher: `평균보다 ${(averageTime)-(mytime)}분 빨라요!`,
     same: "평균이에요",
-    lower: "평균보다 3분 빨라요!",
+    lower: `평균보다 ${(mytime)-(averageTime)}분 느려요!`,
   };
 
   const PROGRESSBAR_SIZE = size.width / 4 - 35 > 0 ? size.width / 4 - 35 : 0;
@@ -27,7 +44,7 @@ function MyTimeAverage() {
         제한 시간은 총 20분이였어요.
       </Text>
       <Text size="caption-02" color="text-gray01">
-        이지은 님은 15분 만에 모든 문제를 풀어냈어요!
+        이지은 님은 {mytime}분 만에 모든 문제를 풀어냈어요!
       </Text>
       <div>
         <Button size="small" color="activeLight" className="ml-10 mt-5">
@@ -51,7 +68,7 @@ function MyTimeAverage() {
               size="head-04"
               className="absolute top-[37%] flex h-full w-full select-none justify-center text-center"
             >
-              15분
+              {mytime}분
             </Text>
             <Text
               size="caption-02"
@@ -78,7 +95,7 @@ function MyTimeAverage() {
               size="head-04"
               className="absolute top-[37%] flex h-full w-full select-none justify-center text-center"
             >
-              15분
+              {averageTime}분
             </Text>
             <Text
               size="caption-02"
