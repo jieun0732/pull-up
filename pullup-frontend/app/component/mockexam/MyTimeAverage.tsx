@@ -1,3 +1,5 @@
+"use client";
+
 import Text from "../ui/Text";
 import Button from "../ui/Button";
 import ProgressBar from "react-customizable-progressbar";
@@ -6,13 +8,11 @@ import useComponentSize from "@/hooks/useComponentSize";
 import { MockExamTimeAverageType } from "@/types/mockexam/mockexamReport";
 import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
-
+import LocalStorage from "@/utils/LocalStorage";
 
 function MyTimeAverage() {
-
-  
   const [componentRef, size] = useComponentSize();
-  const memberID = localStorage.getItem("memberId") || "";
+  const memberID = LocalStorage.getItem("memberId") || "";
 
   const { data: averageScore } = useSWR<MockExamTimeAverageType>(
     `${API}/exams/mock-exam/recent/${memberID}`,
@@ -28,9 +28,9 @@ function MyTimeAverage() {
   const status = compareTime(averageTime, mytime);
 
   const scoreStatus = {
-    higher: `평균보다 ${(averageTime)-(mytime)}분 빨라요!`,
+    higher: `평균보다 ${averageTime - mytime}분 빨라요!`,
     same: "평균이에요",
-    lower: `평균보다 ${(mytime)-(averageTime)}분 느려요!`,
+    lower: `평균보다 ${mytime - averageTime}분 느려요!`,
   };
 
   const PROGRESSBAR_SIZE = size.width / 4 - 35 > 0 ? size.width / 4 - 35 : 0;

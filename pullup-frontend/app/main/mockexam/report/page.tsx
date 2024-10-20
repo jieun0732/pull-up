@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import Header from "@/component/ui/Header";
 import MyScoreAverage from "@/component/mockexam/MyScoreAverage";

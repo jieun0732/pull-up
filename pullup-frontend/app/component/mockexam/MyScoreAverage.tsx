@@ -11,12 +11,11 @@ import useComponentSize from "@/hooks/useComponentSize";
 import { API, fetcher } from "@/lib/API";
 import useSWR from "swr";
 import { MockExamAverageType } from "@/types/mockexam/mockexamReport";
+import LocalStorage from "@/utils/LocalStorage";
 
 function MyScoreAverage() {
-
-  
   const [componentRef, size] = useComponentSize();
-  const memberID = localStorage.getItem("memberId") || "";
+  const memberID = LocalStorage.getItem("memberId") || "";
 
   const { data: averageScore } = useSWR<MockExamAverageType>(
     `${API}/exams/mock-exam/recent/${memberID}`,
@@ -31,12 +30,10 @@ function MyScoreAverage() {
   const averageProgress = averageScore.averageScore;
   const status = compareScores(averageProgress, progress);
 
-  
-
   const scoreStatus = {
     lower: {
       title: "더 많이 노력해야 해요!",
-      subtitle: `님의 점수는 평균보다 ${(averageProgress)-(progress)}점 낮아요.`,
+      subtitle: `님의 점수는 평균보다 ${averageProgress - progress}점 낮아요.`,
       logo: lowerlogo,
     },
     same: {
@@ -46,7 +43,7 @@ function MyScoreAverage() {
     },
     higher: {
       title: "우수한 합격권이에요!",
-      subtitle: `님의 점수는 평균보다 ${(progress)-(averageProgress)}점 높아요.`,
+      subtitle: `님의 점수는 평균보다 ${progress - averageProgress}점 높아요.`,
       logo: higherlogo,
     },
   };
@@ -101,7 +98,7 @@ function MyScoreAverage() {
               />
               <div className="mx-auto mt-5 flex w-full items-center justify-center gap-3">
                 <Button size="small" color="activeLight">
-                {averageScore.rankPercent}
+                  {averageScore.rankPercent}
                 </Button>
                 <Text size="head-02">{averageScore.score}점</Text>
               </div>

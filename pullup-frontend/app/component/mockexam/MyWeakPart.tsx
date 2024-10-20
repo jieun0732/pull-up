@@ -1,7 +1,10 @@
+"use client";
+
 import Text from "../ui/Text";
 import { MockExamWeakPartType } from "@/types/mockexam/mockexamReport";
 import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
+import LocalStorage from "@/utils/LocalStorage";
 
 const dummyWeak = [
   {
@@ -26,7 +29,7 @@ const dummyWeak = [
 
 function MyWeakPart() {
   const weakest = "수리영역";
-  const memberID = localStorage.getItem("memberId") || "";
+  const memberID = LocalStorage.getItem("memberId") || "";
 
   const { data: averageScore } = useSWR<MockExamWeakPartType>(
     `${API}/exams/mock-exam/recent/${memberID}`,
@@ -40,7 +43,6 @@ function MyWeakPart() {
   if (averageScore) {
     console.log("모든", averageScore);
     console.log("모든", averageScore.problemTypeResults);
-
   } else {
     console.log("데이터를 불러오지 못했습니다.");
   }
