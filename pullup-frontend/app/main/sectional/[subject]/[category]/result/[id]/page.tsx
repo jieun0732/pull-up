@@ -7,25 +7,30 @@ import formatNumber from "@/utils/formatNumber";
 import { BackIcon } from "@/assets/icon/Icons";
 import { categoryMap, entryMap } from "@/constants/constants";
 import useSWR from "swr";
-import { ProblemInfo } from "@/types/problemType";
+import { ProblemInfo, Problem } from "@/types/problemType";
 import { API, fetcher } from "@/lib/API";
 import { roundUpNumber } from "@/utils/roundUpNumber";
+import LocalStorage from "@/utils/LocalStorage";
+import { FormatQuestion } from "@/utils/FormatQuestion";
 
 export default function Page({
   params,
 }: {
   params: {
     subject: string;
-    type: string;
+    category: string;
     id: string;
   };
 }) {
   const router = useRouter();
-  const { subject, type, id } = params;
-  const memberID = localStorage.getItem("memberId") || "";
-
+  const memberID = LocalStorage.getItem("memberId") || "";
   const entry = entryMap[params.subject];
-  const category = categoryMap[params.type];
+  const category = categoryMap[params.category];
+  let type = "";
+
+  if (category !== "골고루") {
+    type = localStorage.getItem("type") || "";
+  }
 
   const queryString = new URLSearchParams({
     memberId: memberID.toString(),
@@ -33,15 +38,15 @@ export default function Page({
     category,
   }).toString();
 
-  const { data, error } = useSWR<ProblemInfo[]>(
+  const { data: problems } = useSWR<ProblemInfo[]>(
     `${API}/exams/problems?${queryString}`,
     fetcher,
   );
 
-  if (!data) return;
+  if (!problems) return;
 
-  const nowProblem: ProblemInfo = data[Number(params.id) - 1];
-
+  const nowProblem: Problem = problems[Number(params.id) - 1].problem;
+  const chosenAnswer = problems[Number(params.id) - 1].chosenAnswer;
   return (
     <>
       <div className="bg-whtie relative flex flex-col items-center pb-7 pt-14">
@@ -56,28 +61,27 @@ export default function Page({
               문제 {formatNumber(Number(params.id))}
             </Text>
             <Button size="small" color="nonactive">
-            {nowProblem.problem.type}
+              {nowProblem.type}
             </Button>
           </div>
 
           <Text size="body-03" className="relative mb-4 px-5">
-            {nowProblem.problem.question}
+            {nowProblem.question}
           </Text>
-        
-          {nowProblem.problem.explanation && (
+
+          {nowProblem.explanation && (
             <div className="relative mx-5 mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
-              <Text size="body-03">{nowProblem.problem.explanation}</Text>
+              <Text size="body-03">{nowProblem.explanation}</Text>
             </div>
           )}
-
         </div>
-        {nowProblem.problem.choices.map((choice, idx) => {
+        {nowProblem.choices.map((choice, idx) => {
           let choiceStyle;
           let choiceNumStyle;
-          if (String(idx + 1) === nowProblem.problem.answer) {
+          if (String(idx + 1) === nowProblem.answer) {
             choiceStyle = "bg-green02 text-green01";
             choiceNumStyle = "bg-green01 text-white";
-          } else if (String(idx + 1) === nowProblem.chosenAnswer) {
+          } else if (String(idx + 1) === chosenAnswer) {
             choiceStyle = "bg-red02 text-red01";
             choiceNumStyle = "bg-red01 text-white";
           } else {
@@ -94,21 +98,23 @@ export default function Page({
               >
                 {idx + 1}
               </div>
-              <div> {choice}</div>
+              <div className="min-h-[40px] min-w-0 flex-1">
+                {FormatQuestion(choice)}
+              </div>
             </div>
-          )
+          );
         })}
 
         <div className="relative px-5">
           <Text size="caption-01" className="mb-3 text-end">
-            정답률 {roundUpNumber(nowProblem?.problem.incorrectRate || 0)}%
+            정답률 {roundUpNumber(nowProblem.incorrectRate || 0)}%
           </Text>
           <div className="w-full rounded-lg bg-[#f2f3f6] px-5 py-7">
             <Text size="body-03" className="mb-3">
               해설
             </Text>
             <Text size="body-04" className="whitespace mb-3">
-              {nowProblem.problem.answerExplain}
+              {nowProblem.answerExplain}
             </Text>
           </div>
         </div>

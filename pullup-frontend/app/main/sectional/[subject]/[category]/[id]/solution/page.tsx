@@ -52,6 +52,7 @@ export default function Page({
   if (!data) return;
 
   const nowProblem: ProblemInfo = data[Number(params.id) - 1];
+  const nextProblem: ProblemInfo = data[Number(params.id)];
 
   return (
     <>
@@ -111,12 +112,23 @@ export default function Page({
           <Button
             size="large"
             color="active"
-            className="backdrop-blur-sm"
-            onClick={() =>
-              router.push(
-                `/main/sectional/${subject}/${category}/${Number(id) + 1}/`,
-              )
-            }
+            className="mt-4 backdrop-blur-sm"
+            onClick={() => {
+              if (data.length == Number(id)) {
+                // case 1) 지금 문제가 마지막 문제인 경우
+                router.push(`/main/sectional/${subject}/${category}/result`);
+              } else if (nextProblem.chosenAnswer) {
+                // case 2) 다음 문제가 이미 풀어져 있는 상태라면 solution페이지로 가야함
+                router.push(
+                  `/main/sectional/${subject}/${category}/${Number(id) + 1}/solution`,
+                );
+              } else {
+                // case 3) 만약 다음 문제가 풀어져 있지 않다면 다음 문제 푸는 페이지로 가야 함
+                router.push(
+                  `/main/sectional/${subject}/${category}/${Number(id) + 1}/`,
+                );
+              }
+            }}
           >
             다음 문제
           </Button>
@@ -128,7 +140,7 @@ export default function Page({
               className="backdrop-blur-sm"
               onClick={() =>
                 router.push(
-                  `/main/sectional/${params.subject}/${params.category}/${Number(id) - 1}/solution`,
+                  `/main/sectional/${subject}/${category}/${Number(id) - 1}/solution`,
                 )
               }
             >
@@ -140,31 +152,19 @@ export default function Page({
               className="backdrop-blur-sm"
               onClick={() => {
                 if (data.length == Number(id)) {
-                  console.log("여기1");
+                  // case 1) 지금 문제가 마지막 문제인 경우
                   router.push(`/main/sectional/${subject}/${category}/result`);
-                } else if (data[Number(id)].chosenAnswer) {
+                } else if (nextProblem.chosenAnswer) {
+                  // case 2) 다음 문제가 이미 풀어져 있는 상태라면 solution페이지로 가야함
                   router.push(
                     `/main/sectional/${subject}/${category}/${Number(id) + 1}/solution`,
                   );
                 } else {
+                  // case 3) 만약 다음 문제가 풀어져 있지 않다면 다음 문제 푸는 페이지로 가야 함
                   router.push(
                     `/main/sectional/${subject}/${category}/${Number(id) + 1}/`,
                   );
                 }
-
-                const previousPath = document.referrer;
-                console.log(previousPath);
-                console.log(window.history);
-                console.log(router.forward());
-                // if (!previousPath.includes("solution")) {
-                //   router.push(
-                //     `/main/sectional/${params.subject}/${params.category}/${Number(id) - 1}/solution`,
-                //   );
-                // } else {
-                //   router.push(
-                //     `/main/sectional/${subject}/${category}/${Number(id) + 1}/`,
-                //   );
-                // }
               }}
             >
               다음 문제

@@ -2,7 +2,7 @@ export const ButtonSizes = {
   xsmall: 22,
   small: "px-2 py-1 rounded-sm text-[13px]",
   medium: "w-[50%] rounded-md py-3",
-  large: "w-full rounded-md font-semibold text-base py-[17px]",
+  large: "w-full rounded-md font-semibold text-base py-[15px]",
 };
 
 export const ButtonStyles = {
@@ -48,7 +48,6 @@ export const categoryMap: Record<string, string> = {
 };
 
 export const reversedCategoryMap: Record<string, string> = {
-  "골고루" : "mix",
-  "유형별": "type",
+  골고루: "mix",
+  유형별: "type",
 };
-

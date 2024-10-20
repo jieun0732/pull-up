@@ -70,7 +70,7 @@ export default function Error({
       </Text>
       <button
         className="mt-7 rounded-xl bg-blue01 px-5 py-2 text-white"
-        onClick={() => router.push("/")}
+        onClick={() => router.push("/s")}
       >
         이전으로 돌아가기
       </button>

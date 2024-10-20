@@ -16,11 +16,11 @@ export interface IncorrectAnswers {
   incorrectTime: string;
 }
 
-
 export interface Problem {
   id: number;
   entry: string;
   category: string;
+  chosenAnswer: string;
   type: string;
   question: string;
   explanation: string;

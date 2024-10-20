@@ -131,7 +131,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
               )
             }
           >
-            이전 문제 중간
+            이전 문제
           </Button>
           <Button size="medium" color="nonactive">
             채점하기
@@ -151,10 +151,10 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
               )
             }
           >
-            이전 문제 중간
+            이전 문제
           </Button>
           <Button size="medium" color="active" onClick={handleNextProblem}>
-            채점하기 중간
+            채점하기
           </Button>
         </div>
       );
@@ -197,7 +197,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
             이전 문제
           </Button>
           <Button size="medium" color="active" onClick={handleSubmit}>
-            채점하기 마지막
+            채점하기
           </Button>
         </div>
       );
