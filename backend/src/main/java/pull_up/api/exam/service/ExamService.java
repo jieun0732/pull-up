@@ -586,28 +586,40 @@ public class ExamService {
      * 멤버의 가장 최근 ExamInformation 가져오기.
      */
     public ExamInformationDetailDto getRecentExamInformation(Long memberId) {
+        // 가장 최근 ExamInformation을 가져옴
         ExamInformation recentExamInformation = examInformationRepository.findTopByMemberIdOrderByCreatedDateDesc(memberId)
             .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
 
+        // ExamInformationId로 관련된 ExamProblems 조회
         List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(recentExamInformation.getId());
 
+        // 문제들을 엔트리별로 그룹화
         Map<String, List<ExamProblem>> groupedByEntry = examProblems.stream()
             .collect(Collectors.groupingBy(examProblem -> examProblem.getProblem().getEntry()));
 
+        // 각 엔트리별로 문제 수와 정답 수 계산
         List<ProblemTypeResultDto> problemTypeResults = groupedByEntry.entrySet().stream()
             .map(entry -> {
                 String entryName = entry.getKey();
                 List<ExamProblem> problems = entry.getValue();
                 int totalProblems = problems.size();
-                int correctProblems = (int) problems.stream().filter(ExamProblem::getIsCorrect).count();
+                int correctProblems = (int) problems.stream()
+                    .filter(examProblem -> Boolean.TRUE.equals(examProblem.getIsCorrect())) // isCorrect가 true인 경우만 필터링
+                    .count();
 
                 return ProblemTypeResultDto.of(entryName, totalProblems, correctProblems);
             })
             .collect(Collectors.toList());
 
-        int totalCorrectAnswers = (int) examProblems.stream().filter(ExamProblem::getIsCorrect).count();
+        // 전체 정답 수 계산
+        int totalCorrectAnswers = (int) examProblems.stream()
+            .filter(examProblem -> Boolean.TRUE.equals(examProblem.getIsCorrect())) // isCorrect가 true인 경우만 필터링
+            .count();
+
+        // 랭크 퍼센트 계산
         String rankPercent = calculateRankPercent(totalCorrectAnswers);
 
+        // 모든 시험 정보 조회 및 평균 점수, 평균 소요 시간 계산
         List<ExamInformation> allExams = examInformationRepository.findAll();
 
         OptionalDouble averageScoreOpt = allExams.stream()
@@ -623,6 +635,7 @@ public class ExamService {
 
         Duration averageTime = totalDuration.isZero() ? null : totalDuration.dividedBy(allExams.size());
 
+        // 결과 반환
         return ExamInformationDetailDto.of(
             recentExamInformation.getId(),
             recentExamInformation.getCreatedDate(),
@@ -636,6 +649,7 @@ public class ExamService {
             rankPercent
         );
     }
+
 
 
     /**
