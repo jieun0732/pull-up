@@ -73,7 +73,6 @@ export default function Layout({
   //   (item: ProblemInfo) => item.id === Number(params.id),
   // );
 
-  console.log(nowProblem);
   return (
     <>
       <div className="bg-whtie relative flex flex-col items-center pb-7 pt-14">

@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/component/ui/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import useSWR, { mutate } from "swr";
 import Text from "@/component/ui/Text";
 import { API, fetcher } from "@/lib/API";
@@ -24,6 +24,9 @@ export default function Page({
   const { openModal, closeModal, Modal } = useModal({ initialOpen: false });
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  let chosenAnswer = searchParams.get("chosenAnswer");
+
   const { subject, category, id } = params;
 
   const memberID = localStorage.getItem("memberId") || "";
@@ -54,6 +57,10 @@ export default function Page({
   const nowProblem: ProblemInfo = data[Number(params.id) - 1];
   const nextProblem: ProblemInfo = data[Number(params.id)];
 
+  if (nowProblem.chosenAnswer) {
+    chosenAnswer = nowProblem.chosenAnswer;
+  }
+
   return (
     <>
       {nowProblem?.problem.choices.map((choice, idx) => {
@@ -62,7 +69,7 @@ export default function Page({
         if (String(idx + 1) === nowProblem.problem.answer) {
           choiceStyle = "bg-green02 text-green01";
           choiceNumStyle = "bg-green01 text-white";
-        } else if (String(idx + 1) === nowProblem.chosenAnswer) {
+        } else if (String(idx + 1) === chosenAnswer) {
           choiceStyle = "bg-red02 text-red01";
           choiceNumStyle = "bg-red01 text-white";
         } else {

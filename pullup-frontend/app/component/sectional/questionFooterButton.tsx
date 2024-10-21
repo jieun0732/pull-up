@@ -27,14 +27,12 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
 
   const handleNextProblem = async () => {
     try {
+      if (selectedId === null) return;
+
+      const selectedIdString = String(selectedId + 1);
       let chosenAnswer;
-      let selectedIdString;
 
-      if (selectedId !== null) {
-        selectedIdString = String(selectedId + 1);
-      }
-
-      do {
+      while (true) {
         const response = await fetch(`${API}/exams/answer`, {
           method: "POST",
           headers: {
@@ -46,18 +44,22 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
           }),
         });
 
-        // if (!response.ok) {
-        //   throw new Error(`HTTP error! status: ${response.status}`);
-        // }
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
 
         const result = await response.json();
         chosenAnswer = result.chosenAnswer;
-        router.push(`/main/sectional/${subject}/${category}/${id}/solution`);
-      } while (chosenAnswer === undefined);
-      router.push(`/main/sectional/${subject}/${category}/${id}/solution`);
+
+        if (chosenAnswer) break;
+      }
+      router.push(
+        `/main/sectional/${subject}/${category}/${id}/solution?chosenAnswer=${chosenAnswer}`,
+      );
     } catch (error) {
-      router.push(`/main/sectional/${subject}/${category}/${id}/solution`);
-      console.error("fetch operation:", error);
+      console.error("Fetch operation error:", error);
+      // 에러가 발생해도 router.push를 호출
+      // router.push(`/main/sectional/${subject}/${category}/${id}/solution`);
     }
   };
 
