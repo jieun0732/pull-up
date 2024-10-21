@@ -14,7 +14,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-//                .addServersItem(new Server().url("https://k10a406.p.ssafy.io/api/").description("요청 서버"))
+                .addServersItem(new Server().url("https://pullup-api.shop/").description("https 요청 server"))
                 .addServersItem(new Server().url("http://43.203.236.62:8080/api/").description("요청 server"))
                 .addServersItem(new Server().url("http://localhost:8000/api/").description("Local server"))
                 .info(new Info()
