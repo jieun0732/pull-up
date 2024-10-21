@@ -3,6 +3,11 @@
 import Text from "../ui/Text";
 import { entryMap } from "@/constants/constants";
 import { ProblemInfo } from "@/types/problemType";
+import useSWR from "swr";
+import { API, fetcher } from "@/lib/API";
+import { User } from "@/types/userType";
+import LocalStorage from "@/utils/LocalStorage";
+
 interface QuestionProps {
   problems: ProblemInfo[];
   params: {
@@ -25,17 +30,20 @@ const SectionalResultHeader: React.FC<QuestionProps> = ({
     (item) => item.isCorrect == true,
   ).length;
 
-  const type = localStorage.getItem('type')
+  const type = LocalStorage.getItem("type");
 
+  const { data: user } = useSWR<User>(
+    `${API}/members/${LocalStorage.getItem("memberId")}`,
+    fetcher,
+  );
 
-
-  if (isFinished == false) {
+  if (isFinished == false && user) {
     return (
       <>
         <Text size="head-02" className="self-start">
           {category === "mix"
-            ? `    이지은님은 ${entryMap[subject]}영역 ${totalProblemsCount}문제 중`
-            : `    이지은님은 ${type} 유형 ${totalProblemsCount}문제 중`}
+            ? `    ${user.data.name}님은 ${entryMap[subject]}영역 ${totalProblemsCount}문제 중`
+            : `    ${user.data.name}님은 ${type} 유형 ${totalProblemsCount}문제 중`}
         </Text>
         <Text size="head-02" className="self-start">
           {solvedCount}개의 학습을 완료했어요
@@ -52,13 +60,13 @@ const SectionalResultHeader: React.FC<QuestionProps> = ({
       </>
     );
   }
-  if (isFinished == true) {
+  if (isFinished == true && user) {
     return (
       <>
         <Text size="head-02" className="self-start">
           {category === "mix"
-            ? `ㅇㅇ님은 ${entryMap[subject]}영역`
-            : `ㅇㅇ님은 ${type} 유형`}
+            ? `${user.data.name}님은 ${entryMap[subject]}영역`
+            : `${user.data.name}님은 ${type} 유형`}
         </Text>
         <Text size="head-02" className="self-start">
           총 {totalProblemsCount}제 중 {isCorrectCount}문제를 맞췄어요!
