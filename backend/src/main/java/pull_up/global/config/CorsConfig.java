@@ -22,6 +22,7 @@ public class CorsConfig {
 
         // TODO : addAllowedOriginPattern 을 client 주소로만 접근 가능하게 변경
         config.addAllowedOriginPattern("*");
+        config.addAllowedOrigin("*");       // 모든 오리진 허용
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.addExposedHeader("*");

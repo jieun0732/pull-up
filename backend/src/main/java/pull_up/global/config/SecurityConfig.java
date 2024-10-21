@@ -80,14 +80,15 @@ public class SecurityConfig {
                 .requestMatchers("/api/pull-up/swagger-ui/index.html").permitAll()
                 .requestMatchers("/api/pull-up/lawsuit/**").permitAll()
                 .requestMatchers("/api/pull-up/").permitAll()
+                .requestMatchers("/").permitAll()
                 .anyRequest().permitAll()
-            );
+            )
 
-//            // 인증 예외 처리
-//            .exceptionHandling(exceptionHandling -> exceptionHandling
-//                .authenticationEntryPoint(new FailedAuthenticationEntryPoint())
-//                .accessDeniedHandler(new CustomAccessDeniedHandler())
-//            );
+            // 인증 예외 처리
+            .exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint(new FailedAuthenticationEntryPoint())
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
+            );
 
         return http.build();
     }
@@ -124,11 +125,17 @@ public class SecurityConfig {
      */
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
-
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowCredentials(false);
+
+        // Allow credentials if needed
+        corsConfiguration.setAllowCredentials(true);
+
+        // Add allowed origins (replace with actual origins for your application)
+        corsConfiguration.addAllowedOriginPattern("http://localhost:8080"); // Swagger UI URL
+        corsConfiguration.addAllowedOriginPattern("https://pullup-api.shop"); // Production server URL
+
+        // Allow all headers, methods, and expose specific headers if necessary
         corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addExposedHeader("*");
 
@@ -138,7 +145,7 @@ public class SecurityConfig {
         return source;
     }
 
-    class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
+    static class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         @Override
         public void commence(HttpServletRequest request, HttpServletResponse response,
@@ -150,7 +157,7 @@ public class SecurityConfig {
         }
     }
 
-    class CustomAccessDeniedHandler implements AccessDeniedHandler {
+    static class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         @Override
         public void handle(HttpServletRequest request, HttpServletResponse response,
