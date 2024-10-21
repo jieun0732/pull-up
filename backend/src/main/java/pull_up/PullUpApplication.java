@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(
 	servers = {
-		@Server(url="/api/pull-up/", description = "Default Server url")
+		@Server(url="", description = " '/api/pull-up/' Default Server url")
 	}
 )
 @SpringBootApplication
