@@ -19,3 +19,12 @@ export interface ProblemTypeResult {
 export interface MockExamWeakPartType {
   problemTypeResults: ProblemTypeResult[];
 } 
+
+// 추가된 타입 정의
+export interface ProblemTypeResult {
+  entry: string;
+  correctProblems: number;
+  totalProblems: number;
+  weakest?: boolean;
+  errorRate?: number;
+}
