@@ -10,6 +10,7 @@ import {
   math,
   spatial,
 } from "@/assets/defaultImages/sectional";
+import { useEffect } from "react";
 
 export default function Page() {
   const sections = [
