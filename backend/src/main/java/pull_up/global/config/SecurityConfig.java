@@ -128,7 +128,7 @@ public class SecurityConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         // Allow credentials if needed
-        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setAllowCredentials(false);
 
         // // Add allowed origins (replace with actual origins for your application)
         // corsConfiguration.addAllowedOriginPattern("http://localhost:8080"); // Swagger UI URL
