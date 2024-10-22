@@ -148,11 +148,12 @@ public class SecurityConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         // Allow credentials if needed
-        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setAllowCredentials(false);
 
-        // Add allowed origins (replace with actual origins for your application)
-        corsConfiguration.addAllowedOriginPattern("http://localhost:8080"); // Swagger UI URL
-        corsConfiguration.addAllowedOriginPattern("https://pullup-api.shop"); // Production server URL
+        // // Add allowed origins (replace with actual origins for your application)
+        // corsConfiguration.addAllowedOriginPattern("http://localhost:8080"); // Swagger UI URL
+        // corsConfiguration.addAllowedOriginPattern("https://pullup-api.shop"); // Production server URL
+        corsConfiguration.addAllowedOrigin("*");
 
         // Allow all headers, methods, and expose specific headers if necessary
         corsConfiguration.addAllowedHeader("*");
