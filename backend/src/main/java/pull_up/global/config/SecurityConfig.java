@@ -29,16 +29,19 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import pull_up.global.Oauth.AppleProperties;
-import pull_up.global.Oauth.OAuth2SuccessHandler;
-import pull_up.global.Oauth.OAuth2UserService;
-import pull_up.global.Oauth.CustomRequestEntityConverter;
+import pull_up.global.Oauth.*;
+import pull_up.global.Oauth.v2.CustomAccessTokenEmitter;
+import pull_up.global.Oauth.v2.OAuth2SuccessHandlerV2;
+import pull_up.global.Oauth.v2.OAuth2UserServiceV2;
 
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final CustomAccessTokenEmitter customAccessTokenEmitter;
+    private final OAuth2UserServiceV2 oAuth2UserServiceV2;
+    private final OAuth2SuccessHandlerV2 oAuth2SuccessHandlerV2;
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final AppleProperties appleProperties;
@@ -48,7 +51,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityFilterChain oauth2SecurityFilterChain) throws Exception {
         http
             // cors 허용
             .cors(cors -> cors
@@ -65,12 +68,29 @@ public class SecurityConfig {
             .formLogin(AbstractHttpConfigurer::disable)
 
             // 카카오 로그인 추가
+          /*
             .oauth2Login(oauth2 -> oauth2
                 .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig.accessTokenResponseClient(accessTokenResponseClient(customRequestEntityConverter())))
 //                .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
                 .redirectionEndpoint(endpoint -> endpoint.baseUri("/login/oauth2/code/*"))
                 .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
                 .successHandler(oAuth2SuccessHandler)
+            )
+           */
+
+          /*
+           * TODO
+           * 1. 요청의 Token 보유여부 확인
+           * 2. Token 보유 시 애플에 요청 전송해서 UserInfo 받아옴
+           * 3. UserInfo 통해서 DB에 해당 사용자가 가입되어 있는지 확인
+           * 4. 가입되어 있으면 로그인, 가입되어 있지 않으면 회원가입
+           * 5. Handler 통해서 회원정보 전송
+           */
+          .oauth2Login(oauth2 -> oauth2
+            .tokenEndpoint(tokenConfig -> tokenConfig.accessTokenResponseClient(customAccessTokenEmitter.emit()))
+              .redirectionEndpoint(customEndPoint -> customEndPoint.baseUri("/login/oauth2/code/*"))
+              .userInfoEndpoint(customEndPoint -> customEndPoint.userService(oAuth2UserServiceV2))
+              .successHandler(oAuth2SuccessHandlerV2)
             )
 
             .authorizeHttpRequests(request -> request
