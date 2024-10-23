@@ -90,7 +90,7 @@ public class SecurityConfig {
            */
           .oauth2Login(oauth2 -> oauth2
             .tokenEndpoint(endpoint -> endpoint.accessTokenResponseClient(customAccessTokenConverter.getTokenClient()))
-              .redirectionEndpoint(endpoint -> endpoint.baseUri("/api/pull-up/oauth2/callback/kakao"))
+              .redirectionEndpoint(endpoint -> endpoint.baseUri("/api/pull-up/oauth2/callback/*"))
               .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserServiceV2))
               .successHandler(oAuth2SuccessHandlerV2)
             )

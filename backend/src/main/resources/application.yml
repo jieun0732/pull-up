@@ -53,14 +53,16 @@ spring:
             client-id: com.pull-up.services
             #client-secret: AuthKey_SNHA348FS6.p8/7MKFVNQYN5/SNHA348FS6
             client-secret: AuthKey_SNHA348FS6.p8
+
             redirect-uri: "https://pullup-api.shop/api/pull-up/oauth2/callback/apple"
 #            redirect-uri: "https://pullup-api.shop/login/oauth2/code/apple"
             authorization-grant-type: authorization_code
-            client-authentication-method: POST
+            client-authentication-method: "client-secret-post"
             scope:
+              - openid
               - name
               - email
-            clientName: apple
+            client-name: "Apple"
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
@@ -70,7 +72,7 @@ spring:
           apple:
             authorizationUri: https://appleid.apple.com/auth/authorize?response_mode=form_post
             tokenUri: https://appleid.apple.com/auth/token
-#            jwk-set-uri: https://appleid.apple.com/auth/keys
+            jwk-set-uri: https://appleid.apple.com/auth/keys
 #            user-name-attribute: sub
 auth:
   login:
