@@ -9,11 +9,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+
 @Component
 public class OAuth2UserServiceV2 extends DefaultOAuth2UserService {
-  public OAuth2UserServiceV2() {
-    super();
-  }
 
   @Override
   public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {

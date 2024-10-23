@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.querydsl:querydsl-codegen:5.1.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="com.querydsl" artifactId="querydsl-codegen" version="5.1.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.querydsl/querydsl-codegen/5.1.0/a8504ea51fbc2258543cedab6a37fe6039b2d20a/querydsl-codegen-5.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

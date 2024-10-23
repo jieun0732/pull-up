@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -30,16 +31,17 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pull_up.global.Oauth.*;
-import pull_up.global.Oauth.v2.CustomAccessTokenEmitter;
+import pull_up.global.Oauth.v2.CustomAccessTokenConverter;
 import pull_up.global.Oauth.v2.OAuth2SuccessHandlerV2;
 import pull_up.global.Oauth.v2.OAuth2UserServiceV2;
 
+@Slf4j
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final CustomAccessTokenEmitter customAccessTokenEmitter;
+//
+    private final CustomAccessTokenConverter customAccessTokenConverter;
     private final OAuth2UserServiceV2 oAuth2UserServiceV2;
     private final OAuth2SuccessHandlerV2 oAuth2SuccessHandlerV2;
     private final OAuth2UserService oAuth2UserService;
@@ -51,7 +53,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityFilterChain oauth2SecurityFilterChain) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             // cors 허용
             .cors(cors -> cors
@@ -68,7 +70,7 @@ public class SecurityConfig {
             .formLogin(AbstractHttpConfigurer::disable)
 
             // 카카오 로그인 추가
-          /*
+/*
             .oauth2Login(oauth2 -> oauth2
                 .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig.accessTokenResponseClient(accessTokenResponseClient(customRequestEntityConverter())))
 //                .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
@@ -76,7 +78,7 @@ public class SecurityConfig {
                 .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
                 .successHandler(oAuth2SuccessHandler)
             )
-           */
+/*
 
           /*
            * TODO
@@ -87,9 +89,9 @@ public class SecurityConfig {
            * 5. Handler 통해서 회원정보 전송
            */
           .oauth2Login(oauth2 -> oauth2
-            .tokenEndpoint(tokenConfig -> tokenConfig.accessTokenResponseClient(customAccessTokenEmitter.emit()))
-              .redirectionEndpoint(customEndPoint -> customEndPoint.baseUri("/login/oauth2/code/*"))
-              .userInfoEndpoint(customEndPoint -> customEndPoint.userService(oAuth2UserServiceV2))
+            .tokenEndpoint(endpoint -> endpoint.accessTokenResponseClient(customAccessTokenConverter.getTokenClient()))
+              .redirectionEndpoint(endpoint -> endpoint.baseUri("/api/pull-up/oauth2/callback/kakao"))
+              .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserServiceV2))
               .successHandler(oAuth2SuccessHandlerV2)
             )
 
@@ -102,14 +104,15 @@ public class SecurityConfig {
                 .requestMatchers("/api/pull-up/").permitAll()
                 .requestMatchers("/").permitAll()
                 .anyRequest().permitAll()
-            )
+            );
 
             // 인증 예외 처리
+          /*
             .exceptionHandling(exceptionHandling -> exceptionHandling
                 .authenticationEntryPoint(new FailedAuthenticationEntryPoint())
                 .accessDeniedHandler(new CustomAccessDeniedHandler())
             );
-
+*/
         return http.build();
     }
 
@@ -136,7 +139,7 @@ public class SecurityConfig {
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient(CustomRequestEntityConverter customRequestEntityConverter) {
         DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
         accessTokenResponseClient.setRequestEntityConverter(customRequestEntityConverter);
-
+        log.info("access token : {}", customRequestEntityConverter);
         return accessTokenResponseClient;
     }
 
