@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.bouncycastle:bcutil-jdk15on:1.70" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.bouncycastle" artifactId="bcutil-jdk15on" version="1.70" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcutil-jdk15on/1.70/54280e7195a7430d7911ded93fc01e07300b9526/bcutil-jdk15on-1.70.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
