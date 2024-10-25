@@ -1,36 +1,61 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Page() {
+export default function AppleRedirect() {
   const router = useRouter();
+  const [code, setCode] = useState<string | null>(null);
+  const [state, setState] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState<string | null>(null);
+  const [lastName, setLastName] = useState<string | null>(null);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    const state = urlParams.get("state");
+    const codeFromUrl = urlParams.get("code");
+    const stateFromUrl = urlParams.get("state");
     const user = urlParams.get("user") || "";
 
-    let firstName = "";
-    let lastName = "";
+    if (codeFromUrl) {
+      setCode(codeFromUrl);
+    }
+    if (stateFromUrl) {
+      setState(stateFromUrl);
+    }
 
     if (user) {
       try {
         const userObject = JSON.parse(user);
-        firstName = userObject.name.firstName;
-        lastName = userObject.name.lastName;
+        setFirstName(userObject.name.firstName);
+        setLastName(userObject.name.lastName);
       } catch (error) {
         console.error("JSON 파싱 오류:", error);
       }
     }
 
-    if (code && state) {
-      // URL로 리다이렉트
+    if (codeFromUrl && state) {
       const callbackUrl = `https://pullup-api.shop/api/oauth2/callback/apple?code=${code}&state=${state}&firstName=${firstName}&lastName=${lastName}`;
-      router.push(callbackUrl);
+      appleLogin(callbackUrl);
     }
-  }, [router]);
+  }, []);
+
+  const appleLogin = async (callbackUrl: string) => {
+    let isSuccessed = false; // 로컬 변수를 함수 내부로 이동
+
+    try {
+      const res = await fetch(callbackUrl);
+
+      if (res.ok) {
+        isSuccessed = true;
+      }
+    } catch (error) {
+      console.error("로그인 요청 중 오류 발생:", error);
+    }
+
+    if (isSuccessed) {
+      router.replace("/main/sectional");
+    }
+  };
 
   return null;
 }
