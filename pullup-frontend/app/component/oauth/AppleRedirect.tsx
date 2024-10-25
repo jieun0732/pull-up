@@ -34,6 +34,7 @@ export default function AppleRedirect() {
     }
 
     if (codeFromUrl && state) {
+      console.log(firstName, lastName);
       const callbackUrl = `https://pullup-api.shop/api/oauth2/callback/apple?code=${code}&state=${state}&firstName=${firstName}&lastName=${lastName}`;
       appleLogin(callbackUrl);
     }
@@ -47,6 +48,7 @@ export default function AppleRedirect() {
 
       if (res.ok) {
         isSuccessed = true;
+        router.replace("/main/sectional");
       }
     } catch (error) {
       console.error("로그인 요청 중 오류 발생:", error);

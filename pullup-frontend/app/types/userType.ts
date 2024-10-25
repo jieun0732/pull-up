@@ -12,3 +12,13 @@ export interface userStatus {
   role: string;
   latestScore: number;
 }
+
+export interface authType {
+  code: string;
+  state: string;
+  user: {
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
+}
