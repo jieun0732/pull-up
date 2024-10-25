@@ -17,21 +17,33 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    let firstName = "";
-    let lastName = "";
+    const newcomment = {
+      id: idToken,
+      code: code,
+    };
 
-    if (typeof userData === "string") {
-      try {
-        const parsedUserData = JSON.parse(userData);
-        firstName = parsedUserData.firstName;
-        lastName = parsedUserData.lastName;
-      } catch (error) {
-        console.error("userData JSON 파싱 오류:", error);
-      }
-    } else if (Array.isArray(userData)) {
-      console.error("userData는 배열입니다:", userData);
-      // 필요한 경우 배열 처리 로직을 추가할 수 있습니다.
-    }
+    return NextResponse.json(JSON.stringify(newcomment), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      status: 201,
+    });
+
+    // let firstName = "";
+    // let lastName = "";
+
+    // if (typeof userData === "string") {
+    //   try {
+    //     const parsedUserData = JSON.parse(userData);
+    //     firstName = parsedUserData.firstName;
+    //     lastName = parsedUserData.lastName;
+    //   } catch (error) {
+    //     console.error("userData JSON 파싱 오류:", error);
+    //   }
+    // } else if (Array.isArray(userData)) {
+    //   console.error("userData는 배열입니다:", userData);
+    //   // 필요한 경우 배열 처리 로직을 추가할 수 있습니다.
+    // }
 
     // const bodyData = {
     //   code: code.toString(),
@@ -72,11 +84,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // );
     // loginUrl.searchParams.set("isSignUpComplete", isSignUpComplete.toString());
 
-    const res = await fetch(
-      `https://pullup-api.shop/api/oauth2/callback/apple?code=${code}&state=${idToken}&firstName=${firstName}&lastName=${lastName}`,
-    );
+    //   const res = await fetch(
+    //     `https://pullup-api.shop/api/oauth2/callback/apple?code=${code}&state=${idToken}&firstName=${firstName}&lastName=${lastName}`,
+    //   );
 
-    return NextResponse.redirect("/main/sectional", 302);
+    //   return NextResponse.redirect("/main/sectional", 302);
   } catch (error) {
     console.error("Error handling POST request:", error);
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
