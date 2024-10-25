@@ -1,7 +1,7 @@
 "use client";
 
-
 import Image from "next/image";
+import Link from "next/link";
 import Text from "./component/ui/Text";
 import { useRouter } from "next/navigation";
 import introLogo from "@/assets/logo/introLogo.png";
@@ -11,10 +11,12 @@ import { useEffect } from "react";
 export default function Home() {
   const totalPercent = 91;
   const router = useRouter();
+  const APPLE_URL =
+    "https://appleid.apple.com/auth/authorize?response_mode=form_post&response_type=code%20id_token&response_type=code&client_id=com.pull-up.services&scope=name%20email&redirect_uri=https://pull-up-snowy.vercel.app/oauth2/apple";
 
   useEffect(() => {
-    localStorage.clear()
-  }, [])
+    localStorage.clear();
+  }, []);
 
   return (
     <main className="flex h-full w-full flex-col items-center justify-center bg-white px-5">
@@ -30,8 +32,8 @@ export default function Home() {
       </Text>
       <button
         onClick={() => {
-          LocalStorage.setItem("memberId", "1")
-          router.push("/main/sectional")
+          LocalStorage.setItem("memberId", "1");
+          router.push("/main/sectional");
         }}
         className="relative mb-5 flex w-full items-center justify-center rounded-md bg-[#fee500] py-5"
       >
@@ -54,7 +56,10 @@ export default function Home() {
           카카오로 로그인
         </p>
       </button>
-      <button className="relative flex w-full items-center justify-center rounded-md bg-black py-5">
+      <Link
+        href={APPLE_URL}
+        className="relative flex w-full items-center justify-center rounded-md bg-black py-5"
+      >
         <svg
           className="absolute left-10"
           xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +74,7 @@ export default function Home() {
           />
         </svg>
         <p className="text-base font-semibold text-white">Apple ID로 로그인</p>
-      </button>
+      </Link>
     </main>
   );
 }

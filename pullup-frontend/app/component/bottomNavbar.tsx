@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ProfileIcon, SectionalIcon, MockTestIcon } from "@/assets/icon/Icons";
 
-
 const navbarItem = [
   {
     name: "모의고사",
@@ -30,7 +29,7 @@ export default function BottomNavbar() {
   if (pathDepth !== 2) return;
 
   return (
-    <nav className="z-90 fixed bottom-0 flex h-[91px] w-full min-w-[320px] max-w-[450px] items-center justify-around pb-[30px] pt-[17px]">
+    <nav className="z-90 fixed bottom-0 flex h-[91px] w-full min-w-[320px] max-w-[450px] items-center justify-around border border-t border-gray03 bg-white pb-[30px] pt-[17px]">
       {navbarItem.map(({ name, Icon, link }) => {
         const isClicked = pathname.includes(link);
         return (

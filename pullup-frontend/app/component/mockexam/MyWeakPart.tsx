@@ -34,6 +34,8 @@ function MyWeakPart() {
     fetcher,
   );
 
+  console.log("********************");
+  console.log(averageScore);
   useEffect(() => {
     if (averageScore) {
       // 각 영역의 오답 비율 계산
@@ -60,8 +62,6 @@ function MyWeakPart() {
   }, [averageScore]);
 
   if (averageScore) {
-    console.log("모든", averageScore);
-    console.log("모든", averageScore.problemTypeResults);
   } else {
     console.log("데이터를 불러오지 못했습니다.");
     return (
