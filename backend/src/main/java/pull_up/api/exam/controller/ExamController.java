@@ -4,27 +4,25 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pull_up.api.exam.dto.CreatedExamInformationResponseDto;
 import pull_up.api.exam.dto.CreatedExamInformationResultDto;
 import pull_up.api.exam.dto.ExamInformationAverageScoreDto;
 import pull_up.api.exam.dto.ExamInformationDetailDto;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemResponseDto;
 import pull_up.api.exam.dto.ExamProblemResultDto;
+import pull_up.api.exam.dto.MockExamProblemResultDto;
 import pull_up.api.exam.service.ExamService;
-import pull_up.api.member.dto.IncorrectAnswerDto;
 import pull_up.api.member.dto.IncorrectAnswerResultDto;
-import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.member.dto.MemberAnswerIndexDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
 import pull_up.api.member.dto.MemberAnswerResultDto;
@@ -44,8 +42,7 @@ import pull_up.api.problem.dto.ProblemTypeSummaryDto;
 @RequiredArgsConstructor
 public class ExamController {
 
-    @Autowired
-    private ExamService examService;
+    private final ExamService examService;
 
     @Operation(summary = "문제 리스트 조회(골고루 및 유형별)", description = "회원이 저장한 답안에 대한 문제 리스트를 조회합니다.", tags = "유형별/골고루")
     @GetMapping("/problems")
@@ -120,7 +117,7 @@ public class ExamController {
     }
 
     @Operation(summary = "다시 풀기", description = "회원의 문제 답안을 초기화합니다.", tags = "유형별/골고루")
-    @PostMapping("/reset")
+    @PutMapping("/reset")
     public ResponseEntity<Void> resetAnswers(
         @RequestParam Long memberId,
         @RequestParam(required = false) String entry,
@@ -137,7 +134,8 @@ public class ExamController {
         @RequestParam(required = false) String entry,
         @RequestParam(required = false) String category,
         @RequestParam(required = false) String type) {
-        MemberAnswerResultDto nextUnanswered = examService.getNextUnanswered(memberId, entry, category, type);
+        MemberAnswerResultDto nextUnanswered = examService.getNextUnanswered(memberId, entry,
+            category, type);
         return ResponseEntity.ok(nextUnanswered);
     }
 
@@ -200,9 +198,9 @@ public class ExamController {
         return ResponseEntity.ok(savedAnswer);
     }
 
-    @Operation(summary = "모의고사 완료 및 점수 저장하기", description = "모의고사를 완료하고 점수를 저장합니다.", tags = "모의고사")
-    @PostMapping("/mock-exam/complete")
-    public ResponseEntity<ExamInformationDto> completeMockExam(@RequestParam Long examInformationId) {
+    @Operation(summary = "모의고사 완료 및 점수 저장하기", description = "모의고사를 완료하고 점수를 저장합니다. 수정", tags = "모의고사")
+    @PostMapping("/mock-exam/{examInformationId}/complete")
+    public ResponseEntity<ExamInformationDto> completeMockExam(@PathVariable Long examInformationId) {
         ExamInformationDto completedExam = examService.completeMockExam(examInformationId);
         return ResponseEntity.ok(completedExam);
     }
@@ -210,7 +208,7 @@ public class ExamController {
     @Operation(summary = "모의고사 삭제하기", description = "모의고사를 삭제합니다.", tags = "모의고사")
     @DeleteMapping("/mock-exam/{examInformationId}")
     public ResponseEntity<?> deleteMockExam(@PathVariable Long examInformationId) {
-         examService.deleteMockExam(examInformationId);
+        examService.deleteMockExam(examInformationId);
         return ResponseEntity.ok().build();
     }
 
@@ -221,10 +219,11 @@ public class ExamController {
         return ResponseEntity.ok(incorrectAnswers);
     }
 
-    @Operation(summary = "틀린 문제 상세 조회하기", description = "회원이 틀린 문제의 상세 정보를 조회합니다.", tags = "틀린문제")
+    @Operation(summary = "틀린 문제 상세 조회하기", description = "회원이 틀린 문제의 상세 정보를 조회합니다. 수정", tags = "틀린문제")
     @GetMapping("/incorrect-answers/{id}")
-    public ResponseEntity<IncorrectAnswerResultDto> getIncorrectAnswer(@PathVariable Long id) {
-        IncorrectAnswerResultDto incorrectAnswer = examService.getIncorrectAnswer(id);
+    public ResponseEntity<IncorrectAnswerResultDto> getIncorrectAnswer(@RequestParam Long memberId, @PathVariable Long id) {
+        IncorrectAnswerResultDto incorrectAnswer = examService.getIncorrectAnswerDetail(memberId,
+            id);
         return ResponseEntity.ok(incorrectAnswer);
     }
 
@@ -238,12 +237,21 @@ public class ExamController {
         return ResponseEntity.ok(averageScoreDto);
     }
 
+    // 모의고사 각 문제의 정답 여부 조회
+    @Operation(summary = "모의고사의 모든 문제 정답 여부 조회", description = "회원이 특정 모의고사의 각 문제에 대한 정답 여부를 조회합니다.", tags = "모의고사")
+    @GetMapping("/mock-exam/answers-status")
+    public ResponseEntity<List<MockExamProblemResultDto>> getMockExamAnswersStatus(
+        @RequestParam Long examId) {
+        List<MockExamProblemResultDto> answerStatuses = examService.getMockExamProblemStatus(examId);
+        return ResponseEntity.ok(answerStatuses);
+    }
+
     /**
      * 문제 유형별로 총 문제 수와 맞힌 문제 수를 반환합니다.
      */
-    @GetMapping("/mock-exam/{examInformationId}/result-by-type")
-    @Operation(summary = "문제 유형별 맞힌 문제 수", description = "문제 유형별로 총 문제 수와 맞힌 문제 수를 반환합니다.", tags = "모의고사")
-    public ResponseEntity<List<ProblemTypeResultDto>> getProblemTypeResults(@PathVariable Long examInformationId) {
+    @GetMapping("/mock-exam/result-by-type")
+    @Operation(summary = "문제 유형별 맞힌 문제 수", description = "문제 유형별로 총 문제 수와 맞힌 문제 수를 반환합니다. 수정", tags = "모의고사")
+    public ResponseEntity<List<ProblemTypeResultDto>> getProblemTypeResults(@RequestParam Long examInformationId) {
         List<ProblemTypeResultDto> results = examService.getProblemTypeResults(examInformationId);
         return ResponseEntity.ok(results);
     }
@@ -251,10 +259,12 @@ public class ExamController {
     /**
      * 멤버의 최근 모의고사 정보 및 문제 유형별 결과를 반환합니다.
      */
-    @GetMapping("/mock-exam/recent/{memberId}")
-    @Operation(summary = "최근 모의고사 정보 및 문제 유형별 결과", description = "멤버의 가장 최근 모의고사 정보를 반환합니다.", tags = "모의고사")
-    public ResponseEntity<ExamInformationDetailDto> getRecentExamInformation(@PathVariable Long memberId) {
-        ExamInformationDetailDto examInformationDetailDto = examService.getRecentExamInformation(memberId);
+    @GetMapping("/mock-exam/recent")
+    @Operation(summary = "최근 모의고사 정보 및 문제 유형별 결과", description = "멤버의 가장 최근 모의고사 정보를 반환합니다. 수정", tags = "모의고사")
+    public ResponseEntity<ExamInformationDetailDto> getRecentExamInformation(
+        @RequestParam Long memberId) {
+        ExamInformationDetailDto examInformationDetailDto = examService.getRecentExamInformation(
+            memberId);
         return ResponseEntity.ok(examInformationDetailDto);
     }
 }

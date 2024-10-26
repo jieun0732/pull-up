@@ -1,7 +1,9 @@
 package pull_up.api.member.service;
 
+import jakarta.transaction.Transactional;
 import java.util.Comparator;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pull_up.api.exam.entity.ExamInformation;
 import pull_up.api.member.dto.MemberDto;
@@ -12,12 +14,11 @@ import pull_up.api.member.exception.MemberException;
 import pull_up.api.member.repository.MemberRepository;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class MemberService {
-    private final MemberRepository memberRepository;
 
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
+    private final MemberRepository memberRepository;
 
     /**
      * 특정 ID를 가진 Member의 정보를 조회하고, 가장 최근 ExamInformation의 Score와 함께 반환하는 메서드.

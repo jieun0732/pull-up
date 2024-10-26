@@ -1,6 +1,7 @@
 package pull_up.api.member.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pull_up.api.exam.dto.ExamInformationDto;
@@ -25,19 +26,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class MemberAnswerService {
 
-    @Autowired
-    private MemberAnswerRepository memberAnswerRepository;
+    private final MemberAnswerRepository memberAnswerRepository;
 
-    @Autowired
-    private ProblemRepository problemRepository;
+    private final ProblemRepository problemRepository;
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    @Autowired
-    private ExamInformationRepository examInformationRepository;
+    private final ExamInformationRepository examInformationRepository;
 
     public MemberAnswerDto submitAnswer(Long memberId, Long problemId, Long examId, String chosenAnswer) {
         Member member = memberRepository.findById(memberId)
