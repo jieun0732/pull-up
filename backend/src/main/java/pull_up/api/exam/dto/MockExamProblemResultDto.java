@@ -23,12 +23,25 @@ public record MockExamProblemResultDto(Long questionNumber,      // 문제 번�
     }
 
     public static MockExamProblemResultDto from(ExamProblem entity) {
+        boolean isCorrect = entity.getIsCorrect() != null ? entity.getIsCorrect() : false;
+
+        // 각 필드에 대해 null 체크 및 기본값 처리
+        String questionText = entity.getProblem() != null && entity.getProblem().getQuestion() != null
+            ? entity.getProblem().getQuestion()
+            : null;
+
+        String chosenAnswer = entity.getChosenAnswer() != null ? entity.getChosenAnswer() : null;
+
+        String correctAnswer = entity.getProblem() != null && entity.getProblem().getAnswer() != null
+            ? entity.getProblem().getAnswer()
+            : null;
+
         return new MockExamProblemResultDto(
             entity.getProblemNumber(),
-            entity.getIsCorrect(),
-            entity.getProblem().getQuestion(), // 문제 내용
-            entity.getChosenAnswer(),
-            entity.getProblem().getAnswer() // 정답
+            isCorrect,
+            questionText,
+            chosenAnswer,
+            correctAnswer
         );
     }
 }

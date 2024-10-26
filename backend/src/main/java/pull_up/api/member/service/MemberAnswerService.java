@@ -88,7 +88,7 @@ public class MemberAnswerService {
 
         // MemberAnswer 생성 및 저장
         for (Problem problem : problems) {
-            MemberAnswer memberAnswer = MemberAnswer.of(member, problem, null, null, null);
+            MemberAnswer memberAnswer = MemberAnswer.of(member, problem, null, null, false);
             memberAnswerRepository.save(memberAnswer);
         }
     }

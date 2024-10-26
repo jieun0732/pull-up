@@ -394,11 +394,10 @@ public class ExamService {
                 problem,
                 problemNumber, // 문제 번호를 추가
                 null, // 선택 답변은 나중에 설정
-                null
+                false
             );
-            log.info("examProblem3: " + examProblem);
+
             examProblems.add(examProblem);
-            log.info("examProblem4: " + examProblems);
             problemNumber++; // 다음 문제의 번호를 증가
         }
 
@@ -409,7 +408,6 @@ public class ExamService {
         List<ExamProblemResultDto> examProblemResultDtos = examProblems.stream()
             .map(ExamProblemResultDto::from)
             .collect(Collectors.toList());
-        log.info("examProblems5: " + examProblemResultDtos);
 
         // 결과를 반환
         return CreatedExamInformationResultDto.from(examInformation, examProblemResultDtos);
