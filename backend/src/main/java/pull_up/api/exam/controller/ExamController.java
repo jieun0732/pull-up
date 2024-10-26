@@ -241,8 +241,8 @@ public class ExamController {
     @Operation(summary = "모의고사의 모든 문제 정답 여부 조회", description = "회원이 특정 모의고사의 각 문제에 대한 정답 여부를 조회합니다.", tags = "모의고사")
     @GetMapping("/mock-exam/answers-status")
     public ResponseEntity<List<MockExamProblemResultDto>> getMockExamAnswersStatus(
-        @RequestParam Long examId) {
-        List<MockExamProblemResultDto> answerStatuses = examService.getMockExamProblemStatus(examId);
+        @RequestParam Long examInformationId) {
+        List<MockExamProblemResultDto> answerStatuses = examService.getMockExamProblemStatus(examInformationId);
         return ResponseEntity.ok(answerStatuses);
     }
 

@@ -670,8 +670,9 @@ public class ExamService {
     /**
      * 모의고사 하나의 정답 여부를 반환합니다.
      */
-    public List<MockExamProblemResultDto> getMockExamProblemStatus(Long examId) {
-        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(examId);
+    public List<MockExamProblemResultDto> getMockExamProblemStatus(Long examInformationId) {
+        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(
+            examInformationId);
 
         // MockExamProblemResultDto로 변환하여 반환
         return examProblems.stream()
