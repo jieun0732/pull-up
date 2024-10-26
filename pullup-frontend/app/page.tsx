@@ -38,7 +38,7 @@ export default function Home() {
           window?.AppleID.auth.init({
             clientId: "com.pull-up.services",
             scope: "name",
-            redirectURI: "http://localhost:3000",
+            redirectURI: "https://pull-up-snowy.vercel.app",
             usePopup: true,
           });
           const res = await window.AppleID.auth.signIn();
