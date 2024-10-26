@@ -1,0 +1,80 @@
+package pull_up.global.Oauth.v2.util;
+
+import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import pull_up.global.Oauth.v2.api.AppleAuthRestApi;
+import pull_up.global.Oauth.v2.dto.AppleJwks;
+import pull_up.global.Oauth.v2.exception.OAuthError;
+import pull_up.global.Oauth.v2.exception.OAuthException;
+
+import java.math.BigInteger;
+import java.security.Key;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class AppleTokenDecoder {
+
+    private final AppleAuthRestApi appleAuthRestApi;
+
+    @Value("${spring.security.oauth2.client.registration.apple.client-id}")
+    private String clientId;
+
+    @Value("${auth.login.apple.token.baseUrl}")
+    private String issuer;
+
+    public Jws<Claims> decode(String token) {
+        AppleJwks keys = appleAuthRestApi.getKeys();
+        log.info("token : {}", token);
+        return Jwts.parser()
+                .keyLocator(new AppleKeyLocator(keys))
+                .requireAudience(clientId)
+                .requireIssuer(issuer)
+                .build()
+                .parseSignedClaims(token);
+    }
+
+    public class AppleKeyLocator extends LocatorAdapter<Key> {
+
+        private final AppleJwks appleJwks;
+
+        public AppleKeyLocator(AppleJwks appleJwks) {
+            this.appleJwks = appleJwks;
+        }
+
+        @Override
+        public Key locate(ProtectedHeader header) {
+            String publicKeyId = header.getKeyId();
+            String algorithm = header.getAlgorithm();
+
+            // 서명된 keyId, algorithm 으로부터 공개키 찾기
+            try {
+                AppleJwks.Jwk publicKey = appleJwks.keys().stream().filter(
+                                key -> key.kid().equals(publicKeyId) && key.alg().equals(algorithm))
+                        .findFirst()
+                        .orElseThrow(() -> new OAuthException(OAuthError.PARSE_APPLE_PUBLIC_KEY_ERROR));
+
+                byte[] nBytes = Base64.getUrlDecoder().decode(publicKey.n());
+                byte[] eBytes = Base64.getUrlDecoder().decode(publicKey.e());
+
+                BigInteger n = new BigInteger(1, nBytes);
+                BigInteger e = new BigInteger(1, eBytes);
+
+                RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
+                KeyFactory keyFactory = KeyFactory.getInstance(publicKey.kty());
+
+                return keyFactory.generatePublic(publicKeySpec);
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                throw new OAuthException(OAuthError.PARSE_APPLE_PUBLIC_KEY_ERROR);
+            }
+        }
+    }
+}
