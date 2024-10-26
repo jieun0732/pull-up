@@ -3,6 +3,7 @@ import GoogleAnalytics from "./lib/GoogleAnalytics";
 // import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import Script from "next/script";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +32,10 @@ export default function RootLayout({
         ) : null}
         {/* 상태관리 컨텍스트 등은 여기서 감싸주면 됨 */}
         {children}
+        <Script
+          type="text/javascript"
+          src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"
+        />
       </body>
     </html>
   );

@@ -13,7 +13,6 @@ export default function Home() {
   const router = useRouter();
   const APPLE_URL =
     "https://appleid.apple.com/auth/authorize?response_mode=form_post&response_type=code%20id_token&response_type=code&client_id=com.pull-up.services&scope=name%20email&redirect_uri=https://pull-up-snowy.vercel.app/oauth2/apple";
-
   useEffect(() => {
     localStorage.clear();
   }, []);
@@ -31,9 +30,19 @@ export default function Home() {
         인적성 검사 준비는 풀업에서
       </Text>
       <button
-        onClick={() => {
-          LocalStorage.setItem("memberId", "1");
-          router.push("/main/sectional");
+        // onClick={() => {
+        //   LocalStorage.setItem("memberId", "1");
+        //   router.push("/main/sectional");
+        // }}
+        onClick={async () => {
+          window?.AppleID.auth.init({
+            clientId: "com.pull-up.services",
+            scope: "name",
+            redirectURI: "http://localhost:3000",
+            usePopup: true,
+          });
+          const res = await window.AppleID.auth.signIn();
+          console.log(res);
         }}
         className="relative mb-5 flex w-full items-center justify-center rounded-md bg-[#fee500] py-5"
       >
