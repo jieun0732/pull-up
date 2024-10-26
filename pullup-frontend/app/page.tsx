@@ -47,33 +47,7 @@ export default function Home() {
         //   LocalStorage.setItem("memberId", "1");
         //   router.push("/main/sectional");
         // }}
-        onClick={async () => {
-          window?.AppleID.auth.init({
-            clientId: "com.pull-up.services",
-            scope: "name",
-            redirectURI: "https://pull-up-snowy.vercel.app/oauth2/apple",
-            usePopup: true,
-          });
-          const res: AppleAuthenticationResponseType =
-            await window.AppleID.auth.signIn();
 
-          fetch("https://pullup-api.shop/api/oauth2/login/apple", {
-            body: JSON.stringify(() => {
-              if (!!res.user)
-                return {
-                  token: res.authorization.id_token,
-                  isFirstLogin: !!res.user,
-                  firstName: res.user.name.firstName,
-                  lastName: res.user.name.lastName,
-                };
-              else
-                return {
-                  token: res.authorization.id_token,
-                  isFirstLogin: !!res.user,
-                };
-            }),
-          });
-        }}
         className="relative mb-5 flex w-full items-center justify-center rounded-md bg-[#fee500] py-5"
       >
         <svg
@@ -95,8 +69,40 @@ export default function Home() {
           카카오로 로그인
         </p>
       </button>
-      <Link
-        href={APPLE_URL}
+      <button
+        onClick={async () => {
+          window?.AppleID.auth.init({
+            clientId: "com.pull-up.services",
+            scope: "name",
+            redirectURI: "https://pull-up-snowy.vercel.app/main/sectional",
+            usePopup: true,
+          });
+          const res: AppleAuthenticationResponseType =
+            await window.AppleID.auth.signIn();
+
+          const response = await fetch(
+            "https://pullup-api.shop/api/oauth2/login/apple",
+            {
+              method: "POST",
+              body: JSON.stringify(() => {
+                if (!!res.user)
+                  return {
+                    token: res.authorization.id_token,
+                    isFirstLogin: !!res.user,
+                    firstName: res.user.name.firstName,
+                    lastName: res.user.name.lastName,
+                  };
+                else
+                  return {
+                    token: res.authorization.id_token,
+                    isFirstLogin: !!res.user,
+                  };
+              }),
+            },
+          );
+          console.log("======================================");
+          console.log(response);
+        }}
         className="relative flex w-full items-center justify-center rounded-md bg-black py-5"
       >
         <svg
@@ -113,7 +119,7 @@ export default function Home() {
           />
         </svg>
         <p className="text-base font-semibold text-white">Apple ID로 로그인</p>
-      </Link>
+      </button>
     </main>
   );
 }
