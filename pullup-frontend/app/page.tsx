@@ -8,6 +8,19 @@ import introLogo from "@/assets/logo/introLogo.png";
 import LocalStorage from "@/utils/LocalStorage";
 import { useEffect } from "react";
 
+interface AppleAuthenticationResponseType {
+  authorization: {
+    code: string;
+    id_token: string;
+  };
+  user?: {
+    name: {
+      firstName: string;
+      lastName: string;
+    };
+  };
+}
+
 export default function Home() {
   const totalPercent = 91;
   const router = useRouter();
@@ -38,11 +51,28 @@ export default function Home() {
           window?.AppleID.auth.init({
             clientId: "com.pull-up.services",
             scope: "name",
-            redirectURI: "https://pull-up-snowy.vercel.app",
+            redirectURI: "https://pull-up-snowy.vercel.app/oauth2/apple",
             usePopup: true,
           });
-          const res = await window.AppleID.auth.signIn();
-          console.log(res);
+          const res: AppleAuthenticationResponseType =
+            await window.AppleID.auth.signIn();
+
+          fetch("https://pullup-api.shop/api/oauth2/login/apple", {
+            body: JSON.stringify(() => {
+              if (!!res.user)
+                return {
+                  token: res.authorization.id_token,
+                  isFirstLogin: !!res.user,
+                  firstName: res.user.name.firstName,
+                  lastName: res.user.name.lastName,
+                };
+              else
+                return {
+                  token: res.authorization.id_token,
+                  isFirstLogin: !!res.user,
+                };
+            }),
+          });
         }}
         className="relative mb-5 flex w-full items-center justify-center rounded-md bg-[#fee500] py-5"
       >
