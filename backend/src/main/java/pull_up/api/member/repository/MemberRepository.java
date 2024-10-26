@@ -1,8 +1,9 @@
 package pull_up.api.member.repository;
 
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import pull_up.api.member.entity.Member;
+
+import java.util.Optional;
 
 /**
  * Member 레포지토리.
@@ -10,4 +11,6 @@ import pull_up.api.member.entity.Member;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmail(String email);
+
+    Optional<Member> findByEmailAndRole(String email, String role);
 }

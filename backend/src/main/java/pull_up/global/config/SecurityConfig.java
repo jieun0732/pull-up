@@ -3,9 +3,6 @@ package pull_up.global.config;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -30,23 +27,25 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import pull_up.global.Oauth.*;
-import pull_up.global.Oauth.v2.CustomAccessTokenConverter;
-import pull_up.global.Oauth.v2.OAuth2SuccessHandlerV2;
-import pull_up.global.Oauth.v2.OAuth2UserServiceV2;
+import pull_up.global.Oauth.AppleProperties;
+import pull_up.global.Oauth.CustomRequestEntityConverter;
+import pull_up.global.Oauth.OAuth2SuccessHandler;
+import pull_up.global.Oauth.OAuth2UserService;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-//
-    private final CustomAccessTokenConverter customAccessTokenConverter;
-    private final OAuth2UserServiceV2 oAuth2UserServiceV2;
-    private final OAuth2SuccessHandlerV2 oAuth2SuccessHandlerV2;
+
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final AppleProperties appleProperties;
+
     @Bean
     public CustomRequestEntityConverter customRequestEntityConverter() {
         return new CustomRequestEntityConverter(appleProperties);
@@ -55,21 +54,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // cors 허용
-            .cors(cors -> cors
-                .configurationSource(corsConfigurationSource())
-            )
-            // csrf 토큰 방어 해제.
-            .csrf(CsrfConfigurer::disable)
-            // httpBasic 인증 방식 해제.
-            .httpBasic(HttpBasicConfigurer::disable)
-            // 서버를 Stateless 하게 유지.
-            .sessionManagement(sessionManagement -> sessionManagement
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-            )
-            .formLogin(AbstractHttpConfigurer::disable)
+                // cors 허용
+                .cors(cors -> cors
+                        .configurationSource(corsConfigurationSource())
+                )
+                // csrf 토큰 방어 해제.
+                .csrf(CsrfConfigurer::disable)
+                // httpBasic 인증 방식 해제.
+                .httpBasic(HttpBasicConfigurer::disable)
+                // 서버를 Stateless 하게 유지.
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
+                .formLogin(AbstractHttpConfigurer::disable)
 
-            // 카카오 로그인 추가
+                // 카카오 로그인 추가
 /*
             .oauth2Login(oauth2 -> oauth2
                 .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig.accessTokenResponseClient(accessTokenResponseClient(customRequestEntityConverter())))
@@ -78,41 +77,26 @@ public class SecurityConfig {
                 .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
                 .successHandler(oAuth2SuccessHandler)
             )
-/*
+*/
 
-          /*
-           * TODO
-           * 1. 요청의 Token 보유여부 확인
-           * 2. Token 보유 시 애플에 요청 전송해서 UserInfo 받아옴
-           * 3. UserInfo 통해서 DB에 해당 사용자가 가입되어 있는지 확인
-           * 4. 가입되어 있으면 로그인, 가입되어 있지 않으면 회원가입
-           * 5. Handler 통해서 회원정보 전송
-           */
-          .oauth2Login(oauth2 -> oauth2
-            .tokenEndpoint(endpoint -> endpoint.accessTokenResponseClient(customAccessTokenConverter.getTokenClient()))
-              .redirectionEndpoint(endpoint -> endpoint.baseUri("/api/pull-up/oauth2/callback/*"))
-              .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserServiceV2))
-              .successHandler(oAuth2SuccessHandlerV2)
-            )
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/api/pull-up/oauth2/**")
+                        .permitAll()
+                        .requestMatchers("/api/pull-up/swagger-ui/**").permitAll()
+                        .requestMatchers("/api/pull-up/swagger-ui/index.html").permitAll()
+                        .requestMatchers("/api/pull-up/lawsuit/**").permitAll()
+                        .requestMatchers("/api/pull-up/").permitAll()
+                        .requestMatchers("/").permitAll()
+                        .anyRequest().permitAll()
+                );
 
-            .authorizeHttpRequests(request -> request
-                .requestMatchers("/api/pull-up/oauth2/**", "/api/pull-up/login")
-                .permitAll()
-                .requestMatchers("/api/pull-up/swagger-ui/**").permitAll()
-                .requestMatchers("/api/pull-up/swagger-ui/index.html").permitAll()
-                .requestMatchers("/api/pull-up/lawsuit/**").permitAll()
-                .requestMatchers("/api/pull-up/").permitAll()
-                .requestMatchers("/").permitAll()
-                .anyRequest().permitAll()
-            );
-
-            // 인증 예외 처리
+        // 인증 예외 처리
           /*
             .exceptionHandling(exceptionHandling -> exceptionHandling
                 .authenticationEntryPoint(new FailedAuthenticationEntryPoint())
                 .accessDeniedHandler(new CustomAccessDeniedHandler())
             );
-*/
+          */
         return http.build();
     }
 
@@ -123,8 +107,8 @@ public class SecurityConfig {
 
             String id = defaultOAuth2User.getAttributes().get("id").toString();
             String body = """
-                {"id":"%s"}
-                """.formatted(id);
+                    {"id":"%s"}
+                    """.formatted(id);
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
@@ -173,7 +157,7 @@ public class SecurityConfig {
 
         @Override
         public void commence(HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException authException) throws IOException, ServletException {
+                             AuthenticationException authException) throws IOException, ServletException {
 
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -185,10 +169,10 @@ public class SecurityConfig {
 
         @Override
         public void handle(HttpServletRequest request, HttpServletResponse response,
-            AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                           AccessDeniedException accessDeniedException) throws IOException, ServletException {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter()
-                .write("Access Denied: You don't have permission to access this resource.");
+                    .write("Access Denied: You don't have permission to access this resource.");
         }
     }
 }
