@@ -494,6 +494,14 @@ public class ExamService {
             }
         }
 
+        problem.setTotalAttempts(problem.getTotalAttempts() + 1);
+        if (!isCorrect) {
+            problem.setIncorrectAttempts(problem.getIncorrectAttempts() + 1);
+        }
+        problem.setIncorrectRate(
+            (double) problem.getIncorrectAttempts() / problem.getTotalAttempts() * 100);
+        problemRepository.save(problem);
+
         // 7. 결과를 DTO로 변환하여 반환
         return ExamProblemResultDto.from(examProblem);
     }
