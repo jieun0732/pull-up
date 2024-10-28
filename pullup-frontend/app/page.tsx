@@ -4,9 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import Text from "./component/ui/Text";
 import { useRouter } from "next/navigation";
-import introLogo from "@/assets/logo/introLogo.png";
 import LocalStorage from "@/utils/LocalStorage";
 import { useEffect } from "react";
+import introLogo from "./assets/logo/introLogo.png";
+import { UserLoginStatus } from "./types/userType";
 
 interface AppleAuthenticationResponseType {
   authorization: {
@@ -43,12 +44,11 @@ export default function Home() {
         인적성 검사 준비는 풀업에서
       </Text>
       <button
-        // onClick={() => {
-        //   LocalStorage.setItem("memberId", "1");
-        //   router.push("/main/sectional");
-        // }}
-
-        className="relative mb-5 flex w-full items-center justify-center rounded-md bg-[#fee500] py-5"
+        onClick={() => {
+          LocalStorage.setItem("memberId", "1");
+          router.push("/main/sectional");
+        }}
+        className="mb-5 flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-[#fee500]"
       >
         <svg
           className="absolute left-10"
@@ -69,7 +69,8 @@ export default function Home() {
           카카오로 로그인
         </p>
       </button>
-      <button
+      <div
+        id="appleid-signin"
         onClick={async () => {
           window?.AppleID.auth.init({
             clientId: "com.pull-up.services",
@@ -80,30 +81,38 @@ export default function Home() {
           const res: AppleAuthenticationResponseType =
             await window.AppleID.auth.signIn();
 
+          const body = () => {
+            if (!!res.user)
+              return {
+                token: res.authorization.id_token,
+                isFirstLogin: true,
+                firstName: res.user.name.firstName,
+                lastName: res.user.name.lastName,
+              };
+            else
+              return {
+                token: res.authorization.id_token,
+                isFirstLogin: true,
+                firstName: "test",
+                lastName: "1111",
+              };
+          };
+
           const response = await fetch(
             "https://pullup-api.shop/api/oauth2/login/apple",
             {
               method: "POST",
-              body: JSON.stringify(() => {
-                if (!!res.user)
-                  return {
-                    token: res.authorization.id_token,
-                    isFirstLogin: !!res.user,
-                    firstName: res.user.name.firstName,
-                    lastName: res.user.name.lastName,
-                  };
-                else
-                  return {
-                    token: res.authorization.id_token,
-                    isFirstLogin: !!res.user,
-                  };
-              }),
+              body: JSON.stringify(body()),
+              headers: {
+                "Content-Type": "application/json;charset=utf-8",
+              },
             },
           );
-          console.log("======================================");
-          console.log(response);
+          const data: UserLoginStatus = await response.json();
+          LocalStorage.setItem("memberId", String(data.memberId));
+          router.push("/main/sectional");
         }}
-        className="relative flex w-full items-center justify-center rounded-md bg-black py-5"
+        className="flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-black text-white"
       >
         <svg
           className="absolute left-10"
@@ -118,8 +127,8 @@ export default function Home() {
             fill="white"
           />
         </svg>
-        <p className="text-base font-semibold text-white">Apple ID로 로그인</p>
-      </button>
+        <p>Apple ID로 로그인</p>
+      </div>
     </main>
   );
 }
