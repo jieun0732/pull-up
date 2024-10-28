@@ -30,7 +30,7 @@ export default function Page({
 
   return (
     <>
-      <div className="bg-whtie relative flex flex-col items-center pb-7 pt-16">
+      <div className="bg-whtie relative flex flex-col items-center pb-7 pt-20">
         <div className="h-11 w-full px-5">
           <div className="relative">
             <BackIcon onClick={() => router.back()} />

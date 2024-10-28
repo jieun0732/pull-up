@@ -20,7 +20,7 @@ export default function Page() {
   if (!data) return;
   console.log(data);
   return (
-    <div className="flex h-full w-full flex-col items-center bg-[#F4F3F8] px-5 pb-[91px] pt-16">
+    <div className="flex h-full w-full flex-col items-center bg-[#F4F3F8] px-5 pb-[91px] pt-20">
       <Header type="back" content="내가 틀린 문제" link="/main/profile" />
       <div className="flex h-full w-full flex-col overflow-x-scroll">
         {data.length === 0 ? (

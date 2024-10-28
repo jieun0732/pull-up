@@ -18,7 +18,7 @@ const TutorialOverlay = ({
     step < 2 && (
       <div
         onClick={() => setStep((prevStep) => prevStep + 1)}
-        className="absolute left-0 top-0 z-20 h-screen w-full bg-black pb-7 pt-16 opacity-80"
+        className="absolute left-0 top-0 z-20 h-screen w-full bg-black pb-7 pt-20 opacity-80"
       />
     )
   );

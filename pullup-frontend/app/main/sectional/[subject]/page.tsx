@@ -127,7 +127,7 @@ export default function Page() {
     };
 
   return (
-    <div className="flex flex-col items-center px-5 pb-7 pt-16">
+    <div className="flex flex-col items-center px-5 pb-7 pt-20">
       <Header type="back" content={`${entry}영역`} link={`/main/sectional/`} />
       <Text size="head-02" className="self-start">
         {entry}영역의 대표 예제를

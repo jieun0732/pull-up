@@ -25,7 +25,7 @@ export default function Page() {
   if (!data) return;
 
   return (
-    <div className="flex h-full flex-col bg-white px-5 pb-[91px] pt-16">
+    <div className="flex h-full flex-col bg-white px-5 pb-[91px] pt-20">
       <div className="">
         <Text size="head-02">문제를 풀고</Text>
         <Text size="head-02">내 실력을 확인해볼 수 있다면?</Text>

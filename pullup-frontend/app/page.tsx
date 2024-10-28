@@ -95,7 +95,8 @@ export default function Home() {
                 isFirstLogin: false,
               };
           };
-
+          console.log("AppleAuthenticationResponseType");
+          console.log(res);
           const response = await fetch(
             "https://pullup-api.shop/api/oauth2/login/apple",
             {
@@ -107,6 +108,8 @@ export default function Home() {
             },
           );
           const data: UserLoginStatus = await response.json();
+          console.log("UserLoginStatus");
+          console.log(data);
           LocalStorage.setItem("memberId", String(data.memberId));
           router.push("/main/sectional");
         }}
