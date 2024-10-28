@@ -8,6 +8,7 @@ import LocalStorage from "@/utils/LocalStorage";
 import { useEffect } from "react";
 import introLogo from "./assets/logo/introLogo.png";
 import { UserLoginStatus } from "./types/userType";
+import { API } from "./lib/API";
 
 interface AppleAuthenticationResponseType {
   authorization: {
@@ -111,6 +112,18 @@ export default function Home() {
           console.log("UserLoginStatus");
           console.log(data);
           LocalStorage.setItem("memberId", String(data.memberId));
+
+          if (!!res.user) {
+            const signup = await fetch(
+              `${API}/memberAnswers/problems/problem-answers?memberId=${data.memberId}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json;charset=utf-8",
+                },
+              },
+            );
+          }
           router.push("/main/sectional");
         }}
         className="relative flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-black text-white"
