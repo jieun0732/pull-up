@@ -26,6 +26,8 @@ interface AppleAuthenticationResponseType {
 export default function Home() {
   const totalPercent = 91;
   const router = useRouter();
+  const KAKAO_URL =
+    "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=f9165f4a6bb04401b296313ef583fb98&scope=profile_nickname account_email&redirect_uri=https://pull-up-snowy.vercel.app/oauth2/kakao";
   const APPLE_URL =
     "https://appleid.apple.com/auth/authorize?response_mode=form_post&response_type=code%20id_token&response_type=code&client_id=com.pull-up.services&scope=name%20email&redirect_uri=https://pull-up-snowy.vercel.app/oauth2/apple";
   useEffect(() => {
@@ -44,11 +46,8 @@ export default function Home() {
       <Text size="body-04" color="text-gray01" className="mb-12">
         인적성 검사 준비는 풀업에서
       </Text>
-      <button
-        onClick={() => {
-          LocalStorage.setItem("memberId", "1");
-          router.push("/main/sectional");
-        }}
+      <Link
+        href={KAKAO_URL}
         className="relative mb-5 flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-[#fee500]"
       >
         <svg
@@ -69,7 +68,7 @@ export default function Home() {
         <p className="text-center text-base font-semibold text-black">
           카카오로 로그인
         </p>
-      </button>
+      </Link>
       <div
         id="appleid-signin"
         onClick={async () => {
