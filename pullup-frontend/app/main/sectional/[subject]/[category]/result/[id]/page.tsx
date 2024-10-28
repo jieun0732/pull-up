@@ -49,7 +49,7 @@ export default function Page({
   const chosenAnswer = problems[Number(params.id) - 1].chosenAnswer;
   return (
     <>
-      <div className="bg-whtie relative flex flex-col items-center pb-7 pt-14">
+      <div className="bg-whtie relative flex flex-col items-center pb-7 pt-16">
         <div className="h-11 w-full px-5">
           <div className="relative">
             <BackIcon onClick={() => router.back()} />

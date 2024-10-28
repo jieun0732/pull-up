@@ -151,7 +151,7 @@ export default function Page() {
           handleExamResult={handleExamResult}
         />
 
-        <div className="relative flex w-full flex-col overflow-x-auto px-5 pt-14">
+        <div className="relative flex w-full flex-col overflow-x-auto px-5 pt-16">
           <div className="relative mb-8 w-full text-center">
             <CloseIcon onClick={openModal} />
             <span

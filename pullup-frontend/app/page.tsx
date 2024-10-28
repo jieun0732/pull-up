@@ -92,9 +92,7 @@ export default function Home() {
             else
               return {
                 token: res.authorization.id_token,
-                isFirstLogin: true,
-                firstName: "test",
-                lastName: "1111",
+                isFirstLogin: false,
               };
           };
 

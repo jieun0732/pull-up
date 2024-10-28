@@ -25,12 +25,11 @@ export default function Page({
   const entry = entryMap[params.subject];
   const categoryKor = categoryMap[params.category];
 
-  let type = ""
+  let type = "";
 
   if (categoryKor !== "골고루") {
-    type = localStorage.getItem('type') || ""
+    type = localStorage.getItem("type") || "";
   }
-
 
   const queryString = new URLSearchParams({
     memberId: memberID,
@@ -49,7 +48,7 @@ export default function Page({
   let nullCount = 0;
 
   return (
-    <div className="h-full w-full min-w-[320px] max-w-[450px] overflow-y-auto bg-[#ffffff] px-5 pb-7 pt-14 text-black01">
+    <div className="h-full w-full min-w-[320px] max-w-[450px] overflow-y-auto bg-[#ffffff] px-5 pb-7 pt-16 text-black01">
       <div className="relative mb-6 h-[25px] w-full text-center text-[17px] font-bold">
         <CloseIcon onClick={() => router.push(`/main/sectional/${subject}`)} />
       </div>

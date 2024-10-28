@@ -13,12 +13,13 @@ export interface userStatus {
   latestScore: number;
 }
 export interface UserLoginStatus {
-  login: string;
+  login: boolean;
   memberId: number;
   provider: "apple" | "kakao";
   name: string;
   email: string;
 }
+
 export interface authType {
   code: string;
   state: string;

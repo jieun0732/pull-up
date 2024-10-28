@@ -30,7 +30,7 @@ export default function Page({
 
   return (
     <>
-      <div className="bg-whtie relative flex flex-col items-center pb-7 pt-14">
+      <div className="bg-whtie relative flex flex-col items-center pb-7 pt-16">
         <div className="h-11 w-full px-5">
           <div className="relative">
             <BackIcon onClick={() => router.back()} />
@@ -42,20 +42,19 @@ export default function Page({
               문제 {formatNumber(Number(params.id))}
             </Text>
             <Button size="small" color="nonactive">
-            {data.problem.type}
+              {data.problem.type}
             </Button>
           </div>
 
           <Text size="body-03" className="relative mb-4 px-5">
             {data.problem.question}
           </Text>
-        
+
           {data.problem.explanation && (
             <div className="relative mx-5 mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
               <Text size="body-03">{data.problem.explanation}</Text>
             </div>
           )}
-
         </div>
         {data.problem.choices.map((choice, idx) => {
           let choiceStyle;
@@ -82,7 +81,7 @@ export default function Page({
               </div>
               <div> {choice}</div>
             </div>
-          )
+          );
         })}
 
         <div className="relative px-5">
