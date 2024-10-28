@@ -49,7 +49,7 @@ export default function Home() {
           LocalStorage.setItem("memberId", "1");
           router.push("/main/sectional");
         }}
-        className="mb-5 flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-[#fee500]"
+        className="relative mb-5 flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-[#fee500]"
       >
         <svg
           className="absolute left-10"
@@ -114,7 +114,7 @@ export default function Home() {
           LocalStorage.setItem("memberId", String(data.memberId));
           router.push("/main/sectional");
         }}
-        className="flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-black text-white"
+        className="relative flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-black text-white"
       >
         <svg
           className="absolute left-10"
