@@ -19,6 +19,7 @@ interface AppleAuthenticationResponseType {
       firstName: string;
       lastName: string;
     };
+    email: string;
   };
 }
 
@@ -74,7 +75,7 @@ export default function Home() {
         onClick={async () => {
           window?.AppleID.auth.init({
             clientId: "com.pull-up.services",
-            scope: "name",
+            scope: "name email",
             redirectURI: "https://pull-up-snowy.vercel.app/main/sectional",
             usePopup: true,
           });
