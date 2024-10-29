@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: pull-up
+
+  config:
+    import: classpath:${spring.application.name}.yml
+
+  datasource:
+    driver-class-name: ${database.jdbc-driver}
+    url: jdbc:${database.provider}://${database.ip}:${database.port}/${database.schema}?serverTimeZone=${database.timezone}
+    username: ${database.username}
+    password: ${database.password}
+
+  # jpa
+  jpa:
+    hibernate:
+      ddl-auto: ${jpa.ddl-auto}
+    properties:
+      hibernate:
+        dialect: ${jpa.dialect}
+        default_batch_fetch_size: ${jpa.batch-fetch}
+        format_sql: ${jpa.format-sql}
+
+
+  # social security
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${oauth2.kakao.client-id}
+            client-secret: ${oauth2.kakao.client-secret}
+            redirect-uri: ${oauth2.kakao.redirect-uri}
+            authorization-grant-type: authorization_code
+          apple:
+            client-id: ${oauth2.apple.client-id}
+            redirect-uri: ${oauth2.apple.redirect-uri}
+            authorization-grant-type: authorization_code
+        provider:
+          kakao:
+            base-uri: https://kauth.kakao.com
+            authorization-uri: ${spring.security.oauth2.client.provider.kakao.base-uri}/oauth/authorize
+            token-uri: ${spring.security.oauth2.client.provider.kakao.base-uri}/oauth/token
+            user-info-uri: ${spring.security.oauth2.client.provider.kakao.base-uri}/v2/user/me
+          apple:
+            base-uri: https://appleid.apple.com
+            authorizationUri: ${spring.security.oauth2.client.provider.apple.base-uri}/auth/authorize?response_mode=form_post&response_type=code%20id_token
+            tokenUri: ${spring.security.oauth2.client.provider.apple.base-uri}/auth/token
+            jwk-set-uri: ${spring.security.oauth2.client.provider.apple.base-uri}/auth/keys
+
+#logging
+logging:
+  level:
+    org.hibernate.SQL: ${log.level.jpa}
+    root: ${log.level.root}
