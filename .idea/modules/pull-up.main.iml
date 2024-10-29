@@ -4,6 +4,11 @@
     <facet external-system-id="GRADLE" type="web" name="Web">
       <configuration>
         <webroots />
+        <sourceRoots>
+          <root url="file://$MODULE_DIR$/../../backend/build/generated/sources/annotationProcessor/java/main" />
+          <root url="file://$MODULE_DIR$/../../backend/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../backend/src/main/resources" />
+        </sourceRoots>
       </configuration>
     </facet>
   </component>

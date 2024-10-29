@@ -28,8 +28,8 @@ public class AppleTokenDecoder {
     @Value("${spring.security.oauth2.client.registration.apple.client-id}")
     private String clientId;
 
-    @Value("${auth.login.apple.token.baseUrl}")
-    private String issuer;
+    @Value("${spring.security.oauth2.client.provider.apple.base-uri}")
+    private String baseUri;
 
     public Jws<Claims> decode(String token) {
         AppleJwks keys = appleAuthRestApi.getKeys();
@@ -37,7 +37,7 @@ public class AppleTokenDecoder {
         return Jwts.parser()
                 .keyLocator(new AppleKeyLocator(keys))
                 .requireAudience(clientId)
-                .requireIssuer(issuer)
+                .requireIssuer(baseUri)
                 .build()
                 .parseSignedClaims(token);
     }
