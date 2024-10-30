@@ -21,7 +21,6 @@ import pull_up.api.exam.dto.ExamInformationDetailDto;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemResponseDto;
 import pull_up.api.exam.dto.ExamProblemResultDto;
-import pull_up.api.exam.dto.MockExamProblemResultDto;
 import pull_up.api.exam.entity.ExamInformation;
 import pull_up.api.exam.entity.ExamProblem;
 import pull_up.api.exam.exception.ExamErrorCode;
@@ -352,9 +351,9 @@ public class ExamService {
 
         // 각 entry에서 선택할 문제 수 설정
         Map<String, Integer> entryLimits = Map.of(
-            "수리", 6,
+            "수리", 7,
             "언어", 7,
-            "추리", 7
+            "추리", 6
         );
 
         // 각 entry에서 문제를 랜덤으로 선택할 리스트
@@ -672,21 +671,7 @@ public class ExamService {
             rankPercent
         );
     }
-
-    /**
-     * 모의고사 하나의 정답 여부를 반환합니다.
-     */
-    public List<MockExamProblemResultDto> getMockExamProblemStatus(Long examInformationId) {
-        List<ExamProblem> examProblems = examProblemRepository.findByExamInformationId(
-            examInformationId);
-
-        // MockExamProblemResultDto로 변환하여 반환
-        return examProblems.stream()
-            .map(MockExamProblemResultDto::from)
-            .collect(Collectors.toList());
-    }
-
-
+    
     /**
      * 맞힌 문제 수에 따라 상위 퍼센트 계산.
      */
