@@ -47,10 +47,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/pull-up/oauth2/**")
                         .permitAll()
+
                         .requestMatchers("/api/pull-up/lawsuit/**").permitAll()
-                        .requestMatchers("/api/pull-up/").permitAll()
-                        .requestMatchers("/").permitAll()
-                        .anyRequest().permitAll()
+
+                        .anyRequest()
+                        .permitAll()
                 )
                 .build();
     }
@@ -69,12 +70,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", corsConfiguration);
 
         return source;
-    }
-
-    @Bean
-    public JwtDecoderFactory<ClientRegistration> idTokenDecoderFactory() {
-        OidcIdTokenDecoderFactory idTokenDecoderFactory = new OidcIdTokenDecoderFactory();
-        idTokenDecoderFactory.setJwsAlgorithmResolver(clientRegistration -> MacAlgorithm.HS256);
-        return idTokenDecoderFactory;
     }
 }
