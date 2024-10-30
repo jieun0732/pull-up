@@ -58,9 +58,10 @@ spring:
             jwk-set-uri: https://appleid.apple.com/auth/keys
 
 auth:
-  login:
-    redirect-uri: ${oauth2.frontend.redirect-uri}
+  kakao:
+    frontend-redirect-uri: ${oauth2.kakao.frontend-redirect-uri}
   apple:
+    frontend-redirect-uri: ${oauth2.apple.frontend-redirect-uri}
     token:
       key-path: ${oauth2.apple.token.key-path}
       key-id: ${oauth2.apple.token.key-id}

@@ -15,11 +15,8 @@ import pull_up.global.oauth.v2.dto.OAuth2LoginResponseDto;
 import pull_up.global.oauth.v2.service.OAuth2LoginService;
 
 import java.io.IOException;
-import java.io.UTFDataFormatException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.LinkedHashMap;
 
 @Slf4j
 @Component
@@ -27,7 +24,7 @@ import java.util.LinkedHashMap;
 public class OAuth2SuccessHandlerV2 implements AuthenticationSuccessHandler {
 
     private final OAuth2LoginService oAuth2LoginService;
-    @Value("${auth.login.redirect-uri}")
+    @Value("${auth.kakao.frontend-redirect-uri}")
     private String URI;
 
     @Override

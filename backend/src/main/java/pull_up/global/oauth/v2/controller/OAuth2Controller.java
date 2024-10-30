@@ -21,7 +21,7 @@ import java.util.Properties;
 @RequiredArgsConstructor
 public class OAuth2Controller {
 
-    @Value("${auth.login.redirect-uri}")
+    @Value("${auth.apple.frontend-redirect-uri}")
     private String redirectUri;
 
     private final OAuth2LoginService oAuth2LoginService;
