@@ -1,30 +1,36 @@
-export interface MockExamAverageType {
+export interface MockExamReportType {
   examId: number;
-  rankPercent: string;
-  averageScore: number;
+  createdDate: string;
+  solvedDate: string;
+  requiredTime: RequiredTime;
   score: number;
-}
-
-export interface MockExamTimeAverageType {
-  averageTime: number;
-  requiredTime: string;
-}  
-
-export interface ProblemTypeResult {
-  entry: string;
-  totalProblems: number;
-  correctProblems: number;
-}
-
-export interface MockExamWeakPartType {
   problemTypeResults: ProblemTypeResult[];
-} 
+  averageScore: number;
+  averageTime: RequiredTime;
+  totalCorrectAnswers: number;
+  rankPercent: string;
+}
 
-// 추가된 타입 정의
-export interface ProblemTypeResult {
+interface ProblemTypeResult {
   entry: string;
-  correctProblems: number;
   totalProblems: number;
-  weakest?: boolean;
-  errorRate?: number;
+  correctProblems: number;
+}
+
+interface RequiredTime {
+  seconds: number;
+  zero: boolean;
+  nano: number;
+  negative: boolean;
+  units: Unit[];
+}
+
+interface Unit {
+  durationEstimated: boolean;
+  timeBased: boolean;
+  dateBased: boolean;
+}
+
+export interface MockExamReportPropType {
+  recentReportInfo: MockExamReportType;
 }

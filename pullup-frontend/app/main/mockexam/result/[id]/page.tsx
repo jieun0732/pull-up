@@ -1,48 +1,37 @@
 "use client";
 
 import Button from "@/component/ui/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Text from "@/component/ui/Text";
 import formatNumber from "@/utils/formatNumber";
 import { BackIcon } from "@/assets/icon/Icons";
-import { categoryMap, entryMap } from "@/constants/constants";
 import useSWR from "swr";
-import { ProblemInfo, Problem } from "@/types/problemType";
 import { API, fetcher } from "@/lib/API";
 import { roundUpNumber } from "@/utils/roundUpNumber";
 import LocalStorage from "@/utils/LocalStorage";
 import { FormatQuestion } from "@/utils/FormatQuestion";
+import { MockExamResultType } from "@/types/mockexam/mockexamQuestion";
+import Spinner from "@/component/ui/Spinner";
 
 export default function Page() {
-  // const router = useRouter();
-  // const memberID = LocalStorage.getItem("memberId") || "";
-  // const entry = entryMap[params.subject];
-  // const category = categoryMap[params.category];
-  // let type = "";
+  const examId = LocalStorage.getItem("examId") || "";
+  const params = useParams<{ id: string }>();
+  const router = useRouter();
 
-  // if (category !== "골고루") {
-  //   type = localStorage.getItem("type") || "";
-  // }
+  const { data: result, isLoading } = useSWR<MockExamResultType[]>(
+    `${API}/exams/mock-exam/problems?examInformationId=${examId}`,
+    fetcher,
+  );
 
-  // const queryString = new URLSearchParams({
-  //   memberId: memberID.toString(),
-  //   entry,
-  //   category,
-  // }).toString();
+  if (!result) return <Spinner />;
 
-  // const { data: problems } = useSWR<ProblemInfo[]>(
-  //   `${API}/exams/problems?${queryString}`,
-  //   fetcher,
-  // );
+  const nowProblem = result[Number(params.id) - 1].problem;
+  const chosenAnswer = result[Number(params.id) - 1].chosenAnswer;
 
-  // if (!problems) return;
-
-  // const nowProblem: Problem = problems[Number(params.id) - 1].problem;
-  // const chosenAnswer = problems[Number(params.id) - 1].chosenAnswer;
   return (
     <>
       <div className="bg-whtie relative flex flex-col items-center pb-7 pt-20">
-        {/* <div className="h-11 w-full px-5">
+        <div className="h-11 w-full px-5">
           <div className="relative">
             <BackIcon onClick={() => router.back()} />
           </div>
@@ -109,7 +98,7 @@ export default function Page() {
               {nowProblem.answerExplain}
             </Text>
           </div>
-        </div> */}
+        </div>
       </div>
     </>
   );
