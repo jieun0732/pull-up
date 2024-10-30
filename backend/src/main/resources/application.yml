@@ -3,7 +3,9 @@ spring:
     name: pull-up
 
   config:
-    import: classpath:${spring.application.name}.yml
+    import:
+      - optional:classpath:${spring.application.name}-local.yml
+      - optional:file:${spring.application.name}-server.yml
 
   datasource:
     driver-class-name: ${database.jdbc-driver}
@@ -32,21 +34,39 @@ spring:
             client-secret: ${oauth2.kakao.client-secret}
             redirect-uri: ${oauth2.kakao.redirect-uri}
             authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            client-name: kakao
+            scope:
+              - profile_nickname
           apple:
             client-id: ${oauth2.apple.client-id}
             redirect-uri: ${oauth2.apple.redirect-uri}
             authorization-grant-type: authorization_code
+            client-authentication-method: form_post
+            scope:
+              - name
+              - email
         provider:
           kakao:
-            base-uri: https://kauth.kakao.com
-            authorization-uri: ${spring.security.oauth2.client.provider.kakao.base-uri}/oauth/authorize
-            token-uri: ${spring.security.oauth2.client.provider.kakao.base-uri}/oauth/token
-            user-info-uri: ${spring.security.oauth2.client.provider.kakao.base-uri}/v2/user/me
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
           apple:
-            base-uri: https://appleid.apple.com
-            authorizationUri: ${spring.security.oauth2.client.provider.apple.base-uri}/auth/authorize?response_mode=form_post&response_type=code%20id_token
-            tokenUri: ${spring.security.oauth2.client.provider.apple.base-uri}/auth/token
-            jwk-set-uri: ${spring.security.oauth2.client.provider.apple.base-uri}/auth/keys
+            authorizationUri: https://appleid.apple.com/auth/authorize?response_mode=form_post&response_type=code%20id_token
+            tokenUri: https://appleid.apple.com/auth/token
+            jwk-set-uri: https://appleid.apple.com/auth/keys
+
+auth:
+  login:
+    redirect-uri: ${oauth2.frontend.redirect-uri}
+  apple:
+    token:
+      key-path: ${oauth2.apple.token.key-path}
+      key-id: ${oauth2.apple.token.key-id}
+      team-id: ${oauth2.apple.token.team-id}
+      base-uri: ${oauth2.apple.token.base-uri}
+      expire: ${oauth2.apple.token.expire}
 
 #logging
 logging:

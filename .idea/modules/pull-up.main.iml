@@ -34,9 +34,9 @@
     <orderEntry type="library" name="Gradle: jakarta.persistence:jakarta.persistence-api:3.1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: com.querydsl:querydsl-apt:jakarta:5.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.nimbusds:nimbus-jose-jwt:9.30.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.bouncycastle:bcpkix-jdk15on:1.70" level="project" />
     <orderEntry type="library" name="Gradle: org.bouncycastle:bcpkix-jdk18on:1.72" level="project" />
     <orderEntry type="library" name="Gradle: commons-io:commons-io:2.17.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.11.0" level="project" />
     <orderEntry type="library" name="Gradle: org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0" level="project" />
     <orderEntry type="library" name="Gradle: com.querydsl:querydsl-jpa:jakarta:5.0.0" level="project" />
     <orderEntry type="library" name="Gradle: io.jsonwebtoken:jjwt-impl:0.12.5" level="project" />
@@ -64,10 +64,9 @@
     <orderEntry type="library" name="Gradle: org.springframework.data:spring-data-jdbc:3.3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: com.querydsl:querydsl-codegen:5.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.stephenc.jcip:jcip-annotations:1.0-1" level="project" />
-    <orderEntry type="library" name="Gradle: org.bouncycastle:bcutil-jdk15on:1.70" level="project" />
-    <orderEntry type="library" name="Gradle: org.bouncycastle:bcprov-jdk15on:1.70" level="project" />
     <orderEntry type="library" name="Gradle: org.bouncycastle:bcutil-jdk18on:1.72" level="project" />
     <orderEntry type="library" name="Gradle: org.bouncycastle:bcprov-jdk18on:1.72" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.errorprone:error_prone_annotations:2.27.0" level="project" />
     <orderEntry type="library" name="Gradle: org.springdoc:springdoc-openapi-starter-webmvc-api:2.2.0" level="project" />
     <orderEntry type="library" name="Gradle: org.webjars:swagger-ui:5.2.0" level="project" />
     <orderEntry type="library" name="Gradle: com.querydsl:querydsl-core:5.1.0" level="project" />
