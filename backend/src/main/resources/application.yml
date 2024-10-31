@@ -57,6 +57,7 @@ spring:
             tokenUri: https://appleid.apple.com/auth/token
             jwk-set-uri: https://appleid.apple.com/auth/keys
 
+# custom auth config
 auth:
   kakao:
     frontend-redirect-uri: ${oauth2.kakao.frontend-redirect-uri}
@@ -68,6 +69,12 @@ auth:
       team-id: ${oauth2.apple.token.team-id}
       base-uri: ${oauth2.apple.token.base-uri}
       expire: ${oauth2.apple.token.expire}
+  jwt:
+    key: ${jwt.key}
+    subject: ${jwt.subject}
+    issuer: ${jwt.issuer}
+    audience: ${jwt.audience}
+    expire: ${jwt.expire}
 
 #logging
 logging:

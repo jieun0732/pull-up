@@ -9,17 +9,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
-import org.springframework.security.oauth2.client.oidc.authentication.OidcIdTokenDecoderFactory;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoderFactory;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import pull_up.global.oauth.v2.handler.OAuth2SuccessHandlerV2;
-import pull_up.global.oauth.v2.service.OAuth2UserServiceV2;
-import pull_up.global.oauth.v2.util.CustomAccessTokenConverter;
+import pull_up.global.auth.v2.handler.OAuth2SuccessHandlerV2;
+import pull_up.global.auth.v2.service.OAuth2UserServiceV2;
 
 @Slf4j
 @Configuration

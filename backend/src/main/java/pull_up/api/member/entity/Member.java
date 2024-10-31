@@ -21,27 +21,22 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
     @Column
     private String name;
 
-    @Setter
     @Column
     private String email;
 
-    @Setter
     @Column
     private boolean accessCheck;
 
-    @Setter
     @Column
     private String role;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<ExamInformation> examInformations; // Member와 연결된 ExamInformation 리스트
 
-    protected Member() {
-    }
+    protected Member() {}
 
     /**
      * 파라미터 생성자.
