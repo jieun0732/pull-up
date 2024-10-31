@@ -36,5 +36,14 @@ out/
 ### VS Code ###
 .vscode/
 
+### Gradle ###
+/jdks/
+/wrapper/
+/daemon/
+/caches/
+
 ### Environment ###
-pull-up.yml
+pull-up-local.yml
+pull-up-server.yml
+AuthKey_SNHA348FS6.p8
+

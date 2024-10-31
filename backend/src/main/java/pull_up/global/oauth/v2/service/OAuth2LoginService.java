@@ -15,6 +15,8 @@ import pull_up.global.oauth.v2.exception.OAuthError;
 import pull_up.global.oauth.v2.exception.OAuthException;
 import pull_up.global.oauth.v2.util.AppleTokenDecoder;
 
+import java.util.Optional;
+
 import static pull_up.global.oauth.v2.exception.OAuthError.NOT_REGISTERED_MEMBER_IN_DATABASE;
 
 @Slf4j
@@ -24,27 +26,33 @@ public class OAuth2LoginService {
 
     private final MemberRepository memberRepository;
     private final AppleTokenDecoder appleTokenDecoder;
+    private final Gson gson = new Gson();
 
     public OAuth2LoginResponseDto getKakaoUser(DefaultOAuth2User user) {
-        Gson gson = new Gson();
-        KakaoUserInfoDto.KakaoAccount dto = gson.fromJson(gson.toJson(user.getAttributes().get("kakao_account")),
-                KakaoUserInfoDto.KakaoAccount.class);
-        Member member = memberRepository.findByEmailAndRole(dto.email(), OAuth2Provider.KAKAO.getRole())
-                .orElseGet(() -> registKakaoMember(dto));
+        KakaoUserInfoDto.KakaoAccount dto = gson.fromJson(gson.toJson(user.getAttributes().get("kakao_account")), KakaoUserInfoDto.KakaoAccount.class);
 
-        return OAuth2LoginResponseDto.getDtoWithProvider(member, OAuth2Provider.KAKAO);
+        Optional<Member> member = memberRepository.findByEmailAndRole(dto.email(), OAuth2Provider.KAKAO.getRole());
+        if (member.isPresent()) {
+            return OAuth2LoginResponseDto.of(member.get(), false, OAuth2Provider.KAKAO);
+
+        } else {
+            Member newMember = registKakaoMember(dto);
+            return OAuth2LoginResponseDto.of(newMember, true, OAuth2Provider.KAKAO);
+        }
     }
 
     public OAuth2LoginResponseDto getAppleUser(String idToken, String userJson) {
         String email = (String) appleTokenDecoder.decode(idToken).getPayload().get("email");
-        Member member;
-        if (userJson.equals("ALREADY_REGISTERED_USER"))
-            member = memberRepository.findByEmailAndRole(email, OAuth2Provider.APPLE.getRole())
+
+        if (userJson.equals("ALREADY_REGISTERED_USER")) {
+            Member member = memberRepository.findByEmailAndRole(email, OAuth2Provider.APPLE.getRole())
                     .orElseThrow(() -> new OAuthException(NOT_REGISTERED_MEMBER_IN_DATABASE));
+            return OAuth2LoginResponseDto.of(member, false, OAuth2Provider.APPLE);
 
-        else member = registAppleMember(email, userJson);
-
-        return OAuth2LoginResponseDto.getDtoWithProvider(member, OAuth2Provider.APPLE);
+        } else {
+            Member member = registAppleMember(email, userJson);
+            return OAuth2LoginResponseDto.of(member, true, OAuth2Provider.APPLE);
+        }
     }
 
     private Member registKakaoMember(KakaoUserInfoDto.KakaoAccount dto) {
@@ -58,7 +66,6 @@ public class OAuth2LoginService {
         if (memberRepository.findByEmailAndRole(email, OAuth2Provider.APPLE.getRole()).isPresent())
             throw new OAuthException(OAuthError.ALREADY_REGISTERED_MEMBER_WITH_USER_JSON);
 
-        Gson gson = new Gson();
         AppleLoginRequestDto dto = gson.fromJson(userJson, AppleLoginRequestDto.class);
 
         Member member = Member.of(dto.name().firstName(), dto.name().lastName(), email, false, "apple_user");

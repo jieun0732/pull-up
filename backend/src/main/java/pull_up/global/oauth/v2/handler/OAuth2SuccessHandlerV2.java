@@ -34,7 +34,7 @@ public class OAuth2SuccessHandlerV2 implements AuthenticationSuccessHandler {
         OAuth2LoginResponseDto kakaoUser = oAuth2LoginService.getKakaoUser(user);
 
         String redirectUrl = UriComponentsBuilder.fromUriString(URI)
-                .queryParam("login", URLEncoder.encode(kakaoUser.login().toString(), StandardCharsets.UTF_8))
+                .queryParam("login", URLEncoder.encode(kakaoUser.firstLogin().toString(), StandardCharsets.UTF_8))
                 .queryParam("memberId", URLEncoder.encode(kakaoUser.memberId().toString(), StandardCharsets.UTF_8))
                 .queryParam("name", URLEncoder.encode(kakaoUser.name(), StandardCharsets.UTF_8))
                 .queryParam("email", URLEncoder.encode(kakaoUser.email(), StandardCharsets.UTF_8))
