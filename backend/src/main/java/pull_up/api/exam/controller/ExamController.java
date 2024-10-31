@@ -20,7 +20,6 @@ import pull_up.api.exam.dto.ExamInformationDetailDto;
 import pull_up.api.exam.dto.ExamInformationDto;
 import pull_up.api.exam.dto.ExamProblemResponseDto;
 import pull_up.api.exam.dto.ExamProblemResultDto;
-import pull_up.api.exam.dto.MockExamProblemResultDto;
 import pull_up.api.exam.service.ExamService;
 import pull_up.api.member.dto.IncorrectAnswerResultDto;
 import pull_up.api.member.dto.MemberAnswerIndexDto;
@@ -161,7 +160,7 @@ public class ExamController {
         return ResponseEntity.ok(problemsSolved);
     }
 
-    @Operation(summary = "모의고사 문제 리스트 조회", description = "시험 정보 ID를 기준으로 문제를 조회합니다.", tags = "모의고사")
+    @Operation(summary = "모의고사 id로 문제 리스트 및 정답 여부 조회 ", description = "시험 정보 ID를 기준으로 문제를 조회합니다.", tags = "모의고사")
     @GetMapping("/mock-exam/problems")
     public ResponseEntity<List<ProblemSolvedDto>> getExamProblemByExamInformation(
         @RequestParam Long examInformationId) {
@@ -237,14 +236,6 @@ public class ExamController {
         return ResponseEntity.ok(averageScoreDto);
     }
 
-    // 모의고사 각 문제의 정답 여부 조회
-    @Operation(summary = "모의고사의 모든 문제 정답 여부 조회", description = "회원이 특정 모의고사의 각 문제에 대한 정답 여부를 조회합니다.", tags = "모의고사")
-    @GetMapping("/mock-exam/answers-status")
-    public ResponseEntity<List<MockExamProblemResultDto>> getMockExamAnswersStatus(
-        @RequestParam Long examInformationId) {
-        List<MockExamProblemResultDto> answerStatuses = examService.getMockExamProblemStatus(examInformationId);
-        return ResponseEntity.ok(answerStatuses);
-    }
 
     /**
      * 문제 유형별로 총 문제 수와 맞힌 문제 수를 반환합니다.
