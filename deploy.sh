@@ -11,7 +11,7 @@ if [ $? -eq 1 ]; then
 fi
 
 # move jar file
-mv ./build/libs/pull-up-backend.jar ~/.ssh/pull-up-backend.jar
+mv ./build/libs/pull-up-0.0.1-SNAPSHOT.jar ~/.ssh/pull-up-backend.jar
 
 # scp jar file
 cd ~/.ssh
