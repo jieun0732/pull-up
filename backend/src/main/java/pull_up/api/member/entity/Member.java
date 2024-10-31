@@ -53,20 +53,27 @@ public class Member extends BaseEntity {
         this.role = role;
     }
 
-    /**
-     * 파라미터로부터 멤버 엔티티 객체를 생성하는 함수.
-     */
     public static Member of(String name, String email, boolean accessCheck, String role) {
-        return new Member(name, email, accessCheck, role);
+        return new Member(name, getPrivateEmail(email), accessCheck, role);
+    }
+
+    public static Member of(String firstName, String lastName, String email, boolean accessCheck, String role) {
+        return Member.of(getFullName(firstName,lastName), email, accessCheck, role);
     }
 
     /**
-     * 성과 이름을 붙여 객체 생성하는 함수(한글은 반대로)
+     <p>성과 이름을 붙여 객체 생성하는 메서드(한글은 반대로)</p>
      */
-    public static Member of(String firstName, String lastName, String email, boolean accessCheck, String role) {
-        String name;
-        if (Pattern.matches("^[ㄱ-ㅎ가-힣]*$", firstName)) name = lastName + firstName;
-        else name = firstName + lastName;
-        return new Member(name, email, accessCheck, role);
+    private static String getFullName(String firstName, String lastName) {
+        if (Pattern.matches("^[ㄱ-ㅎ가-힣]*$", firstName)) return lastName + firstName;
+        else return firstName + lastName;
+    }
+
+    /**
+     <p>이메일 비공개 시(애플 등) 익명 이메일 대신 등록하는 메서드</p>
+     */
+    private static String getPrivateEmail(String email) {
+        if (email.split("@")[1].contains("private")) return "CONCEALED_EMAIL";
+        return email;
     }
 }
