@@ -226,13 +226,6 @@ export default function Page() {
               제출하기
             </button>
           )}
-
-          <button
-            onClick={handleExamResult}
-            className="ml-auto rounded-t-2xl rounded-bl-2xl bg-gray03 px-6 py-2 text-gray02 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]"
-          >
-            제출하기
-          </button>
           {(() => {
             if (params.id === "1") {
               return (

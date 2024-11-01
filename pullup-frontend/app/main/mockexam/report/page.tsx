@@ -16,7 +16,7 @@ export default function Page() {
   const memberID = LocalStorage.getItem("memberId") || "";
 
   const { data: recentReportInfo, isLoading } = useSWR<MockExamReportType>(
-    `${API}/exams/mock-exam/recent/${memberID}`,
+    `${API}/exams/mock-exam/recent?memberId=${memberID}`,
     fetcher,
   );
 
