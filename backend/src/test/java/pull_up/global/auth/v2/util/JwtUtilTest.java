@@ -5,6 +5,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
 import pull_up.api.member.entity.Member;
 import pull_up.global.auth.v2.dto.JwtUserInfoDto;
@@ -99,5 +101,19 @@ class JwtUtilTest {
         assertThat(dto.name()).isEqualTo("leaf");
         assertThat(dto.email()).isEqualTo("test@example.com");
         assertThat(dto.role()).isEqualTo("apple-user");
+    }
+
+    @Test
+    @DisplayName("토큰으로부터 Authentication 객체 가져오는지 테스트")
+    void testGetAuthentication() {
+        // given
+        String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoidGVzdCBzdWJqZWN0IiwiaXNzIjoidGVzdCBpc3N1ZXIiLCJpYXQiOjE3MzAzODg3NzUsImV4cCI6MTczMDY0Nzk3NSwibmFtZSI6ImxlYWYiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJyb2xlIjoiYXBwbGUtdXNlciJ9.rkjDf4MJBfdptTQBlfnYtWMmgTP-2eBsncMIlOKKXyA";
+
+        // when
+        Authentication authentication = suit.getAuthentication(accessToken);
+
+        // then
+        assertThat(authentication).isInstanceOf(UsernamePasswordAuthenticationToken.class);
+        assertThat(authentication.getCredentials()).isEqualTo(accessToken);
     }
 }

@@ -69,6 +69,8 @@ auth:
     domain: http://localhost:8080
     path: /
     max-age: 1234
+  domain:
+    frontend: http://localhost:8080
 
 
 #logging

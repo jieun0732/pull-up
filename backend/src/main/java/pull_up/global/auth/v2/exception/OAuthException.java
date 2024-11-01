@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class OAuthException extends RuntimeException {
-    private OAuthError errorCode;
+    private OAuthError error;
     private String message;
 
-    public OAuthException(OAuthError errorCode) {
-        this.errorCode = errorCode;
-        this.message = errorCode.getMessage();
+    public OAuthException(OAuthError error) {
+        this.error = error;
+        this.message = error.getMessage();
     }
 }

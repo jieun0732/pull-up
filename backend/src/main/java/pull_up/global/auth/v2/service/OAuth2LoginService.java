@@ -7,7 +7,9 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import pull_up.api.member.entity.Member;
 import pull_up.api.member.repository.MemberRepository;
+import pull_up.global.auth.v2.api.KakaoAuthRestApi;
 import pull_up.global.auth.v2.dto.AppleLoginRequestDto;
+import pull_up.global.auth.v2.dto.KakaoLoginRequestDto;
 import pull_up.global.auth.v2.dto.KakaoUserInfoDto;
 import pull_up.global.auth.v2.dto.OAuth2LoginResponseDto;
 import pull_up.global.auth.v2.enums.OAuth2Provider;
@@ -26,6 +28,7 @@ public class OAuth2LoginService {
 
     private final MemberRepository memberRepository;
     private final AppleTokenDecoder appleTokenDecoder;
+    private final KakaoAuthRestApi kakaoAuthRestApi;
     private final Gson gson = new Gson();
 
     public OAuth2LoginResponseDto getKakaoUser(KakaoUserInfoDto.KakaoAccount dto) {
@@ -44,8 +47,13 @@ public class OAuth2LoginService {
         return getKakaoUser(dto);
     }
 
+    public OAuth2LoginResponseDto getKakaoUser(String code) {
+        KakaoUserInfoDto userInfo = kakaoAuthRestApi.getUserInfo(new KakaoLoginRequestDto(code));
+        return getKakaoUser(userInfo.kakao_account());
+    }
+
     public OAuth2LoginResponseDto getAppleUser(String idToken, String userJson) {
-        String email = Member.getPrivateEmail((String) appleTokenDecoder.decode(idToken).getPayload().get("email"));
+        String email = Member.getPrivateEmail((String) appleTokenDecoder.decode(idToken).get("email"));
 
         if (userJson.equals("ALREADY_REGISTERED_USER")) {
             Member member = memberRepository.findByEmailAndRole(email, OAuth2Provider.APPLE.getRole())

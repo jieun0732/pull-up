@@ -1,40 +1,40 @@
 package pull_up.api.problem.dto;
 
-import java.io.Serializable;
 import pull_up.api.problem.entity.Problem;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * DTO for {@link Problem}
  */
 public record ProblemDto(Long id, String entry, String category, String type, String question,
-                         String explanation, String choice1, String choice2, String choice3,
-                         String choice4, String choice5, String answer, String answerExplain,
+                         String explanation, List<String> choices, String answer, String answerExplain,
                          Integer totalAttempts, Integer incorrectAttempts,
                          Double incorrectRate) implements
-    Serializable {
+        Serializable {
 
     public static ProblemDto of(Long id, String entry, String category, String type,
-        String question, String explanation, String choice1, String choice2, String choice3,
-        String choice4, String choice5, String answer, String answerExplain, Integer totalAttempts,
-        Integer incorrectAttempts, Double incorrectRate) {
-        return new ProblemDto(id, entry, category, type, question, explanation, choice1, choice2,
-            choice3, choice4, choice5, answer, answerExplain, totalAttempts, incorrectAttempts,
-            incorrectRate);
+                                String question, String explanation, List<String> choices, String answer, String answerExplain, Integer totalAttempts,
+                                Integer incorrectAttempts, Double incorrectRate) {
+        return new ProblemDto(id, entry, category, type, question, explanation, choices, answer, answerExplain, totalAttempts, incorrectAttempts,
+                incorrectRate);
     }
 
     public static ProblemDto from(Problem entity) {
+        List<String> choices = List.of(entity.getChoice1(), entity.getChoice2(), entity.getChoice3(), entity.getChoice4(), entity.getChoice5());
+
         return new ProblemDto(entity.getId(), entity.getEntry(), entity.getCategory(),
-            entity.getType(), entity.getQuestion(), entity.getExplanation(), entity.getChoice1(),
-            entity.getChoice2(), entity.getChoice3(), entity.getChoice4(), entity.getChoice5(),
-            entity.getAnswer(), entity.getAnswerExplain(), entity.getTotalAttempts(),
-            entity.getIncorrectAttempts(), entity.getIncorrectRate());
+                entity.getType(), entity.getQuestion(), entity.getExplanation(), choices,
+                entity.getAnswer(), entity.getAnswerExplain(), entity.getTotalAttempts(),
+                entity.getIncorrectAttempts(), entity.getIncorrectRate());
     }
 
     public static Problem toEntity(ProblemDto dto) {
         return Problem.of(dto.entry(), dto.category(), dto.type(), dto.question(),
-            dto.explanation(), dto.choice1(), dto.choice2(), dto.choice3(), dto.choice4(),
-            dto.choice5(), dto.answer(), dto.answerExplain(), dto.totalAttempts(),
-            dto.incorrectAttempts(), dto.incorrectRate());
+                dto.explanation(), dto.choices().get(0), dto.choices().get(1), dto.choices().get(2), dto.choices().get(3),
+                dto.choices().get(4), dto.answer(), dto.answerExplain(), dto.totalAttempts(),
+                dto.incorrectAttempts(), dto.incorrectRate());
     }
 
 }

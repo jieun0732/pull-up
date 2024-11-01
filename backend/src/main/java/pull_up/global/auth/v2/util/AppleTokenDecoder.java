@@ -31,7 +31,7 @@ public class AppleTokenDecoder {
     @Value("${auth.apple.token.base-uri}")
     private String baseUri;
 
-    public Jws<Claims> decode(String token) {
+    public Claims decode(String token) {
         AppleJwks keys = appleAuthRestApi.getKeys();
         log.info("token : {}", token);
         return Jwts.parser()
@@ -39,7 +39,8 @@ public class AppleTokenDecoder {
                 .requireAudience(clientId)
                 .requireIssuer(baseUri)
                 .build()
-                .parseSignedClaims(token);
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     public class AppleKeyLocator extends LocatorAdapter<Key> {

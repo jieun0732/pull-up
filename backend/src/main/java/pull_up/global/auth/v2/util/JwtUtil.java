@@ -5,6 +5,10 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Component;
 import pull_up.api.member.entity.Member;
 import pull_up.global.auth.v2.dto.JwtUserInfoDto;
@@ -14,6 +18,7 @@ import pull_up.global.auth.v2.exception.OAuthException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtil {
@@ -82,6 +87,7 @@ public class JwtUtil {
     }
 
     public JwtUserInfoDto getUserInfo(String accessToken) {
+        validate(accessToken);
         Claims payload = Jwts.parser()
                 .verifyWith(Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8)))
                 .build()
@@ -92,5 +98,13 @@ public class JwtUtil {
                 (String) payload.get("name"),
                 (String) payload.get("email"),
                 (String) payload.get("role"));
+    }
+
+    public Authentication getAuthentication(String accessToken) {
+        JwtUserInfoDto userInfo = getUserInfo(accessToken);
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userInfo.role());
+        DefaultOAuth2User user = new DefaultOAuth2User(List.of(authority), JwtUserInfoDto.getAttributes(userInfo), "id");
+
+        return new UsernamePasswordAuthenticationToken(user, accessToken, List.of(authority));
     }
 }

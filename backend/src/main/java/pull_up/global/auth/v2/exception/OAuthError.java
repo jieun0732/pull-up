@@ -13,7 +13,9 @@ public enum OAuthError {
     ALREADY_REGISTERED_MEMBER_WITH_USER_JSON(HttpStatus.BAD_REQUEST, "Already Registered Member, But User json has User Name"),
     NOT_PROVIDED_OAUTH2_VENDOR_REQUEST(HttpStatus.BAD_REQUEST, "Not Provided Vendor Request."),
     APPLE_USER_PARSE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Apple User parse throws exception."),
-    PARSE_JWT_ERROR(HttpStatus.UNAUTHORIZED, "Invalid Login Token.");
+    PARSE_JWT_ERROR(HttpStatus.UNAUTHORIZED, "Invalid Login Token."),
+    NO_ACCESS_TOKEN_IN_COOKIES(HttpStatus.UNAUTHORIZED, "No Access Token in Cookies"),
+    INTERNAL_SERVER_ERROR_WHILE_RESPONSE(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error while create response");
 
     private final HttpStatus httpStatus;
     private final String message;

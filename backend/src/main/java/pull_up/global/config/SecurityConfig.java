@@ -13,9 +13,14 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import pull_up.global.auth.AuthenticationExceptionHandler;
+import pull_up.global.auth.AuthorizationEntryPoint;
+import pull_up.global.auth.JwtAuthenticationFilter;
 import pull_up.global.auth.v2.handler.OAuth2SuccessHandlerV2;
 import pull_up.global.auth.v2.service.OAuth2UserServiceV2;
 
@@ -32,31 +37,37 @@ public class SecurityConfig {
 
     private final OAuth2UserServiceV2 oAuth2UserService;
     private final OAuth2SuccessHandlerV2 oAuth2SuccessHandler;
+    private final AuthenticationExceptionHandler exceptionHandler;
+    private final AuthorizationEntryPoint authorizationEntryPoint;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/**")
+                // for cors
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(CsrfConfigurer::disable)
-                .httpBasic(HttpBasicConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
 
+                // for exception handling
+                .exceptionHandling(exception ->
+                        exception.accessDeniedHandler(exceptionHandler)
+                                .authenticationEntryPoint(authorizationEntryPoint))
+
+
+                // for oauth2
                 .oauth2Login(oauth2 -> oauth2
-                    .redirectionEndpoint(redirect -> redirect.baseUri("/api/pull-up/oauth2/callback/kakao"))
                     .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
                     .successHandler(oAuth2SuccessHandler)
                 )
 
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/pull-up/oauth2/**")
-                        .permitAll()
-
+                // for authorization and authentication
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/pull-up/oauth2/**").permitAll()
                         .requestMatchers("/api/pull-up/lawsuit/**").permitAll()
-
-                        .anyRequest()
-                        .permitAll()
+                        .anyRequest().authenticated()
                 )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -66,8 +77,11 @@ public class SecurityConfig {
 
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.addAllowedOrigin(frontendDomain);
+        corsConfiguration.addAllowedOrigin("https://appleid.apple.com");
+        corsConfiguration.addAllowedOrigin("https://kauth.kakao.com");
+        corsConfiguration.addAllowedOrigin("https://kapi.kakao.com");
         corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addExposedHeader("*");
+        corsConfiguration.setExposedHeaders((List.of("Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

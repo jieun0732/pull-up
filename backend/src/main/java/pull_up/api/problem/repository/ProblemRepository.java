@@ -7,9 +7,7 @@ import org.springframework.data.repository.query.Param;
 import pull_up.api.problem.dto.ProblemDto;
 import pull_up.api.problem.entity.Problem;
 
-public interface ProblemRepository extends JpaRepository<Problem, Long> {
-
-    List<ProblemDto> findByEntryAndCategory(String entry, String category);
+public interface ProblemRepository extends JpaRepository<Problem, Long>, CustomProblemRepository {
 
     List<Problem> findByCategory(String category);
 
