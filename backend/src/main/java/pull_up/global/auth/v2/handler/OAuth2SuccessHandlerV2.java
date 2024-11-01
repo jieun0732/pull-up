@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 import pull_up.global.auth.v2.dto.OAuth2LoginResponseDto;
 import pull_up.global.auth.v2.service.OAuth2LoginService;
+import pull_up.global.auth.v2.util.CookieUtil;
+import pull_up.global.auth.v2.util.JwtUtil;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -24,8 +26,11 @@ import java.nio.charset.StandardCharsets;
 public class OAuth2SuccessHandlerV2 implements AuthenticationSuccessHandler {
 
     private final OAuth2LoginService oAuth2LoginService;
+    private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
+
     @Value("${auth.kakao.frontend-redirect-uri}")
-    private String URI;
+    private String redirectUri;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -33,14 +38,15 @@ public class OAuth2SuccessHandlerV2 implements AuthenticationSuccessHandler {
         DefaultOAuth2User user = (DefaultOAuth2User) authentication.getPrincipal();
         OAuth2LoginResponseDto kakaoUser = oAuth2LoginService.getKakaoUser(user);
 
-        String redirectUrl = UriComponentsBuilder.fromUriString(URI)
-                .queryParam("login", URLEncoder.encode(kakaoUser.firstLogin().toString(), StandardCharsets.UTF_8))
+        String redirectUrl = UriComponentsBuilder.fromUriString(redirectUri)
+                .queryParam("firstLogin", URLEncoder.encode(kakaoUser.firstLogin().toString(), StandardCharsets.UTF_8))
                 .queryParam("memberId", URLEncoder.encode(kakaoUser.memberId().toString(), StandardCharsets.UTF_8))
                 .queryParam("name", URLEncoder.encode(kakaoUser.name(), StandardCharsets.UTF_8))
                 .queryParam("email", URLEncoder.encode(kakaoUser.email(), StandardCharsets.UTF_8))
                 .queryParam("provider", URLEncoder.encode(kakaoUser.provider(), StandardCharsets.UTF_8))
                 .build().toUriString();
 
+        response.addCookie(cookieUtil.getSecureCookie(jwtUtil.getAccessToken(kakaoUser)));
         response.sendRedirect(redirectUrl);
     }
 }

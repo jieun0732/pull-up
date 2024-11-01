@@ -1,3 +1,6 @@
+server:
+  port: ${basic-server.port}
+
 spring:
   application:
     name: pull-up
@@ -75,6 +78,13 @@ auth:
     issuer: ${jwt.issuer}
     audience: ${jwt.audience}
     expire: ${jwt.expire}
+  cookie:
+    domain: ${cookie.domain}
+    path: ${cookie.path}
+    max-age: ${cookie.max-age}
+  domain:
+    frontend: ${basic-server.frontend-domain}
+
 
 #logging
 logging:

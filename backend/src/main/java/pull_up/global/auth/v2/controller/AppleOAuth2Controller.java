@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import pull_up.global.auth.v2.util.CookieUtil;
 import pull_up.global.auth.v2.util.JwtUtil;
 import pull_up.global.auth.v2.dto.OAuth2LoginResponseDto;
 import pull_up.global.auth.v2.service.OAuth2LoginService;
@@ -26,6 +27,7 @@ public class AppleOAuth2Controller {
 
     private final OAuth2LoginService oAuth2LoginService;
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
 
     @PostMapping("/api/pull-up/oauth2/callback/apple")
     RedirectView appleLogin(HttpServletRequest request, HttpServletResponse response) {
@@ -36,8 +38,7 @@ public class AppleOAuth2Controller {
                 parameterMap.getOrDefault("user", new String[] {"ALREADY_REGISTERED_USER"})[0]
         );
 
-        response.addCookie(new Cookie("accessToken", jwtUtil.getAccessToken(appleUser)));
-
+        response.addCookie(cookieUtil.getSecureCookie(jwtUtil.getAccessToken(appleUser)));
         return setRedirect(appleUser);
     }
 

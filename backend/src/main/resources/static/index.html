@@ -14,11 +14,30 @@
   <body>
     <h1>Demo</h1>
     <div class="container unauthenticated">
-      With Kakao: <a href="/oauth2/authorization/kakao">click here</a> With Apple:
-      <a href="/oauth2/authorization/apple">click here</a>
+      With Kakao: <a href="/oauth2/authorization/kakao">click here</a>
+      <br>
+      With Apple: <a href="/oauth2/authorization/apple">click here</a>
+      <br>
+      get Fetch with token(local): <a href="javascript:getFetchTest(localBaseUrl)" >click here</a>
+      get Fetch with token(server): <a href="javascript:getFetchTest(serverBaseUrl)" >click here</a>
     </div>
     <div class="container authenticated" style="display: none">Logged in as: <span id="user"></span></div>
     <script type="text/javascript">
+      const localBaseUrl = "http://localhost:8080";
+      const serverBaseUrl = "https://pullup-api.shop";
+      async function getFetchTest(baseUrl) {
+        const params = new URLSearchParams(location.search);
+        const response = await fetch(baseUrl + "/api/pull-up/exams/incorrect-answers/1?memberId=" + params.get("memberId"), {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+        const jsonData = await response.json();
+        console.log(jsonData);
+      }
+
       $.get("/user", function (data) {
         $("#user").html(data.name);
         $(".unauthenticated").hide();

@@ -28,9 +28,7 @@ public class OAuth2LoginService {
     private final AppleTokenDecoder appleTokenDecoder;
     private final Gson gson = new Gson();
 
-    public OAuth2LoginResponseDto getKakaoUser(DefaultOAuth2User user) {
-        KakaoUserInfoDto.KakaoAccount dto = gson.fromJson(gson.toJson(user.getAttributes().get("kakao_account")), KakaoUserInfoDto.KakaoAccount.class);
-
+    public OAuth2LoginResponseDto getKakaoUser(KakaoUserInfoDto.KakaoAccount dto) {
         Optional<Member> member = memberRepository.findByEmailAndRole(dto.email(), OAuth2Provider.KAKAO.getRole());
         if (member.isPresent()) {
             return OAuth2LoginResponseDto.of(member.get(), false, OAuth2Provider.KAKAO);
@@ -41,8 +39,13 @@ public class OAuth2LoginService {
         }
     }
 
+    public OAuth2LoginResponseDto getKakaoUser(DefaultOAuth2User user) {
+        KakaoUserInfoDto.KakaoAccount dto = gson.fromJson(gson.toJson(user.getAttributes().get("kakao_account")), KakaoUserInfoDto.KakaoAccount.class);
+        return getKakaoUser(dto);
+    }
+
     public OAuth2LoginResponseDto getAppleUser(String idToken, String userJson) {
-        String email = (String) appleTokenDecoder.decode(idToken).getPayload().get("email");
+        String email = Member.getPrivateEmail((String) appleTokenDecoder.decode(idToken).getPayload().get("email"));
 
         if (userJson.equals("ALREADY_REGISTERED_USER")) {
             Member member = memberRepository.findByEmailAndRole(email, OAuth2Provider.APPLE.getRole())

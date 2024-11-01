@@ -13,6 +13,7 @@ import pull_up.api.member.entity.Member;
 import pull_up.global.auth.v2.dto.OAuth2LoginResponseDto;
 import pull_up.global.auth.v2.enums.OAuth2Provider;
 import pull_up.global.auth.v2.service.OAuth2LoginService;
+import pull_up.global.auth.v2.util.CookieUtil;
 import pull_up.global.auth.v2.util.JwtUtil;
 
 import java.net.URI;
@@ -34,13 +35,17 @@ class AppleOAuth2ControllerTest {
     void init() {
         service = Mockito.mock(OAuth2LoginService.class);
         JwtUtil jwtUtil = new JwtUtil();
-        suit = new AppleOAuth2Controller(service, jwtUtil);
+        CookieUtil cookieUtil = new CookieUtil();
+        suit = new AppleOAuth2Controller(service, jwtUtil, cookieUtil);
         mockMvc = MockMvcBuilders.standaloneSetup(suit).build();
         ReflectionTestUtils.setField(suit,"redirectUri", "https//example.com");
         ReflectionTestUtils.setField(jwtUtil,"key", "bvTAyAcnI3j1NPxTfJh9KLhBLQrrKdoS");
         ReflectionTestUtils.setField(jwtUtil,"subject", "test subject");
         ReflectionTestUtils.setField(jwtUtil,"issuer", "test issuer");
         ReflectionTestUtils.setField(jwtUtil,"expire", 259200000L);
+        ReflectionTestUtils.setField(cookieUtil, "domain", "https://example.com");
+        ReflectionTestUtils.setField(cookieUtil, "maxAge", 1234);
+        ReflectionTestUtils.setField(cookieUtil, "path", "/");
     }
 
     @Test

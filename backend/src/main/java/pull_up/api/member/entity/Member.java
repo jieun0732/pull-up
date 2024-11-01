@@ -67,7 +67,7 @@ public class Member extends BaseEntity {
     /**
      <p>이메일 비공개 시(애플 등) 익명 이메일 대신 등록하는 메서드</p>
      */
-    private static String getPrivateEmail(String email) {
+    public static String getPrivateEmail(String email) {
         if (email.split("@")[1].contains("private")) return "CONCEALED_EMAIL";
         return email;
     }

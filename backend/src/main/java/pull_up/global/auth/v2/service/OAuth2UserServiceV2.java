@@ -31,13 +31,6 @@ public class OAuth2UserServiceV2 extends DefaultOAuth2UserService {
   }
 
   private OAuth2User loadKakaoUser(OAuth2UserRequest userRequest) {
-//    log.info("user parameters : {} ", userRequest.getAdditionalParameters());
-//    String userJson = (String) userRequest.getAdditionalParameters().get("kakao_account");
-//    log.info("user json : {}", userJson);
-//    log.info("email : {}", userRequest.getAdditionalParameters().get("email"));
-//    log.info("name : {}", userRequest.getAdditionalParameters().get("nickName"));
-//    OAuth2LoginResponseDto kakaoUser = oAuth2LoginService.getKakaoUser(userJson);
-//    userRequest.getAdditionalParameters().put("memberId", kakaoUser.memberId());
     return super.loadUser(userRequest);
   }
 }
