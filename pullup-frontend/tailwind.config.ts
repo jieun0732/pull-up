@@ -35,6 +35,7 @@ const config: Config = {
       animation: {
         fadeInUp: "fadeInUp 0.5s ease-in-out",
         fadeOutDown: "fadeOutDown 0.5s ease-in-out",
+        spin: "spin 1.5s linear infinite",
       },
       keyframes: {
         fadeInUp: {
@@ -56,6 +57,10 @@ const config: Config = {
             opacity: "0",
             transform: "translateY(20px)",
           },
+        },
+        spin: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
         },
       },
     },

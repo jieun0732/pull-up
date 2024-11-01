@@ -1,22 +1,50 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import Text from "./component/ui/Text";
-import { useRouter } from "next/navigation";
-import introLogo from "@/assets/logo/introLogo.png";
-import LocalStorage from "@/utils/LocalStorage";
-import { useEffect } from "react";
+import introLogo from "./assets/logo/introLogo.png";
+import {
+  APPLE_REDIRECT_URI,
+  KAKAO_REDIRECT_URI,
+  KAKAO_KEY,
+  API,
+} from "./lib/API";
+import { useState, useEffect } from "react";
+
+interface AppleAuthenticationResponseType {
+  authorization: {
+    code: string;
+    id_token: string;
+  };
+  user?: {
+    name: {
+      firstName: string;
+      lastName: string;
+    };
+    email: string;
+  };
+}
 
 export default function Home() {
   const totalPercent = 91;
-  const router = useRouter();
-  const APPLE_URL =
-    "https://appleid.apple.com/auth/authorize?response_mode=form_post&response_type=code%20id_token&response_type=code&client_id=com.pull-up.services&scope=name%20email&redirect_uri=https://pull-up-snowy.vercel.app/oauth2/apple";
+
+  const [kakaoLoaded, setKakaoLoaded] = useState(false);
 
   useEffect(() => {
-    localStorage.clear();
-  }, []);
+    const handleKakaoInit = () => {
+      if (window.Kakao) {
+        if (!window.Kakao.isInitialized()) {
+          window.Kakao.init("ebfd504b765655d935edf9d25c288afa");
+        }
+      } else {
+        console.error("Kakao SDK not loaded");
+      }
+    };
+
+    if (kakaoLoaded) {
+      handleKakaoInit();
+    }
+  }, [kakaoLoaded]);
 
   return (
     <main className="flex h-full w-full flex-col items-center justify-center bg-white px-5">
@@ -30,12 +58,34 @@ export default function Home() {
       <Text size="body-04" color="text-gray01" className="mb-12">
         인적성 검사 준비는 풀업에서
       </Text>
-      <button
-        onClick={() => {
-          LocalStorage.setItem("memberId", "1");
-          router.push("/main/sectional");
+      <div
+        onClick={async () => {
+          if (typeof window !== "undefined") {
+            const { Kakao } = window;
+            Kakao.init("ebfd504b765655d935edf9d25c288afa");
+            console.log(String(Kakao.isInitialized()));
+            if (Kakao.isInitialized()) {
+              try {
+                Kakao.Auth.authorize({
+                  redirectUri:
+                    "https://pullup-api.shop/api/pull-up/oauth2/callback/kakao",
+                  throughTalk: Boolean(navigator.userAgent.match(/Android/i))
+                    ? false
+                    : true,
+                });
+              } catch (error) {
+                console.log("kakaoLoginError");
+                console.log(error);
+                alert("kakaoLoginError");
+                alert(error);
+              }
+            } else {
+              console.log("kakao init", KAKAO_KEY);
+              await Kakao.init("ebfd504b765655d935edf9d25c288afa");
+            }
+          }
         }}
-        className="relative mb-5 flex w-full items-center justify-center rounded-md bg-[#fee500] py-5"
+        className="relative mb-5 flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-[#fee500]"
       >
         <svg
           className="absolute left-10"
@@ -55,10 +105,31 @@ export default function Home() {
         <p className="text-center text-base font-semibold text-black">
           카카오로 로그인
         </p>
-      </button>
-      <Link
-        href={APPLE_URL}
-        className="relative flex w-full items-center justify-center rounded-md bg-black py-5"
+      </div>
+      <div
+        onClick={async () => {
+          window?.AppleID.auth.init({
+            clientId: "com.pull-up.services",
+            scope: "name email",
+            redirectURI:
+              "https://pullup-api.shop/api/pull-up/oauth2/callback/apple",
+            usePopup: false,
+          });
+          try {
+            const res: AppleAuthenticationResponseType =
+              await window.AppleID.auth.signIn();
+            console.log("appleSignIn");
+            console.log(res);
+          } catch (error) {
+            console.log("appleSignInError");
+            console.log(error);
+            alert("appleSignInError");
+            alert(error);
+            alert((error as any)?.message);
+            alert((error as any)?.code);
+          }
+        }}
+        className="relative flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-black text-white"
       >
         <svg
           className="absolute left-10"
@@ -73,8 +144,8 @@ export default function Home() {
             fill="white"
           />
         </svg>
-        <p className="text-base font-semibold text-white">Apple ID로 로그인</p>
-      </Link>
+        <p className="text-[20px]">Apple ID로 로그인</p>
+      </div>
     </main>
   );
 }

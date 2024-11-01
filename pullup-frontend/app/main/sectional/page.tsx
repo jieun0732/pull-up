@@ -40,7 +40,7 @@ export default function Page() {
   ];
 
   return (
-    <div className="bg-white px-5 pb-[91px] pt-14">
+    <div className="bg-white px-5 pb-[91px] pt-20">
       <Text size="head-02">내가 필요한 부분만</Text>
       <Text size="head-02"> 골라서 풀어볼 수 있어요!</Text>
       <Text size="head-05" color="text-gray01" className="mb-[26px]">

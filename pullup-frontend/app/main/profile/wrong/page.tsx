@@ -11,17 +11,20 @@ import { formatDate } from "@/utils/formatDate";
 import LocalStorage from "@/utils/LocalStorage";
 
 export default function Page() {
-  const { data , error } = useSWR<IncorrectAnswers[]>(`${API}/exams/incorrect-answers?memberId=${LocalStorage.getItem("memberId")}`, fetcher);
-  const router = useRouter()
-  
-  if (!data) return
-  console.log(data)
+  const { data, error } = useSWR<IncorrectAnswers[]>(
+    `${API}/exams/incorrect-answers?memberId=${LocalStorage.getItem("memberId")}`,
+    fetcher,
+  );
+  const router = useRouter();
+
+  if (!data) return;
+  console.log(data);
   return (
-    <div className="flex h-full w-full flex-col items-center bg-[#F4F3F8] px-5 pb-[91px] pt-14">
+    <div className="flex h-full w-full flex-col items-center bg-[#F4F3F8] px-5 pb-[91px] pt-20">
       <Header type="back" content="내가 틀린 문제" link="/main/profile" />
-      <div className="flex w-full h-full flex-col overflow-x-scroll">
+      <div className="flex h-full w-full flex-col overflow-x-scroll">
         {data.length === 0 ? (
-          <p className="w-full text-center my-auto">아직 푼 문제가 없어요!</p>
+          <p className="my-auto w-full text-center">아직 푼 문제가 없어요!</p>
         ) : (
           data.map((item) => {
             return (

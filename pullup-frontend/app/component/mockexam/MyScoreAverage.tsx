@@ -10,101 +10,21 @@ import lowerlogo from "@/assets/logo/lowerLogo.png";
 import useComponentSize from "@/hooks/useComponentSize";
 import { API, fetcher } from "@/lib/API";
 import useSWR from "swr";
-import { MockExamAverageType } from "@/types/mockexam/mockexamReport";
+import {
+  MockExamReportType,
+  MockExamReportPropType,
+} from "@/types/mockexam/mockexamReport";
 import LocalStorage from "@/utils/LocalStorage";
+import Spinner from "../ui/Spinner";
 
-function MyScoreAverage() {
+function MyScoreAverage({ recentReportInfo }: MockExamReportPropType) {
   const [componentRef, size] = useComponentSize();
   const memberID = LocalStorage.getItem("memberId") || "";
 
-  const { data: averageScore } = useSWR<MockExamAverageType>(
-    `${API}/exams/mock-exam/recent/${memberID}`,
-    fetcher,
-  );
+  LocalStorage.setItem("examId", String(recentReportInfo?.examId));
 
-  LocalStorage.setItem("examId", String(averageScore?.examId));
-
-  if (!averageScore) {
-    return (
-      <div className="flex h-[370px] w-full flex-col rounded-2xl bg-white p-6">
-        <div className="w-full">
-          <Text size="head-02" color="text-blue01">
-            잠시만 기다려주세요!
-          </Text>
-          <Text size="caption-02" color="text-gray01">
-            잠시만 기다려주세요!
-          </Text>
-          <div
-            className="relative mt-3 flex w-full flex-col items-center justify-center"
-            ref={componentRef}
-          >
-            <div className="absolute left-0 top-0">
-              <ProgressBar
-                progress={0}
-                radius={0}
-                cut={200}
-                rotate={190}
-                initialAnimation={false}
-                strokeColor="#4d70ec"
-                strokeWidth={18}
-                trackStrokeColor="#F2F3F6"
-                trackStrokeWidth={18}
-                strokeLinecap={"round"}
-                pointerRadius={1}
-                pointerStrokeWidth={10}
-                pointerStrokeColor={"#4d70ec"}
-              />
-              <div className="absolute top-0 flex h-full w-full select-none flex-col items-center justify-center text-center">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-blue01"></div>
-                  <Text size="caption-02" color="text-gray01" className="mr-2">
-                    내 점수
-                  </Text>
-                  <div className="h-2 w-2 rounded-full bg-black01"></div>
-                  <Text size="caption-02" color="text-gray01">
-                    평균
-                  </Text>
-                </div>
-                <Image
-                  src={""}
-                  alt="statusIcon"
-                  className="mt-3 h-32 w-auto"
-                  width={40}
-                />
-                <div className="mx-auto mt-5 flex w-full items-center justify-center gap-3">
-                  <Button size="small" color="activeLight">
-                    상위 ??%
-                  </Button>
-                  <Text size="head-02">??점</Text>
-                </div>
-              </div>
-            </div>
-
-            <div className="absolute left-0 top-0">
-              <ProgressBar
-                progress={0}
-                radius={0}
-                cut={200}
-                rotate={190}
-                initialAnimation={false}
-                strokeColor="#4d6fec0"
-                strokeWidth={18}
-                trackStrokeColor="#f2f3f60"
-                trackStrokeWidth={18}
-                strokeLinecap={"round"}
-                pointerRadius={1}
-                pointerStrokeWidth={10}
-                pointerStrokeColor={"#3d4150"}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const progress = averageScore.score;
-  const averageProgress = averageScore.averageScore;
+  const progress = recentReportInfo.score;
+  const averageProgress = recentReportInfo.averageScore;
   const status = compareScores(averageProgress, progress);
 
   const scoreStatus = {
@@ -175,9 +95,9 @@ function MyScoreAverage() {
               />
               <div className="mx-auto mt-5 flex w-full items-center justify-center gap-3">
                 <Button size="small" color="activeLight">
-                  {averageScore.rankPercent}
+                  {recentReportInfo.rankPercent}
                 </Button>
-                <Text size="head-02">{averageScore.score}점</Text>
+                <Text size="head-02">{recentReportInfo?.score}점</Text>
               </div>
             </div>
           </div>

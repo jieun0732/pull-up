@@ -12,3 +12,20 @@ export interface userStatus {
   role: string;
   latestScore: number;
 }
+export interface UserLoginStatus {
+  firstLogin: boolean;
+  memberId: number;
+  provider: "apple" | "kakao";
+  name: string;
+  email: string;
+}
+
+export interface authType {
+  code: string;
+  state: string;
+  user: {
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
+}

@@ -16,7 +16,6 @@ export interface MockExamProblemsType {
   problemIds: ProblemId[];
 }
 
-
 export interface ProblemBeingSolved {
   id: number;
   problem: Problem;
@@ -48,11 +47,17 @@ export interface Problem {
   incorrectRate: null;
 }
 
+export interface MockExamResultType {
+  id: number;
+  problem: Problem;
+  chosenAnswer: null;
+  isCorrect: null;
+}
 
 export interface MockExamProblemType {
   id: number;
   problemNumber: number;
-  ChosenAnswer : number;
+  ChosenAnswer: number;
   entry: string;
   category: string;
   type: string;
@@ -66,7 +71,6 @@ export interface MockExamProblemType {
   incorrectRate: number;
   createdDate: string;
 }
-
 
 interface ExamInformation {
   id: number;
@@ -87,5 +91,3 @@ interface Member {
   accessCheck: boolean;
   role: string;
 }
-
-

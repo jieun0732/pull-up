@@ -75,7 +75,7 @@ export default function Layout({
 
   return (
     <>
-      <div className="bg-whtie relative flex flex-col items-center pb-7 pt-14">
+      <div className="bg-whtie relative flex flex-col items-center pb-7 pt-20">
         <div className="relative flex w-full flex-col">
           <div className="relative mx-5 w-full">
             <CloseIcon onClick={openModal} />
