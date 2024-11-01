@@ -10,19 +10,18 @@ import useSWR from "swr";
 interface QuestionListPropType {
   showQuestions: boolean;
   setShowQuestions: React.Dispatch<React.SetStateAction<boolean>>;
-  handleExamResult : () => Promise<void>
+  handleExamResult: () => Promise<void>;
+  problemList: ProblemBeingSolved[] | undefined;
 }
 
 function QuestionList({
   showQuestions,
   setShowQuestions,
   handleExamResult,
+  problemList,
 }: QuestionListPropType) {
   const router = useRouter();
-  const examId = localStorage.getItem('examId')
-  const { data :problemList, error:questionListError } = useSWR<ProblemBeingSolved[]>(
-    showQuestions ? `${API}/exams/mock-exam/problems?examInformationId=${examId}` : null,
-  );
+  const examId = localStorage.getItem("examId");
 
   const handleClick = () => {
     setShowQuestions(false);
@@ -33,9 +32,8 @@ function QuestionList({
     router.push(`/main/mockexam/${id}`);
   };
 
-  const isFinished = problemList?.every(item => item.chosenAnswer !== null);
+  const isFinished = problemList?.every((item) => item.chosenAnswer !== null);
 
-  
   return (
     <>
       {showQuestions && (
@@ -87,7 +85,12 @@ function QuestionList({
         </div>
 
         {isFinished ? (
-          <Button size="large" color="active" className="mt-9" onClick={handleExamResult}>
+          <Button
+            size="large"
+            color="active"
+            className="mt-9"
+            onClick={handleExamResult}
+          >
             제출하기
           </Button>
         ) : (

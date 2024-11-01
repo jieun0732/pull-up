@@ -21,7 +21,10 @@ import {
 } from "@/component/mockexam/tutorial";
 import useSWR from "swr";
 import { API } from "@/lib/API";
-import { MockExamProblemType } from "@/types/mockexam/mockexamQuestion";
+import {
+  MockExamProblemType,
+  ProblemBeingSolved,
+} from "@/types/mockexam/mockexamQuestion";
 import useTimer from "@/hooks/useTimer";
 import LocalStorage from "@/utils/LocalStorage";
 
@@ -38,6 +41,13 @@ export default function Page() {
 
   const { data: nowProblem, error } = useSWR<MockExamProblemType>(
     `${API}/exams/mock-exam/problem?examInformationId=${examId}&problemNumber=${params.id}`,
+  );
+  const { data: problemList, error: questionListError } = useSWR<
+    ProblemBeingSolved[]
+  >(
+    showQuestions
+      ? `${API}/exams/mock-exam/problems?examInformationId=${examId}`
+      : null,
   );
 
   useEffect(() => {
@@ -113,7 +123,7 @@ export default function Page() {
     console.log("handleExamResult");
     try {
       const response = await fetch(
-        `${API}/exams/mock-exam/complete?examInformationId=${LocalStorage.getItem("examId")}`,
+        `${API}/exams/mock-exam/${examId}/complete`,
         {
           method: "POST",
           headers: {
@@ -140,6 +150,8 @@ export default function Page() {
   }, [nowProblem]);
   if (!nowProblem) return;
 
+  const isFinished = problemList?.every((item) => item.chosenAnswer !== null);
+
   return (
     <>
       <div className="bg-whtie relative flex h-full flex-col items-center overflow-x-auto">
@@ -149,6 +161,7 @@ export default function Page() {
           showQuestions={showQuestions}
           setShowQuestions={setShowQuestions}
           handleExamResult={handleExamResult}
+          problemList={problemList}
         />
 
         <div className="relative flex w-full flex-col overflow-x-auto px-5 pt-20">
@@ -200,6 +213,20 @@ export default function Page() {
 
         <div className="absolute bottom-0 mb-11 flex w-full flex-col px-5 py-4">
           <TutorialStep1SpeechBubble step={step} problemId={params.id} />
+
+          {isFinished ? (
+            <button
+              onClick={handleExamResult}
+              className="ml-auto rounded-t-2xl rounded-bl-2xl bg-blue03 px-6 py-2 text-blue01 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]"
+            >
+              제출하기
+            </button>
+          ) : (
+            <button className="ml-auto rounded-t-2xl rounded-bl-2xl bg-gray03 px-6 py-2 text-gray02 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]">
+              제출하기
+            </button>
+          )}
+
           <button
             onClick={handleExamResult}
             className="ml-auto rounded-t-2xl rounded-bl-2xl bg-gray03 px-6 py-2 text-gray02 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]"

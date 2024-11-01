@@ -27,8 +27,9 @@ const useTimer = (dep: string, durationInMinutes: number) => {
       const handleExamResult = async () => {
         console.log("handleExamResult");
         try {
+          const examId = LocalStorage.getItem("examId");
           const response = await fetch(
-            `${API}/exams/mock-exam/complete?examInformationId=${LocalStorage.getItem("examId")}`,
+            `${API}/exams/mock-exam/${examId}/complete`,
             {
               method: "POST",
               headers: {
