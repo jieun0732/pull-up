@@ -1,7 +1,10 @@
 export function compareScores(average: number, myscore: number) {
-  if (myscore > average) {
+  const roundedAverage = roundUpScore(average);
+  const roundedMyScore = roundUpScore(myscore);
+
+  if (roundedMyScore > roundedAverage) {
     return "higher";
-  } else if (myscore === average) {
+  } else if (roundedMyScore === roundedAverage) {
     return "same";
   } else {
     return "lower";
@@ -16,4 +19,8 @@ export function compareTime(average: number, mytime: number) {
   } else {
     return "higher";
   }
+}
+
+export function roundUpScore(num: number): number {
+  return Math.round(num * 10) / 10;
 }

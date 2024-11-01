@@ -3,12 +3,9 @@
 import Text from "../ui/Text";
 import Button from "../ui/Button";
 import ProgressBar from "react-customizable-progressbar";
-import { compareTime } from "@/utils/compareFunc";
+import { compareTime, roundUpScore } from "@/utils/compareFunc";
 import useComponentSize from "@/hooks/useComponentSize";
-import {
-  MockExamReportType,
-  MockExamReportPropType,
-} from "@/types/mockexam/mockexamReport";
+import { MockExamReportPropType } from "@/types/mockexam/mockexamReport";
 import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
 import LocalStorage from "@/utils/LocalStorage";
@@ -18,8 +15,8 @@ function MyTimeAverage({ recentReportInfo }: MockExamReportPropType) {
   const [componentRef, size] = useComponentSize();
   const memberID = LocalStorage.getItem("memberId") || "";
 
-  const mytime = recentReportInfo?.requiredTime.seconds / 60;
-  const averageTime = recentReportInfo?.averageTime.seconds / 60;
+  const mytime = roundUpScore(recentReportInfo?.requiredTime / 60);
+  const averageTime = roundUpScore(recentReportInfo?.averageTime);
 
   const status = compareTime(averageTime, mytime);
 

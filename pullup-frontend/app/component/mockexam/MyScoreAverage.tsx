@@ -3,19 +3,13 @@ import Image from "next/image";
 import ProgressBar from "react-customizable-progressbar";
 import Text from "../ui/Text";
 import Button from "../ui/Button";
-import { compareScores } from "@/utils/compareFunc";
+import { compareScores, roundUpScore } from "@/utils/compareFunc";
 import higherlogo from "@/assets/logo/higherLogo.png";
 import samelogo from "@/assets/logo/sameLogo.png";
 import lowerlogo from "@/assets/logo/lowerLogo.png";
 import useComponentSize from "@/hooks/useComponentSize";
-import { API, fetcher } from "@/lib/API";
-import useSWR from "swr";
-import {
-  MockExamReportType,
-  MockExamReportPropType,
-} from "@/types/mockexam/mockexamReport";
+import { MockExamReportPropType } from "@/types/mockexam/mockexamReport";
 import LocalStorage from "@/utils/LocalStorage";
-import Spinner from "../ui/Spinner";
 
 function MyScoreAverage({ recentReportInfo }: MockExamReportPropType) {
   const [componentRef, size] = useComponentSize();
@@ -30,7 +24,7 @@ function MyScoreAverage({ recentReportInfo }: MockExamReportPropType) {
   const scoreStatus = {
     lower: {
       title: "더 많이 노력해야 해요!",
-      subtitle: `님의 점수는 평균보다 ${averageProgress - progress}점 낮아요.`,
+      subtitle: `님의 점수는 평균보다 ${roundUpScore(averageProgress - progress)}점 낮아요.`,
       logo: lowerlogo,
     },
     same: {
@@ -40,7 +34,7 @@ function MyScoreAverage({ recentReportInfo }: MockExamReportPropType) {
     },
     higher: {
       title: "우수한 합격권이에요!",
-      subtitle: `님의 점수는 평균보다 ${progress - averageProgress}점 높아요.`,
+      subtitle: `님의 점수는 평균보다 ${roundUpScore(progress - averageProgress)}점 높아요.`,
       logo: higherlogo,
     },
   };

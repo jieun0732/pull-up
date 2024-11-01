@@ -14,9 +14,10 @@ import { MockExamResultType } from "@/types/mockexam/mockexamQuestion";
 import Spinner from "@/component/ui/Spinner";
 
 export default function Page() {
-  const examId = LocalStorage.getItem("examId") || "";
   const params = useParams<{ id: string }>();
   const router = useRouter();
+
+  const examId = LocalStorage.getItem("examId") || "";
 
   const { data: result, isLoading } = useSWR<MockExamResultType[]>(
     `${API}/exams/mock-exam/problems?examInformationId=${examId}`,
@@ -27,6 +28,9 @@ export default function Page() {
 
   const nowProblem = result[Number(params.id) - 1].problem;
   const chosenAnswer = result[Number(params.id) - 1].chosenAnswer;
+
+  console.log("result");
+  console.log(result[Number(params.id) - 1]);
 
   return (
     <>

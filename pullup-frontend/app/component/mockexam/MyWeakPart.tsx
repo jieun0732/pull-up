@@ -2,10 +2,7 @@
 
 import Text from "../ui/Text";
 import { MockExamReportPropType } from "@/types/mockexam/mockexamReport";
-import useSWR from "swr";
-import { API, fetcher } from "@/lib/API";
 import LocalStorage from "@/utils/LocalStorage";
-import { useState, useEffect } from "react";
 
 function MyWeakPart({ recentReportInfo }: MockExamReportPropType) {
   const memberID = LocalStorage.getItem("memberId") || "";

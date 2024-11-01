@@ -15,7 +15,7 @@ import WrongIcon from "@/assets/icon/problem/wrongIcon";
 
 export default function Page() {
   const router = useRouter();
-
+  const name = LocalStorage.getItem("name") || "";
   const examId = LocalStorage.getItem("examId") || "";
 
   const { data: result, isLoading } = useSWR<MockExamResultType[]>(
@@ -33,7 +33,7 @@ export default function Page() {
         <CloseIcon onClick={() => router.push(`/main/mockexam/report`)} />
       </div>
       <Text size="head-02" className="self-start">
-        ㅇㅇㅇ님의 모의고사 점수는
+        {name}님의 모의고사 점수는
       </Text>
       <Text size="head-02" className="self-start">
         {countCorrect * 5}점이예요!

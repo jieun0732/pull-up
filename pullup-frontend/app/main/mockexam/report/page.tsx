@@ -22,11 +22,13 @@ export default function Page() {
 
   if (isLoading) return <Spinner />;
 
+  const name = LocalStorage.getItem("name") || "";
+
   return (
     <div className="h-full w-full min-w-[320px] max-w-[450px] overflow-y-auto bg-[#f3f4f6] px-5 pb-7 pt-20 text-black01">
       <Header
         type="cancel"
-        content="이지은 님의 모의고사"
+        content={`${name} 님의 모의고사`}
         link="/main/mockexam"
       />
       {recentReportInfo && (
