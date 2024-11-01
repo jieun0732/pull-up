@@ -192,6 +192,9 @@ export default function Page() {
             isSelected={selectedId === idx}
             selectedId={selectedId}
             setSelectedId={setSelectedId}
+            type="mockexam"
+            problemNumber={nowProblem.problemNumber}
+            paramsId={params.id}
           />
         ))}
 

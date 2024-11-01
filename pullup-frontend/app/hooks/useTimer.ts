@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import LocalStorage from "@/utils/LocalStorage";
+import { API } from "@/lib/API";
 
 const useTimer = (dep: string, durationInMinutes: number) => {
   const router = useRouter();
@@ -7,13 +9,13 @@ const useTimer = (dep: string, durationInMinutes: number) => {
   const [timeLeft, setTimeLeft] = useState(durationInSeconds);
 
   useEffect(() => {
-    const createdDate = localStorage.getItem('time');
+    const createdDate = localStorage.getItem("time");
     const currentTime = Date.now();
-    
+
     if (!createdDate) {
       const currentTimeISO = new Date().toISOString(); // 현재 시간을 ISO 형식으로 저장
-      localStorage.setItem('time', currentTimeISO); // localStorage에 현재 시간 저장
-      router.push('/main/mockexam'); // 기본 페이지로 이동
+      localStorage.setItem("time", currentTimeISO); // localStorage에 현재 시간 저장
+      router.push("/main/mockexam"); // 기본 페이지로 이동
       return;
     }
 
@@ -22,7 +24,30 @@ const useTimer = (dep: string, durationInMinutes: number) => {
 
     // 30분이 지나면 이동
     if (currentTime - createdTime > thirtyMinutes) {
-      router.push('/main/mockexam/report'); // 이동할 페이지
+      const handleExamResult = async () => {
+        console.log("handleExamResult");
+        try {
+          const response = await fetch(
+            `${API}/exams/mock-exam/complete?examInformationId=${LocalStorage.getItem("examId")}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            },
+          );
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const result = await response.json();
+          router.push("/main/mockexam/report");
+        } catch (error) {
+          console.error("Error fetching access check:", error);
+        }
+      };
+
+      handleExamResult();
       return;
     }
 
@@ -32,7 +57,7 @@ const useTimer = (dep: string, durationInMinutes: number) => {
 
     // 타이머가 남은 시간이 없으면 이동
     if (remainingTime <= 0) {
-      router.push('/main/mockexam/report'); // 타이머가 끝났음을 표시
+      router.push("/main/mockexam/report"); // 타이머가 끝났음을 표시
       return;
     }
 
@@ -43,7 +68,7 @@ const useTimer = (dep: string, durationInMinutes: number) => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          router.push('/main/mockexam/report'); // 타이머가 끝나면 이동
+          router.push("/main/mockexam/report"); // 타이머가 끝나면 이동
           return 0; // 타이머가 끝났음을 표시
         }
         return prev - 1;
@@ -57,7 +82,7 @@ const useTimer = (dep: string, durationInMinutes: number) => {
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   };
 
   return formatTime(timeLeft);

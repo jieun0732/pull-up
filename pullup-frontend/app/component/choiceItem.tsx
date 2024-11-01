@@ -1,10 +1,16 @@
 import { FormatQuestion } from "@/utils/FormatQuestion";
+import { API } from "@/lib/API";
+import LocalStorage from "@/utils/LocalStorage";
+
 interface ChoiceItemProps {
   idx: number;
   choice: string;
   isSelected: boolean;
   selectedId: number | null;
   setSelectedId: (id: number | null) => void;
+  type?: string;
+  problemNumber?: number;
+  paramsId?: string;
 }
 
 const ChoiceItem = ({
@@ -13,12 +19,43 @@ const ChoiceItem = ({
   isSelected,
   selectedId,
   setSelectedId,
+  type,
+  problemNumber,
+  paramsId,
 }: ChoiceItemProps) => {
   const handleClick = () => {
     if (selectedId === idx) {
       setSelectedId(null);
     } else {
       setSelectedId(idx);
+    }
+    if (paramsId && paramsId == "20") {
+      handleFinalQuestion();
+    }
+  };
+
+  const handleFinalQuestion = async () => {
+    if (type == "mockexam" && selectedId) {
+      try {
+        const response = await fetch(`${API}/exams/mock-exam/answer`, {
+          method: "POST",
+          headers: {
+            Accept: "*/*",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            examInformationId: Number(LocalStorage.getItem("examId")),
+            problemNumber: Number(problemNumber),
+            chosenAnswer: selectedId + 1,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
