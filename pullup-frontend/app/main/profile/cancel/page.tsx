@@ -2,12 +2,13 @@
 
 import Header from "@/component/ui/Header";
 import Button from "@/component/ui/Button";
+import LocalStorage from "@/utils/LocalStorage";
 import { useState } from "react";
 
 export default function Page() {
   const [activeCancel, setActiveCancel] = useState<boolean>(false);
 
-  const userName = "홍길동";
+  const userName = LocalStorage.getItem("name") || "";
 
   const term = [
     {
@@ -28,7 +29,7 @@ export default function Page() {
           정말 풀업을 탈퇴하실 건가요?
         </p>
         <p className="mb-9 text-[15px] font-medium text-gray01">
-          탈퇴 전 oo님께서 확인하실 정보가 있어요!
+          탈퇴 전 {userName}님께서 확인하실 정보가 있어요!
         </p>
       </div>
 
