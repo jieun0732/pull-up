@@ -7,7 +7,7 @@ export const ButtonSizes = {
 
 export const ButtonStyles = {
   active:
-    "whitespace-nowrap bg-blue01 text-white flex items-center justify-center",
+    "whitespace-nowrap bg-blue01 text-white flex items-center justify-center transition-colors duration-200 active:bg-[#4366d8]",
   nonactive:
     "whitespace-nowrap bg-gray03 text-center text-gray02 flex items-center justify-center",
   activeBorder:

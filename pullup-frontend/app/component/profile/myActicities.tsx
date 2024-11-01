@@ -38,7 +38,7 @@ export default function MyActivities({ testScore }: MyActivitiesProp) {
               <Text size="head-04">모의고사 점수</Text>
             </div>
             <Text size="head-02" color="text-blue01">
-              {testScore !== null ? `${testScore}점` : "-"}
+              {testScore !== null && testScore !== 0 ? `${testScore}점` : "-"}
             </Text>
           </div>
         </Link>

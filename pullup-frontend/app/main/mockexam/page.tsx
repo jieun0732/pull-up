@@ -34,7 +34,7 @@ export default function Page() {
         </Text>
       </div>
 
-      {data.data.latestScore !== null ? (
+      {data.data.latestScore !== null && data.data.latestScore !== 0 ? (
         <div className="flex h-full flex-col items-center justify-around">
           <Image
             src={questionLogo}
