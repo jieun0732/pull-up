@@ -85,6 +85,7 @@ export default function Page() {
                   `${API}/exams/mock-exam/start?memberId=${localStorage.getItem("memberId")}`,
                   {
                     method: "POST",
+                    credentials: "include",
                   },
                 );
 

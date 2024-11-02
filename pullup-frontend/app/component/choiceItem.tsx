@@ -39,6 +39,7 @@ const ChoiceItem = ({
       try {
         const response = await fetch(`${API}/exams/mock-exam/answer`, {
           method: "POST",
+          credentials: "include",
           headers: {
             Accept: "*/*",
             "Content-Type": "application/json",

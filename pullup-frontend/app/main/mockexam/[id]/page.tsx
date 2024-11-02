@@ -59,6 +59,7 @@ export default function Page() {
             `${API}/members/${LocalStorage.getItem("memberId")}/access-check`,
             {
               method: "PUT",
+              credentials: "include",
               headers: {
                 "Content-Type": "application/json",
               },
@@ -93,6 +94,7 @@ export default function Page() {
     try {
       const response = await fetch(`${API}/exams/mock-exam/answer`, {
         method: "POST",
+        credentials: "include",
         headers: {
           Accept: "*/*",
           "Content-Type": "application/json",
@@ -126,6 +128,7 @@ export default function Page() {
         `${API}/exams/mock-exam/${examId}/complete`,
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },

@@ -35,6 +35,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
       while (true) {
         const response = await fetch(`${API}/exams/answer`, {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
@@ -75,6 +76,7 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
       do {
         const response = await fetch(`${API}/exams/answer`, {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },

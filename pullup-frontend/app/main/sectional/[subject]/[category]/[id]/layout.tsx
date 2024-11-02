@@ -55,7 +55,9 @@ export default function Layout({
     ({ url, ids }) =>
       Promise.all(
         ids.map((id) =>
-          fetch(`${url}/${id}`).then(async (response) => {
+          fetch(`${url}/${id}`, {
+            credentials: "include",
+          }).then(async (response) => {
             return response.json();
           }),
         ),

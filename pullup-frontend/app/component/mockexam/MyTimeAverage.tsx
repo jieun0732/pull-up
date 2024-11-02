@@ -6,10 +6,7 @@ import ProgressBar from "react-customizable-progressbar";
 import { compareTime, roundUpScore } from "@/utils/compareFunc";
 import useComponentSize from "@/hooks/useComponentSize";
 import { MockExamReportPropType } from "@/types/mockexam/mockexamReport";
-import useSWR from "swr";
-import { API, fetcher } from "@/lib/API";
 import LocalStorage from "@/utils/LocalStorage";
-import Spinner from "../ui/Spinner";
 
 function MyTimeAverage({ recentReportInfo }: MockExamReportPropType) {
   const [componentRef, size] = useComponentSize();

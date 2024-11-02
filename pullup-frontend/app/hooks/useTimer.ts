@@ -32,6 +32,7 @@ const useTimer = (dep: string, durationInMinutes: number) => {
             `${API}/exams/mock-exam/${examId}/complete`,
             {
               method: "POST",
+              credentials: "include",
               headers: {
                 "Content-Type": "application/json",
               },

@@ -63,6 +63,7 @@ export default function Page() {
 
       fetch(`${API}/exams/reset?${queryString}`, {
         method: "POST",
+        credentials: "include",
       })
         .then((response) => {
           if (!response.ok) {
@@ -103,6 +104,7 @@ export default function Page() {
       try {
         const response = await fetch(`${API}/exams/problems?${queryString}`, {
           method: "GET",
+          credentials: "include",
         });
 
         if (!response.ok) {
@@ -173,6 +175,7 @@ export default function Page() {
                 }).toString();
                 fetch(`${API}/exams/reset?${queryString}`, {
                   method: "POST",
+                  credentials: "include",
                 })
                   .then((response) => {
                     router.push(`/main/sectional/${params.subject}/mix/1`);
