@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "pull-up",
+    "slug": "pull-up",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#4D70EC"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pull.up"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e585058c-9fc5-45e7-b5fa-83a84b9eccf3"
+      }
+    }
+  }
+}
