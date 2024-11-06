@@ -73,15 +73,17 @@ public class JwtUtil {
 
     public void validate(String token) {
         try {
-            Jwts.parser()
+            if (Jwts.parser()
                     .verifyWith(Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8)))
                     .build()
                     .parseSignedClaims(token)
                     .getPayload()
                     .getSubject()
-                    .equals(subject);
+                    .equals(subject)) return;
 
+            throw new OAuthException(OAuthError.PARSE_JWT_ERROR);
         } catch (JwtException e) {
+            System.out.println("e = " + e);
             throw new OAuthException(OAuthError.PARSE_JWT_ERROR);
         }
     }

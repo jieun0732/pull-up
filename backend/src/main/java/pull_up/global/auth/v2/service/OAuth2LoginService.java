@@ -13,7 +13,6 @@ import pull_up.global.auth.v2.dto.KakaoLoginRequestDto;
 import pull_up.global.auth.v2.dto.KakaoUserInfoDto;
 import pull_up.global.auth.v2.dto.OAuth2LoginResponseDto;
 import pull_up.global.auth.v2.enums.OAuth2Provider;
-import pull_up.global.auth.v2.exception.OAuthError;
 import pull_up.global.auth.v2.exception.OAuthException;
 import pull_up.global.auth.v2.util.AppleTokenDecoder;
 
@@ -52,6 +51,13 @@ public class OAuth2LoginService {
         return getKakaoUser(userInfo.kakao_account());
     }
 
+    private Member registKakaoMember(KakaoUserInfoDto.KakaoAccount dto) {
+        Member member = Member.of(dto.profile().nickname(), dto.email(), false, "kakao_user");
+        memberRepository.save(member);
+
+        return member;
+    }
+
     public OAuth2LoginResponseDto getAppleUser(String idToken, String userJson) {
         String email = (String) appleTokenDecoder.decode(idToken).get("email");
 
@@ -66,22 +72,14 @@ public class OAuth2LoginService {
         }
     }
 
-    private Member registKakaoMember(KakaoUserInfoDto.KakaoAccount dto) {
-        Member member = Member.of(dto.profile().nickname(), dto.email(), false, "kakao_user");
-        memberRepository.save(member);
-
-        return member;
-    }
-
     private Member registAppleMember(String email, String userJson) {
-        if (memberRepository.findByEmailAndRole(email, OAuth2Provider.APPLE.getRole()).isPresent())
-            throw new OAuthException(OAuthError.ALREADY_REGISTERED_MEMBER_WITH_USER_JSON);
+        return memberRepository.findByEmailAndRole(email, OAuth2Provider.APPLE.getRole()).orElseGet(() -> {
+            AppleLoginRequestDto dto = gson.fromJson(userJson, AppleLoginRequestDto.class);
 
-        AppleLoginRequestDto dto = gson.fromJson(userJson, AppleLoginRequestDto.class);
+            Member newMember = Member.of(dto.name().firstName(), dto.name().lastName(), email, false, "apple_user");
+            memberRepository.save(newMember);
 
-        Member member = Member.of(dto.name().firstName(), dto.name().lastName(), email, false, "apple_user");
-        memberRepository.save(member);
-
-        return member;
+            return newMember;
+        });
     }
 }

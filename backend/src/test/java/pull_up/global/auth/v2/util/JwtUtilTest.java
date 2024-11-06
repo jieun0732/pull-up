@@ -1,7 +1,6 @@
 package pull_up.global.auth.v2.util;
 
 import org.assertj.core.api.AbstractThrowableAssert;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,10 +24,10 @@ class JwtUtilTest {
     @BeforeEach
     void init() {
         suit = new JwtUtil();
-        ReflectionTestUtils.setField(suit,"key", "bvTAyAcnI3j1NPxTfJh9KLhBLQrrKdoS");
-        ReflectionTestUtils.setField(suit,"subject", "test subject");
-        ReflectionTestUtils.setField(suit,"issuer", "test issuer");
-        ReflectionTestUtils.setField(suit,"expire", 259200000L);
+        ReflectionTestUtils.setField(suit, "key", "bvTAyAcnI3j1NPxTfJh9KLhBLQrrKdoS");
+        ReflectionTestUtils.setField(suit, "subject", "test subject");
+        ReflectionTestUtils.setField(suit, "issuer", "test issuer");
+        ReflectionTestUtils.setField(suit, "expire", 259200000L);
     }
 
     @Test
@@ -90,8 +89,8 @@ class JwtUtilTest {
     @Test
     @DisplayName("토큰으로부터 아이디, 이름, 이메일 가져오는지 테스트")
     void testGetUserInfo() {
-        // given
-        String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoidGVzdCBzdWJqZWN0IiwiaXNzIjoidGVzdCBpc3N1ZXIiLCJpYXQiOjE3MzAzODg3NzUsImV4cCI6MTczMDY0Nzk3NSwibmFtZSI6ImxlYWYiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJyb2xlIjoiYXBwbGUtdXNlciJ9.rkjDf4MJBfdptTQBlfnYtWMmgTP-2eBsncMIlOKKXyA";
+        // given(2109년에 만료되는 토큰)
+        String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoidGVzdCBzdWJqZWN0IiwiaXNzIjoidGVzdCBpc3N1ZXIiLCJpYXQiOjE3MzA4NzI3MzEsImV4cCI6NDMyMjg3MjczMSwibmFtZSI6ImxlYWYiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJyb2xlIjoiYXBwbGUtdXNlciJ9.ETNw7-7casHnF8tlN3w_7XZk5Wja4EpK7YRuVaOOBX4";
 
         // when
         JwtUserInfoDto dto = suit.getUserInfo(accessToken);
@@ -106,8 +105,8 @@ class JwtUtilTest {
     @Test
     @DisplayName("토큰으로부터 Authentication 객체 가져오는지 테스트")
     void testGetAuthentication() {
-        // given
-        String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoidGVzdCBzdWJqZWN0IiwiaXNzIjoidGVzdCBpc3N1ZXIiLCJpYXQiOjE3MzAzODg3NzUsImV4cCI6MTczMDY0Nzk3NSwibmFtZSI6ImxlYWYiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJyb2xlIjoiYXBwbGUtdXNlciJ9.rkjDf4MJBfdptTQBlfnYtWMmgTP-2eBsncMIlOKKXyA";
+        // given(2109년에 만료되는 토큰)
+        String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoidGVzdCBzdWJqZWN0IiwiaXNzIjoidGVzdCBpc3N1ZXIiLCJpYXQiOjE3MzA4NzIzMTgsImV4cCI6NDMyMjg3MjMxOCwibmFtZSI6ImxlYWYiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJyb2xlIjoiYXBwbGUtdXNlciJ9.9LIfVKam8uRgrrIhKkCfmOSPYYanjlQc_eSCYaMK72s";
 
         // when
         Authentication authentication = suit.getAuthentication(accessToken);
