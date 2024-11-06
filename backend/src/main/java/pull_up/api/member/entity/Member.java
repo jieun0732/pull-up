@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.api.exam.entity.ExamInformation;
+import pull_up.api.exam.entity.ExamProblem;
 import pull_up.global.common.entity.BaseEntity;
 
 import java.util.List;
@@ -33,8 +34,14 @@ public class Member extends BaseEntity {
     @Column
     private String role;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ExamInformation> examInformations; // Member와 연결된 ExamInformation 리스트
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<IncorrectAnswer> incorrectAnswers;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<MemberAnswer> memberAnswers;
 
     protected Member() {}
 

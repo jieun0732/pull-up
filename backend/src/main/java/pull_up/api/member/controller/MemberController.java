@@ -28,9 +28,7 @@ import pull_up.global.common.response.BaseResponse;
 @RequiredArgsConstructor
 public class MemberController {
 
-    @Autowired
-    private MemberService memberService;
-
+    private final MemberService memberService;
 
     /**
      * 특정 ID를 가진 Member를 조회하는 엔드포인트.
@@ -54,10 +52,17 @@ public class MemberController {
     /**
      * 멤버 탈퇴.
      */
-    @Operation(summary = "멤버 탈퇴", description = "멤버를 탈퇴시킵니다.", tags = "멤버")
+    @Operation(summary = "멤버 탈퇴(soft)", description = "멤버를 탈퇴시킵니다.", tags = "멤버")
     @DeleteMapping("/{id}/delete")
     public BaseResponse<Void> deleteMember(@PathVariable Long id) {
         memberService.deleteMember(id);
         return BaseResponse.success(HttpStatus.OK.value(), "멤버 탈퇴를 완료하였습니다.", null);
+    }
+
+    @Operation(summary = "멤버 탈퇴(hard)", description = "멤버를 탈퇴시킵니다. DB에서 관련된 데이터를 모두 삭제합니다.", tags = "멤버")
+    @DeleteMapping("/{id}/delete/hard")
+    public ResponseEntity<String> deleteMemberHard(@PathVariable Long id) {
+        memberService.deleteMemberHard(id);
+        return new ResponseEntity<>("delete member " + id + " successfully.", HttpStatus.OK);
     }
 }
