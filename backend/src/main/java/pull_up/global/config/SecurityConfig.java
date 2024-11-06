@@ -1,5 +1,6 @@
 package pull_up.global.config;
 
+import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,7 +55,6 @@ public class SecurityConfig {
                         exception.accessDeniedHandler(exceptionHandler)
                                 .authenticationEntryPoint(authorizationEntryPoint))
 
-
                 // for oauth2
                 .oauth2Login(oauth2 -> oauth2
                     .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
@@ -62,12 +62,13 @@ public class SecurityConfig {
                 )
 
                 // for authorization and authentication
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/pull-up/oauth2/**").permitAll()
-                        .requestMatchers("/api/pull-up/lawsuit/**").permitAll()
-                        .anyRequest().authenticated()
-                )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/admin/**").permitAll()
+                        .requestMatchers("/api/pull-up/oauth2/**").permitAll()
+                        .anyRequest().permitAll()
+                )
+
                 .build();
     }
 

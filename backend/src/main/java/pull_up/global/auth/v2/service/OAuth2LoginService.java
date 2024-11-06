@@ -53,7 +53,7 @@ public class OAuth2LoginService {
     }
 
     public OAuth2LoginResponseDto getAppleUser(String idToken, String userJson) {
-        String email = Member.getPrivateEmail((String) appleTokenDecoder.decode(idToken).get("email"));
+        String email = (String) appleTokenDecoder.decode(idToken).get("email");
 
         if (userJson.equals("ALREADY_REGISTERED_USER")) {
             Member member = memberRepository.findByEmailAndRole(email, OAuth2Provider.APPLE.getRole())

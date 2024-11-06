@@ -2,7 +2,6 @@ package pull_up.global.auth.v2.service;
 
 import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,10 +15,9 @@ import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import pull_up.api.member.entity.Member;
 import pull_up.api.member.repository.MemberRepository;
-import pull_up.global.auth.v2.api.AppleAuthRestApi;
 import pull_up.global.auth.v2.api.KakaoAuthRestApi;
-import pull_up.global.auth.v2.dto.AppleJwks;
 import pull_up.global.auth.v2.dto.AppleLoginRequestDto;
 import pull_up.global.auth.v2.dto.KakaoUserInfoDto;
 import pull_up.global.auth.v2.dto.OAuth2LoginResponseDto;
@@ -28,6 +26,7 @@ import pull_up.global.auth.v2.util.AppleTokenDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -137,5 +136,45 @@ class OAuth2LoginServiceTest {
 
         // then2 : 다시 로그인하면 첫번째 로그인 false
         assertThat(appleUser2.firstLogin()).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("가리기 한 회원 회원가입 및 조회 테스트")
+    void testRegisterConcealedUser() {
+        // given
+
+        Gson gson = new Gson();
+        String privateMail = "test@private.apple.com";
+        Claims email = Jwts.claims().add("email", privateMail).build();
+
+        String idToken = "test token";
+        AppleLoginRequestDto dto = new AppleLoginRequestDto(new AppleLoginRequestDto.UserName("leaf", "nam"), privateMail);
+        String userJson = gson.toJson(dto);
+
+        // when : email 가린채로 로그인 시도 1
+        BDDMockito.when(appleTokenDecoder.decode(any())).thenReturn(email);
+        OAuth2LoginResponseDto appleUser = suit.getAppleUser(idToken, userJson);
+        Member memberInDB = memberRepository.findByEmail(privateMail).get();
+
+        // then
+        assertThat(memberInDB.getEmail()).isEqualTo(privateMail);
+
+        assertThat(appleUser.email()).isEqualTo("CONCEALED_EMAIL");
+        assertThat(appleUser.firstLogin()).isEqualTo(true);
+        assertThat(appleUser.provider()).isEqualTo("apple");
+        assertThat(appleUser.name()).isEqualTo("leaf nam");
+
+        // given2
+        String privateMail2 = "test2@private.apple.com";
+        Claims email2 = Jwts.claims().add("email", privateMail2).build();
+        AppleLoginRequestDto dto2 = new AppleLoginRequestDto(new AppleLoginRequestDto.UserName("sangyeop", "nam"), privateMail2);
+        String userJson2 = gson.toJson(dto2);
+
+        // when2 : 다른 사용자 로그인 시도
+        BDDMockito.when(appleTokenDecoder.decode(any())).thenReturn(email2);
+        OAuth2LoginResponseDto appleUser2 = suit.getAppleUser(idToken, userJson2);
+
+        // then2 : 1과 2는 다른 계정
+        assertThat(appleUser.memberId()).isNotEqualTo(appleUser2.memberId());
     }
 }

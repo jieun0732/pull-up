@@ -16,12 +16,18 @@ public record OAuth2LoginResponseDto(
     public static OAuth2LoginResponseDto of(Member member, Boolean firstLogin, OAuth2Provider oAuth2Provider) {
         switch (oAuth2Provider) {
             case APPLE -> {
-                return new OAuth2LoginResponseDto(firstLogin, member.getId(), "apple", member.getName(), member.getEmail());
+                return new OAuth2LoginResponseDto(firstLogin, member.getId(), "apple", member.getName(), getPrivateEmail(member.getEmail()));
             }
             case KAKAO -> {
                 return new OAuth2LoginResponseDto(firstLogin, member.getId(), "kakao", member.getName(), member.getEmail());
             }
             default -> throw new IllegalStateException("Unexpected value: " + oAuth2Provider);
         }
+    }
+
+    public static String getPrivateEmail(String email) {
+        if (email.equals("CONCEALED_EMAIL")) return email;
+        if (email.split("@")[1].contains("private")) return "CONCEALED_EMAIL";
+        return email;
     }
 }

@@ -2,6 +2,9 @@ server:
   port: ${basic-server.port}
 
 spring:
+  mvc:
+    static-path-pattern: /admin/**
+
   application:
     name: pull-up
 
