@@ -29,6 +29,7 @@ public class MemberService {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER)); // 예외 던지기
 
+
         // MemberDto를 생성하여 반환
         return MemberScoreDto.of(
                 member.getId(),

@@ -21,6 +21,12 @@ public record MemberScoreDto (
                 .map(ExamInformation::getScore) // Score 반환
                 .orElse(null); // Score가 없으면 null 반환
 
-        return new MemberScoreDto(id, name, email, accessCheck, role, latestScore);
+        return new MemberScoreDto(id, name, getPrivateEmail(email), accessCheck, role, latestScore);
+    }
+
+    public static String getPrivateEmail(String email) {
+        if (email.equals("CONCEALED_EMAIL")) return email;
+        if (email.split("@")[1].contains("private")) return "CONCEALED_EMAIL";
+        return email;
     }
 }

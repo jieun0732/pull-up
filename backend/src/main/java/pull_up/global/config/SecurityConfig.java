@@ -78,6 +78,7 @@ public class SecurityConfig {
 
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.addAllowedOrigin(frontendDomain);
+        corsConfiguration.addAllowedOrigin("https://pullup-api.shop");
         corsConfiguration.addAllowedOrigin("https://appleid.apple.com");
         corsConfiguration.addAllowedOrigin("https://kauth.kakao.com");
         corsConfiguration.addAllowedOrigin("https://kapi.kakao.com");
