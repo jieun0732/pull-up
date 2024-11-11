@@ -1,15 +1,11 @@
 package pull_up.api.exam.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
@@ -30,6 +26,9 @@ public class ExamInformation extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "examInformation", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<ExamProblem> examProblem;
 
     @Setter
     @Column
@@ -58,7 +57,6 @@ public class ExamInformation extends BaseEntity {
     @Setter
     @Column
     private Integer score;
-
 
     protected ExamInformation() {
     }

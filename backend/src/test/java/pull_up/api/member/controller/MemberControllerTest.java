@@ -11,7 +11,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pull_up.api.exam.entity.ExamInformation;
+import pull_up.api.exam.entity.ExamProblem;
 import pull_up.api.exam.repository.ExamInformationRepository;
+import pull_up.api.exam.repository.ExamProblemRepository;
 import pull_up.api.member.entity.IncorrectAnswer;
 import pull_up.api.member.entity.Member;
 import pull_up.api.member.entity.MemberAnswer;
@@ -25,7 +27,6 @@ import pull_up.api.problem.repository.ProblemRepository;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -55,37 +56,46 @@ class MemberControllerTest {
     IncorrectAnswerRepository incorrectAnswerRepository;
 
     @Autowired
+    ProblemRepository problemRepository;
+
+    @Autowired
+    ExamProblemRepository examProblemRepository;
+
+    @Autowired
     EntityManager em;
 
     // fixtures
+    Problem problemFixture;
     Member memberFixture;
+    ExamProblem examProblemFixture;
     List<ExamInformation> examInformationFixtures;
     List<IncorrectAnswer> incorrectAnswerFixtures;
     List<MemberAnswer> memberAnswerFixtures;
-    @Autowired
-    private ProblemRepository problemRepository;
+
 
     @BeforeEach
     void init() {
         memberService = new MemberService(memberRepository);
         suit = new MemberController(memberService);
         mockMvc = MockMvcBuilders.standaloneSetup(suit).build();
-        Problem problem = Problem.of("수리",
+        problemFixture = Problem.of("수리",
                 "골고루", "속력", "test123", "test1234", "1", "2", "3", "4", "5", "1", "qwer1234", 100, 30, 30d);
 
         memberFixture = Member.of("test", "test@example.com", false, "apple-user");
         memberFixture.setId(1L);
 
         examInformationFixtures = List.of(ExamInformation.of(memberFixture, null, "모의고사", null, LocalDateTime.now(), null, null, 0));
-        memberAnswerFixtures = List.of(MemberAnswer.of(memberFixture, problem, examInformationFixtures.get(0), "2", false));
-        incorrectAnswerFixtures = List.of(IncorrectAnswer.of(memberFixture,problem, examInformationFixtures.get(0), "2", LocalDateTime.now()));
+        memberAnswerFixtures = List.of(MemberAnswer.of(memberFixture, problemFixture, examInformationFixtures.get(0), "2", false));
+        incorrectAnswerFixtures = List.of(IncorrectAnswer.of(memberFixture,problemFixture, examInformationFixtures.get(0), "2", LocalDateTime.now()));
 
+        examProblemFixture = ExamProblem.of(examInformationFixtures.get(0), problemFixture,0L,"1", true);
 
         memberFixture.setExamInformations(examInformationFixtures);
         memberFixture.setIncorrectAnswers(incorrectAnswerFixtures);
         memberFixture.setMemberAnswers(memberAnswerFixtures);
 
-        problemRepository.save(problem);
+        examProblemRepository.save(examProblemFixture);
+        problemRepository.save(problemFixture);
         memberRepository.save(memberFixture);
         examInformationRepository.save(examInformationFixtures.get(0));
         memberAnswerRepository.save(memberAnswerFixtures.get(0));
@@ -112,5 +122,6 @@ class MemberControllerTest {
         assertThat(examInformationRepository.findById(examInformationFixtures.get(0).getId())).isEmpty();
         assertThat(memberAnswerRepository.findById(memberAnswerFixtures.get(0).getId())).isEmpty();
         assertThat(incorrectAnswerRepository.findById(incorrectAnswerFixtures.get(0).getId())).isEmpty();
+        assertThat(examProblemRepository.findById(examProblemFixture.getId())).isEmpty();
     }
 }
