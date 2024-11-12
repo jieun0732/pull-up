@@ -1,4 +1,4 @@
-package pull_up.global.response;
+package pull_up.global.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

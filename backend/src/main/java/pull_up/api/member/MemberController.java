@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pull_up.api.member.dto.MemberDto;
 import pull_up.api.member.dto.MemberScoreDto;
 import pull_up.domain.member.MemberService;
-import pull_up.global.response.BaseResponse;
+import pull_up.global.dto.BaseResponse;
 
 /**
  * 멤버 controller.

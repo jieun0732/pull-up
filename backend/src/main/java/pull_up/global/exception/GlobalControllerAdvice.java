@@ -9,7 +9,7 @@ import pull_up.global.exception.member.IncorrectAnswerException;
 import pull_up.global.exception.member.MemberAnswerException;
 import pull_up.global.exception.member.MemberException;
 import pull_up.global.exception.problem.ProblemException;
-import pull_up.global.response.BaseResponse;
+import pull_up.global.dto.BaseResponse;
 
 
 /**
