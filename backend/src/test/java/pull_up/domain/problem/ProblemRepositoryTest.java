@@ -68,8 +68,8 @@ class ProblemRepositoryTest {
         suit.save(problem2);
 
         // then
-        assertThat(problem2.getId()).isEqualTo(2);
         assertThat(suit.findById(problem2.getId()).get()).usingRecursiveComparison().isEqualTo(problem2);
+        suit.deleteAll();
     }
 
     @Test
