@@ -10,6 +10,7 @@ import pull_up.domain.problem.ProblemRepository;
 import pull_up.infra.database.entity.Problem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -123,7 +124,10 @@ public class MockProblemRepository implements ProblemRepository {
 
     @Override
     public <S extends Problem> List<S> saveAll(Iterable<S> entities) {
-        throw new UnsupportedOperationException();
+        List<S> entityList = (List<S>) entities;
+        for (int i = 0; i < entityList.size(); i++) entityList.get(i).setId((long) (i + 1));
+        this.problems.addAll(entityList);
+        return entityList;
     }
 
     @Override

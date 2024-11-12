@@ -1,68 +1,25 @@
-package pull_up.domain.problem;
+package pull_up.api.problem.dto;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pull_up.api.problem.dto.CreateProblem;
-import pull_up.global.dto.MessageDto;
 import pull_up.infra.database.entity.Problem;
-import pull_up.infra.database.repository.MockProblemRepository;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
 
-class ProblemServiceTest {
-
-    ProblemService suit;
-
-    ProblemRepository mockProblemRepository;
-
-    @BeforeEach
-    void init() {
-        mockProblemRepository = new MockProblemRepository();
-        suit = new ProblemService(mockProblemRepository);
-    }
+import static org.assertj.core.api.Assertions.*;
+class CreateProblemTest {
 
     @Test
-    @DisplayName("문제 생성 테스트")
-    void createProblemTest() {
+    @DisplayName("format 변환 테스트")
+     void testConvertFormat() {
         // given
-        CreateProblem.Request request = new CreateProblem.Request("", "", "", "", "", "", "", "", "", "", "", "", 0D);
 
         // when
-        MessageDto response = suit.createProblem(request);
+        List<Problem> problems = CreateProblem.FormatRequest.toEntity(formatString);
 
         // then
-        assertThat(response.message()).isEqualTo("Problem 1 has been created successfully.");
-    }
-
-    @Test
-    @DisplayName("Spreadsheet로 문제 생성 테스트")
-    void testCreateProblemBySheet() {
-        // given
-        CreateProblem.FormatRequest request = new CreateProblem.FormatRequest(formatString);
-
-        // when
-        MessageDto response = suit.createProblem(request);
-
-        // then
-        assertThat(response.message()).isEqualTo(28 + " Problems have been created successfully.");
-    }
-
-    @Test
-    @DisplayName("전체 문제 삭제 테스트")
-    void testDeleteAll() {
-        // given
-        mockProblemRepository.save(Problem.of("", "", "", "", "", "", "", "", "", "", "", "", 0, 0, 0D));
-        mockProblemRepository.save(Problem.of("", "", "", "", "", "", "", "", "", "", "", "", 0, 0, 0D));
-        mockProblemRepository.save(Problem.of("", "", "", "", "", "", "", "", "", "", "", "", 0, 0, 0D));
-
-        assertThat(mockProblemRepository.findAll()).hasSize(3);
-
-        // when
-        suit.deleteAllProblem();
-
-        // then
-        assertThat(mockProblemRepository.findAll()).hasSize(0);
+        assertThat(problems).hasSize(28);
     }
 
     private String formatString = """
