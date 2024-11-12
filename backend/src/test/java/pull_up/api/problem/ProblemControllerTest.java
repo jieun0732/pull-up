@@ -1,20 +1,23 @@
 package pull_up.api.problem;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.nimbusds.jose.util.StandardCharset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import pull_up.api.problem.dto.CreateProblem;
 import pull_up.domain.problem.ProblemService;
 import pull_up.global.dto.MessageDto;
+import pull_up.infra.database.entity.Problem;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -22,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProblemControllerTest {
 
     @Mock
-    ProblemService mockProblemService;
+    ProblemService mockService;
 
     ProblemController suit;
 
@@ -32,9 +35,26 @@ class ProblemControllerTest {
 
     @BeforeEach
     void init() {
-        suit = new ProblemController(mockProblemService);
+        suit = new ProblemController(mockService);
         mockMvc = MockMvcBuilders.standaloneSetup(suit).build();
         gson = new Gson();
+    }
+
+    @Test
+    @DisplayName("문제 생성 요청 테스트")
+    void testCreateProblem() throws Exception {
+        // given
+        CreateProblem.Request request = new CreateProblem.Request("", "", "", "", "", "", "", "", "", "", "", "", 0D);
+        String body = gson.toJson(request);
+
+        // when
+        BDDMockito.when(mockService.createProblem(any())).thenReturn(new MessageDto("Problem 1 has been created successfully."));
+
+        // then
+        mockMvc.perform(post("/api/pull-up/problems").contentType(APPLICATION_JSON).content(body))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().json(gson.toJson(new MessageDto("Problem 1 has been created successfully."))));
     }
 
     @Test

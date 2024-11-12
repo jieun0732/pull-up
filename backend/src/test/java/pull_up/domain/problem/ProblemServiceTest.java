@@ -3,6 +3,8 @@ package pull_up.domain.problem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pull_up.api.problem.dto.CreateProblem;
+import pull_up.global.dto.MessageDto;
 import pull_up.infra.database.entity.Problem;
 import pull_up.infra.database.repository.MockProblemRepository;
 
@@ -18,6 +20,19 @@ class ProblemServiceTest {
     void init() {
         mockProblemRepository = new MockProblemRepository();
         suit = new ProblemService(mockProblemRepository);
+    }
+
+    @Test
+    @DisplayName("문제 생성 테스트")
+    void createProblemTest() {
+        // given
+        CreateProblem.Request request = new CreateProblem.Request("", "", "", "", "", "", "", "", "", "", "", "", 0D);
+
+        // when
+        MessageDto problem = suit.createProblem(request);
+
+        // then
+        assertThat(problem.message()).isEqualTo("Problem 1 has been created successfully.");
     }
 
     @Test

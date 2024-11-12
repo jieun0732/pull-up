@@ -115,7 +115,9 @@ public class MockProblemRepository implements ProblemRepository {
 
     @Override
     public <S extends Problem> S save(S entity) {
+        entity.setId(1L);
         this.problems.add(entity);
+
         return entity;
     }
 

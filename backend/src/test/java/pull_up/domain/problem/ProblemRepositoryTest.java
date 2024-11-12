@@ -59,6 +59,20 @@ class ProblemRepositoryTest {
     }
 
     @Test
+    @DisplayName("problem 저장 테스트")
+    void testSaveProblem() {
+        // given
+        Problem problem2 = Problem.of("test", "test", "test", "123", "1234", "1", "2", "3", "4", "5", "1", "qwer1234", 100, 30, 30d);
+
+        // when
+        suit.save(problem2);
+
+        // then
+        assertThat(problem2.getId()).isEqualTo(2);
+        assertThat(suit.findById(problem2.getId()).get()).usingRecursiveComparison().isEqualTo(problem2);
+    }
+
+    @Test
     @DisplayName("problem 삭제 시 연관된 엔티티 모두 삭제되는지 확인")
     void testDeleteAllRelation() {
         // given
