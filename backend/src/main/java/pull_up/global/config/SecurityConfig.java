@@ -1,29 +1,24 @@
 package pull_up.global.config;
 
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import pull_up.global.auth.AuthenticationExceptionHandler;
-import pull_up.global.auth.AuthorizationEntryPoint;
-import pull_up.global.auth.JwtAuthenticationFilter;
-import pull_up.global.auth.v2.handler.OAuth2SuccessHandlerV2;
-import pull_up.global.auth.v2.service.OAuth2UserServiceV2;
+import pull_up.global.security.handler.AuthenticationExceptionHandler;
+import pull_up.global.security.handler.AuthorizationEntryPoint;
+import pull_up.global.security.filter.JwtAuthenticationFilter;
+import pull_up.global.security.handler.OAuth2SuccessHandler;
+import pull_up.domain.auth.service.CustomOAuth2UserService;
 
 import java.util.List;
 
@@ -36,8 +31,8 @@ public class SecurityConfig {
     @Value("${auth.domain.frontend}")
     private String frontendDomain;
 
-    private final OAuth2UserServiceV2 oAuth2UserService;
-    private final OAuth2SuccessHandlerV2 oAuth2SuccessHandler;
+    private final CustomOAuth2UserService oAuth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final AuthenticationExceptionHandler exceptionHandler;
     private final AuthorizationEntryPoint authorizationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;

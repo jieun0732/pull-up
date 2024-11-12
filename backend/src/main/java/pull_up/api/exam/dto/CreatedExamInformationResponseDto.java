@@ -1,7 +1,7 @@
 package pull_up.api.exam.dto;
 
 import java.io.Serializable;
-import pull_up.api.exam.entity.ExamInformation;
+import pull_up.infra.database.entity.ExamInformation;
 import pull_up.api.member.dto.MemberDto;
 /**
  * DTO for creating a new {@link ExamInformation} with only the necessary fields.

@@ -1,10 +1,9 @@
 package pull_up.api.member.dto;
 
 import java.io.Serializable;
-import java.util.List;
 
 import pull_up.api.exam.dto.ExamInformationDto;
-import pull_up.api.member.entity.MemberAnswer;
+import pull_up.infra.database.entity.MemberAnswer;
 import pull_up.api.problem.dto.ProblemDto;
 
 /**

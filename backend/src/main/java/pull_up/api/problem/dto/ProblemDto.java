@@ -1,6 +1,6 @@
 package pull_up.api.problem.dto;
 
-import pull_up.api.problem.entity.Problem;
+import pull_up.infra.database.entity.Problem;
 
 import java.io.Serializable;
 import java.util.List;

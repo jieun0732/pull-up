@@ -2,7 +2,7 @@ package pull_up.api.exam.dto;
 
 import java.io.Serializable;
 import java.util.List;
-import pull_up.api.exam.entity.ExamInformation;
+import pull_up.infra.database.entity.ExamInformation;
 import pull_up.api.member.dto.MemberDto;
 
 public record CreatedExamInformationResultDto(Long id, MemberDto member, String entry, String category, String type, List<ExamProblemResultDto> problemIds) implements

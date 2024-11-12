@@ -2,7 +2,7 @@ package pull_up.api.member.dto;
 
 import java.io.Serializable;
 import pull_up.api.exam.dto.ExamInformationDto;
-import pull_up.api.member.entity.MemberAnswer;
+import pull_up.infra.database.entity.MemberAnswer;
 import pull_up.api.problem.dto.ProblemResultDto;
 
 public record MemberAnswerResultDto(Long id, MemberDto member, ProblemResultDto problem,

@@ -1,7 +1,7 @@
 package pull_up.api.exam.dto;
 
 import java.io.Serializable;
-import pull_up.api.exam.entity.ExamProblem;
+import pull_up.infra.database.entity.ExamProblem;
 
 public record MockExamProblemResultDto(Long questionNumber,      // 문제 번호
                                        boolean isCorrect,        // 정답 여부

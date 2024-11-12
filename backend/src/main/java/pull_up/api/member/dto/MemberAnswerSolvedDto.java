@@ -1,7 +1,7 @@
 package pull_up.api.member.dto;
 
 import java.io.Serializable;
-import pull_up.api.member.entity.MemberAnswer;
+import pull_up.infra.database.entity.MemberAnswer;
 
 public record MemberAnswerSolvedDto(Long problemId, Boolean isCorrect,
                                     String chosenAnswer) implements Serializable {

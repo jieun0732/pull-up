@@ -3,7 +3,7 @@ package pull_up.api.member.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import pull_up.api.exam.dto.ExamInformationDto;
-import pull_up.api.member.entity.IncorrectAnswer;
+import pull_up.infra.database.entity.IncorrectAnswer;
 import pull_up.api.problem.dto.ProblemResultDto;
 
 /**

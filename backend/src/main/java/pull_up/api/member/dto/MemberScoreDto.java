@@ -1,6 +1,6 @@
 package pull_up.api.member.dto;
 
-import pull_up.api.exam.entity.ExamInformation;
+import pull_up.infra.database.entity.ExamInformation;
 
 import java.util.Comparator;
 import java.util.List;
