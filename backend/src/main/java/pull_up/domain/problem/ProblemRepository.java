@@ -1,8 +1,9 @@
-package pull_up.infra.database.repository.problem;
+package pull_up.domain.problem;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import pull_up.infra.database.entity.Problem;
+import pull_up.infra.database.repository.problem.CustomProblemRepository;
 
 public interface ProblemRepository extends JpaRepository<Problem, Long>, CustomProblemRepository {
 

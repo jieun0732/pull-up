@@ -29,31 +29,24 @@ public class ExamInformation extends BaseEntity {
     @OneToMany(mappedBy = "examInformation", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ExamProblem> examProblem;
 
-    @Setter
     @Column
     private String entry;
 
-    @Setter
     @Column
     private String category;
 
-    @Setter
     @Column
     private String type;
 
-    @Setter
     @Column
     private LocalDateTime createdDate;  // 문제 생성 날짜
 
-    @Setter
     @Column
     private LocalDateTime solvedDate; // 문제를 다 푼 시간
 
-    @Setter
     @Column
     private Duration requiredTime;  // 문제 풀면서 걸린 소요시간
 
-    @Setter
     @Column
     private Integer score;
 

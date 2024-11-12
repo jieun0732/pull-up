@@ -43,7 +43,7 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository{
                 .where(member.id.eq(id))
                 .fetch();
 
-        ret.setExamInformations(examProblems.stream().map(ExamProblem::getExamInformation).toList());
+        ret.setExamInformationList(examProblems.stream().map(ExamProblem::getExamInformation).toList());
         ret.setMemberAnswers(memberAnswers);
         ret.setIncorrectAnswers(incorrectAnswers);
         return ret;

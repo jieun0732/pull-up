@@ -32,18 +32,14 @@ public class ExamProblem extends BaseEntity {
     @JoinColumn(name = "problem_id")
     private Problem problem;
 
-    @Setter
     @Column
     private Long problemNumber;
 
-    @Setter
     @Column
     private String chosenAnswer;
 
-    @Setter
     @Column
     private Boolean isCorrect;
-
 
     protected ExamProblem() {
     }

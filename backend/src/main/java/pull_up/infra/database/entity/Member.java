@@ -33,7 +33,7 @@ public class Member extends BaseEntity {
     private String role;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<ExamInformation> examInformations; // Member와 연결된 ExamInformation 리스트
+    private List<ExamInformation> examInformationList; // Member와 연결된 ExamInformation 리스트
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<IncorrectAnswer> incorrectAnswers;

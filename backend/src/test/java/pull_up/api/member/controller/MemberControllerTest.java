@@ -23,7 +23,7 @@ import pull_up.infra.database.repository.member.MemberAnswerRepository;
 import pull_up.infra.database.repository.member.MemberRepository;
 import pull_up.domain.member.MemberService;
 import pull_up.infra.database.entity.Problem;
-import pull_up.infra.database.repository.problem.ProblemRepository;
+import pull_up.domain.problem.ProblemRepository;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -91,7 +91,7 @@ class MemberControllerTest {
 
         examProblemFixture = ExamProblem.of(examInformationFixtures.get(0), problemFixture,0L,"1", true);
 
-        memberFixture.setExamInformations(examInformationFixtures);
+        memberFixture.setExamInformationList(examInformationFixtures);
         memberFixture.setIncorrectAnswers(incorrectAnswerFixtures);
         memberFixture.setMemberAnswers(memberAnswerFixtures);
 

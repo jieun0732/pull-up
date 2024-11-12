@@ -37,11 +37,9 @@ public class IncorrectAnswer extends BaseEntity {
     @JoinColumn(name = "exam_information_id")
     private ExamInformation examInformation;
 
-    @Setter
     @Column
     private String chosenAnswer;
 
-    @Setter
     @Column
     private LocalDateTime incorrectTime;
 

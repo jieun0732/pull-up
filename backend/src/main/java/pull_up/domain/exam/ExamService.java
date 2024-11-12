@@ -53,7 +53,7 @@ import pull_up.api.problem.dto.ProblemTypeSummaryDto;
 import pull_up.infra.database.entity.Problem;
 import pull_up.global.exception.problem.ProblemErrorCode;
 import pull_up.global.exception.problem.ProblemException;
-import pull_up.infra.database.repository.problem.ProblemRepository;
+import pull_up.domain.problem.ProblemRepository;
 import pull_up.global.entity.BaseEntity;
 
 /**

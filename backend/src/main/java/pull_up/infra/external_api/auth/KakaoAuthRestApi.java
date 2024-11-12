@@ -1,4 +1,4 @@
-package pull_up.infra.api.auth;
+package pull_up.infra.external_api.auth;
 
 import com.nimbusds.jose.util.StandardCharset;
 import lombok.extern.slf4j.Slf4j;

@@ -1,16 +1,12 @@
 package pull_up.infra.database.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.global.entity.BaseEntity;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,29 +19,23 @@ public class Problem extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
     @Column
     private String entry; // 수리 언어 추리
 
-    @Setter
     @Column
     private String category; // 모의고사 유형별 골고루
 
-    @Setter
     @Column
     private String type; // 이외 분류
 
     @Lob
-    @Setter
     @Column
     private String question;
 
     @Lob
-    @Setter
     @Column
     private String explanation;
 
-    @Setter
     @Column
     private String choice1;
 
@@ -53,28 +43,22 @@ public class Problem extends BaseEntity {
     @Column
     private String choice2;
 
-    @Setter
     @Column
     private String choice3;
 
-    @Setter
     @Column
     private String choice4;
 
-    @Setter
     @Column
     private String choice5;
 
-    @Setter
     @Column
     private String answer;
 
     @Lob
-    @Setter
     @Column
     private String answerExplain;
 
-    @Setter
     @Column
     private Integer totalAttempts;
 
@@ -82,9 +66,17 @@ public class Problem extends BaseEntity {
     @Column
     private Integer incorrectAttempts;
 
-    @Setter
     @Column
     private Double incorrectRate;
+
+    @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<ExamProblem> examProblems;
+
+    @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<IncorrectAnswer> incorrectAnswers;
+
+    @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<MemberAnswer> memberAnswers;
 
 
     protected Problem() {

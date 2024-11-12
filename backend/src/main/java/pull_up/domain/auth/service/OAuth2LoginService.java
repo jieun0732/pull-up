@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import pull_up.infra.database.entity.Member;
 import pull_up.infra.database.repository.member.MemberRepository;
-import pull_up.infra.api.auth.KakaoAuthRestApi;
+import pull_up.infra.external_api.auth.KakaoAuthRestApi;
 import pull_up.api.auth.dto.AppleLoginRequestDto;
 import pull_up.api.auth.dto.KakaoLoginRequestDto;
 import pull_up.api.auth.dto.KakaoUserInfoDto;
