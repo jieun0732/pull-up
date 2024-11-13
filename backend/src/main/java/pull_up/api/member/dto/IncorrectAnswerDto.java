@@ -25,7 +25,7 @@ public record IncorrectAnswerDto(Long id, MemberDto member, ProblemDto problem,
             entity.getId(),
             MemberDto.from(entity.getMember()),
             ProblemDto.from(entity.getProblem()),
-            ExamInformationDto.from(entity.getExamInformation()),
+            ExamInformationDto.from(entity.getExam()),
             entity.getChosenAnswer(),
         entity.getIncorrectTime());
     }

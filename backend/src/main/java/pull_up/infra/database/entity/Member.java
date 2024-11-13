@@ -33,7 +33,7 @@ public class Member extends BaseEntity {
     private String role;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<ExamInformation> examInformationList; // Member와 연결된 ExamInformation 리스트
+    private List<Exam> examList; // Member와 연결된 ExamInformation 리스트
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<IncorrectAnswer> incorrectAnswers;
@@ -68,4 +68,5 @@ public class Member extends BaseEntity {
         if (Pattern.matches("^[ㄱ-ㅎ가-힣]*$", firstName)) return lastName + firstName;
         else return firstName + " " + lastName;
     }
+
 }

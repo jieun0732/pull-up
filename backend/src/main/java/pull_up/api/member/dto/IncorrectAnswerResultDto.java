@@ -23,7 +23,7 @@ public record IncorrectAnswerResultDto(Long id, MemberDto member, ProblemResultD
             entity.getId(),
             entity.getMember() != null ? MemberDto.from(entity.getMember()) : null,
             entity.getProblem() != null ? ProblemResultDto.from(entity.getProblem()) : null,
-            entity.getExamInformation() != null ? ExamInformationDto.from(entity.getExamInformation()) : null,
+            entity.getExam() != null ? ExamInformationDto.from(entity.getExam()) : null,
             entity.getChosenAnswer() != null ? entity.getChosenAnswer() : null,
             entity.getIncorrectTime() != null ? entity.getIncorrectTime() : null
         );

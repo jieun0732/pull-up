@@ -194,4 +194,9 @@ public class MockProblemRepository implements ProblemRepository {
     public List<ProblemDto> findByEntryAndCategory(String entry, String category) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public void deleteAllWithRelation() {
+        this.problems.clear();
+    }
 }

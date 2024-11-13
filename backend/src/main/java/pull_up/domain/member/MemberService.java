@@ -34,7 +34,7 @@ public class MemberService {
                 member.getEmail(),
                 member.isAccessCheck(),
                 member.getRole(),
-                member.getExamInformationList()// 최신 Score 함께 반환
+                member.getExamList()// 최신 Score 함께 반환
         );
     }
 

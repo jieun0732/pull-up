@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface CustomProblemRepository {
     List<ProblemDto> findByEntryAndCategory(String entry, String category);
+
+    void deleteAllWithRelation();
 }

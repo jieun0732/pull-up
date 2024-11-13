@@ -70,14 +70,13 @@ public class Problem extends BaseEntity {
     private Double incorrectRate;
 
     @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<ExamProblem> examProblems;
+    private List<AnsweredProblem> answeredProblems;
 
     @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<IncorrectAnswer> incorrectAnswers;
 
     @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<MemberAnswer> memberAnswers;
-
 
     protected Problem() {
     }
@@ -116,5 +115,11 @@ public class Problem extends BaseEntity {
         return new Problem(entry, category, type, question, explanation, choice1, choice2, choice3,
             choice4, choice5, answer, answerExplain, totalAttempts, incorrectAttempts,
             incorrectRate);
+    }
+
+    public void addTotalAttempt(Boolean isCorrect) {
+        totalAttempts++;
+        if (!isCorrect) incorrectAttempts++;
+        incorrectRate = (double) incorrectAttempts / totalAttempts * 100;
     }
 }

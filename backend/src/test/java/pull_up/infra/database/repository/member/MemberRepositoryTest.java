@@ -32,8 +32,8 @@ class MemberRepositoryTest {
     // fixtures
     Problem problem;
     Member member;
-    ExamProblem examProblem;
-    List<ExamInformation> examInformations;
+    AnsweredProblem answeredProblem;
+    List<Exam> exams;
     List<IncorrectAnswer> incorrectAnswers;
     List<MemberAnswer> memberAnswers;
 
@@ -43,21 +43,22 @@ class MemberRepositoryTest {
         problem = Problem.of("수리",
                 "골고루", "속력", "test123", "test1234", "1", "2", "3", "4", "5", "1", "qwer1234", 100, 30, 30d);
         member = Member.of("test", "test@example.com", false, "apple-user");
-        examInformations = List.of(ExamInformation.of(member, null, "모의고사", null, LocalDateTime.now(), null, null, 0));
-        memberAnswers = List.of(MemberAnswer.of(member, problem, examInformations.get(0), "2", false));
-        incorrectAnswers = List.of(IncorrectAnswer.of(member, problem, examInformations.get(0), "2", LocalDateTime.now()));
-        examProblem = ExamProblem.of(examInformations.get(0), problem,0L,"1", true);
 
-        member.setExamInformationList(examInformations);
+        exams = List.of(Exam.of(member, null, "모의고사", null, LocalDateTime.now(), null, null, 0));
+        memberAnswers = List.of(MemberAnswer.of(member, problem, exams.get(0), "2", false));
+        incorrectAnswers = List.of(IncorrectAnswer.of(member, problem, exams.get(0), "2", LocalDateTime.now()));
+        answeredProblem = AnsweredProblem.of(exams.get(0), problem,0L,"1", true);
+
+        member.setExamList(exams);
         member.setIncorrectAnswers(incorrectAnswers);
         member.setMemberAnswers(memberAnswers);
 
-        em.persist(examProblem);
+        em.persist(answeredProblem);
         em.persist(problem);
         em.persist(member);
-        em.persist(examInformations.get(0));
-        em.persist(memberAnswers.get(0));
-        em.persist(incorrectAnswers.get(0));
+        exams.forEach(t -> em.persist(t));
+        memberAnswers.forEach(t -> em.persist(t));
+        incorrectAnswers.forEach(t -> em.persist(t));
 
         em.flush();
         em.clear();
@@ -68,7 +69,7 @@ class MemberRepositoryTest {
     void testDeleteRelatedTable() {
         // given
         assertThat(em.find(Member.class, member.getId())).isNotNull();
-        assertThat(em.find(ExamInformation.class, examInformations.get(0).getId())).isNotNull();
+        assertThat(em.find(Exam.class, exams.get(0).getId())).isNotNull();
         assertThat(em.find(IncorrectAnswer.class, incorrectAnswers.get(0).getId())).isNotNull();
         assertThat(em.find(MemberAnswer.class, memberAnswers.get(0).getId())).isNotNull();
 
@@ -77,7 +78,7 @@ class MemberRepositoryTest {
 
         // then
         assertThat(em.find(Member.class, member.getId())).isNull();
-        assertThat(em.find(ExamInformation.class, examInformations.get(0).getId())).isNull();
+        assertThat(em.find(Exam.class, exams.get(0).getId())).isNull();
         assertThat(em.find(IncorrectAnswer.class, incorrectAnswers.get(0).getId())).isNull();
         assertThat(em.find(MemberAnswer.class, memberAnswers.get(0).getId())).isNull();
     }

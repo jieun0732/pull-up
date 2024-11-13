@@ -18,7 +18,7 @@ import pull_up.global.entity.BaseEntity;
 @Entity
 @Table(name = "exam_problem")
 @SQLRestriction("is_deleted = false")
-public class ExamProblem extends BaseEntity {
+public class AnsweredProblem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class ExamProblem extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "exam_information_id")
-    private ExamInformation examInformation;
+    private Exam exam;
 
     @ManyToOne
     @JoinColumn(name = "problem_id")
@@ -41,14 +41,14 @@ public class ExamProblem extends BaseEntity {
     @Column
     private Boolean isCorrect;
 
-    protected ExamProblem() {
+    protected AnsweredProblem() {
     }
 
     /**
      * 파라미터 생성자.
      */
-    private ExamProblem(ExamInformation examInformation, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
-        this.examInformation = examInformation;
+    private AnsweredProblem(Exam exam, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
+        this.exam = exam;
         this.problem = problem;
         this.problemNumber = ProblemNumber;
         this.chosenAnswer = chosenAnswer;
@@ -58,7 +58,13 @@ public class ExamProblem extends BaseEntity {
     /**
      * 파라미터로부터 ExamProblem 엔티티 객체를 생성하는 함수.
      */
-    public static ExamProblem of(ExamInformation examInformation, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
-        return new ExamProblem(examInformation, problem, ProblemNumber, chosenAnswer, isCorrect);
+    public static AnsweredProblem of(Exam exam, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
+        return new AnsweredProblem(exam, problem, ProblemNumber, chosenAnswer, isCorrect);
+    }
+
+    public void grade(Integer selectedAnswer) {
+        this.chosenAnswer = selectedAnswer.toString();
+        if (problem.getAnswer().equals(chosenAnswer)) isCorrect = true;
+        problem.addTotalAttempt(isCorrect);
     }
 }

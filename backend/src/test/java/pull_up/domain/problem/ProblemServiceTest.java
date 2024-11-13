@@ -39,10 +39,9 @@ class ProblemServiceTest {
     @DisplayName("Spreadsheet로 문제 생성 테스트")
     void testCreateProblemBySheet() {
         // given
-        CreateProblem.FormatRequest request = new CreateProblem.FormatRequest(formatString);
 
         // when
-        MessageDto response = suit.createProblem(request);
+        MessageDto response = suit.createProblem(formatString);
 
         // then
         assertThat(response.message()).isEqualTo(28 + " Problems have been created successfully.");

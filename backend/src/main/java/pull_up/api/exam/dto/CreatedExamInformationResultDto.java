@@ -2,7 +2,7 @@ package pull_up.api.exam.dto;
 
 import java.io.Serializable;
 import java.util.List;
-import pull_up.infra.database.entity.ExamInformation;
+import pull_up.infra.database.entity.Exam;
 import pull_up.api.member.dto.MemberDto;
 
 public record CreatedExamInformationResultDto(Long id, MemberDto member, String entry, String category, String type, List<ExamProblemResultDto> problemIds) implements
@@ -14,7 +14,7 @@ public record CreatedExamInformationResultDto(Long id, MemberDto member, String 
     }
 
     // Entity로부터 DTO를 생성하는 메서드
-    public static CreatedExamInformationResultDto from(ExamInformation entity, List<ExamProblemResultDto> problemIds) {
+    public static CreatedExamInformationResultDto from(Exam entity, List<ExamProblemResultDto> problemIds) {
         return new CreatedExamInformationResultDto(
             entity.getId(),
             MemberDto.from(entity.getMember()),

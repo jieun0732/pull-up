@@ -4,8 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pull_up.api.exam.dto.ExamInformationDto;
-import pull_up.infra.database.entity.ExamInformation;
-import pull_up.infra.database.repository.exam.ExamInformationRepository;
+import pull_up.infra.database.entity.Exam;
+import pull_up.infra.database.repository.exam.ExamRepository;
 import pull_up.api.member.dto.MemberAnswerDto;
 import pull_up.api.member.dto.MemberAnswerResultDto;
 import pull_up.api.member.dto.MemberDto;
@@ -35,7 +35,7 @@ public class MemberAnswerService {
 
     private final MemberRepository memberRepository;
 
-    private final ExamInformationRepository examInformationRepository;
+    private final ExamRepository examRepository;
 
     public MemberAnswerDto submitAnswer(Long memberId, Long problemId, Long examId, String chosenAnswer) {
         Member member = memberRepository.findById(memberId)
@@ -55,7 +55,7 @@ public class MemberAnswerService {
     public MemberAnswerResultDto saveMemberAnswer(MemberDto memberDTO, ProblemDto problemDTO, ExamInformationDto examInformationDTO, String chosenAnswer) {
         Member member = MemberDto.toEntity(memberDTO);
         Problem problem = problemRepository.findById(problemDTO.id()).orElseThrow();
-        ExamInformation examInformation = examInformationRepository.findById(examInformationDTO.id()).orElseThrow();
+        Exam exam = examRepository.findById(examInformationDTO.id()).orElseThrow();
         boolean isCorrect = chosenAnswer.equals(problem.getAnswer());
 
         problem.setTotalAttempts(problem.getTotalAttempts() + 1);
@@ -65,7 +65,7 @@ public class MemberAnswerService {
         problem.setIncorrectRate((double) problem.getIncorrectAttempts() / problem.getTotalAttempts() * 100);
         problemRepository.save(problem);
 
-        MemberAnswer memberAnswer = MemberAnswer.of(member, problem, examInformation, chosenAnswer, isCorrect);
+        MemberAnswer memberAnswer = MemberAnswer.of(member, problem, exam, chosenAnswer, isCorrect);
         memberAnswerRepository.save(memberAnswer);
 
         return MemberAnswerResultDto.from(memberAnswer);

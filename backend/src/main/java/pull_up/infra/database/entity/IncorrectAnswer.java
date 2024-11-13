@@ -35,7 +35,7 @@ public class IncorrectAnswer extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "exam_information_id")
-    private ExamInformation examInformation;
+    private Exam exam;
 
     @Column
     private String chosenAnswer;
@@ -49,10 +49,10 @@ public class IncorrectAnswer extends BaseEntity {
     /**
      * 파라미터 생성자.
      */
-    private IncorrectAnswer(Member member, Problem problem, ExamInformation examInformation, String chosenAnswer, LocalDateTime incorrectTime) {
+    private IncorrectAnswer(Member member, Problem problem, Exam exam, String chosenAnswer, LocalDateTime incorrectTime) {
         this.member = member;
         this.problem = problem;
-        this.examInformation = examInformation;
+        this.exam = exam;
         this.chosenAnswer = chosenAnswer;
         this.incorrectTime = incorrectTime;
     }
@@ -60,8 +60,8 @@ public class IncorrectAnswer extends BaseEntity {
     /**
      * 파라미터로부터 UserAnswer 엔티티 객체를 생성하는 함수.
      */
-    public static IncorrectAnswer of(Member member, Problem problem, ExamInformation examInformation, String chosenAnswer, LocalDateTime incorrectTime) {
-        return new IncorrectAnswer(member, problem, examInformation, chosenAnswer, incorrectTime);
+    public static IncorrectAnswer of(Member member, Problem problem, Exam exam, String chosenAnswer, LocalDateTime incorrectTime) {
+        return new IncorrectAnswer(member, problem, exam, chosenAnswer, incorrectTime);
     }
 
 }

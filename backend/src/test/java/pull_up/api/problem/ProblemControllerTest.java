@@ -61,14 +61,12 @@ class ProblemControllerTest {
     @DisplayName("스프레드시트 문제 생성 요청 테스트")
     void testCreateProblemWithSheet() throws Exception {
         // given
-        CreateProblem.FormatRequest request = new CreateProblem.FormatRequest("test");
-        String body = gson.toJson(request);
 
         // when
-        BDDMockito.when(mockService.createProblem((CreateProblem.FormatRequest) any())).thenReturn(new MessageDto("10 Problems have been created successfully."));
+        BDDMockito.when(mockService.createProblem((String) any())).thenReturn(new MessageDto("10 Problems have been created successfully."));
 
         // then
-        mockMvc.perform(post("/api/pull-up/problems/format").contentType(APPLICATION_JSON).content(body))
+        mockMvc.perform(post("/api/pull-up/problems/format").contentType(APPLICATION_JSON).content("\"test\""))
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(content().json(gson.toJson(new MessageDto("10 Problems have been created successfully."))));

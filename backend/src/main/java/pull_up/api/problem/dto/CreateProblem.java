@@ -1,10 +1,13 @@
 package pull_up.api.problem.dto;
 
+import lombok.extern.slf4j.Slf4j;
 import pull_up.infra.database.entity.Problem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 public record CreateProblem() {
 
     public record Request(
@@ -32,12 +35,13 @@ public record CreateProblem() {
         }
     }
 
-    public record FormatRequest(String formatString) {
+    public record FormatRequest() {
         public static List<Problem> toEntity(String formatString) {
             String[] formatCols = formatString.split("/row/");
             List<Problem> ret = new ArrayList<>();
             for (String formatCol : formatCols) {
                 String[] values = formatCol.split("/col/");
+                log.info("입력된 문제 : {}", Arrays.toString(values));
                 ret.add(Problem.of(values[0], values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8], values[9], values[10], values[11], 0, 0, Double.parseDouble(values[12])));
             }
             return ret;

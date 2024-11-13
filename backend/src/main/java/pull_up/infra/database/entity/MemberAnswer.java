@@ -34,7 +34,7 @@ public class MemberAnswer extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "exam_information_id")
-    private ExamInformation examInformation;
+    private Exam exam;
 
     @Column
     private String chosenAnswer;
@@ -49,10 +49,10 @@ public class MemberAnswer extends BaseEntity {
     /**
      * 파라미터 생성자.
      */
-    private MemberAnswer(Member member, Problem problem, ExamInformation examInformation, String chosenAnswer, Boolean isCorrect) {
+    private MemberAnswer(Member member, Problem problem, Exam exam, String chosenAnswer, Boolean isCorrect) {
         this.member = member;
         this.problem = problem;
-        this.examInformation = examInformation;
+        this.exam = exam;
         this.chosenAnswer = chosenAnswer;
         this.isCorrect = isCorrect;
     }
@@ -60,7 +60,7 @@ public class MemberAnswer extends BaseEntity {
     /**
      * 파라미터로부터 UserAnswer 엔티티 객체를 생성하는 함수.
      */
-    public static MemberAnswer of(Member member, Problem problem, ExamInformation examInformation, String chosenAnswer, Boolean isCorrect) {
-        return new MemberAnswer(member, problem, examInformation, chosenAnswer, isCorrect);
+    public static MemberAnswer of(Member member, Problem problem, Exam exam, String chosenAnswer, Boolean isCorrect) {
+        return new MemberAnswer(member, problem, exam, chosenAnswer, isCorrect);
     }
 }

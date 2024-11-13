@@ -4,10 +4,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import pull_up.api.problem.dto.ProblemDto;
-import pull_up.infra.database.entity.Problem;
+import pull_up.infra.database.entity.*;
 
 import java.util.List;
 
+import static pull_up.infra.database.entity.QAnsweredProblem.answeredProblem;
+import static pull_up.infra.database.entity.QIncorrectAnswer.incorrectAnswer;
+import static pull_up.infra.database.entity.QMemberAnswer.memberAnswer;
 import static pull_up.infra.database.entity.QProblem.problem;
 
 
@@ -15,9 +18,11 @@ import static pull_up.infra.database.entity.QProblem.problem;
 public class CustomProblemRepositoryImpl implements CustomProblemRepository {
 
     private final JPAQueryFactory qf;
+    private final EntityManager em;
 
     public CustomProblemRepositoryImpl(EntityManager em) {
         this.qf = new JPAQueryFactory(em);
+        this.em = em;
     }
 
     @Override
@@ -26,5 +31,17 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                 .where(problem.entry.eq(entry)
                         .and(problem.category.eq(category))).fetch();
         return problems.stream().map(ProblemDto::from).toList();
+    }
+
+    @Override
+    public void deleteAllWithRelation() {
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();
+
+        qf.delete(problem).execute();
+        qf.delete(answeredProblem).execute();
+        qf.delete(memberAnswer).execute();
+        qf.delete(incorrectAnswer).execute();
+
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();
     }
 }

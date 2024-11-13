@@ -1,7 +1,8 @@
 package pull_up.api.problem.dto;
 
 import java.io.Serializable;
-import pull_up.infra.database.entity.ExamProblem;
+
+import pull_up.infra.database.entity.AnsweredProblem;
 
 public record ProblemSolvedDto(Long id, Long problemNumber, ProblemDto problem, String chosenAnswer, Boolean isCorrect) implements Serializable {
 
@@ -9,7 +10,7 @@ public record ProblemSolvedDto(Long id, Long problemNumber, ProblemDto problem, 
         return new ProblemSolvedDto(id, problemNumber, problem, chosenAnswer, isCorrect);
     }
 
-    public static ProblemSolvedDto from(ExamProblem entity) {
+    public static ProblemSolvedDto from(AnsweredProblem entity) {
         return new ProblemSolvedDto(
             entity.getId(),
             entity.getProblemNumber(),
