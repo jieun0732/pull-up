@@ -694,6 +694,7 @@ public class ExamService {
                 else incorrectCount++;
             }
         }
+        exam.setSolvedTime(LocalDateTime.now());
 
         return new GradeExam.Response(correctCount + incorrectCount,
                 correctCount,

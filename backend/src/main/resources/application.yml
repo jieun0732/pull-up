@@ -88,6 +88,8 @@ auth:
   domain:
     frontend: ${basic-server.frontend-domain}
 
+springdoc:
+  use-fqn: true
 
 #logging
 logging:

@@ -72,6 +72,8 @@ auth:
   domain:
     frontend: http://localhost:8080
 
+springdoc:
+  use-fqn: true
 
 #logging
 logging:

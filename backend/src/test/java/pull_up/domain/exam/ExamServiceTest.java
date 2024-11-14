@@ -14,11 +14,13 @@ import pull_up.infra.database.fixture.MemberFixture;
 import pull_up.infra.database.repository.answer.AnswerRepository;
 import pull_up.infra.database.repository.exam.ExamRepository;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.mock;
 
@@ -97,12 +99,13 @@ class ExamServiceTest {
         assertThat(exam.getAnswers().get(2).getProblem().getIncorrectRate()).isEqualTo(100);
         assertThat(exam.getAnswers().get(3).getProblem().getIncorrectRate()).isEqualTo(100);
         assertThat(exam.getAnswers().get(4).getProblem().getIncorrectRate()).isEqualTo(0);
+        assertThat(exam.getSolvedTime()).isCloseTo(LocalDateTime.now(Clock.systemDefaultZone()), within(1, ChronoUnit.SECONDS));
 
         // then 2 : 틀린문제 3개 확인
         assertThat(incorrectAnswersResponse.list()).hasSize(3)
-                .anySatisfy((res) -> assertThat(res).usingRecursiveComparison().ignoringFields("answerId").isEqualTo(expect1))
-                .anySatisfy((res) -> assertThat(res).usingRecursiveComparison().ignoringFields("answerId").isEqualTo(expect2))
-                .anySatisfy((res) -> assertThat(res).usingRecursiveComparison().ignoringFields("answerId").isEqualTo(expect3));
+                .anySatisfy((res) -> assertThat(res).usingRecursiveComparison().ignoringFields("answerId", "solvedTime").isEqualTo(expect1))
+                .anySatisfy((res) -> assertThat(res).usingRecursiveComparison().ignoringFields("answerId", "solvedTime").isEqualTo(expect2))
+                .anySatisfy((res) -> assertThat(res).usingRecursiveComparison().ignoringFields("answerId", "solvedTime").isEqualTo(expect3));
 
         // then 3: 틀린문제 세부정보 확인
         assertThat(incorrectAnswerDetail).usingRecursiveComparison().ignoringFields("answerId").isEqualTo(expectDetail);

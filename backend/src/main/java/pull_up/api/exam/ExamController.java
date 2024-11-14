@@ -252,6 +252,7 @@ public class ExamController {
     }
 
     @PostMapping("/mock-exam/grade")
+    @Operation(summary = "모의고사 채점", description = "모의고사를 채점한 뒤, 채점 결과를 반환합니다.", tags = "모의고사")
     public ResponseEntity<GradeExam.Response> grade(@RequestBody GradeExam.Request request) {
         return ResponseEntity.ok(examService.grade(request));
     }
