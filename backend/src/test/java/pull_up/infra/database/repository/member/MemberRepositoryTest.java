@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
         connection = EmbeddedDatabaseConnection.H2)
 class MemberRepositoryTest {
 
-
     @Autowired
     MemberRepository suit;
 

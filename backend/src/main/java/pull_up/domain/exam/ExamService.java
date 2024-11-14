@@ -708,7 +708,7 @@ public class ExamService {
 
         int correctCount = 0, wrongCount = 0;
         for (GradeExam.SelectedAnswer selectedAnswer : request.selectedAnswers()) {
-            for (AnsweredProblem answeredProblem : exam.getAnsweredProblem()) {
+            for (AnsweredProblem answeredProblem : exam.getAnsweredProblems()) {
                 if (!answeredProblem.getProblemNumber().equals(selectedAnswer.problemId())) continue;
                 answeredProblem.grade(selectedAnswer.selectedAnswer());
                 if (answeredProblem.getIsCorrect()) correctCount++;

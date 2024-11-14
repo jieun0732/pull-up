@@ -1,14 +1,28 @@
 package pull_up.infra.database.repository.exam;
 
-import org.springframework.stereotype.Repository;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import pull_up.infra.database.entity.Exam;
+import pull_up.infra.database.entity.QAnsweredProblem;
+import pull_up.infra.database.entity.QExam;
 
 import java.util.Optional;
 
-public class CustomExamRepositoryImpl implements CustomExamRepository{
+import static pull_up.infra.database.entity.QAnsweredProblem.answeredProblem;
+import static pull_up.infra.database.entity.QExam.exam;
+
+public class CustomExamRepositoryImpl implements CustomExamRepository {
+
+    private final JPAQueryFactory qf;
+
+    public CustomExamRepositoryImpl(EntityManager em) {
+        this.qf = new JPAQueryFactory(em);
+    }
 
     @Override
     public Optional<Exam> findByIdWithAnswer(Long id) {
-        return Optional.empty();
+        return Optional.ofNullable(qf.selectFrom(exam)
+                .leftJoin(exam.answeredProblems, answeredProblem).fetchJoin()
+                .fetchFirst());
     }
 }

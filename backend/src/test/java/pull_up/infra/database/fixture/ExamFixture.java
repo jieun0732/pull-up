@@ -30,7 +30,7 @@ public enum ExamFixture {
 
     public Exam get(Member member) {
         Exam exam = Exam.of(member, entry, category, type, createdDate, solvedTime, Duration.between(createdDate, solvedTime), score);
-        exam.setAnsweredProblem(answeredProblems);
+        exam.setAnsweredProblems(answeredProblems);
         answeredProblems.forEach(answeredProblem -> answeredProblem.setExam(exam));
         member.setExamList(List.of(exam));
         return exam;

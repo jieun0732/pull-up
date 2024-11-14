@@ -73,7 +73,7 @@ public enum ProblemFixture {
                 0,
                 0,
                 incorrectRate);
-        problem.setId(id);
+//        problem.setId(id);
         return problem;
     }
 }

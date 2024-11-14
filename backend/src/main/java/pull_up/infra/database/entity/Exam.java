@@ -27,7 +27,7 @@ public class Exam extends BaseEntity {
     private Member member;
 
     @OneToMany(mappedBy = "exam", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<AnsweredProblem> answeredProblem;
+    private List<AnsweredProblem> answeredProblems;
 
     @Column
     private String entry;
@@ -76,7 +76,7 @@ public class Exam extends BaseEntity {
 
     public static Exam of(Member member, List<AnsweredProblem> answeredProblems, String entry, String category, String type, LocalDateTime createdDate, LocalDateTime solvedDate, Duration requiredTime, Integer score) {
         Exam exam = new Exam(member, entry, category, type, createdDate, solvedDate, requiredTime, score);
-        exam.setAnsweredProblem(answeredProblems);
+        exam.setAnsweredProblems(answeredProblems);
         return exam;
     }
 }

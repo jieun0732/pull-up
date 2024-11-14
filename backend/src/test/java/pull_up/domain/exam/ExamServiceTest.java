@@ -4,15 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pull_up.api.exam.dto.GradeExam;
-import pull_up.infra.database.entity.AnsweredProblem;
 import pull_up.infra.database.entity.Exam;
-import pull_up.infra.database.entity.Problem;
 import pull_up.infra.database.fixture.ExamFixture;
 import pull_up.infra.database.fixture.MemberFixture;
-import pull_up.infra.database.fixture.ProblemFixture;
 import pull_up.infra.database.repository.exam.ExamRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,11 +60,11 @@ class ExamServiceTest {
         assertThat(response.correctRate()).isEqualTo((double) 2 / 5);
 
         // 정답률 변화 확인
-        assertThat(exam.getAnsweredProblem().get(0).getProblem().getIncorrectRate()).isEqualTo(0);
-        assertThat(exam.getAnsweredProblem().get(1).getProblem().getIncorrectRate()).isEqualTo(100);
-        assertThat(exam.getAnsweredProblem().get(2).getProblem().getIncorrectRate()).isEqualTo(100);
-        assertThat(exam.getAnsweredProblem().get(3).getProblem().getIncorrectRate()).isEqualTo(100);
-        assertThat(exam.getAnsweredProblem().get(4).getProblem().getIncorrectRate()).isEqualTo(0);
+        assertThat(exam.getAnsweredProblems().get(0).getProblem().getIncorrectRate()).isEqualTo(0);
+        assertThat(exam.getAnsweredProblems().get(1).getProblem().getIncorrectRate()).isEqualTo(100);
+        assertThat(exam.getAnsweredProblems().get(2).getProblem().getIncorrectRate()).isEqualTo(100);
+        assertThat(exam.getAnsweredProblems().get(3).getProblem().getIncorrectRate()).isEqualTo(100);
+        assertThat(exam.getAnsweredProblems().get(4).getProblem().getIncorrectRate()).isEqualTo(0);
     }
 
 }

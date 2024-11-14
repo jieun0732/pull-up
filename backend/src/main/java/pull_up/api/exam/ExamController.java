@@ -15,12 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pull_up.api.exam.dto.CreatedExamInformationResultDto;
-import pull_up.api.exam.dto.ExamInformationAverageScoreDto;
-import pull_up.api.exam.dto.ExamInformationDetailDto;
-import pull_up.api.exam.dto.ExamInformationDto;
-import pull_up.api.exam.dto.ExamProblemResponseDto;
-import pull_up.api.exam.dto.ExamProblemResultDto;
+import pull_up.api.exam.dto.*;
 import pull_up.domain.exam.ExamService;
 import pull_up.api.member.dto.IncorrectAnswerResultDto;
 import pull_up.api.member.dto.MemberAnswerIndexDto;
@@ -255,8 +250,12 @@ public class ExamController {
     @Operation(summary = "최근 모의고사 정보 및 문제 유형별 결과", description = "멤버의 가장 최근 모의고사 정보를 반환합니다. 수정", tags = "모의고사")
     public ResponseEntity<ExamInformationDetailDto> getRecentExamInformation(
         @RequestParam Long memberId) {
-        ExamInformationDetailDto examInformationDetailDto = examService.getRecentExamInformation(
-            memberId);
-        return ResponseEntity.ok(examInformationDetailDto);
+
+        return ResponseEntity.ok(examService.getRecentExamInformation(memberId));
+    }
+
+    @PostMapping("/mock-exam/grade")
+    public ResponseEntity<GradeExam.Response> grade(@RequestBody GradeExam.Request request) {
+        return ResponseEntity.ok(examService.grade(request));
     }
 }
