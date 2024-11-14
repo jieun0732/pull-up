@@ -70,7 +70,7 @@ public class Problem extends BaseEntity {
     private Double incorrectRate;
 
     @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<AnsweredProblem> answeredProblems;
+    private List<Answer> answers;
 
     @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<IncorrectAnswer> incorrectAnswers;

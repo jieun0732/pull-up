@@ -1,7 +1,6 @@
 package pull_up.infra.database.repository.exam;
 
 import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,38 +26,35 @@ class ExamRepositoryTest {
     @Autowired
     EntityManager em;
 
-    Member member;
-    Exam exam;
-
-    @BeforeEach
-    void init() {
-        member = MemberFixture.APPLE_USER.get();
-        exam = ExamFixture.MATHEMATICS.get(member);
+    @Test
+    @DisplayName("시험 조회 시 해당 문제(AnsweredProblem) 함께 잘 가져오는지 테스트")
+    void testGetExamWithAnswer() {
+        // given
+        Member member = MemberFixture.APPLE_USER.get();
+        Exam exam = ExamFixture.MATHEMATICS.get(member);
 
         em.persist(member);
         em.persist(exam);
-        exam.getAnsweredProblems().forEach(answeredProblem -> {
+        exam.getAnswers().forEach(answeredProblem -> {
+            answeredProblem.getProblem().setId(null);
+            answeredProblem.setId(null);
             em.persist(answeredProblem.getProblem());
             em.persist(answeredProblem);
         });
 
         em.flush();
         em.clear();
-    }
 
-    @Test
-    @DisplayName("시험 조회 시 해당 문제(AnsweredProblem) 함께 잘 가져오는지 테스트")
-    void testGetExamWithAnswer() {
-        // given
         Long id = exam.getId();
-    
+
         // when
         Exam examInDB = suit.findByIdWithAnswer(id).get();
 
         // then
         assertThat(examInDB).usingRecursiveComparison()
-                .ignoringFields("member", "answeredProblems").isEqualTo(exam);
+                .ignoringFields("member", "answers").isEqualTo(exam);
 
-        assertThat(examInDB.getAnsweredProblems()).hasSize(5);
+        assertThat(examInDB.getAnswers()).hasSize(5);
     }
+
 }

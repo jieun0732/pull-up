@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,17 +39,28 @@ class ExamControllerTest {
     @Test
     @DisplayName("문제 채점 요청 테스트")
     void testGradeApi() throws Exception {
-        // given
         GradeExam.Request request = new GradeExam.Request(1L, List.of(new GradeExam.SelectedAnswer(1L, 1)));
-
-        // when
         mockMvc.perform(post("/api/pull-up/exams/mock-exam/grade")
                         .content(gson.toJson(request))
                         .contentType(APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
-
-                // then
                 .andExpect(status().is(200));
+    }
+
+    @Test
+    @DisplayName("틀린문제 전체 및 상세조회 테스트")
+    void testIncorrectAnswer() throws Exception {
+        mockMvc.perform(get("/api/pull-up/exams/incorrect-answers?memberId=1")
+                        .contentType(APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andDo(print())
+                .andExpect(status().is(200));
+        mockMvc.perform(get("/api/pull-up/exams/incorrect-answers/1")
+                        .contentType(APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
+                .andDo(print())
+                .andExpect(status().is(200));
+
     }
 }

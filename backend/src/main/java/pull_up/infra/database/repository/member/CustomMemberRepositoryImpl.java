@@ -7,7 +7,7 @@ import pull_up.infra.database.entity.*;
 
 import java.util.List;
 
-import static pull_up.infra.database.entity.QAnsweredProblem.answeredProblem;
+import static pull_up.infra.database.entity.QAnswer.answer;
 import static pull_up.infra.database.entity.QExam.exam;
 import static pull_up.infra.database.entity.QIncorrectAnswer.incorrectAnswer;
 import static pull_up.infra.database.entity.QMember.member;
@@ -28,8 +28,8 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository{
                 .where(member.id.eq(id))
                 .fetchFirst();
 
-        List<AnsweredProblem> answeredProblems = qf.selectFrom(answeredProblem)
-                .leftJoin(answeredProblem.exam, exam).fetchJoin()
+        List<Answer> answers = qf.selectFrom(answer)
+                .leftJoin(answer.exam, exam).fetchJoin()
                 .where(exam.member.id.eq(id))
                 .fetch();
 
@@ -43,7 +43,7 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository{
                 .where(member.id.eq(id))
                 .fetch();
 
-        ret.setExamList(answeredProblems.stream().map(AnsweredProblem::getExam).toList());
+        ret.setExamList(answers.stream().map(Answer::getExam).toList());
         ret.setMemberAnswers(memberAnswers);
         ret.setIncorrectAnswers(incorrectAnswers);
         return ret;

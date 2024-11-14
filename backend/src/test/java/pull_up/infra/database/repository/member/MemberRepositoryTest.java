@@ -31,7 +31,7 @@ class MemberRepositoryTest {
     // fixtures
     Problem problem;
     Member member;
-    AnsweredProblem answeredProblem;
+    Answer answer;
     List<Exam> exams;
     List<IncorrectAnswer> incorrectAnswers;
     List<MemberAnswer> memberAnswers;
@@ -46,13 +46,13 @@ class MemberRepositoryTest {
         exams = List.of(Exam.of(member, null, "모의고사", null, LocalDateTime.now(), null, null, 0));
         memberAnswers = List.of(MemberAnswer.of(member, problem, exams.get(0), "2", false));
         incorrectAnswers = List.of(IncorrectAnswer.of(member, problem, exams.get(0), "2", LocalDateTime.now()));
-        answeredProblem = AnsweredProblem.of(exams.get(0), problem,0L,"1", true);
+        answer = Answer.of(exams.get(0), problem,0L,"1", true);
 
         member.setExamList(exams);
         member.setIncorrectAnswers(incorrectAnswers);
         member.setMemberAnswers(memberAnswers);
 
-        em.persist(answeredProblem);
+        em.persist(answer);
         em.persist(problem);
         em.persist(member);
         exams.forEach(t -> em.persist(t));

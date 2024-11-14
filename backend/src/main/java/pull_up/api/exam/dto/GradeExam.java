@@ -12,7 +12,7 @@ public record GradeExam() {
     public record Response(
             Integer totalCount,
             Integer correctCount,
-            Integer wrongCount,
+            Integer incorrectCount,
             Double correctRate
     ) {
     }

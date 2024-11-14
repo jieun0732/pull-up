@@ -31,7 +31,7 @@ class ProblemRepositoryTest {
 
     Problem problem;
     Member member;
-    List<AnsweredProblem> answeredProblems;
+    List<Answer> answers;
     List<Exam> exams;
     List<IncorrectAnswer> incorrectAnswers;
     List<MemberAnswer> memberAnswers;
@@ -42,14 +42,14 @@ class ProblemRepositoryTest {
         problem = Problem.of("수리", "골고루", "속력", "test123", "test1234", "1", "2", "3", "4", "5", "1", "qwer1234", 100, 30, 30d);
 
         exams = List.of(Exam.of(member, null, "모의고사", null, LocalDateTime.now(), null, null, 0));
-        answeredProblems = List.of(AnsweredProblem.of(exams.get(0), problem, 0L, "1", true));
+        answers = List.of(Answer.of(exams.get(0), problem, 0L, "1", true));
         memberAnswers = List.of(MemberAnswer.of(member, problem, exams.get(0), "2", false));
         incorrectAnswers = List.of(IncorrectAnswer.of(member, problem, exams.get(0), "2", LocalDateTime.now()));
 
         em.persist(member);
         em.persist(problem);
 
-        answeredProblems.forEach(t -> em.persist(t));
+        answers.forEach(t -> em.persist(t));
         exams.forEach(t -> em.persist(t));
         memberAnswers.forEach(t -> em.persist(t));
         incorrectAnswers.forEach(t -> em.persist(t));
@@ -77,7 +77,7 @@ class ProblemRepositoryTest {
     void testDeleteAllRelation() {
         // given
         assertThat(em.find(Problem.class, problem.getId())).isNotNull();
-        assertThat(em.find(AnsweredProblem.class, answeredProblems.get(0).getId())).isNotNull();
+        assertThat(em.find(Answer.class, answers.get(0).getId())).isNotNull();
         assertThat(em.find(MemberAnswer.class, memberAnswers.get(0).getId())).isNotNull();
         assertThat(em.find(IncorrectAnswer.class, incorrectAnswers.get(0).getId())).isNotNull();
 
@@ -86,7 +86,7 @@ class ProblemRepositoryTest {
 
         // then
         assertThat(em.find(Problem.class, problem.getId())).isNull();
-        assertThat(em.find(AnsweredProblem.class, answeredProblems.get(0).getId())).isNull();
+        assertThat(em.find(Answer.class, answers.get(0).getId())).isNull();
         assertThat(em.find(MemberAnswer.class, memberAnswers.get(0).getId())).isNull();
         assertThat(em.find(IncorrectAnswer.class, incorrectAnswers.get(0).getId())).isNull();
     }

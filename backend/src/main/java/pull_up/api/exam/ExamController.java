@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pull_up.api.exam.dto.*;
 import pull_up.domain.exam.ExamService;
-import pull_up.api.member.dto.IncorrectAnswerResultDto;
 import pull_up.api.member.dto.MemberAnswerIndexDto;
 import pull_up.api.member.dto.MemberAnswerResponseDto;
 import pull_up.api.member.dto.MemberAnswerResultDto;
@@ -27,6 +26,7 @@ import pull_up.api.problem.dto.ProblemSolvedDto;
 import pull_up.api.problem.dto.ProblemTimeResultDto;
 import pull_up.api.problem.dto.ProblemTypeResultDto;
 import pull_up.api.problem.dto.ProblemTypeSummaryDto;
+import pull_up.global.dto.ListDto;
 
 /**
  * 시험 관련 요청을 처리하는 컨트롤러.
@@ -209,17 +209,14 @@ public class ExamController {
 
     @Operation(summary = "틀린 문제 리스트 조회하기", description = "회원이 틀린 문제 리스트를 조회합니다.", tags = "틀린문제")
     @GetMapping("/incorrect-answers")
-    public ResponseEntity<List<IncorrectAnswerResultDto>> getIncorrectAnswers(@RequestParam Long memberId) {
-        List<IncorrectAnswerResultDto> incorrectAnswers = examService.getIncorrectAnswers(memberId);
-        return ResponseEntity.ok(incorrectAnswers);
+    public ResponseEntity<ListDto<IncorrectAnswer.Brief>> getIncorrectAnswers(@RequestParam Long memberId) {
+        return ResponseEntity.ok(examService.getIncorrectAnswers(memberId));
     }
 
     @Operation(summary = "틀린 문제 상세 조회하기", description = "회원이 틀린 문제의 상세 정보를 조회합니다. 수정", tags = "틀린문제")
     @GetMapping("/incorrect-answers/{id}")
-    public ResponseEntity<IncorrectAnswerResultDto> getIncorrectAnswer(@RequestParam Long memberId, @PathVariable Long id) {
-        IncorrectAnswerResultDto incorrectAnswer = examService.getIncorrectAnswerDetail(memberId,
-            id);
-        return ResponseEntity.ok(incorrectAnswer);
+    public ResponseEntity<IncorrectAnswer.Detail> getIncorrectAnswer(@PathVariable Long id) {
+        return ResponseEntity.ok(examService.getIncorrectAnswerDetail(id));
     }
 
     /**

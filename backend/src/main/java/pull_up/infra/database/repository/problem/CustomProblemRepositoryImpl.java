@@ -8,7 +8,7 @@ import pull_up.infra.database.entity.*;
 
 import java.util.List;
 
-import static pull_up.infra.database.entity.QAnsweredProblem.answeredProblem;
+import static pull_up.infra.database.entity.QAnswer.answer;
 import static pull_up.infra.database.entity.QIncorrectAnswer.incorrectAnswer;
 import static pull_up.infra.database.entity.QMemberAnswer.memberAnswer;
 import static pull_up.infra.database.entity.QProblem.problem;
@@ -38,7 +38,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();
 
         qf.delete(problem).execute();
-        qf.delete(answeredProblem).execute();
+        qf.delete(answer).execute();
         qf.delete(memberAnswer).execute();
         qf.delete(incorrectAnswer).execute();
 

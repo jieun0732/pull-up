@@ -18,7 +18,7 @@ import pull_up.global.entity.BaseEntity;
 @Entity
 @Table(name = "exam_problem")
 @SQLRestriction("is_deleted = false")
-public class AnsweredProblem extends BaseEntity {
+public class Answer extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,13 +41,13 @@ public class AnsweredProblem extends BaseEntity {
     @Column
     private Boolean isCorrect;
 
-    protected AnsweredProblem() {
+    protected Answer() {
     }
 
     /**
      * 파라미터 생성자.
      */
-    private AnsweredProblem(Exam exam, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
+    private Answer(Exam exam, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
         this.exam = exam;
         this.problem = problem;
         this.problemNumber = ProblemNumber;
@@ -58,8 +58,8 @@ public class AnsweredProblem extends BaseEntity {
     /**
      * 파라미터로부터 ExamProblem 엔티티 객체를 생성하는 함수.
      */
-    public static AnsweredProblem of(Exam exam, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
-        return new AnsweredProblem(exam, problem, ProblemNumber, chosenAnswer, isCorrect);
+    public static Answer of(Exam exam, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
+        return new Answer(exam, problem, ProblemNumber, chosenAnswer, isCorrect);
     }
 
     public void grade(Integer selectedAnswer) {

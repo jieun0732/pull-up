@@ -1,7 +1,7 @@
 package pull_up.infra.database.fixture;
 
 import lombok.RequiredArgsConstructor;
-import pull_up.infra.database.entity.AnsweredProblem;
+import pull_up.infra.database.entity.Answer;
 import pull_up.infra.database.entity.Exam;
 import pull_up.infra.database.entity.Member;
 
@@ -20,7 +20,7 @@ public enum ExamFixture {
             LocalDateTime.of(2024, 11, 13, 22, 3),
             0);
 
-    private final List<AnsweredProblem> answeredProblems;
+    private final List<Answer> answers;
     private final String entry;
     private final String category;
     private final String type;
@@ -30,8 +30,8 @@ public enum ExamFixture {
 
     public Exam get(Member member) {
         Exam exam = Exam.of(member, entry, category, type, createdDate, solvedTime, Duration.between(createdDate, solvedTime), score);
-        exam.setAnsweredProblems(answeredProblems);
-        answeredProblems.forEach(answeredProblem -> answeredProblem.setExam(exam));
+        exam.setAnswers(answers);
+        answers.forEach(answeredProblem -> answeredProblem.setExam(exam));
         member.setExamList(List.of(exam));
         return exam;
     }

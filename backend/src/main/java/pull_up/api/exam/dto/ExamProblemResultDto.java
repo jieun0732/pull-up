@@ -1,7 +1,8 @@
 package pull_up.api.exam.dto;
 
 import java.io.Serializable;
-import pull_up.infra.database.entity.AnsweredProblem;
+
+import pull_up.infra.database.entity.Answer;
 import pull_up.api.problem.dto.ProblemResultDto;
 
 public record ExamProblemResultDto(Long id, ExamInformationDto examInformation,
@@ -15,7 +16,7 @@ public record ExamProblemResultDto(Long id, ExamInformationDto examInformation,
         return new ExamProblemResultDto(id, examInformation, problem, problemNumber, chosenAnswer, isCorrect);
     }
 
-    public static ExamProblemResultDto from(AnsweredProblem entity) {
+    public static ExamProblemResultDto from(Answer entity) {
         return new ExamProblemResultDto(
             entity.getId(),
             ExamInformationDto.from(entity.getExam()),

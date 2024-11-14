@@ -1,0 +1,12 @@
+package pull_up.infra.database.repository.answer;
+
+import pull_up.infra.database.entity.Answer;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface CustomAnswerRepository {
+    List<Answer> findIncorrectAnswersByMemberId(Long memberId);
+
+    Optional<Answer> findByIdWithProblem(Long id);
+}
