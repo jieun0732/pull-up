@@ -10,9 +10,6 @@ import pull_up.api.member.dto.MemberDto;
 import pull_up.api.member.dto.MemberScoreDto;
 import pull_up.domain.member.MemberService;
 
-/**
- * 멤버 controller.
- */
 @Slf4j
 @RequestMapping("/api/pull-up/members")
 @RestController
