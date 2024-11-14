@@ -5,11 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pull_up.api.exam.exception.ExamException;
+import pull_up.global.dto.MessageDto;
 import pull_up.global.exception.member.IncorrectAnswerException;
 import pull_up.global.exception.member.MemberAnswerException;
 import pull_up.global.exception.member.MemberException;
 import pull_up.global.exception.problem.ProblemException;
-import pull_up.global.dto.BaseResponse;
 
 
 /**
@@ -26,7 +26,7 @@ public class GlobalControllerAdvice {
     public ResponseEntity<?> applicationHandler(MemberException e) {
         log.error("Member Error occurs {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
-            .body(BaseResponse.error(e.getErrorCode().getHttpStatus().value(), e.getMessage()));
+                .body(new MessageDto(e.getMessage()));
     }
 
     /**
@@ -36,7 +36,7 @@ public class GlobalControllerAdvice {
     public ResponseEntity<?> applicationHandler(MemberAnswerException e) {
         log.error("MemberAnswer Error occurs {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
-            .body(BaseResponse.error(e.getErrorCode().getHttpStatus().value(), e.getMessage()));
+                .body(new MessageDto(e.getMessage()));
     }
 
     /**
@@ -46,7 +46,7 @@ public class GlobalControllerAdvice {
     public ResponseEntity<?> applicationHandler(IncorrectAnswerException e) {
         log.error("IncorrectAnswer Error occurs {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
-            .body(BaseResponse.error(e.getErrorCode().getHttpStatus().value(), e.getMessage()));
+                .body(new MessageDto(e.getMessage()));
     }
 
     /**
@@ -56,7 +56,7 @@ public class GlobalControllerAdvice {
     public ResponseEntity<?> applicationHandler(ProblemException e) {
         log.error("Problem Error occurs {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
-            .body(BaseResponse.error(e.getErrorCode().getHttpStatus().value(), e.getMessage()));
+                .body(new MessageDto(e.getMessage()));
     }
 
     /**
@@ -66,7 +66,7 @@ public class GlobalControllerAdvice {
     public ResponseEntity<?> applicationHandler(ExamException e) {
         log.error("Exam Error occurs {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
-            .body(BaseResponse.error(e.getErrorCode().getHttpStatus().value(), e.getMessage()));
+                .body(new MessageDto(e.getMessage()));
     }
 
 }
