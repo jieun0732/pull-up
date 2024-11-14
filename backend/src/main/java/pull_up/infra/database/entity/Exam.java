@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -78,5 +79,19 @@ public class Exam extends BaseEntity {
         Exam exam = new Exam(member, entry, category, type, createdDate, solvedDate, requiredTime, score);
         exam.setAnswers(answers);
         return exam;
+    }
+
+    public int[] grade(Map<Long, Integer> submit) {
+        int correctCount = 0, incorrectCount = 0;
+        for (Map.Entry<Long, Integer> s : submit.entrySet()) {
+            for (Answer answer : answers) {
+                if (!answer.getProblemNumber().equals(s.getKey())) continue;
+                answer.mark(s.getValue());
+                if (answer.getIsCorrect()) correctCount++;
+                else incorrectCount++;
+            }
+        }
+        solvedTime = LocalDateTime.now();
+        return new int[] {correctCount, incorrectCount};
     }
 }

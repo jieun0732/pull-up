@@ -1,12 +1,15 @@
 package pull_up.infra.database.repository.answer;
 
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import pull_up.domain.problem.ProblemRepository;
 import pull_up.infra.database.entity.Answer;
 import pull_up.infra.database.entity.Exam;
 import pull_up.infra.database.entity.Member;
@@ -28,28 +31,29 @@ class AnswerRepositoryTest {
 
     @Autowired
     EntityManager em;
+
     @Autowired
     private AnswerRepository answerRepository;
+
+    @BeforeEach
+    void init() {
+        answerRepository.deleteAll();
+        em.flush();
+        em.clear();
+    }
 
     @Test
     @DisplayName("틀린문제 조회 시 틀린문제만 가져오는지 테스트")
     void testFindIncorrectAnswer() {
         // given
-        answerRepository.deleteAll();
-
         Member member = MemberFixture.APPLE_USER.get();
         Exam exam = ExamFixture.MATHEMATICS.get(member);
-        Answer correctAnswer = exam.getAnswers().get(0);
-        correctAnswer.setIsCorrect(true);
-        correctAnswer.setChosenAnswer("3");
+        makeAnswer(exam, 0, true, "3");
+        Answer incorrectAnswer1 = makeAnswer(exam, 2, false, "3");
+        Answer incorrectAnswer2 = makeAnswer(exam, 3, false, "3");
+        makeAnswer(exam, 1, false, "");
+        makeAnswer(exam, 4, false, "");
 
-        Answer incorrectAnswer1 = exam.getAnswers().get(2);
-        incorrectAnswer1.setIsCorrect(false);
-        incorrectAnswer1.setChosenAnswer("3");
-
-        Answer incorrectAnswer2 = exam.getAnswers().get(3);
-        incorrectAnswer2.setIsCorrect(false);
-        incorrectAnswer2.setChosenAnswer("3");
 
         em.persist(member);
         em.persist(exam);
@@ -65,25 +69,28 @@ class AnswerRepositoryTest {
 
         // when
         List<Answer> incorrectAnswers = suit.findIncorrectAnswersByMemberId(member.getId());
-
+        
         // then
         assertThat(incorrectAnswers).hasSize(2)
                 .anySatisfy(answer -> assertThat(answer.getId()).isEqualTo(incorrectAnswer1.getId()))
                 .anySatisfy(answer -> assertThat(answer.getId()).isEqualTo(incorrectAnswer2.getId()));
     }
 
+    private static Answer makeAnswer(Exam exam, int index, boolean isCorrect, String chosenAnswer) {
+        Answer answer = exam.getAnswers().get(index);
+        answer.setIsCorrect(isCorrect);
+        answer.setChosenAnswer(chosenAnswer);
+        return answer;
+    }
+
     @Test
     @DisplayName("틀린문제 상세 조회 시 문제도 같이 가져오는지 테스트")
     void testIncorrectAnswerWithProblem() {
         // given
-        answerRepository.deleteAll();
-
         Member member = MemberFixture.APPLE_USER.get();
         Exam exam = ExamFixture.MATHEMATICS.get(member);
 
-        Answer incorrectAnswer = exam.getAnswers().get(2);
-        incorrectAnswer.setIsCorrect(false);
-        incorrectAnswer.setChosenAnswer("3");
+        Answer incorrectAnswer = makeAnswer(exam, 2, false, "3");
 
         em.persist(member);
         em.persist(exam);

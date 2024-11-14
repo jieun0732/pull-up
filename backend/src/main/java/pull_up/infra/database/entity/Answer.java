@@ -62,7 +62,7 @@ public class Answer extends BaseEntity {
         return new Answer(exam, problem, ProblemNumber, chosenAnswer, isCorrect);
     }
 
-    public void grade(Integer selectedAnswer) {
+    public void mark(Integer selectedAnswer) {
         this.chosenAnswer = selectedAnswer.toString();
         if (problem.getAnswer().equals(chosenAnswer)) isCorrect = true;
         problem.addTotalAttempt(isCorrect);

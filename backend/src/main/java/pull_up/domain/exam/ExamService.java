@@ -684,21 +684,9 @@ public class ExamService {
         Exam exam = examRepository.findByIdWithAnswer(request.examId())
                 .orElseThrow(() -> new ExamException(NOT_FOUND_EXAM));
 
-        int correctCount = 0, incorrectCount = 0;
-        for (GradeExam.SelectedAnswer selectedAnswer : request.selectedAnswers()) {
-            for (Answer answer : exam.getAnswers()) {
-                if (!answer.getProblemNumber().equals(selectedAnswer.problemId())) continue;
+        int[] result = exam.grade(request.getSubmitMap());
+        int total = result[0] + result[1];
 
-                answer.grade(selectedAnswer.selectedAnswer());
-                if (answer.getIsCorrect()) correctCount++;
-                else incorrectCount++;
-            }
-        }
-        exam.setSolvedTime(LocalDateTime.now());
-
-        return new GradeExam.Response(correctCount + incorrectCount,
-                correctCount,
-                incorrectCount,
-                (double) correctCount / (correctCount + incorrectCount));
+        return new GradeExam.Response(total, result[0], result[1], (double) result[0] / total);
     }
 }
