@@ -38,7 +38,7 @@ class AnswerControllerTest {
     void testCreateAnswer() throws Exception {
         // given
         Submit.Request request = new Submit.Request(1L, 1L, "3");
-        Submit.Response response = new Submit.Response(new AnswerDto( "3", "3", "test", true, 50D, 50D));
+        Submit.Response response = new Submit.Response(new AnswerDto( "3", "3", "test", true, 50D, 50D, null));
 
         // when
         when(mockService.submit(request)).thenReturn(response);
@@ -58,7 +58,7 @@ class AnswerControllerTest {
     void testGet() throws Exception {
         // given
         Long id = 1L;
-        AnswerDto response = new AnswerDto("3", "3", "test", true, 50D, 50D);
+        AnswerDto response = new AnswerDto("3", "3", "test", true, 50D, 50D, null);
 
         // when
         when(mockService.getSolved(id)).thenReturn(response);
