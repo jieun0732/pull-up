@@ -11,16 +11,7 @@ public record Submit() {
 
     }
     public record Response(
-            String chosenAnswer,
-            String correctAnswer,
-            String answerExplain,
-            Boolean isCorrect,
-            Double correctRate,
-            Double inCorrectRate
+            AnswerDto answer
     ) {
-
-        public static Response toDto(Answer answer) {
-            return new Response(answer.getChosenAnswer(),answer.getProblem().getAnswer(), answer.getProblem().getAnswerExplain(), answer.getIsCorrect(), answer.getProblem().getCorrectRate(), answer.getProblem().getIncorrectRate());
-        }
     }
 }

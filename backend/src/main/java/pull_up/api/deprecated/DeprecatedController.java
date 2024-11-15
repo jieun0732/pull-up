@@ -61,7 +61,7 @@ public class DeprecatedController {
      * @deprecated see ProblemController.getList
      */
     @Operation(summary = "문제 리스트 조회(골고루 및 유형별)", description = "회원이 저장한 답안에 대한 문제 리스트를 조회합니다.", tags = "Deprecated")
-    @GetMapping("/problems/v0")
+    @GetMapping("/members/problems")
     public ResponseEntity<List<MemberAnswerResultDto>> getProblemList(
             @RequestParam Long memberId,
             @RequestParam(required = false) String entry,

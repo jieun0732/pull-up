@@ -37,4 +37,16 @@ public class CustomAnswerRepositoryImpl implements CustomAnswerRepository {
                     .where(answer.id.eq(id)).fetchFirst()
         );
     }
+
+    @Override
+    public Optional<Answer> findByIdWithProblem(Long id, Boolean isSolved) {
+        if (!isSolved) return findByIdWithProblem(id);
+
+        return Optional.ofNullable(
+                qf.selectFrom(answer)
+                        .leftJoin(answer.problem, problem).fetchJoin()
+                        .where(answer.id.eq(id)
+                                .and(answer.isSolved.eq(true))).fetchFirst()
+        );
+    }
 }

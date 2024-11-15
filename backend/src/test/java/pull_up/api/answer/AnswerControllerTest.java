@@ -7,13 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import pull_up.api.answer.dto.AnswerDto;
 import pull_up.api.answer.dto.Submit;
 import pull_up.domain.answer.AnswerService;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -37,7 +38,7 @@ class AnswerControllerTest {
     void testCreateAnswer() throws Exception {
         // given
         Submit.Request request = new Submit.Request(1L, 1L, "3");
-        Submit.Response response = new Submit.Response("3", "3", "test", true, 50D, 50D);
+        Submit.Response response = new Submit.Response(new AnswerDto( "3", "3", "test", true, 50D, 50D));
 
         // when
         when(mockService.submit(request)).thenReturn(response);
@@ -47,6 +48,23 @@ class AnswerControllerTest {
                         .content(gson.toJson(request))
                         .contentType(APPLICATION_JSON)
                         .characterEncoding(UTF_8))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().json(gson.toJson(response)));
+    }
+
+    @Test
+    @DisplayName("푼 문제 조회 테스트")
+    void testGet() throws Exception {
+        // given
+        Long id = 1L;
+        AnswerDto response = new AnswerDto("3", "3", "test", true, 50D, 50D);
+
+        // when
+        when(mockService.getSolved(id)).thenReturn(response);
+
+        // then
+        mockMvc.perform(get("/api/answers/solved/" + id))
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(content().json(gson.toJson(response)));

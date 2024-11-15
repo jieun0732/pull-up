@@ -9,4 +9,6 @@ public interface CustomAnswerRepository {
     List<Answer> findIncorrectAnswersByMemberId(Long memberId);
 
     Optional<Answer> findByIdWithProblem(Long id);
+
+    Optional<Answer> findByIdWithProblem(Long id, Boolean isSolved);
 }
