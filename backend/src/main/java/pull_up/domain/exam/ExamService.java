@@ -50,17 +50,6 @@ public class ExamService {
     private final ExamRepository examRepository;
     private final AnswerRepository answerRepository;
 
-
-    /**
-     * 문제 리스트 조회 (골고루 풀기 및 유형별 풀기).
-     */
-    public List<MemberAnswerResultDto> getProblemList(Long memberId, String entry, String category,
-                                                      String type) {
-        List<MemberAnswer> memberAnswers = memberAnswerRepository.findByMemberAndOptionalFilters(
-                memberId, entry, category, type);
-        return memberAnswers.stream().map(MemberAnswerResultDto::from).collect(Collectors.toList());
-    }
-
     /**
      * 문제 index 리스트 조회 ( 골고루 , 유형별 )
      */
@@ -193,13 +182,6 @@ public class ExamService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 문제의 답과 사용의 답 확인하기.
-     */
-    private boolean checkAnswer(Long problemId, String chosenAnswer) {
-        Problem problem = problemRepository.findById(problemId).orElseThrow();
-        return problem.getAnswer().equals(chosenAnswer);
-    }
 
     /**
      * 다시 풀기.
@@ -442,6 +424,14 @@ public class ExamService {
     }
 
     /**
+     * 문제의 답과 사용의 답 확인하기.
+     */
+    private boolean checkAnswer(Long problemId, String chosenAnswer) {
+        Problem problem = problemRepository.findById(problemId).orElseThrow();
+        return problem.getAnswer().equals(chosenAnswer);
+    }
+
+    /**
      * 틀린 문제 리스트 조회하기.
      */
     public ListDto<IncorrectAnswer.Brief> getIncorrectAnswers(Long memberId) {
@@ -633,62 +623,5 @@ public class ExamService {
         int total = result[0] + result[1];
 
         return new GradeExam.Response(total, result[0], result[1], (double) result[0] / total);
-    }
-
-    /**
-     * 문제 답안 저장하기.
-     */
-    @Deprecated
-    public MemberAnswerResultDto saveAnswer(MemberAnswerResponseDto memberAnswerResponseDto) {
-        MemberAnswer memberAnswer = memberAnswerRepository.findById(memberAnswerResponseDto.id())
-                .orElseThrow(
-                        () -> new AnswerException(AnswerErrorCode.NOT_FOUND));
-
-        // 3. 사용자가 제출한 답안을 설정
-        memberAnswer.setChosenAnswer(memberAnswerResponseDto.chosenAnswer());
-
-        Problem problem = memberAnswer.getProblem();
-        Member member = memberAnswer.getMember();
-
-        // 4. 정답 여부를 판별
-        boolean isCorrect = checkAnswer(problem.getId(),
-                memberAnswerResponseDto.chosenAnswer());
-        memberAnswer.setIsCorrect(isCorrect);
-
-        // 5. MemberAnswer를 저장
-        memberAnswerRepository.save(memberAnswer);
-
-        // 6. IncorrectAnswer 처리
-        Optional<pull_up.infra.database.entity.legacy.IncorrectAnswer> existingIncorrectAnswer = incorrectAnswerRepository.findByMemberAndProblem(
-                member, problem);
-
-        if (isCorrect) {
-            // 정답일 경우 기존 오답 기록이 있으면 삭제
-            existingIncorrectAnswer.ifPresent(BaseEntity::softDelete);
-        } else {
-            if (existingIncorrectAnswer.isPresent()) {
-                // 오답일 경우 기존 오답 기록이 있으면 LocalDateTime 업데이트
-                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = existingIncorrectAnswer.get();
-                incorrectAnswer.setIncorrectTime(LocalDateTime.now());
-                incorrectAnswer.setChosenAnswer(memberAnswerResponseDto.chosenAnswer());
-                incorrectAnswerRepository.save(incorrectAnswer);
-            } else {
-                // 오답일 경우 기존 오답 기록이 없으면 새로 저장
-                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = pull_up.infra.database.entity.legacy.IncorrectAnswer.of(member, problem, null,
-                        memberAnswerResponseDto.chosenAnswer(), LocalDateTime.now());
-                incorrectAnswerRepository.save(incorrectAnswer);
-            }
-        }
-
-        problem.setTotalAttempts(problem.getTotalAttempts() + 1);
-        if (!isCorrect) {
-            problem.setIncorrectAttempts(problem.getIncorrectAttempts() + 1);
-        }
-        problem.setIncorrectRate(
-                (double) problem.getIncorrectAttempts() / problem.getTotalAttempts() * 100);
-        problemRepository.save(problem);
-
-        // 7. 결과를 DTO로 변환하여 반환
-        return MemberAnswerResultDto.from(memberAnswer);
     }
 }

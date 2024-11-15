@@ -24,7 +24,7 @@ public record MemberAnswerDto(Long id, MemberDto member, ProblemDto problem,
 
         return new MemberAnswerDto(entity.getId(), MemberDto.from(
             entity.getMember()),
-            ProblemDto.from(entity.getProblem()),
+            ProblemDto.toDto(entity.getProblem()),
             examInformationDto,
             entity.getChosenAnswer(),
             entity.getIsCorrect());

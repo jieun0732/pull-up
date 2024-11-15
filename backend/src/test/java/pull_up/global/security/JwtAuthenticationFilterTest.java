@@ -57,7 +57,7 @@ class JwtAuthenticationFilterTest {
     @DisplayName("인증정보 없는 요청 필터링 테스트")
     void testUnauthorizedRequest() throws Exception {
         // given
-        URI uri = new URI("/api/pull-up/exams/incorrect-answers/" + 1 + "?memberId=" + 1);
+        URI uri = new URI("/api/exams/incorrect-answers/" + 1 + "?memberId=" + 1);
 
         // when
         ResultActions result = mockMvc.perform(get(uri));
@@ -70,8 +70,8 @@ class JwtAuthenticationFilterTest {
     @DisplayName("인증정보 있는 요청 허용 테스트")
     void testAuthorizedRequest() throws Exception {
         // given
-        URI uri = new URI("/api/pull-up/exams/incorrect-answers/" + 1 + "?memberId=" + 1);
-        Cookie accessToken = mockMvc.perform(get("/api/pull-up/oauth2/mock/cookie"))
+        URI uri = new URI("/api/exams/incorrect-answers/" + 1 + "?memberId=" + 1);
+        Cookie accessToken = mockMvc.perform(get("/api/oauth2/mock/cookie"))
                 .andExpect(status().isOk()).andReturn()
                 .getResponse().getCookie("accessToken");
 

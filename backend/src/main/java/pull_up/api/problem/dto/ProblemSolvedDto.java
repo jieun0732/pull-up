@@ -14,7 +14,7 @@ public record ProblemSolvedDto(Long id, Long problemNumber, ProblemDto problem, 
         return new ProblemSolvedDto(
             entity.getId(),
             entity.getProblemNumber(),
-            ProblemDto.from(entity.getProblem()),
+            ProblemDto.toDto(entity.getProblem()),
             entity.getChosenAnswer(),
             entity.getIsCorrect()
         );

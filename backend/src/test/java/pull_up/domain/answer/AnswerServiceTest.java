@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
-import pull_up.api.answer.dto.CreateAnswer;
+import pull_up.api.answer.dto.Submit;
 import pull_up.infra.database.fixture.ExamFixture;
 import pull_up.infra.database.fixture.MemberFixture;
 import pull_up.infra.database.repository.exam.ExamRepository;
@@ -30,13 +30,13 @@ class AnswerServiceTest {
     @DisplayName("Answer 생성 테스트")
     void testSubmit() {
         // given
-        CreateAnswer.Request correstRequest = new CreateAnswer.Request(1L, 1L, "3");
-        CreateAnswer.Request incorrestRequest = new CreateAnswer.Request(1L,2L,  "3");
+        Submit.Request correstRequest = new Submit.Request(1L, 1L, "3");
+        Submit.Request incorrestRequest = new Submit.Request(1L,2L,  "3");
 
         // when
         BDDMockito.when(mockRepository.findByIdWithAnswer(correstRequest.examId())).thenReturn(Optional.of(ExamFixture.MATHEMATICS.get(MemberFixture.APPLE_USER.get())));
-        CreateAnswer.Response correctResponse = suit.submit(correstRequest);
-        CreateAnswer.Response incorrectResponse = suit.submit(incorrestRequest);
+        Submit.Response correctResponse = suit.submit(correstRequest);
+        Submit.Response incorrectResponse = suit.submit(incorrestRequest);
 
         // then
         assertThat(correctResponse.chosenAnswer()).isEqualTo("3");

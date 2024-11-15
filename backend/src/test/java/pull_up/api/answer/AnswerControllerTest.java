@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pull_up.api.answer.dto.CreateAnswer;
+import pull_up.api.answer.dto.Submit;
 import pull_up.domain.answer.AnswerService;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -36,8 +36,8 @@ class AnswerControllerTest {
     @DisplayName("Answer 생성 테스트")
     void testCreateAnswer() throws Exception {
         // given
-        CreateAnswer.Request request = new CreateAnswer.Request(1L, 1L, "3");
-        CreateAnswer.Response response = new CreateAnswer.Response("3", "3", "test", true, 50D, 50D);
+        Submit.Request request = new Submit.Request(1L, 1L, "3");
+        Submit.Response response = new Submit.Response("3", "3", "test", true, 50D, 50D);
 
         // when
         when(mockService.submit(request)).thenReturn(response);

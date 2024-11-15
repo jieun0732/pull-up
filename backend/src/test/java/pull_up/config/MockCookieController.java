@@ -15,7 +15,7 @@ public class MockCookieController {
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
 
-    @GetMapping("/api/pull-up/oauth2/mock/cookie")
+    @GetMapping("/api/oauth2/mock/cookie")
     String getCookie(HttpServletResponse response) {
         String accessToken = jwtUtil.getAccessToken(1234L, "test user", "test@example.com", "test-user");
         Cookie secureCookie = cookieUtil.getSecureCookie(accessToken);

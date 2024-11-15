@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pull_up.api.problem.dto.CreateProblem;
+import pull_up.api.problem.dto.ProblemDto;
+import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
 import pull_up.infra.database.entity.Problem;
 
@@ -32,5 +34,10 @@ public class ProblemService {
         List<Problem> problems = CreateProblem.FormatRequest.toEntity(formatString);
         problemRepository.saveAll(problems);
         return new MessageDto(problems.size() +" Problems have been created successfully.");
+    }
+
+    public ListDto<ProblemDto> getList(String entry, String category, String type) {
+        List<Problem> problems = problemRepository.findByEntryAndCategoryAndType(entry, category, type);
+        return new ListDto<>(problems.stream().map(ProblemDto::toDto).toList());
     }
 }

@@ -1,11 +1,8 @@
 package pull_up.api.answer.dto;
 
-import pull_up.api.exam.dto.ExamInformationDto;
-import pull_up.api.member.dto.MemberDto;
-import pull_up.api.problem.dto.ProblemResultDto;
 import pull_up.infra.database.entity.Answer;
 
-public record CreateAnswer() {
+public record Submit() {
     public record Request(
             Long examId,
             Long problemNumber,

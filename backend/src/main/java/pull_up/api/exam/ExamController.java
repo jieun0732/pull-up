@@ -39,17 +39,6 @@ public class ExamController {
 
     private final ExamService examService;
 
-    @Operation(summary = "문제 리스트 조회(골고루 및 유형별)", description = "회원이 저장한 답안에 대한 문제 리스트를 조회합니다.", tags = "유형별/골고루")
-    @GetMapping("/problems")
-    public ResponseEntity<List<MemberAnswerResultDto>> getProblemList(
-        @RequestParam Long memberId,
-        @RequestParam(required = false) String entry,
-        @RequestParam(required = false) String category,
-        @RequestParam(required = false) String type) {
-        List<MemberAnswerResultDto> problems = examService.getProblemList(memberId, entry, category, type);
-        return ResponseEntity.ok(problems);
-    }
-
     @Operation(summary = "문제 리스트 id값 조회(골고루 및 유형별)", description = "회원이 저장한 답안에 대한 문제 id 리스트를 조회합니다.", tags = "유형별/골고루")
     @GetMapping("/problemsIndex")
     public ResponseEntity<List<MemberAnswerIndexDto>> getProblemIndexList(

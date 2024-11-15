@@ -11,11 +11,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pull_up.api.problem.dto.CreateProblem;
+import pull_up.api.problem.dto.ProblemDto;
 import pull_up.domain.problem.ProblemService;
+import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
 import pull_up.infra.database.entity.Problem;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -46,36 +51,54 @@ class ProblemControllerTest {
         // given
         CreateProblem.Request request = new CreateProblem.Request("", "", "", "", "", "", "", "", "", "", "", "", 0D);
         String body = gson.toJson(request);
+        MessageDto expect = new MessageDto("Problem 1 has been created successfully.");
 
         // when
-        BDDMockito.when(mockService.createProblem((CreateProblem.Request) any())).thenReturn(new MessageDto("Problem 1 has been created successfully."));
+        when(mockService.createProblem((CreateProblem.Request) any())).thenReturn(expect);
 
         // then
-        mockMvc.perform(post("/api/pull-up/problems").contentType(APPLICATION_JSON).content(body))
+        mockMvc.perform(post("/api/problems").contentType(APPLICATION_JSON).content(body))
                 .andDo(print())
                 .andExpect(status().is(200))
-                .andExpect(content().json(gson.toJson(new MessageDto("Problem 1 has been created successfully."))));
+                .andExpect(content().json(gson.toJson(expect)));
     }
 
     @Test
     @DisplayName("스프레드시트 문제 생성 요청 테스트")
     void testCreateProblemWithSheet() throws Exception {
         // given
+        MessageDto expect = new MessageDto("10 Problems have been created successfully.");
 
         // when
-        BDDMockito.when(mockService.createProblem((String) any())).thenReturn(new MessageDto("10 Problems have been created successfully."));
+        when(mockService.createProblem((String) any())).thenReturn(expect);
 
         // then
-        mockMvc.perform(post("/api/pull-up/problems/format").contentType(APPLICATION_JSON).content("\"test\""))
+        mockMvc.perform(post("/api/problems/format").contentType(APPLICATION_JSON).content("\"test\""))
                 .andDo(print())
                 .andExpect(status().is(200))
-                .andExpect(content().json(gson.toJson(new MessageDto("10 Problems have been created successfully."))));
+                .andExpect(content().json(gson.toJson(expect)));
+    }
+
+    @Test
+    @DisplayName("문제 리스트 조회 테스트")
+    void testGetList() throws Exception {
+        // given
+        ListDto<ProblemDto> emptyList = new ListDto<>(List.of());
+
+        // when
+        when(mockService.getList(any(), any(), any())).thenReturn(emptyList);
+
+        // then
+        mockMvc.perform(get("/api/problems"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(content().json(gson.toJson(emptyList)));
     }
 
     @Test
     @DisplayName("전체 문제 삭제 요청 테스트")
     void testDeleteProblemHard() throws Exception {
-        mockMvc.perform(delete("/api/pull-up/problems/hard"))
+        mockMvc.perform(delete("/api/problems/hard"))
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(content().json(gson.toJson(new MessageDto("All problem deleted successfully."))));

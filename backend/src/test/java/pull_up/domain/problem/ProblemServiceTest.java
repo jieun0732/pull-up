@@ -3,68 +3,32 @@ package pull_up.domain.problem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import pull_up.api.problem.dto.CreateProblem;
+import pull_up.api.problem.dto.ProblemDto;
+import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
 import pull_up.infra.database.entity.Problem;
-import pull_up.infra.database.repository.MockProblemRepository;
+import pull_up.infra.database.fixture.ProblemFixture;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 class ProblemServiceTest {
-
     ProblemService suit;
+    ProblemRepository mockRepository;
 
-    ProblemRepository mockProblemRepository;
+    String formatString;
 
     @BeforeEach
     void init() {
-        mockProblemRepository = new MockProblemRepository();
-        suit = new ProblemService(mockProblemRepository);
-    }
+        mockRepository = mock(ProblemRepository.class);
+        suit = new ProblemService(mockRepository);
 
-    @Test
-    @DisplayName("문제 생성 테스트")
-    void createProblemTest() {
-        // given
-        CreateProblem.Request request = new CreateProblem.Request("", "", "", "", "", "", "", "", "", "", "", "", 0D);
-
-        // when
-        MessageDto response = suit.createProblem(request);
-
-        // then
-        assertThat(response.message()).isEqualTo("Problem 1 has been created successfully.");
-    }
-
-    @Test
-    @DisplayName("Spreadsheet로 문제 생성 테스트")
-    void testCreateProblemBySheet() {
-        // given
-
-        // when
-        MessageDto response = suit.createProblem(formatString);
-
-        // then
-        assertThat(response.message()).isEqualTo(28 + " Problems have been created successfully.");
-    }
-
-    @Test
-    @DisplayName("전체 문제 삭제 테스트")
-    void testDeleteAll() {
-        // given
-        mockProblemRepository.save(Problem.of("", "", "", "", "", "", "", "", "", "", "", "", 0, 0, 0D));
-        mockProblemRepository.save(Problem.of("", "", "", "", "", "", "", "", "", "", "", "", 0, 0, 0D));
-        mockProblemRepository.save(Problem.of("", "", "", "", "", "", "", "", "", "", "", "", 0, 0, 0D));
-
-        assertThat(mockProblemRepository.findAll()).hasSize(3);
-
-        // when
-        suit.deleteAllProblem();
-
-        // then
-        assertThat(mockProblemRepository.findAll()).hasSize(0);
-    }
-
-    private String formatString = """
+        formatString = """
              언어/col/골고루/col/관계비교/col/다음 중 관계가 다른 하나는?/col//col/희망(希望) - 기대(期待)/col/위기(危機) - 기회(機會)/col/절망(絶望) - 낙담(落膽)/col/승리(勝利) - 성공(成功)/col/도전(挑戰) - 시도(試圖)/col/2/col/희망- 기대: 유의관계
              위기 - 기회: 반의관계
              절망 - 낙담: 유의관계
@@ -120,4 +84,57 @@ class ProblemServiceTest {
              5번: 빨대가 구부러졌다 -> 같은 의미/col/94/row/언어/col/유형별/col/맞춤법/col/다음 중 띄어쓰기가 옳지 않은 것을 고르시오/col//col/은우는 얼굴도 잘생긴데다가 돈도 많다/col/독서실에서 살다시피 했지만 시험에 떨어졌다/col/어머니께서는 팀장 겸 이사로 선임되셨다/col/좌우간에 곧 있으면 학생들이 들이닥칠 것이다/col/이 문제는 어렵지 않다./col/1/col/의존명사는 띄어 써야 하므로 '잘생긴데다가'는 '잘생긴 데다가'로 띄어 써야합니다./col/88/row/언어/col/유형별/col/맞춤법/col/다음 중 맞춤법에 맞지 않는 것을 고르시오./col//col/이 책은 다양한 지식을 제공하여 독서하는 재미를 더해준다/col/어제 방문한 사람은 모두 옷을 깔끔히 차려입었다/col/날씨가 좋아서 공원에 나갔다./col/아이들은 예전의 사건도 뚜렷히 기억하고 있었다./col/지민이가 하는 일은 아주 중요한 일이다./col/4/col/부사의 끝음절이 'ㅅ' 받침 뒤에 나오는 경우 '이'로 끝나고, 부사의 끝음절이 분명히 '이'로만 나는 것은 '-이'로 적습니다./col/92/row/언어/col/유형별/col/맞춤법/col/다음 중 띄어쓰기가 옳지 않은 것을 고르시오/col//col/이 회사는 그전에 아버지가 근무하신 곳이다./col/다음 사람을 위해 필요한 만큼만 이용해야 한다./col/오랜만에 친구들을 만나서 이야기하니 행복했다/col/사회에서 성공하는 것도 중요하지만, 그 전에 좋은 사람이 되는 것도 중요하다/col/다음 달부터 새로운 프로젝트가 시작되니 그전에 벌여 놓은 일을 정리해야 한다/col/5/col/문장의 각 단어는 띄어 씀을 원칙으로 하여 관형사 '그'와 이전 또는 앞 따위의 시점을 이르는 명사 '전'은 '그 전'으로 띄어 써야합니다./col/67/row/언어/col/유형별/col/맞춤법/col/다음 중 띄어쓰기가 옳지 않은 것을 고르시오/col//col/과학실에서는 학부모 참관수업이 진행되고 있었다/col/고등학생들은 보통 일학년 때부터 본격적으로 수능을 준비한다/col/주머니를 뒤져봤지만, 나오는 것은 백 원짜리 동전 몇 개뿐이었다/col/신입 사원 이강진 씨의 근무 태도에 불만이 쏟아졌다/col/인간대 기계의 대결이라는 말은 사람들의 호기심을 자극했다/col/5/col/두 말을 이어주거나 열거할 적에 끄는 말들은 띄어씁니다.
              '인간대 기계의'는 '인간 대 기계의'로 띄어 써야합니다./col/80/row/언어/col/유형별/col/맞춤법/col/다음 중 띄어쓰기가 옳지 않은 것을 고르시오/col//col/삼촌은 노력한 만큼 대가를 얻는다며 나를 위로했다/col/내가 아는 솔지는 그런 짓을 할만큼 나쁜 사람은 아니었다/col/매일 아침에는 공원이 비교적 한산하다./col/나는 형진이가 언제 도착했는지 알 수 없다./col/민규는 단춧구멍만큼 작은 눈을 가진 아이이다./col/2/col/의존명사는 띄어써야하므로, '할만큼'은 '할 만큼'으로 띄어씁니다./col/78
             """;
+    }
+
+    @Test
+    @DisplayName("문제 생성 테스트")
+    void createProblemTest() {
+        // given
+        CreateProblem.Request request = new CreateProblem.Request("", "", "", "", "", "", "", "", "", "", "", "", 0D);
+
+        // when
+        given(mockRepository.save(any())).willAnswer(i -> {
+            Problem problem = i.getArgument(0);
+            problem.setId(1L);
+            return problem;
+        });
+
+        MessageDto response = suit.createProblem(request);
+
+        // then
+        assertThat(response.message()).isEqualTo("Problem 1 has been created successfully.");
+    }
+
+    @Test
+    @DisplayName("스프레드시트로 문제 생성 테스트")
+    void testCreateProblemBySheet() {
+        // given
+
+        // when
+        MessageDto response = suit.createProblem(formatString);
+
+        // then
+        assertThat(response.message()).isEqualTo(28 + " Problems have been created successfully.");
+    }
+
+    @Test
+    @DisplayName("리스트 조회 테스트")
+    void testGetList() {
+        // given
+        List<Problem> queryResult = List.of(ProblemFixture.ONE.get(), ProblemFixture.TWO.get());
+
+        // when
+        Mockito.when(mockRepository.findByEntryAndCategoryAndType("123", "234", "345")).thenReturn(queryResult);
+        ListDto<ProblemDto> result = suit.getList("123", "234", "345");
+
+        // then
+        assertThat(result.list()).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("전체 문제 삭제 테스트")
+    void testDeleteAll() {
+        suit.deleteAllProblem();
+        Mockito.verify(mockRepository, times(1)).deleteAllWithRelation();
+    }
 }

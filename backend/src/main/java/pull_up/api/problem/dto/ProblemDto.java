@@ -2,32 +2,36 @@ package pull_up.api.problem.dto;
 
 import pull_up.infra.database.entity.Problem;
 
-import java.io.Serializable;
 import java.util.List;
 
-/**
- * DTO for {@link Problem}
- */
-public record ProblemDto(Long id, String entry, String category, String type, String question,
-                         String explanation, List<String> choices, String answer, String answerExplain,
-                         Integer totalAttempts, Integer incorrectAttempts,
-                         Double incorrectRate) implements
-        Serializable {
+public record ProblemDto(
+        Long id,
+        String entry,
+        String category,
+        String type,
+        String question,
+        String explanation,
+        List<String> choices,
+        String answer,
+        String answerExplain,
+        Integer totalAttempts,
+        Integer incorrectAttempts,
+        Double incorrectRate
+) {
 
-    public static ProblemDto of(Long id, String entry, String category, String type,
-                                String question, String explanation, List<String> choices, String answer, String answerExplain, Integer totalAttempts,
-                                Integer incorrectAttempts, Double incorrectRate) {
-        return new ProblemDto(id, entry, category, type, question, explanation, choices, answer, answerExplain, totalAttempts, incorrectAttempts,
-                incorrectRate);
-    }
-
-    public static ProblemDto from(Problem entity) {
-        List<String> choices = List.of(entity.getChoice1(), entity.getChoice2(), entity.getChoice3(), entity.getChoice4(), entity.getChoice5());
-
-        return new ProblemDto(entity.getId(), entity.getEntry(), entity.getCategory(),
-                entity.getType(), entity.getQuestion(), entity.getExplanation(), choices,
-                entity.getAnswer(), entity.getAnswerExplain(), entity.getTotalAttempts(),
-                entity.getIncorrectAttempts(), entity.getIncorrectRate());
+    public static ProblemDto toDto(Problem entity) {
+        return new ProblemDto(entity.getId(),
+                entity.getEntry(),
+                entity.getCategory(),
+                entity.getType(),
+                entity.getQuestion(),
+                entity.getExplanation(),
+                List.of(entity.getChoice1(), entity.getChoice2(), entity.getChoice3(), entity.getChoice4(), entity.getChoice5()),
+                entity.getAnswer(),
+                entity.getAnswerExplain(),
+                entity.getTotalAttempts(),
+                entity.getIncorrectAttempts(),
+                entity.getIncorrectRate());
     }
 
     public static Problem toEntity(ProblemDto dto) {

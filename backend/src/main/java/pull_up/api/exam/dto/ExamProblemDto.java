@@ -19,7 +19,7 @@ public record ExamProblemDto(Long id, ExamInformationDto examInformation, Proble
         return new ExamProblemDto(
             entity.getId(),
             ExamInformationDto.from(entity.getExam()),
-            ProblemDto.from(entity.getProblem()),
+            ProblemDto.toDto(entity.getProblem()),
             entity.getProblemNumber(),
             entity.getChosenAnswer(),
             entity.getIsCorrect()
