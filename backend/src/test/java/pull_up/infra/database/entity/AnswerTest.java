@@ -2,7 +2,7 @@ package pull_up.infra.database.entity;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pull_up.infra.database.fixture.AnsweredProblemFixture;
+import pull_up.infra.database.fixture.AnswerFixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,18 +12,23 @@ class AnswerTest {
     @DisplayName("채점 잘하는지 테스트")
     void testMark() {
         // given
-        Answer problemAnswer3 = AnsweredProblemFixture.NO_CHOSEN_1.get();
-        Answer problemAnswer4 = AnsweredProblemFixture.NO_CHOSEN_1.get();
+        Answer problemAnswer = AnswerFixture.NO_CHOSEN_1.get();
 
         // when
-        problemAnswer3.mark(3);
-        problemAnswer4.mark(4);
+        problemAnswer.mark(3);
 
         // then
-        assertThat(problemAnswer3.getChosenAnswer()).isEqualTo("3");
-        assertThat(problemAnswer4.getChosenAnswer()).isEqualTo("4");
-        assertThat(problemAnswer3.getIsCorrect()).isTrue();
-        assertThat(problemAnswer4.getIsCorrect()).isFalse();
+        assertThat(problemAnswer.getChosenAnswer()).isEqualTo("3");
+        assertThat(problemAnswer.getIsCorrect()).isTrue();
+        assertThat(problemAnswer.getTryCount()).isEqualTo(1);
+
+        // when 2
+        problemAnswer.mark(4);
+
+        // then 2
+        assertThat(problemAnswer.getChosenAnswer()).isEqualTo("4");
+        assertThat(problemAnswer.getIsCorrect()).isFalse();
+        assertThat(problemAnswer.getTryCount()).isEqualTo(2);
     }
 
 }

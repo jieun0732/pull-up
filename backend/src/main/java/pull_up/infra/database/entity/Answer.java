@@ -38,6 +38,9 @@ public class Answer extends BaseEntity {
     private Long problemNumber;
 
     @Column
+    private Integer tryCount;
+
+    @Column
     private String chosenAnswer;
 
     @Column
@@ -58,11 +61,9 @@ public class Answer extends BaseEntity {
         this.problemNumber = ProblemNumber;
         this.chosenAnswer = chosenAnswer;
         this.isCorrect = isCorrect;
+        this.tryCount = 0;
     }
 
-    /**
-     * 파라미터로부터 ExamProblem 엔티티 객체를 생성하는 함수.
-     */
     public static Answer of(Exam exam, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
         return new Answer(exam, problem, ProblemNumber, chosenAnswer, isCorrect);
     }
@@ -74,9 +75,10 @@ public class Answer extends BaseEntity {
     }
 
     public void mark(Integer selectedAnswer) {
-        this.chosenAnswer = selectedAnswer.toString();
-        if (problem.getAnswer().equals(chosenAnswer)) isCorrect = true;
+        chosenAnswer = selectedAnswer.toString();
+        isCorrect = problem.getAnswer().equals(chosenAnswer);
         problem.addTotalAttempt(isCorrect);
         solveTime = LocalDateTime.now();
+        tryCount++;
     }
 }

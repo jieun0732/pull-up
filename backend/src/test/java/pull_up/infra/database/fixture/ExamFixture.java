@@ -9,7 +9,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static pull_up.infra.database.fixture.AnsweredProblemFixture.*;
+import static pull_up.infra.database.fixture.AnswerFixture.*;
 
 @RequiredArgsConstructor
 public enum ExamFixture {

@@ -9,7 +9,7 @@ import java.util.List;
 import static pull_up.infra.database.fixture.ProblemFixture.*;
 
 @RequiredArgsConstructor
-public enum AnsweredProblemFixture {
+public enum AnswerFixture {
     NO_CHOSEN_1(ONE.get(), 1L, "", false),
     NO_CHOSEN_2(TWO.get(), 2L,"", false),
     NO_CHOSEN_3(THREE.get(), 3L,"", false),
