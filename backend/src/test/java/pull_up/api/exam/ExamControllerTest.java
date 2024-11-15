@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pull_up.api.exam.dto.GradeExam;
+import pull_up.api.exam.dto.ExamGrade;
 import pull_up.domain.exam.ExamService;
 
 import java.nio.charset.StandardCharsets;
@@ -39,7 +39,7 @@ class ExamControllerTest {
     @Test
     @DisplayName("문제 채점 요청 테스트")
     void testGradeApi() throws Exception {
-        GradeExam.Request request = new GradeExam.Request(1L, List.of(new GradeExam.SelectedAnswer(1L, 1)));
+        ExamGrade.Request request = new ExamGrade.Request(1L, List.of(new ExamGrade.SelectedAnswer(1L, 1)));
         mockMvc.perform(post("/api/exams/mock-exam/grade")
                         .content(gson.toJson(request))
                         .contentType(APPLICATION_JSON)

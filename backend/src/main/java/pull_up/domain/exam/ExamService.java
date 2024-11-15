@@ -13,8 +13,6 @@ import pull_up.api.problem.dto.*;
 import pull_up.domain.problem.ProblemRepository;
 import pull_up.global.dto.ListDto;
 import pull_up.global.entity.BaseEntity;
-import pull_up.global.exception.member.AnswerErrorCode;
-import pull_up.global.exception.member.AnswerException;
 import pull_up.global.exception.member.MemberErrorCode;
 import pull_up.global.exception.member.MemberException;
 import pull_up.global.exception.problem.ProblemErrorCode;
@@ -615,13 +613,13 @@ public class ExamService {
         examRepository.delete(exam);
     }
 
-    public GradeExam.Response grade(GradeExam.Request request) {
+    public ExamGrade.Response grade(ExamGrade.Request request) {
         Exam exam = examRepository.findByIdWithAnswer(request.examId())
                 .orElseThrow(() -> new ExamException(NOT_FOUND_EXAM));
 
         int[] result = exam.grade(request.getSubmitMap());
         int total = result[0] + result[1];
 
-        return new GradeExam.Response(total, result[0], result[1], (double) result[0] / total);
+        return new ExamGrade.Response(total, result[0], result[1], (double) result[0] / total);
     }
 }

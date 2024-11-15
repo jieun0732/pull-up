@@ -5,8 +5,8 @@ import pull_up.api.problem.dto.ProblemDto;
 import pull_up.infra.database.entity.Answer;
 
 public record AnswerDto(
-        String chosenAnswer,
-        String correctAnswer,
+        Integer chosenAnswer,
+        Integer correctAnswer,
         String answerExplain,
         Boolean isCorrect,
         Double correctRate,
@@ -14,8 +14,9 @@ public record AnswerDto(
         ProblemDto problemDto
 ) {
     public static AnswerDto toDto(Answer answer) {
-        return new AnswerDto(answer.getChosenAnswer(),
-                answer.getProblem().getAnswer(),
+        return new AnswerDto(
+                Integer.parseInt(answer.getChosenAnswer()),
+                Integer.parseInt(answer.getProblem().getAnswer()),
                 answer.getProblem().getAnswerExplain(),
                 answer.getIsCorrect(),
                 answer.getProblem().getCorrectRate(),

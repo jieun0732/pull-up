@@ -3,7 +3,7 @@ package pull_up.domain.answer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pull_up.api.answer.dto.AnswerDto;
-import pull_up.api.answer.dto.Submit;
+import pull_up.api.answer.dto.AnswerSubmit;
 import pull_up.api.exam.exception.ExamErrorCode;
 import pull_up.api.exam.exception.ExamException;
 import pull_up.global.exception.member.AnswerException;
@@ -21,13 +21,13 @@ public class AnswerService {
     private final ExamRepository examRepository;
     private final AnswerRepository answerRepository;
 
-    public Submit.Response submit(Submit.Request request) {
+    public AnswerSubmit.Response submit(AnswerSubmit.Request request) {
         Exam exam = examRepository.findByIdWithAnswer(request.examId())
                 .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
 
         Answer answer = Answer.submit(exam, request.problemNumber(), request.selectedAnswer());
 
-        return new Submit.Response(AnswerDto.toDto(answer));
+        return new AnswerSubmit.Response(AnswerDto.toDto(answer));
     }
 
     public AnswerDto getSolved(Long id) {

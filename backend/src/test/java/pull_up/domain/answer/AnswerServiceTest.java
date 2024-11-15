@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pull_up.api.answer.dto.AnswerDto;
-import pull_up.api.answer.dto.Submit;
+import pull_up.api.answer.dto.AnswerSubmit;
 import pull_up.global.exception.member.AnswerErrorCode;
 import pull_up.global.exception.member.AnswerException;
 import pull_up.infra.database.entity.Answer;
@@ -39,20 +39,20 @@ class AnswerServiceTest {
     @DisplayName("Answer 생성 테스트")
     void testSubmit() {
         // given
-        Submit.Request correstRequest = new Submit.Request(1L, 1L, "3");
-        Submit.Request incorrestRequest = new Submit.Request(1L,2L,  "3");
+        AnswerSubmit.Request correstRequest = new AnswerSubmit.Request(1L, 1L, "3");
+        AnswerSubmit.Request incorrestRequest = new AnswerSubmit.Request(1L,2L,  "3");
 
         // when
         when(mockExamRepository.findByIdWithAnswer(correstRequest.examId())).thenReturn(Optional.of(ExamFixture.MATHEMATICS.get(MemberFixture.APPLE_USER.get())));
-        Submit.Response correctResponse = suit.submit(correstRequest);
-        Submit.Response incorrectResponse = suit.submit(incorrestRequest);
+        AnswerSubmit.Response correctResponse = suit.submit(correstRequest);
+        AnswerSubmit.Response incorrectResponse = suit.submit(incorrestRequest);
 
         // then
-        assertThat(correctResponse.answer().chosenAnswer()).isEqualTo("3");
-        assertThat(correctResponse.answer().correctAnswer()).isEqualTo("3");
+        assertThat(correctResponse.answer().chosenAnswer()).isEqualTo(3);
+        assertThat(correctResponse.answer().correctAnswer()).isEqualTo(3);
         assertThat(correctResponse.answer().isCorrect()).isTrue();
-        assertThat(incorrectResponse.answer().chosenAnswer()).isEqualTo("3");
-        assertThat(incorrectResponse.answer().correctAnswer()).isEqualTo("2");
+        assertThat(incorrectResponse.answer().chosenAnswer()).isEqualTo(3);
+        assertThat(incorrectResponse.answer().correctAnswer()).isEqualTo(2);
         assertThat(incorrectResponse.answer().isCorrect()).isFalse();
     }
 
@@ -81,11 +81,11 @@ class AnswerServiceTest {
         AnswerDto incorrectResponse = suit.getSolved(incorrectId);
 
         // then
-        assertThat(correctResponse.chosenAnswer()).isEqualTo("3");
-        assertThat(correctResponse.correctAnswer()).isEqualTo("3");
+        assertThat(correctResponse.chosenAnswer()).isEqualTo(3);
+        assertThat(correctResponse.correctAnswer()).isEqualTo(3);
         assertThat(correctResponse.isCorrect()).isTrue();
-        assertThat(incorrectResponse.chosenAnswer()).isEqualTo("3");
-        assertThat(incorrectResponse.correctAnswer()).isEqualTo("2");
+        assertThat(incorrectResponse.chosenAnswer()).isEqualTo(3);
+        assertThat(incorrectResponse.correctAnswer()).isEqualTo(2);
         assertThat(incorrectResponse.isCorrect()).isFalse();
         assertThatThrownBy(() -> suit.getSolved(notSolvedId)).isInstanceOf(AnswerException.class)
                 .hasMessage(AnswerErrorCode.NOT_FOUND.getMessage());

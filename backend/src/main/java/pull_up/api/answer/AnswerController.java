@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pull_up.api.answer.dto.AnswerDto;
-import pull_up.api.answer.dto.Submit;
+import pull_up.api.answer.dto.AnswerSubmit;
 import pull_up.domain.answer.AnswerService;
 
 @RestController
@@ -17,7 +17,7 @@ public class AnswerController {
 
     @Operation(summary = "문제 답안 제출하기", description = "해당 문제의 답안을 제출합니다.", tags = "풀이")
     @PostMapping("/submit")
-    public ResponseEntity<Submit.Response> submit(@RequestBody Submit.Request request) {
+    public ResponseEntity<AnswerSubmit.Response> submit(@RequestBody AnswerSubmit.Request request) {
         return ResponseEntity.ok(answerService.submit(request));
     }
 

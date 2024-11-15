@@ -3,7 +3,7 @@ package pull_up.domain.exam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pull_up.api.exam.dto.GradeExam;
+import pull_up.api.exam.dto.ExamGrade;
 import pull_up.api.exam.dto.IncorrectAnswer;
 import pull_up.global.dto.ListDto;
 import pull_up.infra.database.entity.Answer;
@@ -53,12 +53,12 @@ class ExamServiceTest {
     void testGrade() {
         // given
         Long examId = 1L;
-        GradeExam.Request request = new GradeExam.Request(examId, List.of(
-                new GradeExam.SelectedAnswer(1L, 3),
-                new GradeExam.SelectedAnswer(2L, 3),
-                new GradeExam.SelectedAnswer(3L, 3),
-                new GradeExam.SelectedAnswer(4L, 3),
-                new GradeExam.SelectedAnswer(5L, 3)
+        ExamGrade.Request request = new ExamGrade.Request(examId, List.of(
+                new ExamGrade.SelectedAnswer(1L, 3),
+                new ExamGrade.SelectedAnswer(2L, 3),
+                new ExamGrade.SelectedAnswer(3L, 3),
+                new ExamGrade.SelectedAnswer(4L, 3),
+                new ExamGrade.SelectedAnswer(5L, 3)
         ));
 
         Long memberId = 1L;
@@ -85,7 +85,7 @@ class ExamServiceTest {
         when(answerRepository.findIncorrectAnswersByMemberId(memberId)).thenReturn(incorrectAnswers);
         when(answerRepository.findByIdWithProblem(answerId)).thenReturn(Optional.of(incorrectAnswer));
 
-        GradeExam.Response response = suit.grade(request);
+        ExamGrade.Response response = suit.grade(request);
         ListDto<IncorrectAnswer.Brief> incorrectAnswersResponse = suit.getIncorrectAnswers(memberId);
         IncorrectAnswer.Detail incorrectAnswerDetail = suit.getIncorrectAnswerDetail(answerId);
 
