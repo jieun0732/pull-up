@@ -49,6 +49,9 @@ public class Answer extends BaseEntity {
     @Column
     private LocalDateTime solveTime;
 
+    @Column
+    private Boolean isSolved;
+
     protected Answer() {
     }
 
@@ -62,6 +65,7 @@ public class Answer extends BaseEntity {
         this.chosenAnswer = chosenAnswer;
         this.isCorrect = isCorrect;
         this.tryCount = 0;
+        this.isSolved = false;
     }
 
     public static Answer of(Exam exam, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
@@ -80,5 +84,6 @@ public class Answer extends BaseEntity {
         problem.addTotalAttempt(isCorrect);
         solveTime = LocalDateTime.now();
         tryCount++;
+        isSolved = true;
     }
 }

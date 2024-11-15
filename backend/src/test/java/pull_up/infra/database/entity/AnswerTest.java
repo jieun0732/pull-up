@@ -21,6 +21,7 @@ class AnswerTest {
         assertThat(problemAnswer.getChosenAnswer()).isEqualTo("3");
         assertThat(problemAnswer.getIsCorrect()).isTrue();
         assertThat(problemAnswer.getTryCount()).isEqualTo(1);
+        assertThat(problemAnswer.getIsSolved()).isTrue();
 
         // when 2
         problemAnswer.mark(4);
