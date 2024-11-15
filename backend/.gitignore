@@ -37,6 +37,7 @@ out/
 .vscode/
 
 ### Gradle ###
+.tmp/
 /jdks/
 /wrapper/
 /daemon/
