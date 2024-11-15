@@ -104,13 +104,6 @@ public class ExamController {
         return ResponseEntity.ok(correctnessList);
     }
 
-    @Operation(summary = "문제 답안 저장하기", description = "회원의 문제 답안을 저장합니다.", tags = "유형별/골고루")
-    @PostMapping("/answer")
-    public ResponseEntity<MemberAnswerResultDto> saveAnswer(@RequestBody MemberAnswerResponseDto memberAnswerResponseDto) {
-        MemberAnswerResultDto savedAnswer = examService.saveAnswer(memberAnswerResponseDto);
-        return ResponseEntity.ok(savedAnswer);
-    }
-
     @Operation(summary = "다시 풀기", description = "회원의 문제 답안을 초기화합니다.", tags = "유형별/골고루")
     @PutMapping("/reset")
     public ResponseEntity<Void> resetAnswers(

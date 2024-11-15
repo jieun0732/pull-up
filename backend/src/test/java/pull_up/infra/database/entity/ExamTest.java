@@ -39,6 +39,20 @@ class ExamTest {
 
     }
 
+    @Test
+    @DisplayName("문제 번호로 제출한 문제 가져오기")
+    void testGetAnswer() {
+        // given
+        Exam exam = ExamFixture.MATHEMATICS.get(MemberFixture.APPLE_USER.get());
+
+        // when
+        Answer answer = exam.getAnswer(1L);
+
+        // then
+        assertThat(answer.getProblemNumber()).isEqualTo(1L);
+        assertThat(answer.getProblem().getQuestion()).isEqualTo("철수가 출발 지점에서 10km 떨어진 지점에서부터 시계 방향으로 원형 트랙을 자전거로 돌기 시작했다. 이 원형 트랙의 총 길이는 8km이다. 철수는 처음 2시간 동안 5바퀴를 돌았고, 다음 1시간 동안 3바퀴를 돌았다면, 철수의 3시간 동안의 자전거 평균 속력은 몇 km/h인가? (소수점 둘째자리에서 반올림하세요.)");
+    }
+
     private static void assertAnswer(Answer answer, long problemNumber, boolean isCorrect) {
         assertThat(answer.getProblemNumber()).isEqualTo(problemNumber);
         assertThat(answer.getIsCorrect()).isEqualTo(isCorrect);

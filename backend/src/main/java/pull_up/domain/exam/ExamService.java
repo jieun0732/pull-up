@@ -13,8 +13,8 @@ import pull_up.api.problem.dto.*;
 import pull_up.domain.problem.ProblemRepository;
 import pull_up.global.dto.ListDto;
 import pull_up.global.entity.BaseEntity;
-import pull_up.global.exception.member.MemberAnswerErrorCode;
-import pull_up.global.exception.member.MemberAnswerException;
+import pull_up.global.exception.member.AnswerErrorCode;
+import pull_up.global.exception.member.AnswerException;
 import pull_up.global.exception.member.MemberErrorCode;
 import pull_up.global.exception.member.MemberException;
 import pull_up.global.exception.problem.ProblemErrorCode;
@@ -191,62 +191,6 @@ public class ExamService {
         return answers.stream()
                 .map(ProblemSolvedDto::from)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * 문제 답안 저장하기.
-     */
-    public MemberAnswerResultDto saveAnswer(MemberAnswerResponseDto memberAnswerResponseDto) {
-        MemberAnswer memberAnswer = memberAnswerRepository.findById(memberAnswerResponseDto.id())
-                .orElseThrow(
-                        () -> new MemberAnswerException(MemberAnswerErrorCode.NOT_FOUND_MEMBERANSWER));
-
-        // 3. 사용자가 제출한 답안을 설정
-        memberAnswer.setChosenAnswer(memberAnswerResponseDto.chosenAnswer());
-
-        Problem problem = memberAnswer.getProblem();
-        Member member = memberAnswer.getMember();
-
-        // 4. 정답 여부를 판별
-        boolean isCorrect = checkAnswer(problem.getId(),
-                memberAnswerResponseDto.chosenAnswer());
-        memberAnswer.setIsCorrect(isCorrect);
-
-        // 5. MemberAnswer를 저장
-        memberAnswerRepository.save(memberAnswer);
-
-        // 6. IncorrectAnswer 처리
-        Optional<pull_up.infra.database.entity.legacy.IncorrectAnswer> existingIncorrectAnswer = incorrectAnswerRepository.findByMemberAndProblem(
-                member, problem);
-
-        if (isCorrect) {
-            // 정답일 경우 기존 오답 기록이 있으면 삭제
-            existingIncorrectAnswer.ifPresent(BaseEntity::softDelete);
-        } else {
-            if (existingIncorrectAnswer.isPresent()) {
-                // 오답일 경우 기존 오답 기록이 있으면 LocalDateTime 업데이트
-                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = existingIncorrectAnswer.get();
-                incorrectAnswer.setIncorrectTime(LocalDateTime.now());
-                incorrectAnswer.setChosenAnswer(memberAnswerResponseDto.chosenAnswer());
-                incorrectAnswerRepository.save(incorrectAnswer);
-            } else {
-                // 오답일 경우 기존 오답 기록이 없으면 새로 저장
-                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = pull_up.infra.database.entity.legacy.IncorrectAnswer.of(member, problem, null,
-                        memberAnswerResponseDto.chosenAnswer(), LocalDateTime.now());
-                incorrectAnswerRepository.save(incorrectAnswer);
-            }
-        }
-
-        problem.setTotalAttempts(problem.getTotalAttempts() + 1);
-        if (!isCorrect) {
-            problem.setIncorrectAttempts(problem.getIncorrectAttempts() + 1);
-        }
-        problem.setIncorrectRate(
-                (double) problem.getIncorrectAttempts() / problem.getTotalAttempts() * 100);
-        problemRepository.save(problem);
-
-        // 7. 결과를 DTO로 변환하여 반환
-        return MemberAnswerResultDto.from(memberAnswer);
     }
 
     /**
@@ -689,5 +633,62 @@ public class ExamService {
         int total = result[0] + result[1];
 
         return new GradeExam.Response(total, result[0], result[1], (double) result[0] / total);
+    }
+
+    /**
+     * 문제 답안 저장하기.
+     */
+    @Deprecated
+    public MemberAnswerResultDto saveAnswer(MemberAnswerResponseDto memberAnswerResponseDto) {
+        MemberAnswer memberAnswer = memberAnswerRepository.findById(memberAnswerResponseDto.id())
+                .orElseThrow(
+                        () -> new AnswerException(AnswerErrorCode.NOT_FOUND));
+
+        // 3. 사용자가 제출한 답안을 설정
+        memberAnswer.setChosenAnswer(memberAnswerResponseDto.chosenAnswer());
+
+        Problem problem = memberAnswer.getProblem();
+        Member member = memberAnswer.getMember();
+
+        // 4. 정답 여부를 판별
+        boolean isCorrect = checkAnswer(problem.getId(),
+                memberAnswerResponseDto.chosenAnswer());
+        memberAnswer.setIsCorrect(isCorrect);
+
+        // 5. MemberAnswer를 저장
+        memberAnswerRepository.save(memberAnswer);
+
+        // 6. IncorrectAnswer 처리
+        Optional<pull_up.infra.database.entity.legacy.IncorrectAnswer> existingIncorrectAnswer = incorrectAnswerRepository.findByMemberAndProblem(
+                member, problem);
+
+        if (isCorrect) {
+            // 정답일 경우 기존 오답 기록이 있으면 삭제
+            existingIncorrectAnswer.ifPresent(BaseEntity::softDelete);
+        } else {
+            if (existingIncorrectAnswer.isPresent()) {
+                // 오답일 경우 기존 오답 기록이 있으면 LocalDateTime 업데이트
+                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = existingIncorrectAnswer.get();
+                incorrectAnswer.setIncorrectTime(LocalDateTime.now());
+                incorrectAnswer.setChosenAnswer(memberAnswerResponseDto.chosenAnswer());
+                incorrectAnswerRepository.save(incorrectAnswer);
+            } else {
+                // 오답일 경우 기존 오답 기록이 없으면 새로 저장
+                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = pull_up.infra.database.entity.legacy.IncorrectAnswer.of(member, problem, null,
+                        memberAnswerResponseDto.chosenAnswer(), LocalDateTime.now());
+                incorrectAnswerRepository.save(incorrectAnswer);
+            }
+        }
+
+        problem.setTotalAttempts(problem.getTotalAttempts() + 1);
+        if (!isCorrect) {
+            problem.setIncorrectAttempts(problem.getIncorrectAttempts() + 1);
+        }
+        problem.setIncorrectRate(
+                (double) problem.getIncorrectAttempts() / problem.getTotalAttempts() * 100);
+        problemRepository.save(problem);
+
+        // 7. 결과를 DTO로 변환하여 반환
+        return MemberAnswerResultDto.from(memberAnswer);
     }
 }

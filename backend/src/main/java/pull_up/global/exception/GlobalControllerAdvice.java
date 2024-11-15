@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pull_up.api.exam.exception.ExamException;
 import pull_up.global.dto.MessageDto;
 import pull_up.global.exception.member.IncorrectAnswerException;
-import pull_up.global.exception.member.MemberAnswerException;
+import pull_up.global.exception.member.AnswerException;
 import pull_up.global.exception.member.MemberException;
 import pull_up.global.exception.problem.ProblemException;
 
@@ -32,8 +32,8 @@ public class GlobalControllerAdvice {
     /**
      * MemberAnswer Exception Handler.
      */
-    @ExceptionHandler(MemberAnswerException.class)
-    public ResponseEntity<?> applicationHandler(MemberAnswerException e) {
+    @ExceptionHandler(AnswerException.class)
+    public ResponseEntity<?> applicationHandler(AnswerException e) {
         log.error("MemberAnswer Error occurs {}", e.toString());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
                 .body(new MessageDto(e.getMessage()));

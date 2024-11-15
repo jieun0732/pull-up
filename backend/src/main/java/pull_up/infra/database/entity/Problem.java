@@ -124,4 +124,8 @@ public class Problem extends BaseEntity {
         if (!isCorrect) incorrectAttempts++;
         incorrectRate = (double) incorrectAttempts / totalAttempts * 100;
     }
+
+    public Double getCorrectRate() {
+        return 100 - incorrectRate;
+    }
 }

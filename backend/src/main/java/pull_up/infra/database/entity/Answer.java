@@ -13,6 +13,8 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.global.entity.BaseEntity;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
@@ -41,6 +43,9 @@ public class Answer extends BaseEntity {
     @Column
     private Boolean isCorrect;
 
+    @Column
+    private LocalDateTime solveTime;
+
     protected Answer() {
     }
 
@@ -62,9 +67,16 @@ public class Answer extends BaseEntity {
         return new Answer(exam, problem, ProblemNumber, chosenAnswer, isCorrect);
     }
 
+    public static Answer submit(Exam exam, Long problemNumber, String selectedAnswer) {
+        Answer answer = exam.getAnswer(problemNumber);
+        answer.mark(Integer.valueOf(selectedAnswer));
+        return answer;
+    }
+
     public void mark(Integer selectedAnswer) {
         this.chosenAnswer = selectedAnswer.toString();
         if (problem.getAnswer().equals(chosenAnswer)) isCorrect = true;
         problem.addTotalAttempt(isCorrect);
+        solveTime = LocalDateTime.now();
     }
 }

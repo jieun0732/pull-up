@@ -8,15 +8,15 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public class MemberAnswerException extends RuntimeException {
+public class AnswerException extends RuntimeException {
 
-    private MemberAnswerErrorCode errorCode;
+    private AnswerErrorCode errorCode;
     private String message;
 
     /**
      * 메세지가 없는 생성자.
      */
-    public MemberAnswerException(MemberAnswerErrorCode errorCode) {
+    public AnswerException(AnswerErrorCode errorCode) {
         this.errorCode = errorCode;
         this.message = errorCode.getMessage();
     }
