@@ -3,6 +3,7 @@ package pull_up.api.exam.dto;
 import pull_up.infra.database.entity.Answer;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record IncorrectAnswer() {
     public record Brief(
@@ -34,11 +35,7 @@ public record IncorrectAnswer() {
             String type,
             String question,
             String explanation,
-            String choice1,
-            String choice2,
-            String choice3,
-            String choice4,
-            String choice5,
+            List<String> choices,
             String chosenAnswer,
             String correctAnswer,
             String answerExplain,
@@ -53,11 +50,12 @@ public record IncorrectAnswer() {
                     incorrectAnswer.getProblem().getType(),
                     incorrectAnswer.getProblem().getQuestion(),
                     incorrectAnswer.getProblem().getExplanation(),
-                    incorrectAnswer.getProblem().getChoice1(),
-                    incorrectAnswer.getProblem().getChoice2(),
-                    incorrectAnswer.getProblem().getChoice3(),
-                    incorrectAnswer.getProblem().getChoice4(),
-                    incorrectAnswer.getProblem().getChoice5(),
+                    List.of(
+                            incorrectAnswer.getProblem().getChoice1(),
+                            incorrectAnswer.getProblem().getChoice2(),
+                            incorrectAnswer.getProblem().getChoice3(),
+                            incorrectAnswer.getProblem().getChoice4(),
+                            incorrectAnswer.getProblem().getChoice5()),
                     incorrectAnswer.getChosenAnswer(),
                     incorrectAnswer.getProblem().getAnswer(),
                     incorrectAnswer.getProblem().getAnswerExplain(),

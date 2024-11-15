@@ -4,14 +4,16 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import pull_up.infra.database.entity.*;
+import pull_up.infra.database.entity.legacy.IncorrectAnswer;
+import pull_up.infra.database.entity.legacy.MemberAnswer;
 
 import java.util.List;
 
 import static pull_up.infra.database.entity.QAnswer.answer;
 import static pull_up.infra.database.entity.QExam.exam;
-import static pull_up.infra.database.entity.QIncorrectAnswer.incorrectAnswer;
 import static pull_up.infra.database.entity.QMember.member;
-import static pull_up.infra.database.entity.QMemberAnswer.memberAnswer;
+import static pull_up.infra.database.entity.legacy.QIncorrectAnswer.incorrectAnswer;
+import static pull_up.infra.database.entity.legacy.QMemberAnswer.memberAnswer;
 
 @Repository
 public class CustomMemberRepositoryImpl implements CustomMemberRepository{

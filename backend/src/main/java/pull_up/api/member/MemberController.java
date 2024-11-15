@@ -11,7 +11,7 @@ import pull_up.api.member.dto.MemberScoreDto;
 import pull_up.domain.member.MemberService;
 
 @Slf4j
-@RequestMapping("/api/pull-up/members")
+@RequestMapping("/api/members")
 @RestController
 @RequiredArgsConstructor
 public class MemberController {

@@ -33,7 +33,7 @@ import pull_up.global.dto.ListDto;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/pull-up/exams")
+@RequestMapping("/api/exams")
 @RequiredArgsConstructor
 public class ExamController {
 

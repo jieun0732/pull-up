@@ -1,7 +1,7 @@
 package pull_up.api.member.dto;
 
 import java.io.Serializable;
-import pull_up.infra.database.entity.MemberAnswer;
+import pull_up.infra.database.entity.legacy.MemberAnswer;
 
 public record MemberAnswerResponseDto(Long id,
                                       // ID of the MemberAnswer entity

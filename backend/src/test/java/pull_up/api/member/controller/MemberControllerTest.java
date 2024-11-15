@@ -36,7 +36,7 @@ class MemberControllerTest {
     @Test
     @DisplayName("회원 삭제 API 테스트")
     void testDeleteMember() throws Exception {
-        mockMvc.perform(delete("/api/pull-up/members/" + 1 + "/delete/hard"))
+        mockMvc.perform(delete("/api/members/" + 1 + "/delete/hard"))
                 .andDo(print())
                 .andExpect(status().is(200));
     }

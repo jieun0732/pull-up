@@ -10,6 +10,8 @@ import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import pull_up.infra.database.entity.*;
+import pull_up.infra.database.entity.legacy.IncorrectAnswer;
+import pull_up.infra.database.entity.legacy.MemberAnswer;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,4 +1,4 @@
-package pull_up.infra.database.entity;
+package pull_up.infra.database.entity.legacy;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,17 +8,21 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.global.entity.BaseEntity;
+import pull_up.infra.database.entity.Exam;
+import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.entity.Problem;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "member_answer")
+@Table(name = "incorrect_answer")
 @SQLRestriction("is_deleted = false")
-public class MemberAnswer extends BaseEntity {
+public class IncorrectAnswer extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,27 +44,27 @@ public class MemberAnswer extends BaseEntity {
     private String chosenAnswer;
 
     @Column
-    private Boolean isCorrect;
+    private LocalDateTime incorrectTime;
 
-
-    protected MemberAnswer() {
+    protected IncorrectAnswer() {
     }
 
     /**
      * 파라미터 생성자.
      */
-    private MemberAnswer(Member member, Problem problem, Exam exam, String chosenAnswer, Boolean isCorrect) {
+    private IncorrectAnswer(Member member, Problem problem, Exam exam, String chosenAnswer, LocalDateTime incorrectTime) {
         this.member = member;
         this.problem = problem;
         this.exam = exam;
         this.chosenAnswer = chosenAnswer;
-        this.isCorrect = isCorrect;
+        this.incorrectTime = incorrectTime;
     }
 
     /**
      * 파라미터로부터 UserAnswer 엔티티 객체를 생성하는 함수.
      */
-    public static MemberAnswer of(Member member, Problem problem, Exam exam, String chosenAnswer, Boolean isCorrect) {
-        return new MemberAnswer(member, problem, exam, chosenAnswer, isCorrect);
+    public static IncorrectAnswer of(Member member, Problem problem, Exam exam, String chosenAnswer, LocalDateTime incorrectTime) {
+        return new IncorrectAnswer(member, problem, exam, chosenAnswer, incorrectTime);
     }
+
 }

@@ -1,4 +1,4 @@
-package pull_up.infra.database.repository.member;
+package pull_up.infra.database.repository.legacy;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pull_up.infra.database.entity.Member;
-import pull_up.infra.database.entity.MemberAnswer;
+import pull_up.infra.database.entity.legacy.MemberAnswer;
 import pull_up.infra.database.entity.Problem;
 
 public interface MemberAnswerRepository extends JpaRepository<MemberAnswer, Long>, CustomMemberAnswerRepository {

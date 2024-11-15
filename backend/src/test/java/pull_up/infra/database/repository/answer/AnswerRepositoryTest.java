@@ -32,12 +32,9 @@ class AnswerRepositoryTest {
     @Autowired
     EntityManager em;
 
-    @Autowired
-    private AnswerRepository answerRepository;
-
     @BeforeEach
     void init() {
-        answerRepository.deleteAll();
+        suit.deleteAll();
         em.flush();
         em.clear();
     }
@@ -48,11 +45,11 @@ class AnswerRepositoryTest {
         // given
         Member member = MemberFixture.APPLE_USER.get();
         Exam exam = ExamFixture.MATHEMATICS.get(member);
-        makeAnswer(exam, 0, true, "3");
+        Answer correctAnswer = makeAnswer(exam, 0, true, "3");
+        Answer notSolvedAnswer1 = makeAnswer(exam, 1, false, "");
+        Answer notSolvedAnswer2 = makeAnswer(exam, 4, false, "");
         Answer incorrectAnswer1 = makeAnswer(exam, 2, false, "3");
         Answer incorrectAnswer2 = makeAnswer(exam, 3, false, "3");
-        makeAnswer(exam, 1, false, "");
-        makeAnswer(exam, 4, false, "");
 
 
         em.persist(member);

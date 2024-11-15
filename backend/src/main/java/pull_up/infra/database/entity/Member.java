@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.global.entity.BaseEntity;
+import pull_up.infra.database.entity.legacy.IncorrectAnswer;
+import pull_up.infra.database.entity.legacy.MemberAnswer;
 
 import java.util.List;
 import java.util.regex.Pattern;

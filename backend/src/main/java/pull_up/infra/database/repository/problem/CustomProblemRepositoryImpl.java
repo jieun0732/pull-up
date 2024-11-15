@@ -9,9 +9,9 @@ import pull_up.infra.database.entity.*;
 import java.util.List;
 
 import static pull_up.infra.database.entity.QAnswer.answer;
-import static pull_up.infra.database.entity.QIncorrectAnswer.incorrectAnswer;
-import static pull_up.infra.database.entity.QMemberAnswer.memberAnswer;
 import static pull_up.infra.database.entity.QProblem.problem;
+import static pull_up.infra.database.entity.legacy.QIncorrectAnswer.incorrectAnswer;
+import static pull_up.infra.database.entity.legacy.QMemberAnswer.memberAnswer;
 
 
 @Repository

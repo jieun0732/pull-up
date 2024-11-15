@@ -1,4 +1,4 @@
-package pull_up.infra.database.repository.member;
+package pull_up.infra.database.repository.legacy;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -8,7 +8,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
-import pull_up.infra.database.entity.MemberAnswer;
+import pull_up.infra.database.entity.legacy.MemberAnswer;
 
 public class CustomMemberAnswerRepositoryImpl implements CustomMemberAnswerRepository {
 

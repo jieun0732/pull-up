@@ -20,10 +20,11 @@ import pull_up.global.exception.member.MemberException;
 import pull_up.global.exception.problem.ProblemErrorCode;
 import pull_up.global.exception.problem.ProblemException;
 import pull_up.infra.database.entity.*;
+import pull_up.infra.database.entity.legacy.MemberAnswer;
 import pull_up.infra.database.repository.answer.AnswerRepository;
 import pull_up.infra.database.repository.exam.ExamRepository;
-import pull_up.infra.database.repository.member.IncorrectAnswerRepository;
-import pull_up.infra.database.repository.member.MemberAnswerRepository;
+import pull_up.infra.database.repository.legacy.IncorrectAnswerRepository;
+import pull_up.infra.database.repository.legacy.MemberAnswerRepository;
 import pull_up.infra.database.repository.member.MemberRepository;
 
 import java.time.Duration;
@@ -215,7 +216,7 @@ public class ExamService {
         memberAnswerRepository.save(memberAnswer);
 
         // 6. IncorrectAnswer 처리
-        Optional<pull_up.infra.database.entity.IncorrectAnswer> existingIncorrectAnswer = incorrectAnswerRepository.findByMemberAndProblem(
+        Optional<pull_up.infra.database.entity.legacy.IncorrectAnswer> existingIncorrectAnswer = incorrectAnswerRepository.findByMemberAndProblem(
                 member, problem);
 
         if (isCorrect) {
@@ -224,13 +225,13 @@ public class ExamService {
         } else {
             if (existingIncorrectAnswer.isPresent()) {
                 // 오답일 경우 기존 오답 기록이 있으면 LocalDateTime 업데이트
-                pull_up.infra.database.entity.IncorrectAnswer incorrectAnswer = existingIncorrectAnswer.get();
+                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = existingIncorrectAnswer.get();
                 incorrectAnswer.setIncorrectTime(LocalDateTime.now());
                 incorrectAnswer.setChosenAnswer(memberAnswerResponseDto.chosenAnswer());
                 incorrectAnswerRepository.save(incorrectAnswer);
             } else {
                 // 오답일 경우 기존 오답 기록이 없으면 새로 저장
-                pull_up.infra.database.entity.IncorrectAnswer incorrectAnswer = pull_up.infra.database.entity.IncorrectAnswer.of(member, problem, null,
+                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = pull_up.infra.database.entity.legacy.IncorrectAnswer.of(member, problem, null,
                         memberAnswerResponseDto.chosenAnswer(), LocalDateTime.now());
                 incorrectAnswerRepository.save(incorrectAnswer);
             }
@@ -448,7 +449,7 @@ public class ExamService {
 
         // 6. IncorrectAnswer 처리
         Member member = answer.getExam().getMember();
-        Optional<pull_up.infra.database.entity.IncorrectAnswer> existingIncorrectAnswer = incorrectAnswerRepository.findByMemberAndProblemAndExam(
+        Optional<pull_up.infra.database.entity.legacy.IncorrectAnswer> existingIncorrectAnswer = incorrectAnswerRepository.findByMemberAndProblemAndExam(
                 member, problem, answer.getExam());
 
         if (isCorrect) {
@@ -457,13 +458,13 @@ public class ExamService {
         } else {
             if (existingIncorrectAnswer.isPresent()) {
                 // 오답일 경우 기존 오답 기록이 있으면 LocalDateTime 업데이트
-                pull_up.infra.database.entity.IncorrectAnswer incorrectAnswer = existingIncorrectAnswer.get();
+                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = existingIncorrectAnswer.get();
                 incorrectAnswer.setIncorrectTime(LocalDateTime.now());
                 incorrectAnswer.setChosenAnswer(examProblemResponseDto.chosenAnswer());
                 incorrectAnswerRepository.save(incorrectAnswer);
             } else {
                 // 오답일 경우 기존 오답 기록이 없으면 새로 저장
-                pull_up.infra.database.entity.IncorrectAnswer incorrectAnswer = pull_up.infra.database.entity.IncorrectAnswer.of(member, problem,
+                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = pull_up.infra.database.entity.legacy.IncorrectAnswer.of(member, problem,
                         answer.getExam(), examProblemResponseDto.chosenAnswer(),
                         LocalDateTime.now());
                 incorrectAnswerRepository.save(incorrectAnswer);

@@ -72,7 +72,7 @@ class ExamServiceTest {
 
         Long answerId = 1L;
         Answer incorrectAnswer = exam.getAnswers().get(1);
-        IncorrectAnswer.Detail expectDetail = new IncorrectAnswer.Detail(2L, 2L, "수리", "골고루", "속력", "민수는 원형 트랙을 자전거로 시계 방향으로 돌면서 첫 30분 동안 4바퀴, 그 다음 30분 동안 5바퀴, 마지막 1시간 동안 10바퀴를 돌았다. 원형 트랙의 총 길이가 6km라면, 민수가 2시간 동안 자전거를 탄 평균 속력은 몇 km/h인가?", "", "48 km/h", "57 km/h", "60 km/h", "66 km/h", "78 km/h", "3", "2", "민수가 자전거로 총 달린 거리를 구합니다.\n" +
+        IncorrectAnswer.Detail expectDetail = new IncorrectAnswer.Detail(2L, 2L, "수리", "골고루", "속력", "민수는 원형 트랙을 자전거로 시계 방향으로 돌면서 첫 30분 동안 4바퀴, 그 다음 30분 동안 5바퀴, 마지막 1시간 동안 10바퀴를 돌았다. 원형 트랙의 총 길이가 6km라면, 민수가 2시간 동안 자전거를 탄 평균 속력은 몇 km/h인가?", "", List.of("48 km/h", "57 km/h", "60 km/h", "66 km/h", "78 km/h"), "3", "2", "민수가 자전거로 총 달린 거리를 구합니다.\n" +
                 " 첫 30분 동안: 6km X 4바퀴 = 24km\n" +
                 " 다음 30분 동안: 6km X 5바퀴 = 30km\n" +
                 " 마지막 1시간 동안: 6km X 10바퀴 = 60km\n" +

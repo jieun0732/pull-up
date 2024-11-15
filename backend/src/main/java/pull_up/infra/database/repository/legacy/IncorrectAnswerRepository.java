@@ -1,10 +1,10 @@
-package pull_up.infra.database.repository.member;
+package pull_up.infra.database.repository.legacy;
 
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import pull_up.infra.database.entity.Exam;
-import pull_up.infra.database.entity.IncorrectAnswer;
+import pull_up.infra.database.entity.legacy.IncorrectAnswer;
 import pull_up.infra.database.entity.Member;
 import pull_up.infra.database.entity.Problem;
 

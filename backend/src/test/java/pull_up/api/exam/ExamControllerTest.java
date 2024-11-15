@@ -40,7 +40,7 @@ class ExamControllerTest {
     @DisplayName("문제 채점 요청 테스트")
     void testGradeApi() throws Exception {
         GradeExam.Request request = new GradeExam.Request(1L, List.of(new GradeExam.SelectedAnswer(1L, 1)));
-        mockMvc.perform(post("/api/pull-up/exams/mock-exam/grade")
+        mockMvc.perform(post("/api/exams/mock-exam/grade")
                         .content(gson.toJson(request))
                         .contentType(APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
@@ -51,12 +51,12 @@ class ExamControllerTest {
     @Test
     @DisplayName("틀린문제 전체 및 상세조회 테스트")
     void testIncorrectAnswer() throws Exception {
-        mockMvc.perform(get("/api/pull-up/exams/incorrect-answers?memberId=1")
+        mockMvc.perform(get("/api/exams/incorrect-answers?memberId=1")
                         .contentType(APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
                 .andExpect(status().is(200));
-        mockMvc.perform(get("/api/pull-up/exams/incorrect-answers/1")
+        mockMvc.perform(get("/api/exams/incorrect-answers/1")
                         .contentType(APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(print())
