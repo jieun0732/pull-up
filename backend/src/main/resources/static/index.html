@@ -27,7 +27,7 @@
       const serverBaseUrl = "https://pullup-api.shop";
       async function getFetchTest(baseUrl) {
         const params = new URLSearchParams(location.search);
-        const response = await fetch(baseUrl + "/api/pull-up/exams/incorrect-answers/1?memberId=" + params.get("memberId"), {
+        const response = await fetch(baseUrl + "/api/pull-up/examLS/incorrect-answerLS/1?memberId=" + params.get("memberId"), {
           method: "GET",
           mode: "cors",
           headers: {

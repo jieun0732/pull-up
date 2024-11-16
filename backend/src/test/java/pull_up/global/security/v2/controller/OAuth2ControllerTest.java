@@ -10,9 +10,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.RedirectView;
 import pull_up.api.auth.OAuth2Controller;
-import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.api.auth.dto.OAuth2LoginResponseDto;
-import pull_up.domain.auth.enums.OAuth2Provider;
+import pull_up.domain.auth.SNSProvider;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.global.security.util.CookieUtil;
 import pull_up.global.security.util.JwtUtil;
@@ -76,17 +76,17 @@ class OAuth2ControllerTest {
         // given
         URI url = new URI("/api/pull-up/oauth2/callback/apple");
         URI url2 = new URI("/api/pull-up/oauth2/callback/kakao");
-        Member member = Member.of("남상엽", "test@example.com", false, "apple-user");
-        member.setId(1L);
-        OAuth2LoginResponseDto appleUser = OAuth2LoginResponseDto.of(member, true, OAuth2Provider.APPLE);
+        MemberL memberL = MemberL.of("남상엽", "test@example.com", false, "apple-user");
+        memberL.setId(1L);
+        OAuth2LoginResponseDto appleUser = OAuth2LoginResponseDto.of(memberL, true, SNSProvider.APPLE);
 
         // when
         when(service.getAppleUser(any(), any())).thenReturn(appleUser);
         ResultActions result = mockMvc.perform(post(url).param("id_token", "test"));
 
         // when 2
-        member.setRole("kakao-user");
-        OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(member, true, OAuth2Provider.APPLE);
+        memberL.setRole("kakao-user");
+        OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(memberL, true, SNSProvider.APPLE);
         when(service.getKakaoUser((String) any())).thenReturn(kakaoUser);
         ResultActions result2 = mockMvc.perform(get(url2).param("code", "test"));
 

@@ -14,9 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.test.util.ReflectionTestUtils;
 import pull_up.global.security.handler.OAuth2SuccessHandler;
-import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.api.auth.dto.OAuth2LoginResponseDto;
-import pull_up.domain.auth.enums.OAuth2Provider;
+import pull_up.domain.auth.SNSProvider;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.global.security.util.CookieUtil;
 import pull_up.global.security.util.JwtUtil;
@@ -71,9 +71,9 @@ class OAuth2SuccessHandlerTest {
         DefaultOAuth2User user = new DefaultOAuth2User(new ArrayList<>(), attributes, "id");
 
         // mock kakao user
-        Member member = Member.of("남상엽", "test@example.com", false, "kakao-user");
-        member.setId(1L);
-        OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(member, true, OAuth2Provider.KAKAO);
+        MemberL memberL = MemberL.of("남상엽", "test@example.com", false, "kakao-user");
+        memberL.setId(1L);
+        OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(memberL, true, SNSProvider.KAKAO);
 
         // mock filter param
         HttpServletRequest request = new MockHttpServletRequest();

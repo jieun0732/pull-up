@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import pull_up.infra.database.entity.*;
-import pull_up.infra.database.entity.legacy.IncorrectAnswer;
-import pull_up.infra.database.entity.legacy.MemberAnswer;
+import pull_up.infra.database.entity.legacy.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(
         replace = AutoConfigureTestDatabase.Replace.ANY,
         connection = EmbeddedDatabaseConnection.H2)
-class MemberRepositoryTest {
+class MemberLRepositoryTest {
 
     @Autowired
     MemberRepository suit;
@@ -31,33 +29,33 @@ class MemberRepositoryTest {
     EntityManager em;
 
     // fixtures
-    Problem problem;
-    Member member;
-    Answer answer;
-    List<Exam> exams;
+    ProblemL problemL;
+    MemberL memberL;
+    AnswerL answerL;
+    List<ExamL> examLS;
     List<IncorrectAnswer> incorrectAnswers;
     List<MemberAnswer> memberAnswers;
 
 
     @BeforeEach
     void init() {
-        problem = Problem.of("수리",
+        problemL = ProblemL.of("수리",
                 "골고루", "속력", "test123", "test1234", "1", "2", "3", "4", "5", "1", "qwer1234", 100, 30, 30d);
-        member = Member.of("test", "test@example.com", false, "apple-user");
+        memberL = MemberL.of("test", "test@example.com", false, "apple-user");
 
-        exams = List.of(Exam.of(member, null, "모의고사", null, LocalDateTime.now(), null, null, 0));
-        memberAnswers = List.of(MemberAnswer.of(member, problem, exams.get(0), "2", false));
-        incorrectAnswers = List.of(IncorrectAnswer.of(member, problem, exams.get(0), "2", LocalDateTime.now()));
-        answer = Answer.of(exams.get(0), problem,0L,"1", true);
+        examLS = List.of(ExamL.of(memberL, null, "모의고사", null, LocalDateTime.now(), null, null, 0));
+        memberAnswers = List.of(MemberAnswer.of(memberL, problemL, examLS.get(0), "2", false));
+        incorrectAnswers = List.of(IncorrectAnswer.of(memberL, problemL, examLS.get(0), "2", LocalDateTime.now()));
+        answerL = AnswerL.of(examLS.get(0), problemL,0L,"1", true);
 
-        member.setExamList(exams);
-        member.setIncorrectAnswers(incorrectAnswers);
-        member.setMemberAnswers(memberAnswers);
+        memberL.setExamLList(examLS);
+        memberL.setIncorrectAnswers(incorrectAnswers);
+        memberL.setMemberAnswers(memberAnswers);
 
-        em.persist(answer);
-        em.persist(problem);
-        em.persist(member);
-        exams.forEach(t -> em.persist(t));
+        em.persist(answerL);
+        em.persist(problemL);
+        em.persist(memberL);
+        examLS.forEach(t -> em.persist(t));
         memberAnswers.forEach(t -> em.persist(t));
         incorrectAnswers.forEach(t -> em.persist(t));
 
@@ -69,17 +67,17 @@ class MemberRepositoryTest {
     @DisplayName("회원 삭제 시 관련 테이블 한번에 삭제하는지 테스트")
     void testDeleteRelatedTable() {
         // given
-        assertThat(em.find(Member.class, member.getId())).isNotNull();
-        assertThat(em.find(Exam.class, exams.get(0).getId())).isNotNull();
+        assertThat(em.find(MemberL.class, memberL.getId())).isNotNull();
+        assertThat(em.find(ExamL.class, examLS.get(0).getId())).isNotNull();
         assertThat(em.find(IncorrectAnswer.class, incorrectAnswers.get(0).getId())).isNotNull();
         assertThat(em.find(MemberAnswer.class, memberAnswers.get(0).getId())).isNotNull();
 
         // when
-        suit.delete(member);
+        suit.delete(memberL);
 
         // then
-        assertThat(em.find(Member.class, member.getId())).isNull();
-        assertThat(em.find(Exam.class, exams.get(0).getId())).isNull();
+        assertThat(em.find(MemberL.class, memberL.getId())).isNull();
+        assertThat(em.find(ExamL.class, examLS.get(0).getId())).isNull();
         assertThat(em.find(IncorrectAnswer.class, incorrectAnswers.get(0).getId())).isNull();
         assertThat(em.find(MemberAnswer.class, memberAnswers.get(0).getId())).isNull();
     }

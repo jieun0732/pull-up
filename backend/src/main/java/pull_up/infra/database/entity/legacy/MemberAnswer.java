@@ -12,14 +12,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.global.entity.BaseEntity;
-import pull_up.infra.database.entity.Exam;
-import pull_up.infra.database.entity.Member;
-import pull_up.infra.database.entity.Problem;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "member_answer")
+@Table(name = "member_answer_legacy")
 @SQLRestriction("is_deleted = false")
 public class MemberAnswer extends BaseEntity {
 
@@ -29,15 +26,15 @@ public class MemberAnswer extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member member;
+    private MemberL memberL;
 
     @ManyToOne
     @JoinColumn(name = "problem_id")
-    private Problem problem;
+    private ProblemL problemL;
 
     @ManyToOne
     @JoinColumn(name = "exam_information_id")
-    private Exam exam;
+    private ExamL examL;
 
     @Column
     private String chosenAnswer;
@@ -52,10 +49,10 @@ public class MemberAnswer extends BaseEntity {
     /**
      * 파라미터 생성자.
      */
-    private MemberAnswer(Member member, Problem problem, Exam exam, String chosenAnswer, Boolean isCorrect) {
-        this.member = member;
-        this.problem = problem;
-        this.exam = exam;
+    private MemberAnswer(MemberL memberL, ProblemL problemL, ExamL examL, String chosenAnswer, Boolean isCorrect) {
+        this.memberL = memberL;
+        this.problemL = problemL;
+        this.examL = examL;
         this.chosenAnswer = chosenAnswer;
         this.isCorrect = isCorrect;
     }
@@ -63,7 +60,7 @@ public class MemberAnswer extends BaseEntity {
     /**
      * 파라미터로부터 UserAnswer 엔티티 객체를 생성하는 함수.
      */
-    public static MemberAnswer of(Member member, Problem problem, Exam exam, String chosenAnswer, Boolean isCorrect) {
-        return new MemberAnswer(member, problem, exam, chosenAnswer, isCorrect);
+    public static MemberAnswer of(MemberL memberL, ProblemL problemL, ExamL examL, String chosenAnswer, Boolean isCorrect) {
+        return new MemberAnswer(memberL, problemL, examL, chosenAnswer, isCorrect);
     }
 }

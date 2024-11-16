@@ -1,10 +1,11 @@
 package pull_up.api.exam.dto;
 
 import java.io.Serializable;
-import pull_up.infra.database.entity.Exam;
+import pull_up.infra.database.entity.legacy.ExamL;
 import pull_up.api.member.dto.MemberDto;
+
 /**
- * DTO for creating a new {@link Exam} with only the necessary fields.
+ * DTO for creating a new {@link ExamL} with only the necessary fields.
  */
 public record CreatedExamInformationResponseDto(MemberDto member, String entry, String category, String type) implements Serializable {
 
@@ -14,9 +15,9 @@ public record CreatedExamInformationResponseDto(MemberDto member, String entry, 
     }
 
     // Entity로부터 DTO를 생성하는 메서드
-    public static CreatedExamInformationResponseDto from(Exam entity) {
+    public static CreatedExamInformationResponseDto from(ExamL entity) {
         return new CreatedExamInformationResponseDto(
-            MemberDto.from(entity.getMember()),
+            MemberDto.from(entity.getMemberL()),
             entity.getEntry(),
             entity.getCategory(),
             entity.getType()
@@ -24,8 +25,8 @@ public record CreatedExamInformationResponseDto(MemberDto member, String entry, 
     }
 
     // DTO로부터 Entity를 생성하는 메서드
-    public static Exam toEntity(CreatedExamInformationResponseDto dto) {
-        return Exam.of(
+    public static ExamL toEntity(CreatedExamInformationResponseDto dto) {
+        return ExamL.of(
             MemberDto.toEntity(dto.member()),
             dto.entry(),
             dto.category(),

@@ -1,89 +1,48 @@
 package pull_up.infra.database.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.SQLRestriction;
-import pull_up.global.entity.BaseEntity;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @Entity
-@Table(name = "exam_problem")
-@SQLRestriction("is_deleted = false")
-public class Answer extends BaseEntity {
+@Table(name = "answer")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+public class Answer {
 
     @Id
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private Boolean isCorrect;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Boolean isSubmitted;
+
+    @Column(nullable = false)
+    private Integer problemNumber;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Integer submitCount;
+
+    @Column
+    private String submitAnswer;
+
+    @Column
+    private LocalDateTime submitTime;
+
     @ManyToOne
-    @JoinColumn(name = "exam_information_id")
+    @JoinColumn(name = "exam_id")
     private Exam exam;
 
     @ManyToOne
     @JoinColumn(name = "problem_id")
     private Problem problem;
-
-    @Column
-    private Long problemNumber;
-
-    @Column
-    private Integer tryCount;
-
-    @Column
-    private String chosenAnswer;
-
-    @Column
-    private Boolean isCorrect;
-
-    @Column
-    private LocalDateTime solveTime;
-
-    @Column
-    private Boolean isSolved;
-
-    protected Answer() {
-    }
-
-    /**
-     * 파라미터 생성자.
-     */
-    private Answer(Exam exam, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
-        this.exam = exam;
-        this.problem = problem;
-        this.problemNumber = ProblemNumber;
-        this.chosenAnswer = chosenAnswer;
-        this.isCorrect = isCorrect;
-        this.tryCount = 0;
-        this.isSolved = false;
-    }
-
-    public static Answer of(Exam exam, Problem problem, Long ProblemNumber, String chosenAnswer, Boolean isCorrect) {
-        return new Answer(exam, problem, ProblemNumber, chosenAnswer, isCorrect);
-    }
-
-    public static Answer submit(Exam exam, Long problemNumber, String selectedAnswer) {
-        Answer answer = exam.getAnswer(problemNumber);
-        answer.mark(Integer.valueOf(selectedAnswer));
-        return answer;
-    }
-
-    public void mark(Integer selectedAnswer) {
-        chosenAnswer = selectedAnswer.toString();
-        isCorrect = problem.getAnswer().equals(chosenAnswer);
-        problem.addTotalAttempt(isCorrect);
-        solveTime = LocalDateTime.now();
-        tryCount++;
-        isSolved = true;
-    }
 }

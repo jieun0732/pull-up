@@ -8,8 +8,8 @@ import pull_up.api.answer.dto.AnswerSubmit;
 import pull_up.api.exam.exception.ExamErrorCode;
 import pull_up.api.exam.exception.ExamException;
 import pull_up.global.exception.member.AnswerException;
-import pull_up.infra.database.entity.Answer;
-import pull_up.infra.database.entity.Exam;
+import pull_up.infra.database.entity.legacy.AnswerL;
+import pull_up.infra.database.entity.legacy.ExamL;
 import pull_up.infra.database.repository.answer.AnswerRepository;
 import pull_up.infra.database.repository.exam.ExamRepository;
 
@@ -25,23 +25,23 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
 
     public AnswerSubmit.Response submit(AnswerSubmit.Request request) {
-        Exam exam = examRepository.findByIdWithAnswer(request.examId())
+        ExamL examL = examRepository.findByIdWithAnswer(request.examId())
                 .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
 
-        Answer answer = Answer.submit(exam, request.problemNumber(), request.selectedAnswer());
+        AnswerL answerL = AnswerL.submit(examL, request.problemNumber(), request.selectedAnswer());
 
-        return new AnswerSubmit.Response(AnswerDto.toDto(answer));
+        return new AnswerSubmit.Response(AnswerDto.toDto(answerL));
     }
 
     public AnswerDto getSolved(Long id) {
-        Answer answer = answerRepository.findByIdWithProblem(id, true)
+        AnswerL answerL = answerRepository.findByIdWithProblem(id, true)
                 .orElseThrow(() -> new AnswerException(NOT_FOUND));
 
-        return AnswerDto.toDto(answer);
+        return AnswerDto.toDto(answerL);
     }
 
     public AnswerSolved getSolvedAll(Long memberId, String entry) {
-        List<Answer> answers = answerRepository.findSolvedAnswersByMemberIdAndEntry(memberId, entry);
-        return AnswerSolved.toDto(answers);
+        List<AnswerL> answerLS = answerRepository.findSolvedAnswersByMemberIdAndEntry(memberId, entry);
+        return AnswerSolved.toDto(answerLS);
     }
 }

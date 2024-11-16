@@ -8,7 +8,7 @@ public record MemberAnswerSolvedDto(Long problemId, Boolean isCorrect,
 
     public static MemberAnswerSolvedDto from(MemberAnswer memberAnswer) {
         return new MemberAnswerSolvedDto(
-            memberAnswer.getProblem().getId(),
+            memberAnswer.getProblemL().getId(),
             memberAnswer.getIsCorrect(),
             memberAnswer.getChosenAnswer()
         );

@@ -1,6 +1,6 @@
 package pull_up.api.exam.dto;
 
-import pull_up.infra.database.entity.Answer;
+import pull_up.infra.database.entity.legacy.AnswerL;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,14 +16,14 @@ public record IncorrectAnswer() {
             LocalDateTime solvedTime
     ) {
 
-        public static Brief toDto(Answer incorrectProblem) {
+        public static Brief toDto(AnswerL incorrectProblem) {
             return new Brief(incorrectProblem.getId(),
                     incorrectProblem.getProblemNumber(),
-                    incorrectProblem.getProblem().getEntry(),
-                    incorrectProblem.getProblem().getCategory(),
-                    incorrectProblem.getProblem().getType(),
-                    incorrectProblem.getProblem().getQuestion(),
-                    incorrectProblem.getExam().getSolvedTime());
+                    incorrectProblem.getProblemL().getEntry(),
+                    incorrectProblem.getProblemL().getCategory(),
+                    incorrectProblem.getProblemL().getType(),
+                    incorrectProblem.getProblemL().getQuestion(),
+                    incorrectProblem.getExamL().getSolvedTime());
         }
     }
 
@@ -42,24 +42,24 @@ public record IncorrectAnswer() {
             Double incorrectRate
     ) {
 
-        public static Detail toDto(Answer incorrectAnswer) {
-            return new Detail(incorrectAnswer.getId(),
-                    incorrectAnswer.getProblemNumber(),
-                    incorrectAnswer.getProblem().getEntry(),
-                    incorrectAnswer.getProblem().getCategory(),
-                    incorrectAnswer.getProblem().getType(),
-                    incorrectAnswer.getProblem().getQuestion(),
-                    incorrectAnswer.getProblem().getExplanation(),
+        public static Detail toDto(AnswerL incorrectAnswerL) {
+            return new Detail(incorrectAnswerL.getId(),
+                    incorrectAnswerL.getProblemNumber(),
+                    incorrectAnswerL.getProblemL().getEntry(),
+                    incorrectAnswerL.getProblemL().getCategory(),
+                    incorrectAnswerL.getProblemL().getType(),
+                    incorrectAnswerL.getProblemL().getQuestion(),
+                    incorrectAnswerL.getProblemL().getExplanation(),
                     List.of(
-                            incorrectAnswer.getProblem().getChoice1(),
-                            incorrectAnswer.getProblem().getChoice2(),
-                            incorrectAnswer.getProblem().getChoice3(),
-                            incorrectAnswer.getProblem().getChoice4(),
-                            incorrectAnswer.getProblem().getChoice5()),
-                    incorrectAnswer.getChosenAnswer(),
-                    incorrectAnswer.getProblem().getAnswer(),
-                    incorrectAnswer.getProblem().getAnswerExplain(),
-                    incorrectAnswer.getProblem().getIncorrectRate());
+                            incorrectAnswerL.getProblemL().getChoice1(),
+                            incorrectAnswerL.getProblemL().getChoice2(),
+                            incorrectAnswerL.getProblemL().getChoice3(),
+                            incorrectAnswerL.getProblemL().getChoice4(),
+                            incorrectAnswerL.getProblemL().getChoice5()),
+                    incorrectAnswerL.getChosenAnswer(),
+                    incorrectAnswerL.getProblemL().getAnswer(),
+                    incorrectAnswerL.getProblemL().getAnswerExplain(),
+                    incorrectAnswerL.getProblemL().getIncorrectRate());
         }
     }
 }

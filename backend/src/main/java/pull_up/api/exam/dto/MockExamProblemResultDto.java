@@ -2,7 +2,7 @@ package pull_up.api.exam.dto;
 
 import java.io.Serializable;
 
-import pull_up.infra.database.entity.Answer;
+import pull_up.infra.database.entity.legacy.AnswerL;
 
 public record MockExamProblemResultDto(Long questionNumber,      // 문제 번호
                                        boolean isCorrect,        // 정답 여부
@@ -23,18 +23,18 @@ public record MockExamProblemResultDto(Long questionNumber,      // 문제 번�
             correctAnswer);
     }
 
-    public static MockExamProblemResultDto from(Answer entity) {
+    public static MockExamProblemResultDto from(AnswerL entity) {
         boolean isCorrect = entity.getIsCorrect() != null ? entity.getIsCorrect() : false;
 
         // 각 필드에 대해 null 체크 및 기본값 처리
-        String questionText = entity.getProblem() != null && entity.getProblem().getQuestion() != null
-            ? entity.getProblem().getQuestion()
+        String questionText = entity.getProblemL() != null && entity.getProblemL().getQuestion() != null
+            ? entity.getProblemL().getQuestion()
             : null;
 
         String chosenAnswer = entity.getChosenAnswer() != null ? entity.getChosenAnswer() : null;
 
-        String correctAnswer = entity.getProblem() != null && entity.getProblem().getAnswer() != null
-            ? entity.getProblem().getAnswer()
+        String correctAnswer = entity.getProblemL() != null && entity.getProblemL().getAnswer() != null
+            ? entity.getProblemL().getAnswer()
             : null;
 
         return new MockExamProblemResultDto(

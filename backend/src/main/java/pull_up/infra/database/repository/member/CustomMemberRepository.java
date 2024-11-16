@@ -1,7 +1,7 @@
 package pull_up.infra.database.repository.member;
 
-import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.entity.legacy.MemberL;
 
 public interface CustomMemberRepository {
-    Member findMemberByIdWithRelation(Long id);
+    MemberL findMemberByIdWithRelation(Long id);
 }

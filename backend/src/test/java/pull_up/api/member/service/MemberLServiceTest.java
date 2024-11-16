@@ -9,9 +9,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import pull_up.api.member.dto.MemberScoreDto;
 import pull_up.domain.member.MemberService;
-import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.infra.database.repository.member.MemberRepository;
-import pull_up.domain.auth.enums.OAuth2Provider;
+import pull_up.domain.auth.SNSProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,20 +19,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(
         replace = AutoConfigureTestDatabase.Replace.ANY,
         connection = EmbeddedDatabaseConnection.H2)
-class MemberServiceTest {
+class MemberLServiceTest {
 
     @Autowired
     MemberRepository memberRepository;
 
     MemberService suit;
 
-    Member member;
+    MemberL memberL;
 
     @BeforeEach
     void init() {
         suit = new MemberService(memberRepository);
-        member = Member.of("test", "test@privaterelay.appleid.com", false, OAuth2Provider.APPLE.getRole());
-        memberRepository.save(member);
+        memberL = MemberL.of("test", "test@privaterelay.appleid.com", false, SNSProvider.APPLE.getRole());
+        memberRepository.save(memberL);
     }
 
     @Test
@@ -41,7 +41,7 @@ class MemberServiceTest {
         // given
 
         // when
-        MemberScoreDto dto = suit.getMemberById(member.getId());
+        MemberScoreDto dto = suit.getMemberById(memberL.getId());
 
         // then
         assertThat(dto.email()).isEqualTo("CONCEALED_EMAIL");

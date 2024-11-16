@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,7 +14,6 @@ import pull_up.api.problem.dto.ProblemDto;
 import pull_up.domain.problem.ProblemService;
 import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
-import pull_up.infra.database.entity.Problem;
 
 import java.util.List;
 
@@ -27,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-class ProblemControllerTest {
+class ProblemLControllerTest {
 
     @Mock
     ProblemService mockService;

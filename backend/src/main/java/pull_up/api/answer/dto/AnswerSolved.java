@@ -1,6 +1,6 @@
 package pull_up.api.answer.dto;
 
-import pull_up.infra.database.entity.Answer;
+import pull_up.infra.database.entity.legacy.AnswerL;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public record AnswerSolved(
         Integer answerTypeCount,
         List<AnswerType> answerTypes
 ) {
-    public static AnswerSolved toDto(List<Answer> answers) {
+    public static AnswerSolved toDto(List<AnswerL> answerLS) {
         return null;
     }
 

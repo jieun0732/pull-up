@@ -16,7 +16,7 @@ public record MemberAnswerIndexDto(Long id, Long problemId, String chosenAnswer,
     public static MemberAnswerIndexDto from(MemberAnswer entity) {
         return new MemberAnswerIndexDto(
             entity.getId(),
-            entity.getProblem() != null ? entity.getProblem().getId() : null,
+            entity.getProblemL() != null ? entity.getProblemL().getId() : null,
             entity.getChosenAnswer(),
             entity.getIsCorrect()
         );

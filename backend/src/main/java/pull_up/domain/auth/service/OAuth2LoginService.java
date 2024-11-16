@@ -5,14 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
-import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.infra.database.repository.member.MemberRepository;
 import pull_up.infra.external_api.auth.KakaoAuthRestApi;
 import pull_up.api.auth.dto.AppleLoginRequestDto;
 import pull_up.api.auth.dto.KakaoLoginRequestDto;
 import pull_up.api.auth.dto.KakaoUserInfoDto;
 import pull_up.api.auth.dto.OAuth2LoginResponseDto;
-import pull_up.domain.auth.enums.OAuth2Provider;
+import pull_up.domain.auth.SNSProvider;
 import pull_up.global.exception.auth.AuthException;
 import pull_up.global.security.util.AppleTokenDecoder;
 
@@ -31,13 +31,13 @@ public class OAuth2LoginService {
     private final Gson gson = new Gson();
 
     public OAuth2LoginResponseDto getKakaoUser(KakaoUserInfoDto.KakaoAccount dto) {
-        Optional<Member> member = memberRepository.findByEmailAndRole(dto.email(), OAuth2Provider.KAKAO.getRole());
+        Optional<MemberL> member = memberRepository.findByEmailAndRole(dto.email(), SNSProvider.KAKAO.getRole());
         if (member.isPresent()) {
-            return OAuth2LoginResponseDto.of(member.get(), false, OAuth2Provider.KAKAO);
+            return OAuth2LoginResponseDto.of(member.get(), false, SNSProvider.KAKAO);
 
         } else {
-            Member newMember = registKakaoMember(dto);
-            return OAuth2LoginResponseDto.of(newMember, true, OAuth2Provider.KAKAO);
+            MemberL newMemberL = registKakaoMember(dto);
+            return OAuth2LoginResponseDto.of(newMemberL, true, SNSProvider.KAKAO);
         }
     }
 
@@ -51,35 +51,35 @@ public class OAuth2LoginService {
         return getKakaoUser(userInfo.kakao_account());
     }
 
-    private Member registKakaoMember(KakaoUserInfoDto.KakaoAccount dto) {
-        Member member = Member.of(dto.profile().nickname(), dto.email(), false, "kakao_user");
-        memberRepository.save(member);
+    private MemberL registKakaoMember(KakaoUserInfoDto.KakaoAccount dto) {
+        MemberL memberL = MemberL.of(dto.profile().nickname(), dto.email(), false, "kakao_user");
+        memberRepository.save(memberL);
 
-        return member;
+        return memberL;
     }
 
     public OAuth2LoginResponseDto getAppleUser(String idToken, String userJson) {
         String email = (String) appleTokenDecoder.decode(idToken).get("email");
 
         if (userJson.equals("ALREADY_REGISTERED_USER")) {
-            Member member = memberRepository.findByEmailAndRole(email, OAuth2Provider.APPLE.getRole())
+            MemberL memberL = memberRepository.findByEmailAndRole(email, SNSProvider.APPLE.getRole())
                     .orElseThrow(() -> new AuthException(NOT_REGISTERED_MEMBER_IN_DATABASE));
-            return OAuth2LoginResponseDto.of(member, false, OAuth2Provider.APPLE);
+            return OAuth2LoginResponseDto.of(memberL, false, SNSProvider.APPLE);
 
         } else {
-            Member member = registAppleMember(email, userJson);
-            return OAuth2LoginResponseDto.of(member, true, OAuth2Provider.APPLE);
+            MemberL memberL = registAppleMember(email, userJson);
+            return OAuth2LoginResponseDto.of(memberL, true, SNSProvider.APPLE);
         }
     }
 
-    private Member registAppleMember(String email, String userJson) {
-        return memberRepository.findByEmailAndRole(email, OAuth2Provider.APPLE.getRole()).orElseGet(() -> {
+    private MemberL registAppleMember(String email, String userJson) {
+        return memberRepository.findByEmailAndRole(email, SNSProvider.APPLE.getRole()).orElseGet(() -> {
             AppleLoginRequestDto dto = gson.fromJson(userJson, AppleLoginRequestDto.class);
 
-            Member newMember = Member.of(dto.name().firstName(), dto.name().lastName(), email, false, "apple_user");
-            memberRepository.save(newMember);
+            MemberL newMemberL = MemberL.of(dto.name().firstName(), dto.name().lastName(), email, false, "apple_user");
+            memberRepository.save(newMemberL);
 
-            return newMember;
+            return newMemberL;
         });
     }
 }

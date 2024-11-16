@@ -2,10 +2,10 @@ package pull_up.api.member.dto;
 
 import java.io.Serializable;
 
-import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.entity.legacy.MemberL;
 
 /**
- * DTO for {@link Member}
+ * DTO for {@link MemberL}
  */
 public record MemberDto(Long id, String name, String email, boolean accessCheck, String role) implements
     Serializable {
@@ -17,7 +17,7 @@ public record MemberDto(Long id, String name, String email, boolean accessCheck,
     /**
      * Member 엔티티를 MemberDto로 변환하는 메소드.
      */
-    public static MemberDto from(Member entity) {
+    public static MemberDto from(MemberL entity) {
         return new MemberDto(entity.getId(), entity.getName(), entity.getEmail(), entity.isAccessCheck(),
             entity.getRole());
     }
@@ -25,7 +25,7 @@ public record MemberDto(Long id, String name, String email, boolean accessCheck,
     /**
      * MemberDto를 Member로 변환하는 메소드.
      */
-    public static Member toEntity(MemberDto dto) {
-        return Member.of(dto.name(), dto.email(), dto.accessCheck(), dto.role());
+    public static MemberL toEntity(MemberDto dto) {
+        return MemberL.of(dto.name(), dto.email(), dto.accessCheck(), dto.role());
     }
 }

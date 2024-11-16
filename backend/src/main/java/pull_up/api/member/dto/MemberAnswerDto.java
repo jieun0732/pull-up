@@ -19,12 +19,12 @@ public record MemberAnswerDto(Long id, MemberDto member, ProblemDto problem,
     }
 
     public static MemberAnswerDto from(MemberAnswer entity) {
-        ExamInformationDto examInformationDto = (entity.getExam() != null) ?
-            ExamInformationDto.from(entity.getExam()) : null;
+        ExamInformationDto examInformationDto = (entity.getExamL() != null) ?
+            ExamInformationDto.from(entity.getExamL()) : null;
 
         return new MemberAnswerDto(entity.getId(), MemberDto.from(
-            entity.getMember()),
-            ProblemDto.toDto(entity.getProblem()),
+            entity.getMemberL()),
+            ProblemDto.toDto(entity.getProblemL()),
             examInformationDto,
             entity.getChosenAnswer(),
             entity.getIsCorrect());

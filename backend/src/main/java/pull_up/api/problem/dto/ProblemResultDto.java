@@ -2,10 +2,10 @@ package pull_up.api.problem.dto;
 
 import java.io.Serializable;
 import java.util.List;
-import pull_up.infra.database.entity.Problem;
+import pull_up.infra.database.entity.legacy.ProblemL;
 
 /**
- * DTO for {@link Problem} with choices as a list.
+ * DTO for {@link ProblemL} with choices as a list.
  */
 public record ProblemResultDto(
     Long id,
@@ -41,7 +41,7 @@ public record ProblemResultDto(
             incorrectRate);
     }
 
-    public static ProblemResultDto from(Problem entity) {
+    public static ProblemResultDto from(ProblemL entity) {
         List<String> choices = List.of(
             entity.getChoice1(),
             entity.getChoice2(),

@@ -26,7 +26,7 @@ import java.security.PrivateKey;
 import java.util.Date;
 import static io.jsonwebtoken.Jwts.SIG.ES256;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static pull_up.domain.auth.enums.OAuth2Provider.APPLE;
+import static pull_up.domain.auth.SNSProvider.APPLE;
 import static pull_up.global.exception.auth.AuthError.REQUEST_CONVERT_ERROR;
 
 @Slf4j

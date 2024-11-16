@@ -3,10 +3,10 @@ package pull_up.api.problem.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import pull_up.infra.database.entity.Problem;
+import pull_up.infra.database.entity.legacy.ProblemL;
 
 /**
- * DTO for {@link Problem} with choices as a list.
+ * DTO for {@link ProblemL} with choices as a list.
  */
 public record ProblemTimeResultDto(
     Long id,
@@ -48,7 +48,7 @@ public record ProblemTimeResultDto(
             incorrectRate, createdDate, ChosenAnswer);
     }
 
-    public static ProblemTimeResultDto from(Problem entity, LocalDateTime createdDate, Long problemNumber, String chosenAnswer) { // createdDate 파라미터 추가
+    public static ProblemTimeResultDto from(ProblemL entity, LocalDateTime createdDate, Long problemNumber, String chosenAnswer) { // createdDate 파라미터 추가
         List<String> choices = List.of(
             entity.getChoice1(),
             entity.getChoice2(),

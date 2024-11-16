@@ -1,8 +1,7 @@
 package pull_up.api.answer.dto;
 
-import org.springframework.security.core.parameters.P;
 import pull_up.api.problem.dto.ProblemDto;
-import pull_up.infra.database.entity.Answer;
+import pull_up.infra.database.entity.legacy.AnswerL;
 
 public record AnswerDto(
         Integer chosenAnswer,
@@ -13,14 +12,14 @@ public record AnswerDto(
         Double inCorrectRate,
         ProblemDto problemDto
 ) {
-    public static AnswerDto toDto(Answer answer) {
+    public static AnswerDto toDto(AnswerL answerL) {
         return new AnswerDto(
-                Integer.parseInt(answer.getChosenAnswer()),
-                Integer.parseInt(answer.getProblem().getAnswer()),
-                answer.getProblem().getAnswerExplain(),
-                answer.getIsCorrect(),
-                answer.getProblem().getCorrectRate(),
-                answer.getProblem().getIncorrectRate(),
-                ProblemDto.toDto(answer.getProblem()));
+                Integer.parseInt(answerL.getChosenAnswer()),
+                Integer.parseInt(answerL.getProblemL().getAnswer()),
+                answerL.getProblemL().getAnswerExplain(),
+                answerL.getIsCorrect(),
+                answerL.getProblemL().getCorrectRate(),
+                answerL.getProblemL().getIncorrectRate(),
+                ProblemDto.toDto(answerL.getProblemL()));
     }
 }

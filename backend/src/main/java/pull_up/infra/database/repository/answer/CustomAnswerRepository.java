@@ -1,17 +1,17 @@
 package pull_up.infra.database.repository.answer;
 
-import pull_up.infra.database.entity.Answer;
+import pull_up.infra.database.entity.legacy.AnswerL;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CustomAnswerRepository {
-    List<Answer> findIncorrectAnswersByMemberId(Long memberId);
+    List<AnswerL> findIncorrectAnswersByMemberId(Long memberId);
 
-    List<Answer> findSolvedAnswersByMemberIdAndEntry(Long memberId, String entry);
+    List<AnswerL> findSolvedAnswersByMemberIdAndEntry(Long memberId, String entry);
 
-    Optional<Answer> findByIdWithProblem(Long id);
+    Optional<AnswerL> findByIdWithProblem(Long id);
 
-    Optional<Answer> findByIdWithProblem(Long id, Boolean isSolved);
+    Optional<AnswerL> findByIdWithProblem(Long id, Boolean isSolved);
 
 }

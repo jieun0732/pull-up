@@ -1,7 +1,7 @@
 package pull_up.infra.database.repository.problem;
 
 import pull_up.api.problem.dto.ProblemDto;
-import pull_up.infra.database.entity.Problem;
+import pull_up.infra.database.entity.legacy.ProblemL;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ public interface CustomProblemRepository {
 
     void deleteAllWithRelation();
 
-    List<Problem> findByEntryAndCategoryAndType(String entry, String category, String type);
+    List<ProblemL> findByEntryAndCategoryAndType(String entry, String category, String type);
 }

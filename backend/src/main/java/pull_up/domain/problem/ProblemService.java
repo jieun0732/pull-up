@@ -7,7 +7,7 @@ import pull_up.api.problem.dto.CreateProblem;
 import pull_up.api.problem.dto.ProblemDto;
 import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
-import pull_up.infra.database.entity.Problem;
+import pull_up.infra.database.entity.legacy.ProblemL;
 
 import java.util.List;
 
@@ -24,20 +24,20 @@ public class ProblemService {
 
     @Transactional
     public MessageDto createProblem(CreateProblem.Request createProblemReq) {
-        Problem problem = CreateProblem.Request.toEntity(createProblemReq);
-        problemRepository.save(problem);
-        return new MessageDto("Problem " + problem.getId() + " has been created successfully.");
+        ProblemL problemL = CreateProblem.Request.toEntity(createProblemReq);
+        problemRepository.save(problemL);
+        return new MessageDto("Problem " + problemL.getId() + " has been created successfully.");
     }
 
     @Transactional
     public MessageDto createProblem(String formatString) {
-        List<Problem> problems = CreateProblem.FormatRequest.toEntity(formatString);
-        problemRepository.saveAll(problems);
-        return new MessageDto(problems.size() +" Problems have been created successfully.");
+        List<ProblemL> problemLS = CreateProblem.FormatRequest.toEntity(formatString);
+        problemRepository.saveAll(problemLS);
+        return new MessageDto(problemLS.size() +" Problems have been created successfully.");
     }
 
     public ListDto<ProblemDto> getList(String entry, String category, String type) {
-        List<Problem> problems = problemRepository.findByEntryAndCategoryAndType(entry, category, type);
-        return new ListDto<>(problems.stream().map(ProblemDto::toDto).toList());
+        List<ProblemL> problemLS = problemRepository.findByEntryAndCategoryAndType(entry, category, type);
+        return new ListDto<>(problemLS.stream().map(ProblemDto::toDto).toList());
     }
 }

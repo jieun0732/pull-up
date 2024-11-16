@@ -2,13 +2,12 @@ package pull_up.infra.database.repository.exam;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import pull_up.infra.database.entity.Exam;
+import pull_up.infra.database.entity.legacy.ExamL;
 
 import java.util.Optional;
 
-import static pull_up.infra.database.entity.QAnswer.answer;
-import static pull_up.infra.database.entity.QExam.exam;
-
+import static pull_up.infra.database.entity.legacy.QAnswerL.answerL;
+import static pull_up.infra.database.entity.legacy.QExamL.examL;
 public class CustomExamRepositoryImpl implements CustomExamRepository {
 
     private final JPAQueryFactory qf;
@@ -18,9 +17,9 @@ public class CustomExamRepositoryImpl implements CustomExamRepository {
     }
 
     @Override
-    public Optional<Exam> findByIdWithAnswer(Long id) {
-        return Optional.ofNullable(qf.selectFrom(exam)
-                .leftJoin(exam.answers, answer).fetchJoin()
+    public Optional<ExamL> findByIdWithAnswer(Long id) {
+        return Optional.ofNullable(qf.selectFrom(examL)
+                .leftJoin(examL.answerLS, answerL).fetchJoin()
                 .fetchFirst());
     }
 }

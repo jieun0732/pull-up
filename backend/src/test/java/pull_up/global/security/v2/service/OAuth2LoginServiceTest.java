@@ -16,7 +16,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import pull_up.domain.auth.service.OAuth2LoginService;
-import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.infra.database.repository.member.MemberRepository;
 import pull_up.infra.external_api.auth.KakaoAuthRestApi;
 import pull_up.api.auth.dto.AppleLoginRequestDto;
@@ -152,10 +152,10 @@ class OAuth2LoginServiceTest {
         // when : email 가린채로 로그인 시도 1
         BDDMockito.when(appleTokenDecoder.decode(any())).thenReturn(email);
         OAuth2LoginResponseDto appleUser = suit.getAppleUser(idToken, userJson);
-        Member memberInDB = memberRepository.findByEmail(privateMail).get();
+        MemberL memberLInDB = memberRepository.findByEmail(privateMail).get();
 
         // then
-        assertThat(memberInDB.getEmail()).isEqualTo(privateMail);
+        assertThat(memberLInDB.getEmail()).isEqualTo(privateMail);
 
         assertUser(appleUser, "CONCEALED_EMAIL", "apple", "leaf nam");
 

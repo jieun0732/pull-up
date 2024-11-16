@@ -13,14 +13,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.global.entity.BaseEntity;
-import pull_up.infra.database.entity.Exam;
-import pull_up.infra.database.entity.Member;
-import pull_up.infra.database.entity.Problem;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "incorrect_answer")
+@Table(name = "incorrect_answer_legacy")
 @SQLRestriction("is_deleted = false")
 public class IncorrectAnswer extends BaseEntity {
 
@@ -30,15 +27,15 @@ public class IncorrectAnswer extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member member;
+    private MemberL memberL;
 
     @ManyToOne
     @JoinColumn(name = "problem_id")
-    private Problem problem;
+    private ProblemL problemL;
 
     @ManyToOne
     @JoinColumn(name = "exam_information_id")
-    private Exam exam;
+    private ExamL examL;
 
     @Column
     private String chosenAnswer;
@@ -52,10 +49,10 @@ public class IncorrectAnswer extends BaseEntity {
     /**
      * 파라미터 생성자.
      */
-    private IncorrectAnswer(Member member, Problem problem, Exam exam, String chosenAnswer, LocalDateTime incorrectTime) {
-        this.member = member;
-        this.problem = problem;
-        this.exam = exam;
+    private IncorrectAnswer(MemberL memberL, ProblemL problemL, ExamL examL, String chosenAnswer, LocalDateTime incorrectTime) {
+        this.memberL = memberL;
+        this.problemL = problemL;
+        this.examL = examL;
         this.chosenAnswer = chosenAnswer;
         this.incorrectTime = incorrectTime;
     }
@@ -63,8 +60,8 @@ public class IncorrectAnswer extends BaseEntity {
     /**
      * 파라미터로부터 UserAnswer 엔티티 객체를 생성하는 함수.
      */
-    public static IncorrectAnswer of(Member member, Problem problem, Exam exam, String chosenAnswer, LocalDateTime incorrectTime) {
-        return new IncorrectAnswer(member, problem, exam, chosenAnswer, incorrectTime);
+    public static IncorrectAnswer of(MemberL memberL, ProblemL problemL, ExamL examL, String chosenAnswer, LocalDateTime incorrectTime) {
+        return new IncorrectAnswer(memberL, problemL, examL, chosenAnswer, incorrectTime);
     }
 
 }

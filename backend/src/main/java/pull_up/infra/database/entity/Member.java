@@ -1,74 +1,42 @@
 package pull_up.infra.database.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.SQLRestriction;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import pull_up.domain.auth.Role;
+import pull_up.domain.auth.SNSProvider;
 import pull_up.global.entity.BaseEntity;
-import pull_up.infra.database.entity.legacy.IncorrectAnswer;
-import pull_up.infra.database.entity.legacy.MemberAnswer;
 
-import java.util.List;
-import java.util.regex.Pattern;
-
-@Getter
-@Setter
 @Entity
 @Table(name = "member")
-@SQLRestriction("is_deleted = false")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Member extends BaseEntity {
 
     @Id
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Boolean tutorialFinished;
+
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String email;
 
-    @Column
-    private boolean accessCheck;
+    @Column(nullable = false)
+    private String snsId;
 
-    @Column
-    private String role;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private SNSProvider snsProvider;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Exam> examList; // Member와 연결된 ExamInformation 리스트
-
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<IncorrectAnswer> incorrectAnswers;
-
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<MemberAnswer> memberAnswers;
-
-    protected Member() {}
-
-    /**
-     * 파라미터 생성자.
-     */
-    private Member(String name, String email, boolean accessCheck, String role) {
-        this.name = name;
-        this.email = email;
-        this.accessCheck = accessCheck;
-        this.role = role;
-    }
-
-    public static Member of(String name, String email, boolean accessCheck, String role) {
-        return new Member(name, email, accessCheck, role);
-    }
-
-    public static Member of(String firstName, String lastName, String email, boolean accessCheck, String role) {
-        return Member.of(getFullName(firstName,lastName), email, accessCheck, role);
-    }
-
-    /**
-     <p>성과 이름을 붙여 객체 생성하는 메서드(한글은 반대로)</p>
-     */
-    private static String getFullName(String firstName, String lastName) {
-        if (Pattern.matches("^[ㄱ-ㅎ가-힣]*$", firstName)) return lastName + firstName;
-        else return firstName + " " + lastName;
-    }
-
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

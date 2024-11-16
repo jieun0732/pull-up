@@ -2,11 +2,11 @@ package pull_up.api.exam.dto;
 
 import java.io.Serializable;
 
-import pull_up.infra.database.entity.Answer;
+import pull_up.infra.database.entity.legacy.AnswerL;
 import pull_up.api.problem.dto.ProblemDto;
 
 /**
- * DTO for {@link Answer}
+ * DTO for {@link AnswerL}
  */
 public record ExamProblemDto(Long id, ExamInformationDto examInformation, ProblemDto problem, Long problemNumber, String chosenAnswer, Boolean isCorrect) implements Serializable {
 
@@ -15,19 +15,19 @@ public record ExamProblemDto(Long id, ExamInformationDto examInformation, Proble
         return new ExamProblemDto(id, examInformation, problem, problemNumber, chosenAnswer, isCorrect);
     }
 
-    public static ExamProblemDto from(Answer entity) {
+    public static ExamProblemDto from(AnswerL entity) {
         return new ExamProblemDto(
             entity.getId(),
-            ExamInformationDto.from(entity.getExam()),
-            ProblemDto.toDto(entity.getProblem()),
+            ExamInformationDto.from(entity.getExamL()),
+            ProblemDto.toDto(entity.getProblemL()),
             entity.getProblemNumber(),
             entity.getChosenAnswer(),
             entity.getIsCorrect()
         );
     }
 
-    public static Answer toEntity(ExamProblemDto dto) {
-        return Answer.of(
+    public static AnswerL toEntity(ExamProblemDto dto) {
+        return AnswerL.of(
             ExamInformationDto.toEntity(dto.examInformation()),
             ProblemDto.toEntity(dto.problem()),
             dto.problemNumber(),

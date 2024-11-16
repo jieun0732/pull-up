@@ -1,6 +1,6 @@
 package pull_up.api.problem.dto;
 
-import pull_up.infra.database.entity.Problem;
+import pull_up.infra.database.entity.legacy.ProblemL;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public record ProblemDto(
         Double incorrectRate
 ) {
 
-    public static ProblemDto toDto(Problem entity) {
+    public static ProblemDto toDto(ProblemL entity) {
         return new ProblemDto(entity.getId(),
                 entity.getEntry(),
                 entity.getCategory(),
@@ -34,8 +34,8 @@ public record ProblemDto(
                 entity.getIncorrectRate());
     }
 
-    public static Problem toEntity(ProblemDto dto) {
-        return Problem.of(dto.entry(), dto.category(), dto.type(), dto.question(),
+    public static ProblemL toEntity(ProblemDto dto) {
+        return ProblemL.of(dto.entry(), dto.category(), dto.type(), dto.question(),
                 dto.explanation(), dto.choices().get(0), dto.choices().get(1), dto.choices().get(2), dto.choices().get(3),
                 dto.choices().get(4), dto.answer(), dto.answerExplain(), dto.totalAttempts(),
                 dto.incorrectAttempts(), dto.incorrectRate());

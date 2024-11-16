@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pull_up.api.member.dto.MemberDto;
 import pull_up.api.member.dto.MemberScoreDto;
-import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.global.exception.member.MemberErrorCode;
 import pull_up.global.exception.member.MemberException;
 import pull_up.infra.database.repository.member.MemberRepository;
@@ -23,18 +23,18 @@ public class MemberService {
      * 특정 ID를 가진 Member의 정보를 조회하고, 가장 최근 ExamInformation의 Score와 함께 반환하는 메서드.
      */
     public MemberScoreDto getMemberById(Long id) {
-        Member member = memberRepository.findById(id)
+        MemberL memberL = memberRepository.findById(id)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER)); // 예외 던지기
 
 
         // MemberDto를 생성하여 반환
         return MemberScoreDto.of(
-                member.getId(),
-                member.getName(),
-                member.getEmail(),
-                member.isAccessCheck(),
-                member.getRole(),
-                member.getExamList()// 최신 Score 함께 반환
+                memberL.getId(),
+                memberL.getName(),
+                memberL.getEmail(),
+                memberL.isAccessCheck(),
+                memberL.getRole(),
+                memberL.getExamLList()// 최신 Score 함께 반환
         );
     }
 
@@ -43,13 +43,13 @@ public class MemberService {
      * 특정 ID를 가진 Member의 accessCheck을 true로 변경하는 메서드.
      */
     public MemberDto updateAccessCheck(Long id) {
-        Optional<Member> memberOptional = memberRepository.findById(id);
+        Optional<MemberL> memberOptional = memberRepository.findById(id);
         if (memberOptional.isPresent()) {
-            Member member = memberOptional.get();
-            member.setAccessCheck(true);
-            memberRepository.save(member);
-            return new MemberDto(member.getId(), member.getName(), member.getEmail(), member.isAccessCheck(),
-                    member.getRole());
+            MemberL memberL = memberOptional.get();
+            memberL.setAccessCheck(true);
+            memberRepository.save(memberL);
+            return new MemberDto(memberL.getId(), memberL.getName(), memberL.getEmail(), memberL.isAccessCheck(),
+                    memberL.getRole());
         }
         return null; // 또는 예외를 던지도록 처리할 수 있음
     }
@@ -58,13 +58,13 @@ public class MemberService {
      * 멤버 탈퇴.
      */
     public void deleteMember(Long id) {
-        Member member = memberRepository.findById(id)
+        MemberL memberL = memberRepository.findById(id)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER)); // 예외 던지기
-        member.softDelete();
+        memberL.softDelete();
     }
 
     public void deleteMemberHard(Long id) {
-        Member member = memberRepository.findMemberByIdWithRelation(id);
-        memberRepository.delete(member);
+        MemberL memberL = memberRepository.findMemberByIdWithRelation(id);
+        memberRepository.delete(memberL);
     }
 }

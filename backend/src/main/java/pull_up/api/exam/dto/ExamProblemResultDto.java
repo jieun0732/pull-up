@@ -2,7 +2,7 @@ package pull_up.api.exam.dto;
 
 import java.io.Serializable;
 
-import pull_up.infra.database.entity.Answer;
+import pull_up.infra.database.entity.legacy.AnswerL;
 import pull_up.api.problem.dto.ProblemResultDto;
 
 public record ExamProblemResultDto(Long id, ExamInformationDto examInformation,
@@ -16,11 +16,11 @@ public record ExamProblemResultDto(Long id, ExamInformationDto examInformation,
         return new ExamProblemResultDto(id, examInformation, problem, problemNumber, chosenAnswer, isCorrect);
     }
 
-    public static ExamProblemResultDto from(Answer entity) {
+    public static ExamProblemResultDto from(AnswerL entity) {
         return new ExamProblemResultDto(
             entity.getId(),
-            ExamInformationDto.from(entity.getExam()),
-            ProblemResultDto.from(entity.getProblem()),
+            ExamInformationDto.from(entity.getExamL()),
+            ProblemResultDto.from(entity.getProblemL()),
             entity.getProblemNumber(),
             entity.getChosenAnswer(),
             entity.getIsCorrect()
