@@ -1,10 +1,12 @@
 package pull_up.domain.answer;
 
+import org.aspectj.apache.bcel.generic.TargetLostException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pull_up.api.answer.dto.AnswerDto;
+import pull_up.api.answer.dto.AnswerSolved;
 import pull_up.api.answer.dto.AnswerSubmit;
 import pull_up.global.exception.member.AnswerErrorCode;
 import pull_up.global.exception.member.AnswerException;
@@ -15,10 +17,13 @@ import pull_up.infra.database.fixture.MemberFixture;
 import pull_up.infra.database.repository.answer.AnswerRepository;
 import pull_up.infra.database.repository.exam.ExamRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import static pull_up.infra.database.fixture.AnswerFixture.*;
+import static pull_up.infra.database.fixture.AnswerFixture.SOLVED_5;
 
 class AnswerServiceTest {
 
@@ -63,8 +68,8 @@ class AnswerServiceTest {
         Long correctId = 1L;
         Long incorrectId = 2L;
         Long notSolvedId = 3L;
-        Answer correctAnswer = AnswerFixture.NO_CHOSEN_1.get();
-        Answer incorrectAnswer = AnswerFixture.NO_CHOSEN_2.get();
+        Answer correctAnswer = NO_CHOSEN_1.get();
+        Answer incorrectAnswer = NO_CHOSEN_2.get();
         correctAnswer.setChosenAnswer("3");
         correctAnswer.setIsCorrect(true);
         correctAnswer.setIsSolved(true);
@@ -89,5 +94,29 @@ class AnswerServiceTest {
         assertThat(incorrectResponse.isCorrect()).isFalse();
         assertThatThrownBy(() -> suit.getSolved(notSolvedId)).isInstanceOf(AnswerException.class)
                 .hasMessage(AnswerErrorCode.NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("푼 문제 전체조회 테스트")
+    void testGetSolvedAll() {
+        // given
+        Long memberId = 1L;
+        String entry = "수리";
+        List<Answer> answers = List.of(
+                SOLVED_1.get(),
+                SOLVED_2.get(),
+                SOLVED_3.get(),
+                SOLVED_4.get(),
+                SOLVED_5.get());
+
+        // when
+        when(mockAnswerRepository.findByMemberId(memberId)).thenReturn(answers);
+        AnswerSolved response = suit.getSolvedAll(entry, memberId);
+
+        // then
+        assertThat(response.entry()).isEqualTo(entry);
+        assertThat(response.answerTypeCount()).isEqualTo(2);
+        assertThat(response.answerTypes()).hasSize(response.answerTypeCount());
+        assertThat(response.isSolvedEvenly()).isFalse();
     }
 }

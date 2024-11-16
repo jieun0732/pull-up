@@ -37,7 +37,7 @@ class ExamControllerTest {
     }
 
     @Test
-    @DisplayName("문제 채점 요청 테스트")
+    @DisplayName("POST /api/exams/mock-exam/grade")
     void testGradeApi() throws Exception {
         ExamGrade.Request request = new ExamGrade.Request(1L, List.of(new ExamGrade.SelectedAnswer(1L, 1)));
         mockMvc.perform(post("/api/exams/mock-exam/grade")
@@ -49,7 +49,7 @@ class ExamControllerTest {
     }
 
     @Test
-    @DisplayName("틀린문제 전체 및 상세조회 테스트")
+    @DisplayName("GET /api/exams/incorrect-answers")
     void testIncorrectAnswer() throws Exception {
         mockMvc.perform(get("/api/exams/incorrect-answers?memberId=1")
                         .contentType(APPLICATION_JSON)

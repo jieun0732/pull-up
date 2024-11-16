@@ -10,20 +10,28 @@ import static pull_up.infra.database.fixture.ProblemFixture.*;
 
 @RequiredArgsConstructor
 public enum AnswerFixture {
-    NO_CHOSEN_1(ONE.get(), 1L, "", false),
-    NO_CHOSEN_2(TWO.get(), 2L,"", false),
-    NO_CHOSEN_3(THREE.get(), 3L,"", false),
-    NO_CHOSEN_4(FOUR.get(), 4L,"", false),
-    NO_CHOSEN_5(FIVE.get(),5L, "", false);
+    NO_CHOSEN_1(ONE.get(), 1L, "", false, false),
+    NO_CHOSEN_2(TWO.get(), 2L,"", false, false),
+    NO_CHOSEN_3(THREE.get(), 3L,"", false, false),
+    NO_CHOSEN_4(FOUR.get(), 4L,"", false, false),
+    NO_CHOSEN_5(FIVE.get(),5L, "", false, false),
+    SOLVED_1(ONE.get(),1L, "3", true, true),
+    SOLVED_2(TWO.get(),2L, "3", false, true),
+    SOLVED_3(THREE.get(),3L, "3", false, true),
+    SOLVED_4(FOUR.get(),4L, "3", false, true),
+    SOLVED_5(FIVE.get(),5L, "3", true, true)
+    ;
 
     private final Problem problem;
     private final Long problemNumber;
     private final String chosenAnswer;
     private final Boolean isCorrect;
+    private final Boolean isSolved;
 
     public Answer get() {
         Answer answer = Answer.of(null, problem, problemNumber, chosenAnswer, isCorrect);
         problem.setAnswers(List.of(answer));
+        answer.setIsSolved(isSolved);
         return answer;
     }
 }

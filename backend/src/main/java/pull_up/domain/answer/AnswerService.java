@@ -3,6 +3,7 @@ package pull_up.domain.answer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pull_up.api.answer.dto.AnswerDto;
+import pull_up.api.answer.dto.AnswerSolved;
 import pull_up.api.answer.dto.AnswerSubmit;
 import pull_up.api.exam.exception.ExamErrorCode;
 import pull_up.api.exam.exception.ExamException;
@@ -11,6 +12,8 @@ import pull_up.infra.database.entity.Answer;
 import pull_up.infra.database.entity.Exam;
 import pull_up.infra.database.repository.answer.AnswerRepository;
 import pull_up.infra.database.repository.exam.ExamRepository;
+
+import java.util.List;
 
 import static pull_up.global.exception.member.AnswerErrorCode.NOT_FOUND;
 
@@ -35,5 +38,10 @@ public class AnswerService {
                 .orElseThrow(() -> new AnswerException(NOT_FOUND));
 
         return AnswerDto.toDto(answer);
+    }
+
+    public AnswerSolved getSolvedAll(Long memberId, String entry) {
+        List<Answer> answers = answerRepository.findSolvedAnswersByMemberIdAndEntry(memberId, entry);
+        return AnswerSolved.toDto(answers);
     }
 }

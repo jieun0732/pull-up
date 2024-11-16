@@ -30,6 +30,11 @@ public class CustomAnswerRepositoryImpl implements CustomAnswerRepository {
     }
 
     @Override
+    public List<Answer> findSolvedAnswersByMemberIdAndEntry(Long memberId, String entry) {
+        return List.of();
+    }
+
+    @Override
     public Optional<Answer> findByIdWithProblem(Long id) {
         return Optional.ofNullable(
                 qf.selectFrom(answer)

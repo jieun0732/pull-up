@@ -34,7 +34,7 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("회원 삭제 API 테스트")
+    @DisplayName("DELETE /api/members/{id}/delete/hard")
     void testDeleteMember() throws Exception {
         mockMvc.perform(delete("/api/members/" + 1 + "/delete/hard"))
                 .andDo(print())

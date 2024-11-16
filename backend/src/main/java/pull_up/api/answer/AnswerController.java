@@ -5,8 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pull_up.api.answer.dto.AnswerDto;
+import pull_up.api.answer.dto.AnswerSolved;
 import pull_up.api.answer.dto.AnswerSubmit;
 import pull_up.domain.answer.AnswerService;
+import pull_up.global.dto.ListDto;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,10 +25,17 @@ public class AnswerController {
         return ResponseEntity.ok(answerService.submit(request));
     }
 
-    @Operation(summary = "푼 문제 조회하기", description = "풀었던 문제를 조회합니다.", tags = "풀이")
+    @Operation(summary = "푼 문제 상세 조회하기", description = "Id로 풀었던 문제를 상세 조회합니다.", tags = "풀이")
     @GetMapping("/solved/{id}")
     public ResponseEntity<AnswerDto> getSolved(@PathVariable Long id) {
         return ResponseEntity.ok(answerService.getSolved(id));
     }
 
+    @Operation(summary = "영역별 푼 문제 조회하기(전체)", description = "사용자 id로 영역별 풀었던 문제 전체를 조회합니다.", tags = "풀이")
+    @GetMapping("/solved/entry/{entry}")
+    public ResponseEntity<AnswerSolved> getSolvedAll(
+            @PathVariable String entry,
+            @RequestParam Long memberId) {
+        return ResponseEntity.ok(answerService.getSolvedAll(memberId, entry));
+    }
 }
