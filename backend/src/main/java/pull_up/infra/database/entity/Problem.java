@@ -81,6 +81,6 @@ public class Problem {
     }
 
     public String getNormalProblemType() {
-        return problemType.toUpperCase().replaceAll(" ", "");
+        return problemType.toUpperCase().replaceAll("\\s+", "");
     }
 }
