@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pull_up.api.exam.dto.ExamGrade;
-import pull_up.domain.exam.ExamService;
+import pull_up.domain.deprecated.ExamService;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;

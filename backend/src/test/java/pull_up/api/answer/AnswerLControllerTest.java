@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pull_up.api.answer.dto.AnswerDto;
 import pull_up.api.answer.dto.AnswerSolved;
 import pull_up.api.answer.dto.AnswerSubmit;
-import pull_up.domain.answer.AnswerService;
+import pull_up.domain.deprecated.AnswerService;
 
 import java.util.List;
 

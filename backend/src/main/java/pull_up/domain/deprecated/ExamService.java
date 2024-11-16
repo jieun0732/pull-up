@@ -1,4 +1,4 @@
-package pull_up.domain.exam;
+package pull_up.domain.deprecated;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import pull_up.api.exam.exception.ExamErrorCode;
 import pull_up.api.exam.exception.ExamException;
 import pull_up.api.member.dto.*;
 import pull_up.api.problem.dto.*;
-import pull_up.domain.problem.ProblemRepository;
 import pull_up.global.dto.ListDto;
 import pull_up.global.entity.BaseEntity;
 import pull_up.global.exception.member.MemberErrorCode;
@@ -23,6 +22,7 @@ import pull_up.infra.database.repository.exam.ExamRepository;
 import pull_up.infra.database.repository.legacy.IncorrectAnswerRepository;
 import pull_up.infra.database.repository.legacy.MemberAnswerRepository;
 import pull_up.infra.database.repository.member.MemberRepositoryL;
+import pull_up.infra.database.repository.problem.ProblemRepository;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

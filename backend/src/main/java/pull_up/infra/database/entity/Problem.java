@@ -68,7 +68,19 @@ public class Problem {
     @Column
     private byte[] explanation;
 
-    @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY)
-    private List<Answer> answers;
+    public String getQuestionAsString() {
+        return new String(question);
+    }
 
+    public String getExampleAsString() {
+        return new String(example);
+    }
+
+    public String getExplanationAsString() {
+        return new String(explanation);
+    }
+
+    public String getNormalProblemType() {
+        return problemType.toUpperCase().replaceAll(" ", "");
+    }
 }

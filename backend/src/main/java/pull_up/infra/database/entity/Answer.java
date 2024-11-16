@@ -45,4 +45,16 @@ public class Answer {
     @ManyToOne
     @JoinColumn(name = "problem_id")
     private Problem problem;
+
+    private Answer(Exam exam, Problem problem, Integer problemNumber) {
+        this.isSubmitted = false;
+        this.submitCount = 0;
+        this.problemNumber = problemNumber;
+        this.exam = exam;
+        this.problem = problem;
+    }
+
+    public static Answer makeEmptyAnswer(Exam exam, Problem problem, Integer problemNumber) {
+        return new Answer(exam, problem, problemNumber);
+    }
 }

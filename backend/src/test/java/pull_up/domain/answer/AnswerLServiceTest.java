@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import pull_up.api.answer.dto.AnswerDto;
 import pull_up.api.answer.dto.AnswerSolved;
 import pull_up.api.answer.dto.AnswerSubmit;
+import pull_up.domain.deprecated.AnswerService;
 import pull_up.global.exception.member.AnswerErrorCode;
 import pull_up.global.exception.member.AnswerException;
 import pull_up.infra.database.entity.legacy.AnswerL;

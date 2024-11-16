@@ -7,7 +7,11 @@ import pull_up.domain.exam.ExamType;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+
+import static pull_up.domain.exam.ExamType.EVENLY;
 
 @Entity
 @Table(name = "exam")
@@ -48,4 +52,44 @@ public class Exam {
 
     @OneToMany(mappedBy = "exam", fetch = FetchType.LAZY)
     private List<Answer> answers;
+
+    private Exam(ExamType examType, Member member) {
+        this.isFinished = false;
+        this.score = 0;
+        this.examType = examType;
+        this.startTime = LocalDateTime.now();
+        this.member = member;
+    }
+
+    public static Exam start(ExamType examType, Member member, List<Problem> problemList) {
+        return switch (examType) {
+            case EVENLY -> startEvenlyExam(member, problemList);
+            case BY_PROBLEM_TYPE -> throw new UnsupportedOperationException();
+            case MOCK_EXAM -> throw new UnsupportedOperationException();
+        };
+    }
+
+    static Exam startEvenlyExam(Member member, List<Problem> problemList) {
+        Exam exam = new Exam(EVENLY, member);
+        List<Problem> problems = selectEvenlyProblems(problemList);
+        List<Answer> answers = new ArrayList<>(problems.size());
+        for (int i = 1; i <= problems.size(); i++) {
+            answers.add(Answer.makeEmptyAnswer(exam, problems.get(i - 1), i));
+        }
+        exam.answers = answers;
+        return exam;
+    }
+
+    // 유형별로 1개의 문제씩 총 10개만 담기
+    static List<Problem> selectEvenlyProblems(List<Problem> problemList) {
+        List<Problem> problems = new ArrayList<>(10);
+        HashSet<String> problemTypes = new HashSet<>();
+        for (Problem problem : problemList) {
+            if (problemTypes.contains(problem.getNormalProblemType())) continue;
+            if (problems.size() >= 10) break;
+            problems.add(problem);
+            problemTypes.add(problem.getNormalProblemType());
+        }
+        return problems;
+    }
 }

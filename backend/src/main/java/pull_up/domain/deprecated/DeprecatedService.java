@@ -8,7 +8,6 @@ import pull_up.api.member.dto.MemberAnswerResponseDto;
 import pull_up.api.member.dto.MemberAnswerResultDto;
 import pull_up.api.member.dto.MemberDto;
 import pull_up.api.problem.dto.ProblemDto;
-import pull_up.domain.problem.ProblemRepository;
 import pull_up.global.entity.BaseEntity;
 import pull_up.global.exception.member.AnswerErrorCode;
 import pull_up.global.exception.member.AnswerException;
@@ -17,6 +16,7 @@ import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.infra.database.repository.exam.ExamRepository;
 import pull_up.infra.database.repository.legacy.IncorrectAnswerRepository;
 import pull_up.infra.database.repository.legacy.MemberAnswerRepository;
+import pull_up.infra.database.repository.problem.ProblemRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pull_up.api.answer.dto.AnswerDto;
 import pull_up.api.answer.dto.AnswerSolved;
 import pull_up.api.answer.dto.AnswerSubmit;
-import pull_up.domain.answer.AnswerService;
-import pull_up.global.dto.ListDto;
-
-import java.util.List;
+import pull_up.domain.deprecated.AnswerService;
 
 @RestController
 @RequiredArgsConstructor

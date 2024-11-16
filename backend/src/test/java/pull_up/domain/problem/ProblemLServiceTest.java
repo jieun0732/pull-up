@@ -10,6 +10,7 @@ import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
 import pull_up.infra.database.entity.legacy.ProblemL;
 import pull_up.infra.database.fixture.legacy.ProblemFixture;
+import pull_up.infra.database.repository.problem.ProblemRepository;
 
 import java.util.List;
 

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pull_up.api.exam.dto.*;
-import pull_up.domain.exam.ExamService;
+import pull_up.domain.deprecated.ExamService;
 import pull_up.api.member.dto.MemberAnswerIndexDto;
 import pull_up.api.member.dto.MemberAnswerResultDto;
 import pull_up.api.member.dto.MemberAnswerSolvedDto;

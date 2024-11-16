@@ -39,6 +39,6 @@ public enum ProblemFixture {
     private final byte[] explanation;
 
     public Problem get() {
-        return new Problem(id, totalAttempts, incorrectAttempts, incorrectRate, entry, problemType, question, example, choice1, choice2, choice3, choice4, choice5, correctAnswer, explanation, null);
+        return new Problem(id, totalAttempts, incorrectAttempts, incorrectRate, entry, problemType, question, example, choice1, choice2, choice3, choice4, choice5, correctAnswer, explanation);
     }
 }
