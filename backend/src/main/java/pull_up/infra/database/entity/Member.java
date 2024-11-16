@@ -7,6 +7,8 @@ import pull_up.domain.auth.Role;
 import pull_up.domain.auth.SNSProvider;
 import pull_up.global.entity.BaseEntity;
 
+import java.util.regex.Pattern;
+
 @Entity
 @Table(name = "member")
 @Getter
@@ -39,4 +41,26 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    private Member(Boolean tutorialFinished, String name, String email, String snsId, SNSProvider snsProvider, Role role) {
+        this.tutorialFinished = tutorialFinished;
+        this.name = name;
+        this.email = email;
+        this.snsId = snsId;
+        this.snsProvider = snsProvider;
+        this.role = role;
+    }
+
+    public static Member getFirstLoginMember(String name, String email, String snsId, SNSProvider snsProvider) {
+        return new Member(false, name, email, snsId, snsProvider, Role.USER);
+    }
+
+    public static Member getFirstLoginMember(String firstName, String lastName, String email, String snsId, SNSProvider snsProvider) {
+        return getFirstLoginMember(getFullName(firstName,lastName), email, snsId, snsProvider);
+    }
+
+    private static String getFullName(String firstName, String lastName) {
+        if (Pattern.matches("^[ㄱ-ㅎ가-힣]*$", firstName)) return lastName + firstName;
+        else return firstName + " " + lastName;
+    }
 }

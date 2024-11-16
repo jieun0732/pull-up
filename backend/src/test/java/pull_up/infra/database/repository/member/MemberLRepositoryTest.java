@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MemberLRepositoryTest {
 
     @Autowired
-    MemberRepository suit;
+    MemberRepositoryL suit;
 
     @Autowired
     EntityManager em;

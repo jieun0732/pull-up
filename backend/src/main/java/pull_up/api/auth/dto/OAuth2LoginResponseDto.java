@@ -1,8 +1,8 @@
 package pull_up.api.auth.dto;
 
 import lombok.Builder;
-import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.domain.auth.SNSProvider;
+import pull_up.infra.database.entity.Member;
 
 @Builder
 public record OAuth2LoginResponseDto(
@@ -13,13 +13,13 @@ public record OAuth2LoginResponseDto(
         String email
 ) {
 
-    public static OAuth2LoginResponseDto of(MemberL memberL, Boolean firstLogin, SNSProvider SNSProvider) {
+    public static OAuth2LoginResponseDto of(Member member, Boolean firstLogin, SNSProvider SNSProvider) {
         switch (SNSProvider) {
             case APPLE -> {
-                return new OAuth2LoginResponseDto(firstLogin, memberL.getId(), "apple", memberL.getName(), getPrivateEmail(memberL.getEmail()));
+                return new OAuth2LoginResponseDto(firstLogin, member.getId(), "apple", member.getName(), getPrivateEmail(member.getEmail()));
             }
             case KAKAO -> {
-                return new OAuth2LoginResponseDto(firstLogin, memberL.getId(), "kakao", memberL.getName(), memberL.getEmail());
+                return new OAuth2LoginResponseDto(firstLogin, member.getId(), "kakao", member.getName(), member.getEmail());
             }
             default -> throw new IllegalStateException("Unexpected value: " + SNSProvider);
         }

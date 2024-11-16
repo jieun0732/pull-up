@@ -1,5 +1,6 @@
 package pull_up.api.auth;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.Properties;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/pull-up/oauth2/callback")
+@RequestMapping("/api/oauth2/callback")
 public class OAuth2Controller {
 
     @Value("${auth.apple.frontend-redirect-uri}")
@@ -35,6 +36,7 @@ public class OAuth2Controller {
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
 
+    @Operation(summary = "애플 SNS 로그인", description = "애플 SNS 로그인을 시도합니다.", tags = "인증")
     @PostMapping("/apple")
     RedirectView appleLogin(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> parameterMap = request.getParameterMap();
@@ -48,6 +50,7 @@ public class OAuth2Controller {
         return setRedirect(appleUser);
     }
 
+    @Operation(summary = "카카오 SNS 로그인", description = "카카오 SNS 로그인을 시도합니다.", tags = "인증")
     @GetMapping("/kakao")
     RedirectView kakaoLogin(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> parameterMap = request.getParameterMap();

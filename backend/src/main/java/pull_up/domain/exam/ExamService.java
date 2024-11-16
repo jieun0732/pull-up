@@ -22,7 +22,7 @@ import pull_up.infra.database.repository.answer.AnswerRepository;
 import pull_up.infra.database.repository.exam.ExamRepository;
 import pull_up.infra.database.repository.legacy.IncorrectAnswerRepository;
 import pull_up.infra.database.repository.legacy.MemberAnswerRepository;
-import pull_up.infra.database.repository.member.MemberRepository;
+import pull_up.infra.database.repository.member.MemberRepositoryL;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -41,7 +41,7 @@ import static pull_up.api.exam.exception.ExamErrorCode.NOT_FOUND_EXAM;
 public class ExamService {
 
     private final ProblemRepository problemRepository;
-    private final MemberRepository memberRepository;
+    private final MemberRepositoryL memberRepositoryL;
     private final MemberAnswerRepository memberAnswerRepository;
     private final IncorrectAnswerRepository incorrectAnswerRepository;
     private final ExamRepository examRepository;
@@ -234,7 +234,7 @@ public class ExamService {
      */
     public CreatedExamInformationResultDto startMockExam(
             Long memberId) {
-        MemberL memberL = memberRepository.findById(memberId)
+        MemberL memberL = memberRepositoryL.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER));
 
         ExamL examL = ExamL.of(

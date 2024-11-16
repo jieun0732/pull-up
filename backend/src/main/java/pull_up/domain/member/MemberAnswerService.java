@@ -7,7 +7,7 @@ import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.infra.database.entity.legacy.MemberAnswer;
 import pull_up.infra.database.entity.legacy.ProblemL;
 import pull_up.infra.database.repository.legacy.MemberAnswerRepository;
-import pull_up.infra.database.repository.member.MemberRepository;
+import pull_up.infra.database.repository.member.MemberRepositoryL;
 import pull_up.domain.problem.ProblemRepository;
 
 import java.util.List;
@@ -21,11 +21,11 @@ public class MemberAnswerService {
 
     private final ProblemRepository problemRepository;
 
-    private final MemberRepository memberRepository;
+    private final MemberRepositoryL memberRepositoryL;
 
     public void createMemberAnswersForNonMockExamProblems(Long memberId) {
         // Member 조회
-        MemberL memberL = memberRepository.findById(memberId)
+        MemberL memberL = memberRepositoryL.findById(memberId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
 
         // category가 "모의고사"가 아닌 모든 문제 조회

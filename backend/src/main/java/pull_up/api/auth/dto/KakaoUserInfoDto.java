@@ -1,7 +1,7 @@
 package pull_up.api.auth.dto;
 
 public record KakaoUserInfoDto(
-        Long id,
+        String id,
         KakaoAccount kakao_account
 ) {
     public record KakaoAccount(

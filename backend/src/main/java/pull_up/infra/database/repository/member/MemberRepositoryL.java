@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * Member 레포지토리.
  */
-public interface MemberRepository extends JpaRepository<MemberL, Long>, CustomMemberRepository {
+public interface MemberRepositoryL extends JpaRepository<MemberL, Long>, CustomMemberRepository {
 
     Optional<MemberL> findByEmail(String email);
 

@@ -10,7 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import pull_up.api.member.dto.MemberScoreDto;
 import pull_up.domain.member.MemberService;
 import pull_up.infra.database.entity.legacy.MemberL;
-import pull_up.infra.database.repository.member.MemberRepository;
+import pull_up.infra.database.repository.member.MemberRepositoryL;
 import pull_up.domain.auth.SNSProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MemberLServiceTest {
 
     @Autowired
-    MemberRepository memberRepository;
+    MemberRepositoryL memberRepositoryL;
 
     MemberService suit;
 
@@ -30,9 +30,9 @@ class MemberLServiceTest {
 
     @BeforeEach
     void init() {
-        suit = new MemberService(memberRepository);
+        suit = new MemberService(memberRepositoryL);
         memberL = MemberL.of("test", "test@privaterelay.appleid.com", false, SNSProvider.APPLE.getRole());
-        memberRepository.save(memberL);
+        memberRepositoryL.save(memberL);
     }
 
     @Test

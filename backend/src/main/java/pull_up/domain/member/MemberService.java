@@ -8,7 +8,7 @@ import pull_up.api.member.dto.MemberScoreDto;
 import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.global.exception.member.MemberErrorCode;
 import pull_up.global.exception.member.MemberException;
-import pull_up.infra.database.repository.member.MemberRepository;
+import pull_up.infra.database.repository.member.MemberRepositoryL;
 
 import java.util.Optional;
 
@@ -17,13 +17,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final MemberRepository memberRepository;
+    private final MemberRepositoryL memberRepositoryL;
 
     /**
      * 특정 ID를 가진 Member의 정보를 조회하고, 가장 최근 ExamInformation의 Score와 함께 반환하는 메서드.
      */
     public MemberScoreDto getMemberById(Long id) {
-        MemberL memberL = memberRepository.findById(id)
+        MemberL memberL = memberRepositoryL.findById(id)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER)); // 예외 던지기
 
 
@@ -43,11 +43,11 @@ public class MemberService {
      * 특정 ID를 가진 Member의 accessCheck을 true로 변경하는 메서드.
      */
     public MemberDto updateAccessCheck(Long id) {
-        Optional<MemberL> memberOptional = memberRepository.findById(id);
+        Optional<MemberL> memberOptional = memberRepositoryL.findById(id);
         if (memberOptional.isPresent()) {
             MemberL memberL = memberOptional.get();
             memberL.setAccessCheck(true);
-            memberRepository.save(memberL);
+            memberRepositoryL.save(memberL);
             return new MemberDto(memberL.getId(), memberL.getName(), memberL.getEmail(), memberL.isAccessCheck(),
                     memberL.getRole());
         }
@@ -58,13 +58,13 @@ public class MemberService {
      * 멤버 탈퇴.
      */
     public void deleteMember(Long id) {
-        MemberL memberL = memberRepository.findById(id)
+        MemberL memberL = memberRepositoryL.findById(id)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_MEMBER)); // 예외 던지기
         memberL.softDelete();
     }
 
     public void deleteMemberHard(Long id) {
-        MemberL memberL = memberRepository.findMemberByIdWithRelation(id);
-        memberRepository.delete(memberL);
+        MemberL memberL = memberRepositoryL.findMemberByIdWithRelation(id);
+        memberRepositoryL.delete(memberL);
     }
 }

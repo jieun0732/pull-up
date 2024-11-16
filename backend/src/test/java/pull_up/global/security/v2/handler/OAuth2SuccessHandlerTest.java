@@ -14,12 +14,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.test.util.ReflectionTestUtils;
 import pull_up.global.security.handler.OAuth2SuccessHandler;
+import pull_up.infra.database.entity.Member;
 import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.api.auth.dto.OAuth2LoginResponseDto;
 import pull_up.domain.auth.SNSProvider;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.global.security.util.CookieUtil;
 import pull_up.global.security.util.JwtUtil;
+import pull_up.infra.database.fixture.MemberFixture;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ class OAuth2SuccessHandlerTest {
     @DisplayName("로그인 완료 후 토큰 추가")
     void testAddRequestToken() throws Exception {
         // given
-        URI url = new URI("/api/pull-up/oauth2/callback/kakao");
+        URI url = new URI("/api/oauth2/callback/kakao");
 
         // create authentication
         Map<String, Object> attributes = new HashMap<>();
@@ -71,9 +73,9 @@ class OAuth2SuccessHandlerTest {
         DefaultOAuth2User user = new DefaultOAuth2User(new ArrayList<>(), attributes, "id");
 
         // mock kakao user
-        MemberL memberL = MemberL.of("남상엽", "test@example.com", false, "kakao-user");
-        memberL.setId(1L);
-        OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(memberL, true, SNSProvider.KAKAO);
+        Member member = MemberFixture.KAKAO_USER.get();
+        member.setId(1L);
+        OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(member, true, SNSProvider.KAKAO);
 
         // mock filter param
         HttpServletRequest request = new MockHttpServletRequest();

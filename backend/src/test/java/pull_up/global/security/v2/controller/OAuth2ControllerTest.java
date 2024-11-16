@@ -3,28 +3,28 @@ package pull_up.global.security.v2.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.RedirectView;
 import pull_up.api.auth.OAuth2Controller;
-import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.api.auth.dto.OAuth2LoginResponseDto;
 import pull_up.domain.auth.SNSProvider;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.global.security.util.CookieUtil;
 import pull_up.global.security.util.JwtUtil;
+import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.fixture.MemberFixture;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class OAuth2ControllerTest {
 
@@ -39,12 +39,12 @@ class OAuth2ControllerTest {
         CookieUtil cookieUtil = new CookieUtil();
         suit = new OAuth2Controller(service, jwtUtil, cookieUtil);
         mockMvc = MockMvcBuilders.standaloneSetup(suit).build();
-        ReflectionTestUtils.setField(suit,"appleRedirectUri", "https//example.com");
-        ReflectionTestUtils.setField(suit,"kakaoRedirectUri", "https//example.com");
-        ReflectionTestUtils.setField(jwtUtil,"key", "bvTAyAcnI3j1NPxTfJh9KLhBLQrrKdoS");
-        ReflectionTestUtils.setField(jwtUtil,"subject", "test subject");
-        ReflectionTestUtils.setField(jwtUtil,"issuer", "test issuer");
-        ReflectionTestUtils.setField(jwtUtil,"expire", 259200000L);
+        ReflectionTestUtils.setField(suit, "appleRedirectUri", "https//example.com");
+        ReflectionTestUtils.setField(suit, "kakaoRedirectUri", "https//example.com");
+        ReflectionTestUtils.setField(jwtUtil, "key", "bvTAyAcnI3j1NPxTfJh9KLhBLQrrKdoS");
+        ReflectionTestUtils.setField(jwtUtil, "subject", "test subject");
+        ReflectionTestUtils.setField(jwtUtil, "issuer", "test issuer");
+        ReflectionTestUtils.setField(jwtUtil, "expire", 259200000L);
         ReflectionTestUtils.setField(cookieUtil, "domain", "https://example.com");
         ReflectionTestUtils.setField(cookieUtil, "maxAge", 1234);
         ReflectionTestUtils.setField(cookieUtil, "path", "/");
@@ -74,19 +74,20 @@ class OAuth2ControllerTest {
     @DisplayName("로그인 완료 후 토큰 추가")
     void testAddRequestToken() throws Exception {
         // given
-        URI url = new URI("/api/pull-up/oauth2/callback/apple");
-        URI url2 = new URI("/api/pull-up/oauth2/callback/kakao");
-        MemberL memberL = MemberL.of("남상엽", "test@example.com", false, "apple-user");
-        memberL.setId(1L);
-        OAuth2LoginResponseDto appleUser = OAuth2LoginResponseDto.of(memberL, true, SNSProvider.APPLE);
+        URI url = new URI("/api/oauth2/callback/apple");
+        URI url2 = new URI("/api/oauth2/callback/kakao");
+        Member member = MemberFixture.APPLE_USER.get();
+        member.setId(1L);
+        OAuth2LoginResponseDto appleUser = OAuth2LoginResponseDto.of(member, true, SNSProvider.APPLE);
 
         // when
         when(service.getAppleUser(any(), any())).thenReturn(appleUser);
         ResultActions result = mockMvc.perform(post(url).param("id_token", "test"));
 
         // when 2
-        memberL.setRole("kakao-user");
-        OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(memberL, true, SNSProvider.APPLE);
+        Member member2 = MemberFixture.KAKAO_USER.get();
+        member2.setId(1L);
+        OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(member2, true, SNSProvider.APPLE);
         when(service.getKakaoUser((String) any())).thenReturn(kakaoUser);
         ResultActions result2 = mockMvc.perform(get(url2).param("code", "test"));
 

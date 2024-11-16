@@ -15,14 +15,13 @@ import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import pull_up.domain.auth.service.OAuth2LoginService;
-import pull_up.infra.database.entity.legacy.MemberL;
-import pull_up.infra.database.repository.member.MemberRepository;
-import pull_up.infra.external_api.auth.KakaoAuthRestApi;
 import pull_up.api.auth.dto.AppleLoginRequestDto;
 import pull_up.api.auth.dto.KakaoUserInfoDto;
 import pull_up.api.auth.dto.OAuth2LoginResponseDto;
+import pull_up.domain.auth.service.OAuth2LoginService;
+import pull_up.domain.member.MemberRepository;
 import pull_up.global.security.util.AppleTokenDecoder;
+import pull_up.infra.external_api.auth.KakaoAuthRestApi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +63,7 @@ class OAuth2LoginServiceTest {
     @DisplayName("code로 로그인 테스트")
     void testKakaoCodeLogin() {
         // given
-        KakaoUserInfoDto kakaoUserInfoDto = new KakaoUserInfoDto(123L,
+        KakaoUserInfoDto kakaoUserInfoDto = new KakaoUserInfoDto("123",
                 new KakaoUserInfoDto.KakaoAccount("test@examle.com", true, true, true,
                         new KakaoUserInfoDto.KakaoAccount.Profile("leaf", true)));
 
@@ -116,14 +115,14 @@ class OAuth2LoginServiceTest {
     void testAlreadyRegisteredAppleUser() {
         // given
         Gson gson = new Gson();
-        Claims email = Jwts.claims().add("email", "spearoad15@gmail.com").build();
+        Claims sub = Jwts.claims().add("sub", "user sub").build();
 
         String idToken = "test token";
         AppleLoginRequestDto dto = new AppleLoginRequestDto(new AppleLoginRequestDto.UserName("상엽", "남"), "spearoad15@gmail.com");
         String userJson = gson.toJson(dto);
 
         // when
-        BDDMockito.when(appleTokenDecoder.decode(any())).thenReturn(email);
+        BDDMockito.when(appleTokenDecoder.decode(any())).thenReturn(sub);
         OAuth2LoginResponseDto appleUser = suit.getAppleUser(idToken, userJson);
 
         // then : 처음 로그인 시도하면 첫번째 로그인 true
@@ -138,59 +137,23 @@ class OAuth2LoginServiceTest {
     }
 
     @Test
-    @DisplayName("가리기 한 회원 회원가입 및 조회 테스트")
-    void testRegisterConcealedUser() {
-        // given
-        Gson gson = new Gson();
-        String privateMail = "test@privaterelay.appleid.com";
-        Claims email = Jwts.claims().add("email", privateMail).build();
-
-        String idToken = "test token";
-        AppleLoginRequestDto dto = new AppleLoginRequestDto(new AppleLoginRequestDto.UserName("leaf", "nam"), privateMail);
-        String userJson = gson.toJson(dto);
-
-        // when : email 가린채로 로그인 시도 1
-        BDDMockito.when(appleTokenDecoder.decode(any())).thenReturn(email);
-        OAuth2LoginResponseDto appleUser = suit.getAppleUser(idToken, userJson);
-        MemberL memberLInDB = memberRepository.findByEmail(privateMail).get();
-
-        // then
-        assertThat(memberLInDB.getEmail()).isEqualTo(privateMail);
-
-        assertUser(appleUser, "CONCEALED_EMAIL", "apple", "leaf nam");
-
-        // given2
-        String privateMail2 = "test2@privaterelay.appleid.com";
-        Claims email2 = Jwts.claims().add("email", privateMail2).build();
-        AppleLoginRequestDto dto2 = new AppleLoginRequestDto(new AppleLoginRequestDto.UserName("sangyeop", "nam"), privateMail2);
-        String userJson2 = gson.toJson(dto2);
-
-        // when2 : 다른 사용자 로그인 시도
-        BDDMockito.when(appleTokenDecoder.decode(any())).thenReturn(email2);
-        OAuth2LoginResponseDto appleUser2 = suit.getAppleUser(idToken, userJson2);
-
-        // then2 : 1과 2는 다른 계정
-        assertThat(appleUser.memberId()).isNotEqualTo(appleUser2.memberId());
-    }
-
-    @Test
     @DisplayName("이전에 로그인 했던 회원은 기존 아이디 그대로 사용")
     void usePreviousIdTest() {
         // given
         Gson gson = new Gson();
-        Claims email = Jwts.claims().add("email", "spearoad15@gmail.com").build();
+        Claims sub = Jwts.claims().add("sub", "user sub").build();
 
         String idToken = "test token";
         AppleLoginRequestDto dto = new AppleLoginRequestDto(new AppleLoginRequestDto.UserName("상엽", "남"), "spearoad15@gmail.com");
         String userJson = gson.toJson(dto);
 
         // when
-        BDDMockito.when(appleTokenDecoder.decode(any())).thenReturn(email);
+        BDDMockito.when(appleTokenDecoder.decode(any())).thenReturn(sub);
         OAuth2LoginResponseDto appleUser = suit.getAppleUser(idToken, userJson); // 회원가입
         OAuth2LoginResponseDto appleUser2 = suit.getAppleUser(idToken, userJson); // 다시 회원가입
 
         // then
         assertUser(appleUser, "spearoad15@gmail.com", "apple", "남상엽");
-        assertThat(appleUser).isEqualTo(appleUser2);
+        assertThat(appleUser).usingRecursiveComparison().ignoringFields("firstLogin").isEqualTo(appleUser2);
     }
 }

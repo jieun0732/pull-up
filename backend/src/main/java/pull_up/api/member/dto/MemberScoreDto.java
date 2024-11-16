@@ -1,5 +1,6 @@
 package pull_up.api.member.dto;
 
+import pull_up.api.auth.dto.OAuth2LoginResponseDto;
 import pull_up.infra.database.entity.legacy.ExamL;
 
 import java.util.Comparator;
@@ -25,8 +26,6 @@ public record MemberScoreDto (
     }
 
     public static String getPrivateEmail(String email) {
-        if (email.equals("CONCEALED_EMAIL")) return email;
-        if (email.split("@")[1].contains("private")) return "CONCEALED_EMAIL";
-        return email;
+        return OAuth2LoginResponseDto.getPrivateEmail(email);
     }
 }
