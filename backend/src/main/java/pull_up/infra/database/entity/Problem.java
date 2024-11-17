@@ -1,11 +1,10 @@
 package pull_up.infra.database.entity;
 
+import com.nimbusds.jose.util.StandardCharset;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import pull_up.domain.problem.Entry;
-
-import java.util.List;
 
 @Entity
 @Table(name = "problem")
@@ -67,6 +66,24 @@ public class Problem {
     @Lob
     @Column(columnDefinition = "BLOB")
     private byte[] explanation;
+
+    private Problem(Entry entry, String problemType, String question, String example, String choice1, String choice2, String choice3, String choice4, String choice5, String correctAnswer, String explanation) {
+        this.entry = entry;
+        this.problemType = problemType;
+        this.question = question.getBytes(StandardCharset.UTF_8);
+        this.example = example.getBytes(StandardCharset.UTF_8);
+        this.choice1 = choice1;
+        this.choice2 = choice2;
+        this.choice3 = choice3;
+        this.choice4 = choice4;
+        this.choice5 = choice5;
+        this.correctAnswer = correctAnswer;
+        this.explanation = explanation.getBytes(StandardCharset.UTF_8);
+    }
+
+    public static Problem createProblem(Entry entry, String problemType, String question, String example, String choice1, String choice2, String choice3, String choice4, String choice5, String correctAnswer, String explanation) {
+        return new Problem(entry, problemType, question, example, choice1, choice2, choice3, choice4, choice5, correctAnswer, explanation);
+    }
 
     public String getQuestionAsString() {
         return new String(question);

@@ -40,7 +40,7 @@ import static pull_up.domain.exam.exception.ExamErrorCode.NOT_FOUND_EXAM;
 @RequiredArgsConstructor
 public class ExamService {
 
-    private final ProblemRepositoryL problemRepository;
+    private final ProblemRepositoryL problemRepositoryL;
     private final MemberRepositoryL memberRepositoryL;
     private final MemberAnswerRepository memberAnswerRepository;
     private final IncorrectAnswerRepository incorrectAnswerRepository;
@@ -103,7 +103,7 @@ public class ExamService {
     private List<ProblemTypeSummaryDto> getProblemSummaryByEntry(Long memberId, String entry,
                                                                  String category) {
         // 모든 문제를 entry와 category에 따라 조회
-        List<ProblemDto> problemDtos = problemRepository.findByEntryAndCategory(entry, category);
+        List<ProblemDto> problemDtos = problemRepositoryL.findByEntryAndCategory(entry, category);
 
         // 각 type별로 문제 개수를 세고, 선택된 답변의 개수도 세기
         Map<String, Long> totalProblemsByType = problemDtos.stream()
@@ -224,7 +224,7 @@ public class ExamService {
      * 모의고사 문제 리스트 조회.
      */
     public List<ProblemResultDto> getMockExamProblems() {
-        List<ProblemL> problemLS = problemRepository.findByCategory("모의고사");
+        List<ProblemL> problemLS = problemRepositoryL.findByCategory("모의고사");
         Collections.shuffle(problemLS);
         return problemLS.stream().limit(20).map(ProblemResultDto::from).collect(Collectors.toList());
     }
@@ -268,7 +268,7 @@ public class ExamService {
             log.info("limit: " + limit);
 
             // "모의고사" 카테고리와 entry별로 문제를 필터링
-            List<ProblemL> problemLS = problemRepository.findByCategoryAndEntry("모의고사", entryName);
+            List<ProblemL> problemLS = problemRepositoryL.findByCategoryAndEntry("모의고사", entryName);
             log.info("problems1: " + problemLS);
 
             // 문제를 랜덤으로 섞음
@@ -424,7 +424,7 @@ public class ExamService {
      * 문제의 답과 사용의 답 확인하기.
      */
     private boolean checkAnswer(Long problemId, String chosenAnswer) {
-        ProblemL problemL = problemRepository.findById(problemId).orElseThrow();
+        ProblemL problemL = problemRepositoryL.findById(problemId).orElseThrow();
         return problemL.getAnswer().equals(chosenAnswer);
     }
 

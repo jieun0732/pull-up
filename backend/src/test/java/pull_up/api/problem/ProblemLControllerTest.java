@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pull_up.api.problem.dto.CreateProblem;
 import pull_up.api.problem.dto.ProblemDto;
+import pull_up.domain.problem.Entry;
 import pull_up.domain.problem.ProblemService;
 import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
@@ -47,7 +48,7 @@ class ProblemLControllerTest {
     @DisplayName("문제 생성 요청 테스트")
     void testCreateProblem() throws Exception {
         // given
-        CreateProblem.Request request = new CreateProblem.Request("", "", "", "", "", "", "", "", "", "", "", "", 0D);
+        CreateProblem.Request request = new CreateProblem.Request(Entry.MATH, "", "", "", "", "", "", "", "", "", "");
         String body = gson.toJson(request);
         MessageDto expect = new MessageDto("Problem 1 has been created successfully.");
 
@@ -91,14 +92,5 @@ class ProblemLControllerTest {
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(content().json(gson.toJson(emptyList)));
-    }
-
-    @Test
-    @DisplayName("전체 문제 삭제 요청 테스트")
-    void testDeleteProblemHard() throws Exception {
-        mockMvc.perform(delete("/api/problems/hard"))
-                .andDo(print())
-                .andExpect(status().is(200))
-                .andExpect(content().json(gson.toJson(new MessageDto("All problem deleted successfully."))));
     }
 }

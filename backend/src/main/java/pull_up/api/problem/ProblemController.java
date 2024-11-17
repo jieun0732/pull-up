@@ -42,11 +42,11 @@ public class ProblemController {
         return new ResponseEntity<>(problemService.getList(entry, category, type), HttpStatus.OK);
     }
 
-    @Operation(summary = "문제 삭제(hard)", description = "DB 상의 모든 문제를 삭제합니다.", tags = "문제")
+    @Operation(summary = "문제 삭제(hard)", description = "DB 상의 모든 문제를 삭제합니다.", tags = "Deprecated")
     @DeleteMapping("/hard")
     public ResponseEntity<MessageDto> deleteAll() {
-        problemService.deleteAllProblem();
-
-        return new ResponseEntity<>(new MessageDto("All problem deleted successfully."), HttpStatus.OK);
+//        problemService.deleteAllProblem();
+        throw new UnsupportedOperationException();
+//        return new ResponseEntity<>(new MessageDto("All problem deleted successfully."), HttpStatus.OK);
     }
 }

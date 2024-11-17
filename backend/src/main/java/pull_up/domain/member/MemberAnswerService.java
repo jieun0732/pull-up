@@ -19,7 +19,7 @@ public class MemberAnswerService {
 
     private final MemberAnswerRepository memberAnswerRepository;
 
-    private final ProblemRepositoryL problemRepository;
+    private final ProblemRepositoryL problemRepositoryL;
 
     private final MemberRepositoryL memberRepositoryL;
 
@@ -29,7 +29,7 @@ public class MemberAnswerService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
 
         // category가 "모의고사"가 아닌 모든 문제 조회
-        List<ProblemL> problemLS = problemRepository.findByCategoryNot("모의고사");
+        List<ProblemL> problemLS = problemRepositoryL.findByCategoryNot("모의고사");
 
         // MemberAnswer 생성 및 저장
         for (ProblemL problemL : problemLS) {

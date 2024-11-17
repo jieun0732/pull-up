@@ -29,14 +29,14 @@ public class DeprecatedService {
 
     private final MemberAnswerRepository memberAnswerRepository;
     private final IncorrectAnswerRepository incorrectAnswerRepository;
-    private final ProblemRepositoryL problemRepository;
+    private final ProblemRepositoryL problemRepositoryL;
     private final ExamRepositoryL examRepositoryL;
 
     @Deprecated
     @Transactional
     public MemberAnswerResultDto saveMemberAnswer(MemberDto memberDTO, ProblemDto problemDTO, ExamInformationDto examInformationDTO, String chosenAnswer) {
         MemberL memberL = MemberDto.toEntity(memberDTO);
-        ProblemL problemL = problemRepository.findById(problemDTO.id()).orElseThrow();
+        ProblemL problemL = problemRepositoryL.findById(problemDTO.id()).orElseThrow();
         ExamL examL = examRepositoryL.findById(examInformationDTO.id()).orElseThrow();
         boolean isCorrect = chosenAnswer.equals(problemL.getAnswer());
 
@@ -45,7 +45,7 @@ public class DeprecatedService {
             problemL.setIncorrectAttempts(problemL.getIncorrectAttempts() + 1);
         }
         problemL.setIncorrectRate((double) problemL.getIncorrectAttempts() / problemL.getTotalAttempts() * 100);
-        problemRepository.save(problemL);
+        problemRepositoryL.save(problemL);
 
         MemberAnswer memberAnswer = MemberAnswer.of(memberL, problemL, examL, chosenAnswer, isCorrect);
         memberAnswerRepository.save(memberAnswer);
@@ -111,7 +111,7 @@ public class DeprecatedService {
         }
         problemL.setIncorrectRate(
                 (double) problemL.getIncorrectAttempts() / problemL.getTotalAttempts() * 100);
-        problemRepository.save(problemL);
+        problemRepositoryL.save(problemL);
 
         // 7. 결과를 DTO로 변환하여 반환
         return MemberAnswerResultDto.from(memberAnswer);
@@ -121,7 +121,7 @@ public class DeprecatedService {
      * 문제의 답과 사용의 답 확인하기.
      */
     private boolean checkAnswer(Long problemId, String chosenAnswer) {
-        ProblemL problemL = problemRepository.findById(problemId).orElseThrow();
+        ProblemL problemL = problemRepositoryL.findById(problemId).orElseThrow();
         return problemL.getAnswer().equals(chosenAnswer);
     }
 

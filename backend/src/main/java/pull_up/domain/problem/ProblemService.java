@@ -7,8 +7,8 @@ import pull_up.api.problem.dto.CreateProblem;
 import pull_up.api.problem.dto.ProblemDto;
 import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
+import pull_up.infra.database.entity.Problem;
 import pull_up.infra.database.entity.legacy.ProblemL;
-import pull_up.infra.database.repository.problem.ProblemRepositoryL;
 
 import java.util.List;
 
@@ -16,25 +16,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProblemService {
 
-    private final ProblemRepositoryL problemRepository;
-
-    @Transactional
-    public void deleteAllProblem() {
-        problemRepository.deleteAllWithRelation();
-    }
+    private final ProblemRepository problemRepository;
 
     @Transactional
     public MessageDto createProblem(CreateProblem.Request createProblemReq) {
-        ProblemL problemL = CreateProblem.Request.toEntity(createProblemReq);
-        problemRepository.save(problemL);
-        return new MessageDto("Problem " + problemL.getId() + " has been created successfully.");
+        Problem problem = CreateProblem.Request.toEntity(createProblemReq);
+        problemRepository.save(problem);
+        return new MessageDto("Problem " + problem.getId() + " has been created successfully.");
     }
 
     @Transactional
     public MessageDto createProblem(String formatString) {
-        List<ProblemL> problemLS = CreateProblem.FormatRequest.toEntity(formatString);
-        problemRepository.saveAll(problemLS);
-        return new MessageDto(problemLS.size() +" Problems have been created successfully.");
+        List<Problem> problems = CreateProblem.FormatRequest.toEntity(formatString);
+        problemRepository.saveAll(problems);
+        return new MessageDto(problems.size() +" Problems have been created successfully.");
     }
 
     public ListDto<ProblemDto> getList(String entry, String category, String type) {
