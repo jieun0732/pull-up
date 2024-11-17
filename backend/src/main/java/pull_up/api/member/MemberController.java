@@ -18,26 +18,26 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "멤버 조회", description = "멤버에 대해 조회합니다.", tags = "멤버")
+    @Operation(summary = "멤버 조회", description = "멤버에 대해 조회합니다.", tags = "Deprecated")
     @GetMapping("/{id}")
     public ResponseEntity<MemberScoreDto> getMemberById(@PathVariable Long id) {
         return new ResponseEntity<>(memberService.getMemberById(id), HttpStatus.OK);
     }
 
-    @Operation(summary = "튜토리얼 확인", description = "튜토리얼 확인 여부를 확인합니다.", tags = "멤버")
+    @Operation(summary = "튜토리얼 확인", description = "튜토리얼 확인 여부를 확인합니다.", tags = "Deprecated")
     @PutMapping("/{id}/access-check")
     public ResponseEntity<MemberDto> updateAccessCheck(@PathVariable Long id) {
         return new ResponseEntity<>(memberService.updateAccessCheck(id), HttpStatus.OK);
     }
 
-    @Operation(summary = "멤버 탈퇴(soft)", description = "멤버를 탈퇴시킵니다.", tags = "멤버")
+    @Operation(summary = "멤버 탈퇴(soft)", description = "멤버를 탈퇴시킵니다.", tags = "Deprecated")
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         memberService.deleteMember(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Operation(summary = "멤버 탈퇴(hard)", description = "멤버를 탈퇴시킵니다. DB에서 관련된 데이터를 모두 삭제합니다.", tags = "멤버")
+    @Operation(summary = "멤버 탈퇴(hard)", description = "멤버를 탈퇴시킵니다. DB에서 관련된 데이터를 모두 삭제합니다.", tags = "Deprecated")
     @DeleteMapping("/{id}/delete/hard")
     public ResponseEntity<String> deleteMemberHard(@PathVariable Long id) {
         memberService.deleteMemberHard(id);

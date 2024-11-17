@@ -1,4 +1,4 @@
-package pull_up.api.exam.evenly;
+package pull_up.api.exam;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
