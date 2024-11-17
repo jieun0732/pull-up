@@ -79,6 +79,9 @@ public class Problem {
         this.choice5 = choice5;
         this.correctAnswer = correctAnswer;
         this.explanation = explanation.getBytes(StandardCharset.UTF_8);
+        this.totalAttempts = 0;
+        this.incorrectAttempts = 0;
+        this.incorrectRate = 0.0;
     }
 
     public static Problem createProblem(Entry entry, String problemType, String question, String example, String choice1, String choice2, String choice3, String choice4, String choice5, String correctAnswer, String explanation) {
