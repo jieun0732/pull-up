@@ -12,8 +12,8 @@ import pull_up.infra.database.entity.legacy.ExamL;
 import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.infra.database.fixture.legacy.ExamFixture;
 import pull_up.infra.database.fixture.legacy.MemberFixture;
-import pull_up.infra.database.repository.answer.AnswerRepository;
-import pull_up.infra.database.repository.exam.ExamRepository;
+import pull_up.infra.database.repository.answer.AnswerRepositoryL;
+import pull_up.infra.database.repository.exam.ExamRepositoryL;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -27,8 +27,8 @@ import static org.mockito.Mockito.mock;
 
 class ExamLServiceTest {
 
-    ExamRepository examRepository;
-    AnswerRepository answerRepository;
+    ExamRepositoryL examRepositoryL;
+    AnswerRepositoryL answerRepositoryL;
 
     ExamService suit;
 
@@ -37,14 +37,14 @@ class ExamLServiceTest {
 
     @BeforeEach
     void init() {
-        examRepository = mock(ExamRepository.class);
-        answerRepository = mock(AnswerRepository.class);
+        examRepositoryL = mock(ExamRepositoryL.class);
+        answerRepositoryL = mock(AnswerRepositoryL.class);
         suit = new ExamService(null,
                 null,
                 null,
                 null,
-                examRepository,
-                answerRepository);
+                examRepositoryL,
+                answerRepositoryL);
         memberL = MemberFixture.APPLE_USER.get();
         examL = ExamFixture.MATHEMATICS.get(memberL);
     }
@@ -82,9 +82,9 @@ class ExamLServiceTest {
                 " 즉, 114 / 2 = 57 km/h 입니다.", 100D);
 
         // when : 채점 및 틀린문제 확인
-        when(examRepository.findByIdWithAnswer(examId)).thenReturn(Optional.of(examL));
-        when(answerRepository.findIncorrectAnswersByMemberId(memberId)).thenReturn(incorrectAnswerLS);
-        when(answerRepository.findByIdWithProblem(answerId)).thenReturn(Optional.of(incorrectAnswerL));
+        when(examRepositoryL.findByIdWithAnswer(examId)).thenReturn(Optional.of(examL));
+        when(answerRepositoryL.findIncorrectAnswersByMemberId(memberId)).thenReturn(incorrectAnswerLS);
+        when(answerRepositoryL.findByIdWithProblem(answerId)).thenReturn(Optional.of(incorrectAnswerL));
 
         ExamGrade.Response response = suit.grade(request);
         ListDto<IncorrectAnswer.Brief> incorrectAnswersResponse = suit.getIncorrectAnswers(memberId);

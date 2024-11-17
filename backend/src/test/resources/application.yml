@@ -4,20 +4,27 @@ server:
       charset: UTF-8
       force: true
 spring:
-  datasource :
-    url: jdbc:h2:mem:test
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+  application:
+    name: pull-up
+
+  config:
+    import:
+      - optional:classpath:${spring.application.name}-local-test.yml
+
+  datasource:
+    driver-class-name: ${database.jdbc-driver}
+    url: jdbc:${database.provider}://${database.ip}:${database.port}/${database.schema}?serverTimeZone=${database.timezone}
+    username: ${database.username}
+    password: ${database.password}
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    database-platform: org.hibernate.dialect.H2Dialect
+      ddl-auto: ${jpa.ddl-auto}
     properties:
       hibernate:
-        dialect: pull_up.config.H2DialectExtended
-
+        dialect: ${jpa.dialect}
+        default_batch_fetch_size: ${jpa.batch-fetch}
+        format_sql: ${jpa.format-sql}
 
   # social security
   security:

@@ -6,7 +6,7 @@ import pull_up.domain.auth.SNSProvider;
 import pull_up.infra.database.entity.Member;
 
 @RequiredArgsConstructor
-public enum MemberFixture {
+public enum MemberFixture implements Fixture<Member> {
     APPLE_USER(1L, false, "apple test user", "test@apple.com", "test1234", SNSProvider.APPLE, Role.USER),
     KAKAO_USER(2L, false, "apple test user", "test@kakao.com", "test1234", SNSProvider.APPLE, Role.USER),
     TUTORIAL_FINISHED_USER(3L, true, "tutorial finished user", "test@apple.com", "test1234", SNSProvider.APPLE, Role.USER),

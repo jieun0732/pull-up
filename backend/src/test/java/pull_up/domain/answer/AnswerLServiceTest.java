@@ -13,8 +13,8 @@ import pull_up.global.exception.member.AnswerException;
 import pull_up.infra.database.entity.legacy.AnswerL;
 import pull_up.infra.database.fixture.legacy.ExamFixture;
 import pull_up.infra.database.fixture.legacy.MemberFixture;
-import pull_up.infra.database.repository.answer.AnswerRepository;
-import pull_up.infra.database.repository.exam.ExamRepository;
+import pull_up.infra.database.repository.answer.AnswerRepositoryL;
+import pull_up.infra.database.repository.exam.ExamRepositoryL;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,15 +29,15 @@ class AnswerLServiceTest {
 
     AnswerService suit;
 
-    ExamRepository mockExamRepository;
+    ExamRepositoryL mockExamRepositoryL;
 
-    AnswerRepository mockAnswerRepository;
+    AnswerRepositoryL mockAnswerRepositoryL;
 
     @BeforeEach
     void init() {
-        mockExamRepository = Mockito.mock(ExamRepository.class);
-        mockAnswerRepository = Mockito.mock(AnswerRepository.class);
-        suit = new AnswerService(mockExamRepository, mockAnswerRepository);
+        mockExamRepositoryL = Mockito.mock(ExamRepositoryL.class);
+        mockAnswerRepositoryL = Mockito.mock(AnswerRepositoryL.class);
+        suit = new AnswerService(mockExamRepositoryL, mockAnswerRepositoryL);
     }
 
     @Test
@@ -48,7 +48,7 @@ class AnswerLServiceTest {
         AnswerSubmit.Request incorrestRequest = new AnswerSubmit.Request(1L,2L,  "3");
 
         // when
-        when(mockExamRepository.findByIdWithAnswer(correstRequest.examId())).thenReturn(Optional.of(ExamFixture.MATHEMATICS.get(MemberFixture.APPLE_USER.get())));
+        when(mockExamRepositoryL.findByIdWithAnswer(correstRequest.examId())).thenReturn(Optional.of(ExamFixture.MATHEMATICS.get(MemberFixture.APPLE_USER.get())));
         AnswerSubmit.Response correctResponse = suit.submit(correstRequest);
         AnswerSubmit.Response incorrectResponse = suit.submit(incorrestRequest);
 
@@ -78,9 +78,9 @@ class AnswerLServiceTest {
         incorrectAnswerL.setIsSolved(true);
 
         // when
-        when(mockAnswerRepository.findByIdWithProblem(correctId, true)).thenReturn(Optional.of(correctAnswerL));
-        when(mockAnswerRepository.findByIdWithProblem(incorrectId, true)).thenReturn(Optional.of(incorrectAnswerL));
-        when(mockAnswerRepository.findByIdWithProblem(notSolvedId, true)).thenReturn(Optional.empty());
+        when(mockAnswerRepositoryL.findByIdWithProblem(correctId, true)).thenReturn(Optional.of(correctAnswerL));
+        when(mockAnswerRepositoryL.findByIdWithProblem(incorrectId, true)).thenReturn(Optional.of(incorrectAnswerL));
+        when(mockAnswerRepositoryL.findByIdWithProblem(notSolvedId, true)).thenReturn(Optional.empty());
 
         AnswerDto correctResponse = suit.getSolved(correctId);
         AnswerDto incorrectResponse = suit.getSolved(incorrectId);
@@ -110,7 +110,7 @@ class AnswerLServiceTest {
                 SOLVED_5.get());
 
         // when
-        when(mockAnswerRepository.findSolvedAnswersByMemberIdAndEntry(memberId, entry)).thenReturn(answerLS);
+        when(mockAnswerRepositoryL.findSolvedAnswersByMemberIdAndEntry(memberId, entry)).thenReturn(answerLS);
         AnswerSolved response = suit.getSolvedAll(memberId, entry);
 
         // then

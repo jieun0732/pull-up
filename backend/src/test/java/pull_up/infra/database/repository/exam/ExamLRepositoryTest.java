@@ -4,24 +4,17 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import pull_up.config.annotation.IntegrationTest;
 import pull_up.infra.database.entity.legacy.ExamL;
 import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.infra.database.fixture.legacy.ExamFixture;
 import pull_up.infra.database.fixture.legacy.MemberFixture;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-@DataJpaTest
-@AutoConfigureTestDatabase(
-        replace = AutoConfigureTestDatabase.Replace.ANY,
-        connection = EmbeddedDatabaseConnection.H2)
+@IntegrationTest
 class ExamLRepositoryTest {
 
     @Autowired
-    ExamRepository suit;
+    ExamRepositoryL suit;
 
     @Autowired
     EntityManager em;

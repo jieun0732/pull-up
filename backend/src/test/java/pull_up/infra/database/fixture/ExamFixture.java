@@ -8,7 +8,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
-public enum ExamFixture {
+public enum ExamFixture implements Fixture<Exam>{
     EVENLY_START(1L, false, 0, ExamType.EVENLY, LocalDateTime.of(2024, 11, 16, 12, 25), null, null),
     EVENLY_FINISHED(2L, true, 50, ExamType.EVENLY, LocalDateTime.of(2024, 11, 16, 12, 25), LocalDateTime.of(2024, 11, 16, 12, 35), Duration.ofMinutes(10)),
     BY_PROBLEM_TYPE_START(3L, false, 0, ExamType.BY_PROBLEM_TYPE, LocalDateTime.of(2024, 11, 16, 12, 25), null, null),

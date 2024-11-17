@@ -10,7 +10,7 @@ import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
 import pull_up.infra.database.entity.legacy.ProblemL;
 import pull_up.infra.database.fixture.legacy.ProblemFixture;
-import pull_up.infra.database.repository.problem.ProblemRepository;
+import pull_up.infra.database.repository.problem.ProblemRepositoryL;
 
 import java.util.List;
 
@@ -20,13 +20,13 @@ import static org.mockito.Mockito.*;
 
 class ProblemLServiceTest {
     ProblemService suit;
-    ProblemRepository mockRepository;
+    ProblemRepositoryL mockRepository;
 
     String formatString;
 
     @BeforeEach
     void init() {
-        mockRepository = mock(ProblemRepository.class);
+        mockRepository = mock(ProblemRepositoryL.class);
         suit = new ProblemService(mockRepository);
 
         formatString = """

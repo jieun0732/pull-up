@@ -8,7 +8,7 @@ import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.infra.database.entity.legacy.ProblemL;
 import pull_up.infra.database.repository.legacy.MemberAnswerRepository;
 import pull_up.infra.database.repository.member.MemberRepositoryL;
-import pull_up.infra.database.repository.problem.ProblemRepository;
+import pull_up.infra.database.repository.problem.ProblemRepositoryL;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class MemberAnswerService {
 
     private final MemberAnswerRepository memberAnswerRepository;
 
-    private final ProblemRepository problemRepository;
+    private final ProblemRepositoryL problemRepository;
 
     private final MemberRepositoryL memberRepositoryL;
 

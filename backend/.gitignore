@@ -45,6 +45,7 @@ out/
 
 ### Environment ###
 pull-up-local.yml
+pull-up-local-test.yml
 pull-up-server.yml
 AuthKey_SNHA348FS6.p8
 

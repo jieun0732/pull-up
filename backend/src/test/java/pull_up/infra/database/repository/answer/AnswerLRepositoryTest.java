@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import pull_up.config.annotation.IntegrationTest;
 import pull_up.infra.database.entity.legacy.AnswerL;
 import pull_up.infra.database.entity.legacy.ExamL;
 import pull_up.infra.database.entity.legacy.MemberL;
@@ -19,14 +20,11 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(
-        replace = AutoConfigureTestDatabase.Replace.ANY,
-        connection = EmbeddedDatabaseConnection.H2)
+@IntegrationTest
 class AnswerLRepositoryTest {
 
     @Autowired
-    AnswerRepository suit;
+    AnswerRepositoryL suit;
 
     @Autowired
     EntityManager em;

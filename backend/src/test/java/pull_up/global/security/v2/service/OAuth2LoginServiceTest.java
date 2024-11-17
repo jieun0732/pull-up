@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import pull_up.api.auth.dto.AppleLoginRequestDto;
 import pull_up.api.auth.dto.KakaoUserInfoDto;
 import pull_up.api.auth.dto.OAuth2LoginResponseDto;
+import pull_up.config.annotation.IntegrationTest;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.domain.member.MemberRepository;
 import pull_up.global.security.util.AppleTokenDecoder;
@@ -30,10 +31,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(
-        replace = AutoConfigureTestDatabase.Replace.ANY,
-        connection = EmbeddedDatabaseConnection.H2)
+@IntegrationTest
 @ExtendWith(MockitoExtension.class)
 class OAuth2LoginServiceTest {
 

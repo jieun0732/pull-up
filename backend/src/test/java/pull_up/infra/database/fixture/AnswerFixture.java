@@ -6,7 +6,7 @@ import pull_up.infra.database.entity.Answer;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
-public enum AnswerFixture {
+public enum AnswerFixture implements Fixture<Answer> {
     INCORRECT_1(1L, false, true, 1, 1, "1", LocalDateTime.of(2024, 11, 16, 12, 56)),
     INCORRECT_2(2L, false, true, 2, 2, "3", LocalDateTime.of(2024, 11, 16, 12, 56)),
     INCORRECT_3(3L, false, true, 3, 1, "2", LocalDateTime.of(2024, 11, 16, 12, 56)),

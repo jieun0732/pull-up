@@ -17,12 +17,12 @@ import pull_up.global.exception.member.MemberException;
 import pull_up.global.exception.problem.ProblemErrorCode;
 import pull_up.global.exception.problem.ProblemException;
 import pull_up.infra.database.entity.legacy.*;
-import pull_up.infra.database.repository.answer.AnswerRepository;
-import pull_up.infra.database.repository.exam.ExamRepository;
+import pull_up.infra.database.repository.answer.AnswerRepositoryL;
+import pull_up.infra.database.repository.exam.ExamRepositoryL;
 import pull_up.infra.database.repository.legacy.IncorrectAnswerRepository;
 import pull_up.infra.database.repository.legacy.MemberAnswerRepository;
 import pull_up.infra.database.repository.member.MemberRepositoryL;
-import pull_up.infra.database.repository.problem.ProblemRepository;
+import pull_up.infra.database.repository.problem.ProblemRepositoryL;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -40,12 +40,12 @@ import static pull_up.api.exam.exception.ExamErrorCode.NOT_FOUND_EXAM;
 @RequiredArgsConstructor
 public class ExamService {
 
-    private final ProblemRepository problemRepository;
+    private final ProblemRepositoryL problemRepository;
     private final MemberRepositoryL memberRepositoryL;
     private final MemberAnswerRepository memberAnswerRepository;
     private final IncorrectAnswerRepository incorrectAnswerRepository;
-    private final ExamRepository examRepository;
-    private final AnswerRepository answerRepository;
+    private final ExamRepositoryL examRepositoryL;
+    private final AnswerRepositoryL answerRepositoryL;
 
     /**
      * 문제 index 리스트 조회 ( 골고루 , 유형별 )
@@ -159,7 +159,7 @@ public class ExamService {
      * 모의고사 문제 푼 여부 조회.
      */
     public List<ProblemSolvedDto> getProblemsSolvedByExamInformation(Long examInformationId) {
-        List<AnswerL> answerLS = answerRepository.findByExamLId(
+        List<AnswerL> answerLS = answerRepositoryL.findByExamLId(
                 examInformationId);
 
         return answerLS.stream()
@@ -171,7 +171,7 @@ public class ExamService {
      * 모의고사 문제 목록 조회.
      */
     public List<ProblemSolvedDto> getExamProblemByExamInformation(Long examInformationId) {
-        List<AnswerL> answerLS = answerRepository.findByExamLId(
+        List<AnswerL> answerLS = answerRepositoryL.findByExamLId(
                 examInformationId);
 
         return answerLS.stream()
@@ -248,7 +248,7 @@ public class ExamService {
                 0
         );
 
-        examRepository.save(examL);
+        examRepositoryL.save(examL);
 
         // 각 entry에서 선택할 문제 수 설정
         Map<String, Integer> entryLimits = Map.of(
@@ -302,7 +302,7 @@ public class ExamService {
         }
 
         // ExamProblem 객체를 저장
-        answerRepository.saveAll(answerLS);
+        answerRepositoryL.saveAll(answerLS);
 
         // ExamProblemDto 리스트 생성
         List<ExamProblemResultDto> examProblemResultDtos = answerLS.stream()
@@ -319,7 +319,7 @@ public class ExamService {
      */
     public ProblemTimeResultDto getProblemByExamProblemId(Long examProblemId) {
         // ExamProblem 엔티티를 찾음
-        AnswerL answerL = answerRepository.findById(examProblemId)
+        AnswerL answerL = answerRepositoryL.findById(examProblemId)
                 .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
 
         // ExamProblem에서 Problem을 추출하여 반환
@@ -336,7 +336,7 @@ public class ExamService {
      */
     public ProblemTimeResultDto getProblemByExamInformationIdAndProblemNumber(
             Long examInformationId, Long problemNumber) {
-        AnswerL answerL = answerRepository.findByExamLIdAndProblemNumber(
+        AnswerL answerL = answerRepositoryL.findByExamLIdAndProblemNumber(
                 examInformationId, problemNumber);
         if (answerL == null) {
             throw new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM);
@@ -354,7 +354,7 @@ public class ExamService {
      */
     public ExamProblemResultDto saveMockExamAnswer(ExamProblemResponseDto examProblemResponseDto) {
         // 1. ExamProblem을 찾음
-        AnswerL answerL = answerRepository.findByExamLIdAndProblemNumber(
+        AnswerL answerL = answerRepositoryL.findByExamLIdAndProblemNumber(
                 examProblemResponseDto.examInformationId(), examProblemResponseDto.problemNumber());
 
         // 2. 사용자가 제출한 답안을 설정
@@ -368,7 +368,7 @@ public class ExamService {
         answerL.setIsCorrect(isCorrect);
 
         // 5. ExamProblem을 저장
-        answerRepository.save(answerL);
+        answerRepositoryL.save(answerL);
 
         // 6. IncorrectAnswer 처리
         MemberL memberL = answerL.getExamL().getMemberL();
@@ -404,19 +404,19 @@ public class ExamService {
      * 모의고사 완료 및 점수 저장하기.
      */
     public ExamInformationDto completeMockExam(Long examInformationId) {
-        ExamL examL = examRepository.findById(
+        ExamL examL = examRepositoryL.findById(
                         examInformationId)
                 .orElseThrow(() -> new ExamException(NOT_FOUND_EXAM));
         examL.setSolvedTime(LocalDateTime.now());
 
-        List<AnswerL> answerLS = answerRepository.findByExamLId(
+        List<AnswerL> answerLS = answerRepositoryL.findByExamLId(
                 examInformationId);
         int score = (int) answerLS.stream().filter(AnswerL::getIsCorrect).count() * 5;
         examL.setScore(score);
         examL.setRequiredTime(
                 Duration.between(examL.getCreatedDate(), examL.getSolvedTime()));
 
-        examRepository.save(examL);
+        examRepositoryL.save(examL);
         return ExamInformationDto.from(examL);
     }
 
@@ -432,7 +432,7 @@ public class ExamService {
      * 틀린 문제 리스트 조회하기.
      */
     public ListDto<IncorrectAnswer.Brief> getIncorrectAnswers(Long memberId) {
-        List<AnswerL> incorrectAnswerLS = answerRepository.findIncorrectAnswersByMemberId(memberId);
+        List<AnswerL> incorrectAnswerLS = answerRepositoryL.findIncorrectAnswersByMemberId(memberId);
         return new ListDto<>(incorrectAnswerLS.stream().map(IncorrectAnswer.Brief::toDto).toList());
     }
 
@@ -440,7 +440,7 @@ public class ExamService {
      * 틀린 문제 상세 조회하기.
      */
     public IncorrectAnswer.Detail getIncorrectAnswerDetail(Long answerId) {
-        AnswerL incorrectAnswerL = answerRepository.findByIdWithProblem(answerId)
+        AnswerL incorrectAnswerL = answerRepositoryL.findByIdWithProblem(answerId)
                 .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM_PROBLEM));
         return IncorrectAnswer.Detail.toDto(incorrectAnswerL);
     }
@@ -449,7 +449,7 @@ public class ExamService {
      * 전체 모의고사의 평균 점수 및 평균 소요 시간 구하기.
      */
     public ExamInformationAverageScoreDto calculateAverageScore() {
-        List<ExamL> examLS = examRepository.findAll();
+        List<ExamL> examLS = examRepositoryL.findAll();
 
         if (examLS.isEmpty()) {
             return ExamInformationAverageScoreDto.of(0.0,
@@ -473,10 +473,10 @@ public class ExamService {
      * 모의고사 문제 유형별로 총 문제 수와 맞힌 문제 수를 반환합니다.
      */
     public List<ProblemTypeResultDto> getProblemTypeResults(Long examInformationId) {
-        ExamL examL = examRepository.findById(examInformationId)
+        ExamL examL = examRepositoryL.findById(examInformationId)
                 .orElseThrow(() -> new ExamException(NOT_FOUND_EXAM));
 
-        List<AnswerL> answerLS = answerRepository.findByExamLId(
+        List<AnswerL> answerLS = answerRepositoryL.findByExamLId(
                 examInformationId);
 
         Map<String, List<AnswerL>> groupedByEntry = answerLS.stream()
@@ -500,12 +500,12 @@ public class ExamService {
      */
     public ExamInformationDetailDto getRecentExamInformation(Long memberId) {
         // 가장 최근 ExamInformation을 가져옴
-        ExamL recentExamL = examRepository.findTopByMemberLIdOrderByCreatedDateDesc(
+        ExamL recentExamL = examRepositoryL.findTopByMemberLIdOrderByCreatedDateDesc(
                         memberId)
                 .orElseThrow(() -> new ExamException(NOT_FOUND_EXAM));
 
         // ExamInformationId로 관련된 ExamProblems 조회
-        List<AnswerL> answerLS = answerRepository.findByExamLId(
+        List<AnswerL> answerLS = answerRepositoryL.findByExamLId(
                 recentExamL.getId());
 
         // 문제들을 엔트리별로 그룹화
@@ -537,7 +537,7 @@ public class ExamService {
         String rankPercent = calculateRankPercent(totalCorrectAnswers);
 
         // 모든 시험 정보 조회 및 평균 점수, 평균 소요 시간 계산
-        List<ExamL> allExamLS = examRepository.findAll();
+        List<ExamL> allExamLS = examRepositoryL.findAll();
 
         OptionalDouble averageScoreOpt = allExamLS.stream()
                 .mapToInt(ExamL::getScore)
@@ -603,17 +603,17 @@ public class ExamService {
      * 모의고사 삭제.
      */
     public void deleteMockExam(Long examInformationId) {
-        ExamL examL = examRepository.findById(examInformationId)
+        ExamL examL = examRepositoryL.findById(examInformationId)
                 .orElseThrow(() -> new ExamException(NOT_FOUND_EXAM));
 
-        List<AnswerL> answerLS = answerRepository.findByExamLId(
+        List<AnswerL> answerLS = answerRepositoryL.findByExamLId(
                 examInformationId);
-        answerRepository.deleteAll(answerLS);
-        examRepository.delete(examL);
+        answerRepositoryL.deleteAll(answerLS);
+        examRepositoryL.delete(examL);
     }
 
     public ExamGrade.Response grade(ExamGrade.Request request) {
-        ExamL examL = examRepository.findByIdWithAnswer(request.examId())
+        ExamL examL = examRepositoryL.findByIdWithAnswer(request.examId())
                 .orElseThrow(() -> new ExamException(NOT_FOUND_EXAM));
 
         int[] result = examL.grade(request.getSubmitMap());

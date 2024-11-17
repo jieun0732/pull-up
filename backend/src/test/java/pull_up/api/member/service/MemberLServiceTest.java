@@ -8,6 +8,7 @@ import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import pull_up.api.member.dto.MemberScoreDto;
+import pull_up.config.annotation.IntegrationTest;
 import pull_up.domain.member.MemberService;
 import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.infra.database.repository.member.MemberRepositoryL;
@@ -15,10 +16,7 @@ import pull_up.domain.auth.SNSProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(
-        replace = AutoConfigureTestDatabase.Replace.ANY,
-        connection = EmbeddedDatabaseConnection.H2)
+@IntegrationTest
 class MemberLServiceTest {
 
     @Autowired

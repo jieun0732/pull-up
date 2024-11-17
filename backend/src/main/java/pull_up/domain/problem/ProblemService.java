@@ -8,7 +8,7 @@ import pull_up.api.problem.dto.ProblemDto;
 import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
 import pull_up.infra.database.entity.legacy.ProblemL;
-import pull_up.infra.database.repository.problem.ProblemRepository;
+import pull_up.infra.database.repository.problem.ProblemRepositoryL;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProblemService {
 
-    private final ProblemRepository problemRepository;
+    private final ProblemRepositoryL problemRepository;
 
     @Transactional
     public void deleteAllProblem() {

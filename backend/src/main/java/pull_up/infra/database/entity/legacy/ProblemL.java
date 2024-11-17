@@ -29,11 +29,11 @@ public class ProblemL extends BaseEntity {
     private String type; // 이외 분류
 
     @Lob
-    @Column
+    @Column(columnDefinition = "BLOB")
     private String question;
 
     @Lob
-    @Column
+    @Column(columnDefinition = "BLOB")
     private String explanation;
 
     @Column
@@ -56,7 +56,7 @@ public class ProblemL extends BaseEntity {
     private String answer;
 
     @Lob
-    @Column
+    @Column(columnDefinition = "BLOB")
     private String answerExplain;
 
     @Column

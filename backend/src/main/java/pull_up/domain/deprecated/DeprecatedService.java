@@ -13,10 +13,10 @@ import pull_up.global.exception.member.AnswerErrorCode;
 import pull_up.global.exception.member.AnswerException;
 import pull_up.infra.database.entity.legacy.*;
 import pull_up.infra.database.entity.legacy.MemberL;
-import pull_up.infra.database.repository.exam.ExamRepository;
+import pull_up.infra.database.repository.exam.ExamRepositoryL;
 import pull_up.infra.database.repository.legacy.IncorrectAnswerRepository;
 import pull_up.infra.database.repository.legacy.MemberAnswerRepository;
-import pull_up.infra.database.repository.problem.ProblemRepository;
+import pull_up.infra.database.repository.problem.ProblemRepositoryL;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,15 +29,15 @@ public class DeprecatedService {
 
     private final MemberAnswerRepository memberAnswerRepository;
     private final IncorrectAnswerRepository incorrectAnswerRepository;
-    private final ProblemRepository problemRepository;
-    private final ExamRepository examRepository;
+    private final ProblemRepositoryL problemRepository;
+    private final ExamRepositoryL examRepositoryL;
 
     @Deprecated
     @Transactional
     public MemberAnswerResultDto saveMemberAnswer(MemberDto memberDTO, ProblemDto problemDTO, ExamInformationDto examInformationDTO, String chosenAnswer) {
         MemberL memberL = MemberDto.toEntity(memberDTO);
         ProblemL problemL = problemRepository.findById(problemDTO.id()).orElseThrow();
-        ExamL examL = examRepository.findById(examInformationDTO.id()).orElseThrow();
+        ExamL examL = examRepositoryL.findById(examInformationDTO.id()).orElseThrow();
         boolean isCorrect = chosenAnswer.equals(problemL.getAnswer());
 
         problemL.setTotalAttempts(problemL.getTotalAttempts() + 1);

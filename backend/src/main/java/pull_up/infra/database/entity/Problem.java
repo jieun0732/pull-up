@@ -39,11 +39,11 @@ public class Problem {
     private String problemType;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "BLOB")
     private byte[] question;
 
     @Lob
-    @Column
+    @Column(columnDefinition = "BLOB")
     private byte[] example;
 
     @Column
@@ -65,7 +65,7 @@ public class Problem {
     private String correctAnswer;
 
     @Lob
-    @Column
+    @Column(columnDefinition = "BLOB")
     private byte[] explanation;
 
     public String getQuestionAsString() {
