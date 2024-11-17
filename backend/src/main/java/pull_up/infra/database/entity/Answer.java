@@ -3,6 +3,7 @@ package pull_up.infra.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import pull_up.global.entity.BaseEntity;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Answer {
+public class Answer extends BaseEntity {
 
     @Id
     @Setter

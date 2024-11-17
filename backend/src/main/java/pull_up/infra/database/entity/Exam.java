@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.exam.exception.ExamException;
+import pull_up.global.entity.BaseEntity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ import static pull_up.domain.exam.ExamType.EVENLY;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Exam {
+public class Exam extends BaseEntity {
 
     @Id
     @Setter

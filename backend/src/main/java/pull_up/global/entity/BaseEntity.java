@@ -4,7 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
+
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,17 +20,17 @@ import org.springframework.format.annotation.DateTimeFormat;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
-    @Column(name = "created_time", updatable = false)
+    @Column(updatable = false)
     @CreatedDate
-    private LocalDateTime createdTime;
+    protected LocalDateTime createdTime;
 
-    @Column(name = "updated_time")
+    @Column
     @LastModifiedDate
-    private LocalDateTime updatedTime;
+    protected LocalDateTime updatedTime;
 
-    @Column(name = "is_deleted", columnDefinition = "TINYINT", length = 1)
+    @Column(columnDefinition = "TINYINT", length = 1)
     @ColumnDefault("0")
-    private boolean isDeleted = false;
+    protected boolean isDeleted = false;
 
     public void softDelete() {
         if (isDeleted) {

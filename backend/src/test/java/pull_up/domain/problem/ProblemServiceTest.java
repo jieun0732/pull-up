@@ -8,8 +8,10 @@ import pull_up.api.problem.dto.CreateProblem;
 import pull_up.api.problem.dto.ProblemDto;
 import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
+import pull_up.infra.database.entity.Member;
 import pull_up.infra.database.entity.Problem;
 import pull_up.infra.database.entity.legacy.ProblemL;
+import pull_up.infra.database.fixture.MemberFixture;
 import pull_up.infra.database.fixture.legacy.ProblemFixture;
 
 import java.util.List;
