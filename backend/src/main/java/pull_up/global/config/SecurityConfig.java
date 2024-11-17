@@ -71,7 +71,7 @@ public class SecurityConfig {
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        corsConfiguration.setAllowCredentials(true);
+//        corsConfiguration.setAllowCredentials(true);
         corsConfiguration.addAllowedOrigin(frontendDomain);
         corsConfiguration.addAllowedOrigin("https://pullup-api.shop");
         corsConfiguration.addAllowedOrigin("https://appleid.apple.com");
