@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import pull_up.api.member.dto.MemberDto;
 import pull_up.api.member.dto.MemberScoreDto;
 import pull_up.infra.database.entity.legacy.MemberL;
-import pull_up.global.exception.member.MemberErrorCode;
-import pull_up.global.exception.member.MemberException;
+import pull_up.domain.member.member.MemberErrorCode;
+import pull_up.domain.member.member.MemberException;
 import pull_up.infra.database.repository.member.MemberRepositoryL;
 
 import java.util.Optional;

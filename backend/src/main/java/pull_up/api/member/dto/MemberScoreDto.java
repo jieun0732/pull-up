@@ -1,6 +1,6 @@
 package pull_up.api.member.dto;
 
-import pull_up.api.auth.dto.OAuth2LoginResponseDto;
+import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.infra.database.entity.legacy.ExamL;
 
 import java.util.Comparator;

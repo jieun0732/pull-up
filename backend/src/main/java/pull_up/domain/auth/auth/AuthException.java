@@ -1,4 +1,4 @@
-package pull_up.global.exception.auth;
+package pull_up.domain.auth.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

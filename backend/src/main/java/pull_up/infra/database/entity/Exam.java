@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import pull_up.domain.exam.ExamType;
+import pull_up.domain.exam.exception.ExamErrorCode;
+import pull_up.domain.exam.exception.ExamException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -91,5 +93,18 @@ public class Exam {
             problemTypes.add(problem.getNormalProblemType());
         }
         return problems;
+    }
+
+    public Answer submit(Integer problemNumber, Integer submitAnswer) {
+        Answer answer = getAnswerByProblemNumber(problemNumber);
+        answer.mark(submitAnswer);
+        return answer;
+    }
+
+    public Answer getAnswerByProblemNumber(Integer problemNumber) {
+        for (Answer answer : answers) {
+            if (answer.getProblemNumber().equals(problemNumber)) return answer;
+        }
+        throw new ExamException(ExamErrorCode.PROBLEM_NUMBER_EXCEED);
     }
 }

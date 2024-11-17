@@ -3,20 +3,24 @@ package pull_up.domain.exam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import pull_up.api.exam.evenly.dto.Start;
+import pull_up.domain.exam.dto.Next;
+import pull_up.domain.exam.dto.Start;
+import pull_up.domain.exam.dto.Submit;
 import pull_up.domain.member.MemberRepository;
 import pull_up.domain.problem.Entry;
 import pull_up.domain.problem.ProblemRepository;
+import pull_up.infra.database.entity.Answer;
+import pull_up.infra.database.entity.Exam;
 import pull_up.infra.database.entity.Member;
 import pull_up.infra.database.entity.Problem;
+import pull_up.infra.database.fixture.AnswerFixture;
 import pull_up.infra.database.fixture.FixtureFactory;
 import pull_up.infra.database.fixture.MemberFixture;
 import pull_up.infra.database.fixture.ProblemFixture;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class EvenlyExamServiceTest {
@@ -27,21 +31,24 @@ class EvenlyExamServiceTest {
     MemberRepository mockMemberRepository;
     ProblemRepository mockProblemRepository;
 
+    Member member;
+
     @BeforeEach
     void init() {
         mockExamRepository = mock(ExamRepository.class);
         mockMemberRepository = mock(MemberRepository.class);
         mockProblemRepository = mock(ProblemRepository.class);
         suit = new EvenlyExamService(mockExamRepository, null, mockMemberRepository, mockProblemRepository);
+
+        member = MemberFixture.APPLE_USER.get();
     }
 
     @Test
     @DisplayName("시험 시작 테스트")
     void testStartExam() {
         // given
-        Member member = MemberFixture.APPLE_USER.get();
-        Start.Request startReq = new Start.Request(member.getId(), ExamType.EVENLY, Entry.LANGUAGE);
         Problem problem1 = ProblemFixture.LANGUAGE_COMPARE_1.get();
+        Start.Request startReq = new Start.Request(member.getId(), ExamType.EVENLY, Entry.LANGUAGE);
 
         // when
         when(mockMemberRepository.findById(member.getId())).thenReturn(Optional.of(member));
@@ -49,7 +56,6 @@ class EvenlyExamServiceTest {
         Start.Response startRes = suit.start(startReq);
 
         // then
-        assertThat(startRes.problemId()).isEqualTo(9L);
         assertThat(startRes.totalProblemCount()).isEqualTo(2);
         assertThat(startRes.leftProblemCount()).isEqualTo(1);
         assertThat(startRes.problemNumber()).isEqualTo(1);
@@ -60,4 +66,49 @@ class EvenlyExamServiceTest {
         assertThat(startRes.choices()).contains(problem1.getChoice1(), problem1.getChoice2(), problem1.getChoice3(), problem1.getChoice4(), problem1.getChoice5());
     }
 
+    @Test
+    @DisplayName("시험 제출 테스트")
+    void testSubmitAnswer() {
+        // given
+        Integer problemNumber = 1;
+        Integer submitAnswer = 1;
+        Exam exam = FixtureFactory.getExam(member.getId(), ExamType.EVENLY, Entry.LANGUAGE);
+        Problem problem1 = exam.getAnswers().get(0).getProblem();
+
+        Submit.Request submitReq = new Submit.Request(exam.getId(), problemNumber, submitAnswer);
+
+        // when
+        when(mockExamRepository.findById(any())).thenReturn(Optional.of(exam));
+        Submit.Response submitRes = suit.submit(submitReq);
+
+        // then
+        assertThat(submitRes).isNotNull();
+        assertThat(submitRes.isCorrect()).isFalse();
+        assertThat(submitRes.correctAnswer()).isEqualTo(problem1.getCorrectAnswerToInt());
+        assertThat(submitRes.explanation()).isEqualTo(problem1.getExplanationAsString());
+        assertThat(submitRes.incorrectRate()).isEqualTo(100D);
+        assertThat(submitRes.correctRate()).isEqualTo(0D);
+    }
+
+    @Test
+    @DisplayName("다음 문제 요청 테스트")
+    void testNextProblem() {
+        // given
+        Exam exam = FixtureFactory.getExam(member.getId(), ExamType.EVENLY, Entry.LANGUAGE);
+        Problem problem2 = ProblemFixture.LANGUAGE_REASONING_1.get();
+
+        // when
+        when(mockExamRepository.findById(any())).thenReturn(Optional.of(exam));
+        Next.Response nextRes = suit.next(exam.getId(), 2);
+
+        // then
+        assertThat(nextRes.totalProblemCount()).isEqualTo(2);
+        assertThat(nextRes.leftProblemCount()).isEqualTo(0);
+        assertThat(nextRes.problemNumber()).isEqualTo(2);
+        assertThat(nextRes.entry()).isEqualTo(problem2.getEntry());
+        assertThat(nextRes.problemType()).isEqualTo(problem2.getProblemType());
+        assertThat(nextRes.question()).isEqualTo(problem2.getQuestionAsString());
+        assertThat(nextRes.example()).isEqualTo(problem2.getExampleAsString());
+        assertThat(nextRes.choices()).contains(problem2.getChoice1(), problem2.getChoice2(), problem2.getChoice3(), problem2.getChoice4(), problem2.getChoice5());
+    }
 }

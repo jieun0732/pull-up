@@ -6,16 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pull_up.api.exam.dto.IncorrectAnswer;
 import pull_up.api.exam.dto.*;
-import pull_up.api.exam.exception.ExamErrorCode;
-import pull_up.api.exam.exception.ExamException;
+import pull_up.domain.exam.exception.ExamErrorCode;
+import pull_up.domain.exam.exception.ExamException;
 import pull_up.api.member.dto.*;
 import pull_up.api.problem.dto.*;
 import pull_up.global.dto.ListDto;
 import pull_up.global.entity.BaseEntity;
-import pull_up.global.exception.member.MemberErrorCode;
-import pull_up.global.exception.member.MemberException;
-import pull_up.global.exception.problem.ProblemErrorCode;
-import pull_up.global.exception.problem.ProblemException;
+import pull_up.domain.member.member.MemberErrorCode;
+import pull_up.domain.member.member.MemberException;
+import pull_up.domain.problem.problem.ProblemErrorCode;
+import pull_up.domain.problem.problem.ProblemException;
 import pull_up.infra.database.entity.legacy.*;
 import pull_up.infra.database.repository.answer.AnswerRepositoryL;
 import pull_up.infra.database.repository.exam.ExamRepositoryL;
@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static pull_up.api.exam.exception.ExamErrorCode.NOT_FOUND_EXAM;
+import static pull_up.domain.exam.exception.ExamErrorCode.NOT_FOUND_EXAM;
 
 /**
  * 시험 관련 비즈니스 로직을 처리하는 서비스.

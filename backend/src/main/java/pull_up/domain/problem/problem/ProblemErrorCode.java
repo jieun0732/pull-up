@@ -1,4 +1,4 @@
-package pull_up.global.exception.member;
+package pull_up.domain.problem.problem;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
  */
 @Getter
 @AllArgsConstructor
-public enum AnswerErrorCode {
+public enum ProblemErrorCode {
 
-    NOT_FOUND(HttpStatus.NOT_FOUND, "사용자의 문제를 찾을 수 없습니다.");
+    NOT_FOUND_PROBLEM(HttpStatus.BAD_REQUEST, "해당 문제가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

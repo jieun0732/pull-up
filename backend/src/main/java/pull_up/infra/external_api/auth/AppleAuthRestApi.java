@@ -10,7 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import pull_up.api.auth.dto.AppleJwks;
+import pull_up.domain.auth.dto.AppleJwks;
 
 import java.util.List;
 

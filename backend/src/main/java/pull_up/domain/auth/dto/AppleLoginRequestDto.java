@@ -1,4 +1,4 @@
-package pull_up.api.auth.dto;
+package pull_up.domain.auth.dto;
 
 public record AppleLoginRequestDto(
         UserName name,

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import pull_up.api.auth.dto.KakaoLoginRequestDto;
-import pull_up.api.auth.dto.KakaoTokenDto;
-import pull_up.api.auth.dto.KakaoUserInfoDto;
+import pull_up.domain.auth.dto.KakaoLoginRequestDto;
+import pull_up.domain.auth.dto.KakaoTokenDto;
+import pull_up.domain.auth.dto.KakaoUserInfoDto;
 
 import java.util.List;
 

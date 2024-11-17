@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pull_up.global.exception.auth.AuthException;
+import pull_up.domain.auth.auth.AuthException;
 import pull_up.global.security.util.CookieUtil;
 import pull_up.global.security.util.JwtUtil;
 

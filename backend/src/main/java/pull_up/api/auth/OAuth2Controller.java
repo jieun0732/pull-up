@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import pull_up.global.exception.auth.AuthError;
-import pull_up.global.exception.auth.AuthException;
+import pull_up.domain.auth.auth.AuthError;
+import pull_up.domain.auth.auth.AuthException;
 import pull_up.global.security.util.CookieUtil;
 import pull_up.global.security.util.JwtUtil;
-import pull_up.api.auth.dto.OAuth2LoginResponseDto;
+import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.domain.auth.service.OAuth2LoginService;
 
 import java.util.Map;

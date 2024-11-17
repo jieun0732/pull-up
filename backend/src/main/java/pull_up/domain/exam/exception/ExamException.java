@@ -1,4 +1,4 @@
-package pull_up.api.exam.exception;
+package pull_up.domain.exam.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

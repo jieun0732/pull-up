@@ -11,10 +11,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Component;
 import pull_up.infra.database.entity.legacy.MemberL;
-import pull_up.api.auth.dto.JwtUserInfoDto;
-import pull_up.api.auth.dto.OAuth2LoginResponseDto;
-import pull_up.global.exception.auth.AuthError;
-import pull_up.global.exception.auth.AuthException;
+import pull_up.domain.auth.dto.JwtUserInfoDto;
+import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
+import pull_up.domain.auth.auth.AuthError;
+import pull_up.domain.auth.auth.AuthException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;

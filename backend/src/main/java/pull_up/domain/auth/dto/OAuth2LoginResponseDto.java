@@ -1,4 +1,4 @@
-package pull_up.api.auth.dto;
+package pull_up.domain.auth.dto;
 
 import lombok.Builder;
 import pull_up.domain.auth.SNSProvider;

@@ -42,4 +42,28 @@ class ExamTest {
         assertThat(start.getMember()).isEqualTo(member);
         assertThat(start.getAnswers()).hasSize(2);
     }
+    
+    @Test
+    @DisplayName("골고루 문제 답안 제출 테스트")
+    void test() {
+        // given
+        Member member = MemberFixture.APPLE_USER.get();
+        Exam exam = FixtureFactory.getExam(member.getId(), ExamType.EVENLY, Entry.LANGUAGE);
+        Integer problemNumber = 1;
+        Integer submitAnswer = 3;
+
+        // when
+        Answer submittedAnswer = exam.submit(problemNumber, submitAnswer);
+
+        // then
+        assertThat(exam.getAnswers()).contains(submittedAnswer);
+        assertThat(submittedAnswer.getExam()).isEqualTo(exam);
+        assertThat(submittedAnswer.getProblem().getCorrectAnswerToInt()).isEqualTo(2);
+        assertThat(submittedAnswer.getIsCorrect()).isFalse();
+        assertThat(submittedAnswer.getProblemNumber()).isEqualTo(problemNumber);
+        assertThat(submittedAnswer.getSubmitAnswer()).isEqualTo(submitAnswer.toString());
+        assertThat(submittedAnswer.getProblem().getIncorrectAttempts()).isEqualTo(1);
+        assertThat(submittedAnswer.getProblem().getIncorrectRate()).isEqualTo(100);
+        assertThat(submittedAnswer.getProblem().getCorrectRate()).isEqualTo(0);
+    }
 }

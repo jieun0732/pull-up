@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import pull_up.api.answer.dto.AnswerDto;
 import pull_up.api.answer.dto.AnswerSolved;
 import pull_up.api.answer.dto.AnswerSubmit;
-import pull_up.api.exam.exception.ExamErrorCode;
-import pull_up.api.exam.exception.ExamException;
-import pull_up.global.exception.member.AnswerException;
+import pull_up.domain.exam.exception.ExamErrorCode;
+import pull_up.domain.exam.exception.ExamException;
+import pull_up.domain.member.member.AnswerException;
 import pull_up.infra.database.entity.legacy.AnswerL;
 import pull_up.infra.database.entity.legacy.ExamL;
 import pull_up.infra.database.repository.answer.AnswerRepositoryL;
@@ -15,7 +15,7 @@ import pull_up.infra.database.repository.exam.ExamRepositoryL;
 
 import java.util.List;
 
-import static pull_up.global.exception.member.AnswerErrorCode.NOT_FOUND;
+import static pull_up.domain.member.member.AnswerErrorCode.NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor

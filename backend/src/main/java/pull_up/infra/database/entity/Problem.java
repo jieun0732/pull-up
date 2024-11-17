@@ -83,4 +83,18 @@ public class Problem {
     public String getNormalProblemType() {
         return problemType.toUpperCase().replaceAll("\\s+", "");
     }
+
+    public Integer getCorrectAnswerToInt() {
+        return correctAnswer.isEmpty() ? null : Integer.parseInt(correctAnswer);
+    }
+
+    public Double getCorrectRate() {
+        return 100 - getIncorrectRate();
+    }
+
+    public void addTotalAttempt(Boolean isCorrect) {
+        totalAttempts++;
+        if (!isCorrect) incorrectAttempts++;
+        incorrectRate = (double) incorrectAttempts / totalAttempts * 100;
+    }
 }

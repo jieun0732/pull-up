@@ -9,9 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
 import pull_up.global.security.util.JwtUtil;
 import pull_up.infra.database.entity.legacy.MemberL;
-import pull_up.api.auth.dto.JwtUserInfoDto;
-import pull_up.global.exception.auth.AuthError;
-import pull_up.global.exception.auth.AuthException;
+import pull_up.domain.auth.dto.JwtUserInfoDto;
+import pull_up.domain.auth.auth.AuthError;
+import pull_up.domain.auth.auth.AuthException;
 
 import java.nio.charset.StandardCharsets;
 

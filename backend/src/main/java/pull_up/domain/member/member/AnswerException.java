@@ -1,4 +1,4 @@
-package pull_up.global.exception.member;
+package pull_up.domain.member.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,15 +8,15 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public class MemberException extends RuntimeException {
+public class AnswerException extends RuntimeException {
 
-    private MemberErrorCode errorCode;
+    private AnswerErrorCode errorCode;
     private String message;
 
     /**
      * 메세지가 없는 생성자.
      */
-    public MemberException(MemberErrorCode errorCode) {
+    public AnswerException(AnswerErrorCode errorCode) {
         this.errorCode = errorCode;
         this.message = errorCode.getMessage();
     }

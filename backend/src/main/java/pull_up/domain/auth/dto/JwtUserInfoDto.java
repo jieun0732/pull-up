@@ -1,4 +1,4 @@
-package pull_up.api.auth.dto;
+package pull_up.domain.auth.dto;
 
 import java.util.HashMap;
 import java.util.Map;

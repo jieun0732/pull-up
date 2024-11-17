@@ -57,4 +57,18 @@ public class Answer {
     public static Answer makeEmptyAnswer(Exam exam, Problem problem, Integer problemNumber) {
         return new Answer(exam, problem, problemNumber);
     }
+
+    public Integer getSubmitAnswerToInt() {
+        return null;
+    }
+
+    public void mark(Integer submitAnswer) {
+        String submitAnswerToString = Integer.toString(submitAnswer);
+        this.submitAnswer = submitAnswerToString;
+        isCorrect = problem.getCorrectAnswer().equals(submitAnswerToString);
+        problem.addTotalAttempt(isCorrect);
+        submitTime = LocalDateTime.now();
+        isSubmitted = true;
+        submitCount++;
+    }
 }

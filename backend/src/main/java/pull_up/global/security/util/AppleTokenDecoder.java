@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import pull_up.infra.external_api.auth.AppleAuthRestApi;
-import pull_up.api.auth.dto.AppleJwks;
-import pull_up.global.exception.auth.AuthError;
-import pull_up.global.exception.auth.AuthException;
+import pull_up.domain.auth.dto.AppleJwks;
+import pull_up.domain.auth.auth.AuthError;
+import pull_up.domain.auth.auth.AuthException;
 
 import java.math.BigInteger;
 import java.security.Key;

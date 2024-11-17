@@ -1,4 +1,4 @@
-package pull_up.api.exam.evenly.dto;
+package pull_up.domain.exam.dto;
 
 import pull_up.domain.exam.ExamType;
 import pull_up.domain.problem.Entry;
@@ -17,7 +17,7 @@ public record Start() {
 
     }
     public record Response(
-            Long problemId,
+            Long examId,
             Integer totalProblemCount,
             Integer leftProblemCount,
             Integer problemNumber,
@@ -31,7 +31,8 @@ public record Start() {
         public static Response toDto(Exam startedExam) {
             Answer answer1 = startedExam.getAnswers().get(0);
             Problem problem1 = answer1.getProblem();
-            return new Response(problem1.getId(),
+            return new Response(
+                    startedExam.getId(),
                     startedExam.getAnswers().size(),
                     startedExam.getAnswers().size() - 1,
                     answer1.getProblemNumber(),

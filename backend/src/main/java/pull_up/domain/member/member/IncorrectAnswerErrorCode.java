@@ -1,4 +1,4 @@
-package pull_up.global.exception.member;
+package pull_up.domain.member.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

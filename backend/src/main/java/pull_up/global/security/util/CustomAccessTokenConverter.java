@@ -15,8 +15,8 @@ import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCo
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequestEntityConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
-import pull_up.global.exception.auth.AuthError;
-import pull_up.global.exception.auth.AuthException;
+import pull_up.domain.auth.auth.AuthError;
+import pull_up.domain.auth.auth.AuthException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +27,7 @@ import java.util.Date;
 import static io.jsonwebtoken.Jwts.SIG.ES256;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static pull_up.domain.auth.SNSProvider.APPLE;
-import static pull_up.global.exception.auth.AuthError.REQUEST_CONVERT_ERROR;
+import static pull_up.domain.auth.auth.AuthError.REQUEST_CONVERT_ERROR;
 
 @Slf4j
 @Component
