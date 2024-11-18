@@ -3,17 +3,17 @@ package pull_up.domain.exam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pull_up.domain.dao.ExamRepository;
+import pull_up.domain.exam.dto.End;
 import pull_up.domain.exam.dto.Next;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.exam.dto.Submit;
-import pull_up.domain.member.MemberRepository;
+import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.problem.Entry;
-import pull_up.domain.problem.ProblemRepository;
-import pull_up.infra.database.entity.Answer;
+import pull_up.domain.dao.ProblemRepository;
 import pull_up.infra.database.entity.Exam;
 import pull_up.infra.database.entity.Member;
 import pull_up.infra.database.entity.Problem;
-import pull_up.infra.database.fixture.AnswerFixture;
 import pull_up.infra.database.fixture.FixtureFactory;
 import pull_up.infra.database.fixture.MemberFixture;
 import pull_up.infra.database.fixture.ProblemFixture;
@@ -23,7 +23,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class EvenlyExamServiceTest {
+class EvenlyExamServiceLTest {
 
     EvenlyExamService suit;
 
@@ -110,5 +110,52 @@ class EvenlyExamServiceTest {
         assertThat(nextRes.question()).isEqualTo(problem2.getQuestionAsString());
         assertThat(nextRes.example()).isEqualTo(problem2.getExampleAsString());
         assertThat(nextRes.choices()).contains(problem2.getChoice1(), problem2.getChoice2(), problem2.getChoice3(), problem2.getChoice4(), problem2.getChoice5());
+    }
+
+    @Test
+    @DisplayName("시험 종료 테스트")
+    void testEndExam() {
+        // given
+        Exam exam = FixtureFactory.getExam(member.getId(), ExamType.EVENLY, Entry.LANGUAGE);
+
+        // when
+        when(mockExamRepository.findById(any())).thenReturn(Optional.of(exam));
+        End.Response endRes = suit.end(exam.getId());
+
+        // then
+        assertThat(endRes.entry()).isEqualTo(Entry.LANGUAGE);
+        assertThat(endRes.isFinished()).isFalse();
+        assertThat(endRes.memberName()).isEqualTo(member.getName());
+        assertThat(endRes.totalProblemCount()).isEqualTo(2);
+        assertThat(endRes.leftProblemCount()).isEqualTo(2);
+        assertThat(endRes.correctProblemCount()).isEqualTo(0);
+        assertThat(endRes.score()).isEqualTo(0);
+        assertThat(endRes.problemResults()).hasSize(2);
+        assertThat(endRes.problemResults()).allSatisfy(problemResult -> assertThat(problemResult.isSubmitted()).isFalse());
+
+        // when 2
+        suit.submit(new Submit.Request(exam.getId(), 1, 2));
+        End.Response endRes2 = suit.end(exam.getId());
+
+        // then2
+        assertThat(endRes2.isFinished()).isFalse();
+        assertThat(endRes2.totalProblemCount()).isEqualTo(2);
+        assertThat(endRes2.leftProblemCount()).isEqualTo(1);
+        assertThat(endRes2.correctProblemCount()).isEqualTo(1);
+        assertThat(endRes2.score()).isEqualTo(50);
+        assertThat(endRes2.problemResults()).anySatisfy(problemResult -> assertThat(problemResult.isSubmitted()).isTrue());
+
+        // when 3
+        suit.submit(new Submit.Request(exam.getId(), 2, 2));
+        End.Response endRes3 = suit.end(exam.getId());
+
+        // then2
+        assertThat(endRes3.isFinished()).isTrue();
+        assertThat(endRes3.totalProblemCount()).isEqualTo(2);
+        assertThat(endRes3.leftProblemCount()).isEqualTo(0);
+        assertThat(endRes3.correctProblemCount()).isEqualTo(1);
+        assertThat(endRes3.score()).isEqualTo(50);
+        assertThat(endRes3.problemResults()).allSatisfy(problemResult -> assertThat(problemResult.isSubmitted()).isTrue());
+
     }
 }

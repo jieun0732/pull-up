@@ -17,7 +17,7 @@ import pull_up.domain.auth.dto.KakaoUserInfoDto;
 import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.config.annotation.IntegrationTest;
 import pull_up.domain.auth.service.OAuth2LoginService;
-import pull_up.domain.member.MemberRepository;
+import pull_up.domain.dao.MemberRepository;
 import pull_up.global.security.util.AppleTokenDecoder;
 import pull_up.infra.external_api.auth.KakaoAuthRestApi;
 

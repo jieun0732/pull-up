@@ -1,22 +1,19 @@
-package pull_up.domain.member.member;
+package pull_up.domain.deprecated;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * 회원 관련 Exception.
- */
 @Getter
 @AllArgsConstructor
-public class MemberException extends RuntimeException {
+public class IncorrectAnswerException extends RuntimeException {
 
-    private MemberErrorCode errorCode;
+    private IncorrectAnswerErrorCode errorCode;
     private String message;
 
     /**
      * 메세지가 없는 생성자.
      */
-    public MemberException(MemberErrorCode errorCode) {
+    public IncorrectAnswerException(IncorrectAnswerErrorCode errorCode) {
         this.errorCode = errorCode;
         this.message = errorCode.getMessage();
     }

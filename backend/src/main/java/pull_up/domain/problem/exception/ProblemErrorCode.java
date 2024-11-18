@@ -1,4 +1,4 @@
-package pull_up.domain.problem.problem;
+package pull_up.domain.problem.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

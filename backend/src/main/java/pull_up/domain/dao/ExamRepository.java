@@ -1,4 +1,4 @@
-package pull_up.domain.exam;
+package pull_up.domain.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import pull_up.infra.database.entity.Exam;

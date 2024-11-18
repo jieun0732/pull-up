@@ -1,17 +1,11 @@
-package pull_up.api.member;
+package pull_up.api.deprecated;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pull_up.api.exam.dto.ExamInformationDto;
-import pull_up.api.member.dto.MemberAnswerResultDto;
-import pull_up.api.member.dto.MemberDto;
-import pull_up.domain.member.MemberAnswerService;
-import pull_up.api.problem.dto.ProblemDto;
-
-import java.util.List;
+import pull_up.domain.deprecated.MemberAnswerService;
 
 @RestController
 @RequestMapping("/api/pull-up/memberAnswers")

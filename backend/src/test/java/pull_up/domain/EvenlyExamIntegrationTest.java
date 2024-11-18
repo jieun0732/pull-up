@@ -4,19 +4,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import pull_up.config.annotation.IntegrationTest;
+import pull_up.domain.dao.AnswerRepository;
+import pull_up.domain.answer.AnswerService;
+import pull_up.domain.exam.EvenlyExamService;
+import pull_up.domain.dao.ExamRepository;
+import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.dto.End;
 import pull_up.domain.exam.dto.Next;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.exam.dto.Submit;
-import pull_up.config.annotation.IntegrationTest;
-import pull_up.domain.answer.AnswerRepository;
-import pull_up.domain.answer.AnswerService;
-import pull_up.domain.exam.EvenlyExamService;
-import pull_up.domain.exam.ExamRepository;
-import pull_up.domain.exam.ExamType;
-import pull_up.domain.member.MemberRepository;
+import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.problem.Entry;
-import pull_up.domain.problem.ProblemRepository;
+import pull_up.domain.dao.ProblemRepository;
 import pull_up.infra.database.entity.Member;
 import pull_up.infra.database.fixture.MemberFixture;
 
@@ -28,10 +28,14 @@ public class EvenlyExamIntegrationTest {
     EvenlyExamService evenlyExamService;
     AnswerService answerService;
 
-    @Autowired ExamRepository examRepository;
-    @Autowired AnswerRepository answerRepository;
-    @Autowired MemberRepository memberRepository;
-    @Autowired ProblemRepository problemRepository;
+    @Autowired
+    ExamRepository examRepository;
+    @Autowired
+    AnswerRepository answerRepository;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    ProblemRepository problemRepository;
 
     @BeforeEach
     void init() {
@@ -73,6 +77,7 @@ public class EvenlyExamIntegrationTest {
         assertThat(submitRes1).isInstanceOf(Submit.Response.class);
         assertThat(submitRes1.correctAnswer()).isEqualTo(2);
         assertThat(submitRes1.isCorrect()).isEqualTo(false);
+        assertThat(submitRes1.incorrectRate()).isEqualTo(100D);
 
         /* 3. 다음 문제 요청하기 */
 
@@ -95,25 +100,29 @@ public class EvenlyExamIntegrationTest {
         Submit.Request submitReq2 = new Submit.Request(1L, 2, 3);
 
         // [ExamService] 정답 채점
-        evenlyExamService.submit(submitReq2);
+        Submit.Response submitRes2 = evenlyExamService.submit(submitReq2);
+
+        // [백] 2번 문제 채점 후 결과 전송
+        assertThat(submitRes2).isInstanceOf(Submit.Response.class);
+        assertThat(submitRes2.correctAnswer()).isEqualTo(3);
+        assertThat(submitRes2.isCorrect()).isEqualTo(true);
+        assertThat(submitRes2.incorrectRate()).isEqualTo(0D);
 
         /* 5. 시험 종료 */
 
         // [프론트] 시험 종료 요청(PATCH)
-        End.Request endReq = new End.Request();
+        Long endExamId = submitReq2.examId();
 
         // [ExamService] 시험 종료
-        evenlyExamService.end(endReq);
+        End.Response endRes = evenlyExamService.end(endExamId);
 
-        /* 6. 푼 문제 조회 */
-
-        // [프론트] 푼문제 조회(GET)
-
-        // [AnswerService] 푼 문제 조회
-        Object answerRes = answerService.getSolved(member.getId());
-
-        // [백] 푼 문제 중 맞은문제 / 틀린문제 현황 조회해서 전달
-        assertThat(answerRes).isNotNull();
+        // [백] 요청결과 전송
+        assertThat(endRes).isInstanceOf(End.Response.class);
+        assertThat(endRes.entry()).isEqualTo(Entry.LANGUAGE);
+        assertThat(endRes.isFinished()).isEqualTo(true);
+        assertThat(endRes.score()).isEqualTo(50);
+        assertThat(endRes.problemResults()).hasSize(2);
+        assertThat(endRes.problemResults()).noneMatch(problemResult -> !problemResult.isSubmitted());
     }
 
 }

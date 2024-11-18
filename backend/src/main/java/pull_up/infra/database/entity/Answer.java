@@ -60,10 +60,10 @@ public class Answer extends BaseEntity {
     }
 
     public Integer getSubmitAnswerToInt() {
-        return null;
+        return submitAnswer == null ? null : Integer.parseInt(submitAnswer);
     }
 
-    public void mark(Integer submitAnswer) {
+    public boolean mark(Integer submitAnswer) {
         String submitAnswerToString = Integer.toString(submitAnswer);
         this.submitAnswer = submitAnswerToString;
         isCorrect = problem.getCorrectAnswer().equals(submitAnswerToString);
@@ -71,5 +71,7 @@ public class Answer extends BaseEntity {
         submitTime = LocalDateTime.now();
         isSubmitted = true;
         submitCount++;
+
+        return isCorrect;
     }
 }

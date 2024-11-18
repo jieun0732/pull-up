@@ -32,16 +32,6 @@ public class ProblemController {
         return new ResponseEntity<>(problemService.createProblem(formatString), HttpStatus.OK);
     }
 
-    @Operation(summary = "문제 리스트 조회", description = "문제 리스트를 조회합니다.", tags = "문제")
-    @GetMapping
-    public ResponseEntity<ListDto<ProblemDto>> getList(
-            @RequestParam(required = false) String entry,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String type) {
-
-        return new ResponseEntity<>(problemService.getList(entry, category, type), HttpStatus.OK);
-    }
-
     @Operation(summary = "문제 삭제(hard)", description = "DB 상의 모든 문제를 삭제합니다.", tags = "Deprecated")
     @DeleteMapping("/hard")
     public ResponseEntity<MessageDto> deleteAll() {

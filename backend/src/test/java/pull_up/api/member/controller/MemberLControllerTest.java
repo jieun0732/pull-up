@@ -8,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pull_up.api.member.MemberController;
-import pull_up.domain.member.MemberService;
+import pull_up.api.deprecated.MemberController;
+import pull_up.domain.deprecated.MemberServiceL;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -24,11 +24,11 @@ class MemberLControllerTest {
     MemberController suit;
 
     @Mock
-    MemberService memberService;
+    MemberServiceL memberServiceL;
 
     @BeforeEach
     void init() {
-        suit = new MemberController(memberService);
+        suit = new MemberController(memberServiceL);
         mockMvc = MockMvcBuilders.standaloneSetup(suit).build();
 
     }

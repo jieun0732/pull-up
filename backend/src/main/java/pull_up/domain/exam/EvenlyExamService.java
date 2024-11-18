@@ -2,15 +2,17 @@ package pull_up.domain.exam;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pull_up.domain.dao.ExamRepository;
+import pull_up.domain.exam.dto.End;
 import pull_up.domain.exam.dto.Next;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.exam.dto.Submit;
-import pull_up.domain.answer.AnswerRepository;
+import pull_up.domain.dao.AnswerRepository;
 import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.exam.exception.ExamException;
-import pull_up.domain.member.MemberRepository;
-import pull_up.domain.problem.ProblemRepository;
-import pull_up.domain.member.member.MemberException;
+import pull_up.domain.dao.MemberRepository;
+import pull_up.domain.dao.ProblemRepository;
+import pull_up.domain.member.exception.MemberException;
 import pull_up.infra.database.entity.Answer;
 import pull_up.infra.database.entity.Exam;
 import pull_up.infra.database.entity.Member;
@@ -18,7 +20,7 @@ import pull_up.infra.database.entity.Problem;
 
 import java.util.List;
 
-import static pull_up.domain.member.member.MemberErrorCode.NOT_FOUND_MEMBER;
+import static pull_up.domain.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
 
 @RequiredArgsConstructor
 @Service
@@ -56,7 +58,12 @@ public class EvenlyExamService {
         return Next.Response.toDto(examInDB, problemNumber);
     }
 
-    public Object end(Object endReq) {
-        return new Object();
+    public End.Response end(Long examId) {
+        Exam examInDB = examRepository.findById(examId)
+                .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
+
+        examInDB.end();
+
+        return End.Response.toDto(examInDB);
     }
 }

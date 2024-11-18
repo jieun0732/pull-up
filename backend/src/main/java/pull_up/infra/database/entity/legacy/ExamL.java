@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import pull_up.global.entity.BaseEntity;
-import pull_up.domain.member.member.AnswerErrorCode;
-import pull_up.domain.member.member.AnswerException;
+import pull_up.domain.answer.exception.AnswerErrorCode;
+import pull_up.domain.answer.exception.AnswerException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

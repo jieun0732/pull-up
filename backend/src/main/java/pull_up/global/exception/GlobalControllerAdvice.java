@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pull_up.domain.exam.exception.ExamException;
 import pull_up.global.dto.MessageDto;
-import pull_up.domain.member.member.IncorrectAnswerException;
-import pull_up.domain.member.member.AnswerException;
-import pull_up.domain.member.member.MemberException;
-import pull_up.domain.problem.problem.ProblemException;
+import pull_up.domain.deprecated.IncorrectAnswerException;
+import pull_up.domain.answer.exception.AnswerException;
+import pull_up.domain.member.exception.MemberException;
+import pull_up.domain.problem.exception.ProblemException;
 
 
 /**

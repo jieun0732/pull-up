@@ -78,19 +78,4 @@ class ProblemLControllerTest {
                 .andExpect(content().json(gson.toJson(expect)));
     }
 
-    @Test
-    @DisplayName("문제 리스트 조회 테스트")
-    void testGetList() throws Exception {
-        // given
-        ListDto<ProblemDto> emptyList = new ListDto<>(List.of());
-
-        // when
-        when(mockService.getList(any(), any(), any())).thenReturn(emptyList);
-
-        // then
-        mockMvc.perform(get("/api/problems"))
-                .andDo(print())
-                .andExpect(status().is(200))
-                .andExpect(content().json(gson.toJson(emptyList)));
-    }
 }

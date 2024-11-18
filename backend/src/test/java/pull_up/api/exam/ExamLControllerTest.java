@@ -7,8 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import pull_up.api.deprecated.ExamController;
 import pull_up.api.exam.dto.ExamGrade;
-import pull_up.domain.deprecated.ExamService;
+import pull_up.domain.deprecated.ExamServiceL;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -22,7 +23,7 @@ class ExamLControllerTest {
 
     ExamController suit;
 
-    ExamService examService;
+    ExamServiceL examServiceL;
 
     MockMvc mockMvc;
 
@@ -30,8 +31,8 @@ class ExamLControllerTest {
 
     @BeforeEach
     void init() {
-        examService = Mockito.mock(ExamService.class);
-        suit = new ExamController(examService);
+        examServiceL = Mockito.mock(ExamServiceL.class);
+        suit = new ExamController(examServiceL);
         mockMvc = MockMvcBuilders.standaloneSetup(suit).build();
         gson = new Gson();
     }

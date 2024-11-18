@@ -4,12 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import pull_up.api.member.dto.MemberScoreDto;
 import pull_up.config.annotation.IntegrationTest;
-import pull_up.domain.member.MemberService;
+import pull_up.domain.deprecated.MemberServiceL;
 import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.infra.database.repository.member.MemberRepositoryL;
 import pull_up.domain.auth.SNSProvider;
@@ -22,13 +19,13 @@ class MemberLServiceTest {
     @Autowired
     MemberRepositoryL memberRepositoryL;
 
-    MemberService suit;
+    MemberServiceL suit;
 
     MemberL memberL;
 
     @BeforeEach
     void init() {
-        suit = new MemberService(memberRepositoryL);
+        suit = new MemberServiceL(memberRepositoryL);
         memberL = MemberL.of("test", "test@privaterelay.appleid.com", false, SNSProvider.APPLE.getRole());
         memberRepositoryL.save(memberL);
     }

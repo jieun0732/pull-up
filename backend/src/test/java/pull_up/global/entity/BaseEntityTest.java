@@ -1,13 +1,12 @@
 package pull_up.global.entity;
 
 import jakarta.persistence.EntityManager;
-import org.assertj.core.data.Offset;
 import org.assertj.core.data.TemporalUnitWithinOffset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pull_up.config.annotation.IntegrationTest;
-import pull_up.domain.member.MemberRepository;
+import pull_up.domain.dao.MemberRepository;
 import pull_up.infra.database.entity.Member;
 import pull_up.infra.database.fixture.MemberFixture;
 

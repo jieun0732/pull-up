@@ -12,10 +12,10 @@ import pull_up.api.member.dto.*;
 import pull_up.api.problem.dto.*;
 import pull_up.global.dto.ListDto;
 import pull_up.global.entity.BaseEntity;
-import pull_up.domain.member.member.MemberErrorCode;
-import pull_up.domain.member.member.MemberException;
-import pull_up.domain.problem.problem.ProblemErrorCode;
-import pull_up.domain.problem.problem.ProblemException;
+import pull_up.domain.member.exception.MemberErrorCode;
+import pull_up.domain.member.exception.MemberException;
+import pull_up.domain.problem.exception.ProblemErrorCode;
+import pull_up.domain.problem.exception.ProblemException;
 import pull_up.infra.database.entity.legacy.*;
 import pull_up.infra.database.repository.answer.AnswerRepositoryL;
 import pull_up.infra.database.repository.exam.ExamRepositoryL;
@@ -38,7 +38,7 @@ import static pull_up.domain.exam.exception.ExamErrorCode.NOT_FOUND_EXAM;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ExamService {
+public class ExamServiceL {
 
     private final ProblemRepositoryL problemRepositoryL;
     private final MemberRepositoryL memberRepositoryL;

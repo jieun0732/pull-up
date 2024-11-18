@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pull_up.api.exam.dto.ExamGrade;
 import pull_up.api.exam.dto.IncorrectAnswer;
-import pull_up.domain.deprecated.ExamService;
+import pull_up.domain.deprecated.ExamServiceL;
 import pull_up.global.dto.ListDto;
 import pull_up.infra.database.entity.legacy.AnswerL;
 import pull_up.infra.database.entity.legacy.ExamL;
@@ -30,7 +30,7 @@ class ExamLServiceTest {
     ExamRepositoryL examRepositoryL;
     AnswerRepositoryL answerRepositoryL;
 
-    ExamService suit;
+    ExamServiceL suit;
 
     MemberL memberL;
     ExamL examL;
@@ -39,7 +39,7 @@ class ExamLServiceTest {
     void init() {
         examRepositoryL = mock(ExamRepositoryL.class);
         answerRepositoryL = mock(AnswerRepositoryL.class);
-        suit = new ExamService(null,
+        suit = new ExamServiceL(null,
                 null,
                 null,
                 null,

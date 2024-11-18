@@ -2,6 +2,7 @@ package pull_up.api.deprecated;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pull_up.api.exam.dto.ExamInformationDto;
@@ -10,6 +11,8 @@ import pull_up.api.member.dto.MemberAnswerResultDto;
 import pull_up.api.member.dto.MemberDto;
 import pull_up.api.problem.dto.ProblemDto;
 import pull_up.domain.deprecated.DeprecatedService;
+import pull_up.domain.deprecated.ProblemServiceL;
+import pull_up.global.dto.ListDto;
 
 import java.util.List;
 
@@ -19,6 +22,7 @@ import java.util.List;
 public class DeprecatedController {
 
     private final DeprecatedService deprecatedService;
+    private final ProblemServiceL problemServiceL;
 
     /**
      * @deprecated not use
@@ -71,4 +75,13 @@ public class DeprecatedController {
         return ResponseEntity.ok(problems);
     }
 
+    @Operation(summary = "문제 리스트 조회", description = "문제 리스트를 조회합니다.", tags = "Deprecated")
+    @GetMapping
+    public ResponseEntity<ListDto<ProblemDto>> getList(
+            @RequestParam(required = false) String entry,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String type) {
+
+        return new ResponseEntity<>(problemServiceL.getList(entry, category, type), HttpStatus.OK);
+    }
 }

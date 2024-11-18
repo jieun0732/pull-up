@@ -7,8 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.util.ReflectionTestUtils;
-import pull_up.domain.auth.auth.AuthError;
-import pull_up.domain.auth.auth.AuthException;
+import pull_up.domain.auth.exception.AuthError;
+import pull_up.domain.auth.exception.AuthException;
 import pull_up.global.security.util.CookieUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;

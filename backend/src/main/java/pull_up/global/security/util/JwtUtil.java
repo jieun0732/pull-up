@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 import pull_up.infra.database.entity.legacy.MemberL;
 import pull_up.domain.auth.dto.JwtUserInfoDto;
 import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
-import pull_up.domain.auth.auth.AuthError;
-import pull_up.domain.auth.auth.AuthException;
+import pull_up.domain.auth.exception.AuthError;
+import pull_up.domain.auth.exception.AuthException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;

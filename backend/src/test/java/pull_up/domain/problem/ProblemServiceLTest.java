@@ -6,12 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pull_up.api.problem.dto.CreateProblem;
 import pull_up.api.problem.dto.ProblemDto;
+import pull_up.domain.dao.ProblemRepository;
 import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
-import pull_up.infra.database.entity.Member;
 import pull_up.infra.database.entity.Problem;
 import pull_up.infra.database.entity.legacy.ProblemL;
-import pull_up.infra.database.fixture.MemberFixture;
 import pull_up.infra.database.fixture.legacy.ProblemFixture;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-class ProblemServiceTest {
+class ProblemServiceLTest {
     ProblemService suit;
     ProblemRepository mockRepository;
 
@@ -120,24 +119,4 @@ class ProblemServiceTest {
         assertThat(response.message()).isEqualTo(28 + " Problems have been created successfully.");
     }
 
-    @Test
-    @DisplayName("리스트 조회 테스트")
-    void testGetList() {
-        // given
-        List<ProblemL> queryResult = List.of(ProblemFixture.ONE.get(), ProblemFixture.TWO.get());
-
-        // when
-        Mockito.when(mockRepository.findByEntryAndCategoryAndType("123", "234", "345")).thenReturn(queryResult);
-        ListDto<ProblemDto> result = suit.getList("123", "234", "345");
-
-        // then
-        assertThat(result.list()).hasSize(2);
-    }
-
-    @Test
-    @DisplayName("전체 문제 삭제 테스트")
-    void testDeleteAll() {
-//        suit.deleteAllProblem();
-//        Mockito.verify(mockRepository, times(1)).deleteAllWithRelation();
-    }
 }

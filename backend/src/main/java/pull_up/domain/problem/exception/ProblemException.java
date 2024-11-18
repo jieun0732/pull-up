@@ -1,22 +1,19 @@
-package pull_up.domain.member.member;
+package pull_up.domain.problem.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * 회원 관련 Exception.
- */
 @Getter
 @AllArgsConstructor
-public class AnswerException extends RuntimeException {
+public class ProblemException extends RuntimeException {
 
-    private AnswerErrorCode errorCode;
+    private ProblemErrorCode errorCode;
     private String message;
 
     /**
      * 메세지가 없는 생성자.
      */
-    public AnswerException(AnswerErrorCode errorCode) {
+    public ProblemException(ProblemErrorCode errorCode) {
         this.errorCode = errorCode;
         this.message = errorCode.getMessage();
     }

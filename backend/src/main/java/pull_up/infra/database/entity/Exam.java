@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import pull_up.domain.exam.ExamType;
+import pull_up.domain.exam.ProblemSummation;
 import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.exam.exception.ExamException;
 import pull_up.global.entity.BaseEntity;
@@ -99,7 +100,17 @@ public class Exam extends BaseEntity {
     public Answer submit(Integer problemNumber, Integer submitAnswer) {
         Answer answer = getAnswerByProblemNumber(problemNumber);
         answer.mark(submitAnswer);
+        score = calculateScore();
+        duration = Duration.between(startTime, LocalDateTime.now());
         return answer;
+    }
+
+    private Integer calculateScore() {
+        int correctCount = 0;
+        for (Answer answer : answers) {
+            if (answer.getIsSubmitted() && answer.getIsCorrect()) correctCount++;
+        }
+        return (int)((double) correctCount / answers.size() * 100);
     }
 
     public Answer getAnswerByProblemNumber(Integer problemNumber) {
@@ -107,5 +118,37 @@ public class Exam extends BaseEntity {
             if (answer.getProblemNumber().equals(problemNumber)) return answer;
         }
         throw new ExamException(ExamErrorCode.PROBLEM_NUMBER_EXCEED);
+    }
+
+    public void end() {
+        isFinished = getProblemSummation().getLeftProblemCount() == 0;
+        calculateDuration();
+    }
+
+    public ProblemSummation getProblemSummation() {
+        int leftProblemCount = 0, correctProblemCount = 0;
+        for (Answer answer : answers) {
+            if (!answer.getIsSubmitted()) {
+                leftProblemCount++;
+                continue;
+            }
+            if (answer.getIsCorrect()) correctProblemCount++;
+        }
+        return new ProblemSummation(answers.size(), leftProblemCount, correctProblemCount);
+    }
+
+    private void calculateDuration() {
+        LocalDateTime now = LocalDateTime.now();
+        if (notSaved()) {
+            endTime = now;
+            duration = Duration.between(startTime, endTime);
+        } else {
+            duration = duration.plus(Duration.between(endTime, now));
+            endTime = now;
+        }
+    }
+
+    private boolean notSaved() {
+        return endTime == null;
     }
 }

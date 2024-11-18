@@ -1,4 +1,4 @@
-package pull_up.api.member;
+package pull_up.api.deprecated;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pull_up.api.member.dto.MemberDto;
 import pull_up.api.member.dto.MemberScoreDto;
-import pull_up.domain.member.MemberService;
+import pull_up.domain.deprecated.MemberServiceL;
 
 @Slf4j
 @RequestMapping("/api/members")
@@ -16,31 +16,31 @@ import pull_up.domain.member.MemberService;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberServiceL memberServiceL;
 
     @Operation(summary = "멤버 조회", description = "멤버에 대해 조회합니다.", tags = "Deprecated")
     @GetMapping("/{id}")
     public ResponseEntity<MemberScoreDto> getMemberById(@PathVariable Long id) {
-        return new ResponseEntity<>(memberService.getMemberById(id), HttpStatus.OK);
+        return new ResponseEntity<>(memberServiceL.getMemberById(id), HttpStatus.OK);
     }
 
     @Operation(summary = "튜토리얼 확인", description = "튜토리얼 확인 여부를 확인합니다.", tags = "Deprecated")
     @PutMapping("/{id}/access-check")
     public ResponseEntity<MemberDto> updateAccessCheck(@PathVariable Long id) {
-        return new ResponseEntity<>(memberService.updateAccessCheck(id), HttpStatus.OK);
+        return new ResponseEntity<>(memberServiceL.updateAccessCheck(id), HttpStatus.OK);
     }
 
     @Operation(summary = "멤버 탈퇴(soft)", description = "멤버를 탈퇴시킵니다.", tags = "Deprecated")
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
-        memberService.deleteMember(id);
+        memberServiceL.deleteMember(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "멤버 탈퇴(hard)", description = "멤버를 탈퇴시킵니다. DB에서 관련된 데이터를 모두 삭제합니다.", tags = "Deprecated")
     @DeleteMapping("/{id}/delete/hard")
     public ResponseEntity<String> deleteMemberHard(@PathVariable Long id) {
-        memberService.deleteMemberHard(id);
+        memberServiceL.deleteMemberHard(id);
         return new ResponseEntity<>("delete member " + id + " successfully.", HttpStatus.OK);
     }
 }

@@ -7,9 +7,9 @@ import org.mockito.Mockito;
 import pull_up.api.answer.dto.AnswerDto;
 import pull_up.api.answer.dto.AnswerSolved;
 import pull_up.api.answer.dto.AnswerSubmit;
-import pull_up.domain.deprecated.AnswerService;
-import pull_up.domain.member.member.AnswerErrorCode;
-import pull_up.domain.member.member.AnswerException;
+import pull_up.domain.deprecated.AnswerServiceL;
+import pull_up.domain.answer.exception.AnswerErrorCode;
+import pull_up.domain.answer.exception.AnswerException;
 import pull_up.infra.database.entity.legacy.AnswerL;
 import pull_up.infra.database.fixture.legacy.ExamFixture;
 import pull_up.infra.database.fixture.legacy.MemberFixture;
@@ -27,7 +27,7 @@ import static pull_up.infra.database.fixture.legacy.AnswerFixture.SOLVED_5;
 
 class AnswerLServiceTest {
 
-    AnswerService suit;
+    AnswerServiceL suit;
 
     ExamRepositoryL mockExamRepositoryL;
 
@@ -37,7 +37,7 @@ class AnswerLServiceTest {
     void init() {
         mockExamRepositoryL = Mockito.mock(ExamRepositoryL.class);
         mockAnswerRepositoryL = Mockito.mock(AnswerRepositoryL.class);
-        suit = new AnswerService(mockExamRepositoryL, mockAnswerRepositoryL);
+        suit = new AnswerServiceL(mockExamRepositoryL, mockAnswerRepositoryL);
     }
 
     @Test

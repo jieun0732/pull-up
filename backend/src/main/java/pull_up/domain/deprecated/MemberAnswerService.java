@@ -1,4 +1,4 @@
-package pull_up.domain.member;
+package pull_up.domain.deprecated;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

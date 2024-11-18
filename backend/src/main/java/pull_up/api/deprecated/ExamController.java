@@ -1,4 +1,4 @@
-package pull_up.api.exam;
+package pull_up.api.deprecated;
 
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pull_up.api.exam.dto.*;
-import pull_up.domain.deprecated.ExamService;
+import pull_up.domain.deprecated.ExamServiceL;
 import pull_up.api.member.dto.MemberAnswerIndexDto;
 import pull_up.api.member.dto.MemberAnswerResultDto;
 import pull_up.api.member.dto.MemberAnswerSolvedDto;
@@ -36,7 +36,7 @@ import pull_up.global.dto.ListDto;
 @RequiredArgsConstructor
 public class ExamController {
 
-    private final ExamService examService;
+    private final ExamServiceL examServiceL;
 
     @Operation(summary = "문제 리스트 id값 조회(골고루 및 유형별)", description = "회원이 저장한 답안에 대한 문제 id 리스트를 조회합니다.", tags = "Deprecated")
     @GetMapping("/problemsIndex")
@@ -45,7 +45,7 @@ public class ExamController {
         @RequestParam(required = false) String entry,
         @RequestParam(required = false) String category,
         @RequestParam(required = false) String type) {
-        List<MemberAnswerIndexDto> problems = examService.getProblemIndexList(memberId, entry, category, type);
+        List<MemberAnswerIndexDto> problems = examServiceL.getProblemIndexList(memberId, entry, category, type);
         return ResponseEntity.ok(problems);
     }
 
@@ -53,7 +53,7 @@ public class ExamController {
     @GetMapping("/problem")
     public ResponseEntity<MemberAnswerResultDto> getProblemByMemberAnswerId(
         @RequestParam Long memberAnswerId) {
-        MemberAnswerResultDto memberAnswerDto = examService.getProblemByMemberAnswerId(memberAnswerId);
+        MemberAnswerResultDto memberAnswerDto = examServiceL.getProblemByMemberAnswerId(memberAnswerId);
         return ResponseEntity.ok(memberAnswerDto);
     }
 
@@ -61,7 +61,7 @@ public class ExamController {
     @GetMapping("/problems/math")
     public ResponseEntity<List<ProblemTypeSummaryDto>> getMathProblemsSummary(
         @RequestParam Long memberId) {
-        List<ProblemTypeSummaryDto> summaries = examService.getMathProblemsSummary(memberId);
+        List<ProblemTypeSummaryDto> summaries = examServiceL.getMathProblemsSummary(memberId);
         return ResponseEntity.ok(summaries);
     }
 
@@ -69,7 +69,7 @@ public class ExamController {
     @GetMapping("/problems/language")
     public ResponseEntity<List<ProblemTypeSummaryDto>> getLanguageProblemsSummary(
         @RequestParam Long memberId) {
-        List<ProblemTypeSummaryDto> summaries = examService.getLanguageProblemsSummary(memberId);
+        List<ProblemTypeSummaryDto> summaries = examServiceL.getLanguageProblemsSummary(memberId);
         return ResponseEntity.ok(summaries);
     }
 
@@ -77,7 +77,7 @@ public class ExamController {
     @GetMapping("/problems/reasoning")
     public ResponseEntity<List<ProblemTypeSummaryDto>> getReasoningProblemsSummary(
         @RequestParam Long memberId) {
-        List<ProblemTypeSummaryDto> summaries = examService.getReasoningProblemsSummary(memberId);
+        List<ProblemTypeSummaryDto> summaries = examServiceL.getReasoningProblemsSummary(memberId);
         return ResponseEntity.ok(summaries);
     }
 
@@ -88,7 +88,7 @@ public class ExamController {
         @RequestParam(required = false) String entry,
         @RequestParam(required = false) String category,
         @RequestParam(required = false) String type) {
-        List<MemberAnswerSolvedDto> correctnessList = examService.getProblemSolvedList(memberId, entry, category, type);
+        List<MemberAnswerSolvedDto> correctnessList = examServiceL.getProblemSolvedList(memberId, entry, category, type);
         return ResponseEntity.ok(correctnessList);
     }
 
@@ -99,7 +99,7 @@ public class ExamController {
         @RequestParam(required = false) String entry,
         @RequestParam(required = false) String category,
         @RequestParam(required = false) String type) {
-        examService.resetAnswers(memberId, entry, category, type);
+        examServiceL.resetAnswers(memberId, entry, category, type);
         return ResponseEntity.ok().build();
     }
 
@@ -110,7 +110,7 @@ public class ExamController {
         @RequestParam(required = false) String entry,
         @RequestParam(required = false) String category,
         @RequestParam(required = false) String type) {
-        MemberAnswerResultDto nextUnanswered = examService.getNextUnanswered(memberId, entry,
+        MemberAnswerResultDto nextUnanswered = examServiceL.getNextUnanswered(memberId, entry,
             category, type);
         return ResponseEntity.ok(nextUnanswered);
     }
@@ -118,14 +118,14 @@ public class ExamController {
     @Operation(summary = "보유 모의고사 문제 전체 조회", description = "보유하고 있는 모의고사 문제를 모두 조회합니다.", tags = "Deprecated")
     @GetMapping("/mock-exam/problemsList")
     public ResponseEntity<List<ProblemResultDto>> getMockExamProblems() {
-        List<ProblemResultDto> problems = examService.getMockExamProblems();
+        List<ProblemResultDto> problems = examServiceL.getMockExamProblems();
         return ResponseEntity.ok(problems);
     }
 
     @Operation(summary = "모의고사 시작하기", description = "모의고사를 시작합니다.", tags = "Deprecated")
     @PostMapping("/mock-exam/start")
     public ResponseEntity<CreatedExamInformationResultDto> startMockExam(@RequestParam Long memberId) {
-        CreatedExamInformationResultDto startedExam = examService.startMockExam(memberId);
+        CreatedExamInformationResultDto startedExam = examServiceL.startMockExam(memberId);
         return ResponseEntity.ok(startedExam);
     }
 
@@ -133,7 +133,7 @@ public class ExamController {
     @GetMapping("/mock-exam/solved")
     public ResponseEntity<List<ProblemSolvedDto>> getProblemsSolvedByExamInformation(
         @RequestParam Long examInformationId) {
-        List<ProblemSolvedDto> problemsSolved = examService.getProblemsSolvedByExamInformation(examInformationId);
+        List<ProblemSolvedDto> problemsSolved = examServiceL.getProblemsSolvedByExamInformation(examInformationId);
         return ResponseEntity.ok(problemsSolved);
     }
 
@@ -141,7 +141,7 @@ public class ExamController {
     @GetMapping("/mock-exam/problems")
     public ResponseEntity<List<ProblemSolvedDto>> getExamProblemByExamInformation(
         @RequestParam Long examInformationId) {
-        List<ProblemSolvedDto> problemsSolved = examService.getExamProblemByExamInformation(examInformationId);
+        List<ProblemSolvedDto> problemsSolved = examServiceL.getExamProblemByExamInformation(examInformationId);
         return ResponseEntity.ok(problemsSolved);
     }
 
@@ -151,7 +151,7 @@ public class ExamController {
     @Operation(summary = "모의고사 문제 하나 조회(ExamProblem Id 이용)", description = "모의고사 문제 하나를 조회합니다.", tags = "Deprecated")
     @GetMapping("/mock-exam/{examProblemId}")
     public ResponseEntity<ProblemTimeResultDto> getProblemByExamProblemId(@PathVariable Long examProblemId) {
-        ProblemTimeResultDto problemResultDto = examService.getProblemByExamProblemId(examProblemId);
+        ProblemTimeResultDto problemResultDto = examServiceL.getProblemByExamProblemId(examProblemId);
         return ResponseEntity.ok(problemResultDto);
     }
 
@@ -163,41 +163,41 @@ public class ExamController {
     public ResponseEntity<ProblemTimeResultDto> getProblemByExamInformationIdAndProblemNumber(
         @RequestParam Long examInformationId,
         @RequestParam Long problemNumber) {
-        ProblemTimeResultDto problemResultDto = examService.getProblemByExamInformationIdAndProblemNumber(examInformationId, problemNumber);
+        ProblemTimeResultDto problemResultDto = examServiceL.getProblemByExamInformationIdAndProblemNumber(examInformationId, problemNumber);
         return ResponseEntity.ok(problemResultDto);
     }
 
     @Operation(summary = "모의고사 답안 저장하기", description = "모의고사 문제의 답안을 저장합니다.", tags = "Deprecated")
     @PostMapping("/mock-exam/answer")
     public ResponseEntity<ExamProblemResultDto> saveMockExamAnswer(@RequestBody ExamProblemResponseDto examProblemResponseDto) {
-        ExamProblemResultDto savedAnswer = examService.saveMockExamAnswer(examProblemResponseDto);
+        ExamProblemResultDto savedAnswer = examServiceL.saveMockExamAnswer(examProblemResponseDto);
         return ResponseEntity.ok(savedAnswer);
     }
 
     @Operation(summary = "모의고사 완료 및 점수 저장하기", description = "모의고사를 완료하고 점수를 저장합니다. 수정", tags = "Deprecated")
     @PostMapping("/mock-exam/{examInformationId}/complete")
     public ResponseEntity<ExamInformationDto> completeMockExam(@PathVariable Long examInformationId) {
-        ExamInformationDto completedExam = examService.completeMockExam(examInformationId);
+        ExamInformationDto completedExam = examServiceL.completeMockExam(examInformationId);
         return ResponseEntity.ok(completedExam);
     }
 
     @Operation(summary = "모의고사 삭제하기", description = "모의고사를 삭제합니다.", tags = "Deprecated")
     @DeleteMapping("/mock-exam/{examInformationId}")
     public ResponseEntity<?> deleteMockExam(@PathVariable Long examInformationId) {
-        examService.deleteMockExam(examInformationId);
+        examServiceL.deleteMockExam(examInformationId);
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "틀린 문제 리스트 조회하기", description = "회원이 틀린 문제 리스트를 조회합니다.", tags = "Deprecated")
     @GetMapping("/incorrect-answers")
     public ResponseEntity<ListDto<IncorrectAnswer.Brief>> getIncorrectAnswers(@RequestParam Long memberId) {
-        return ResponseEntity.ok(examService.getIncorrectAnswers(memberId));
+        return ResponseEntity.ok(examServiceL.getIncorrectAnswers(memberId));
     }
 
     @Operation(summary = "틀린 문제 상세 조회하기", description = "회원이 틀린 문제의 상세 정보를 조회합니다. 수정", tags = "Deprecated")
     @GetMapping("/incorrect-answers/{id}")
     public ResponseEntity<IncorrectAnswer.Detail> getIncorrectAnswer(@PathVariable Long id) {
-        return ResponseEntity.ok(examService.getIncorrectAnswerDetail(id));
+        return ResponseEntity.ok(examServiceL.getIncorrectAnswerDetail(id));
     }
 
     /**
@@ -206,7 +206,7 @@ public class ExamController {
     @GetMapping("/mock-exam/average-score")
     @Operation(summary = "전체 모의고사의 평균 점수 및 평균 소요시간 구하기", description = "전체 모의고사의 평균 점수 및 소요시간을 구합니다.", tags = "Deprecated")
     public ResponseEntity<ExamInformationAverageScoreDto> getAverageScore() {
-        ExamInformationAverageScoreDto averageScoreDto = examService.calculateAverageScore();
+        ExamInformationAverageScoreDto averageScoreDto = examServiceL.calculateAverageScore();
         return ResponseEntity.ok(averageScoreDto);
     }
 
@@ -217,7 +217,7 @@ public class ExamController {
     @GetMapping("/mock-exam/result-by-type")
     @Operation(summary = "문제 유형별 맞힌 문제 수", description = "문제 유형별로 총 문제 수와 맞힌 문제 수를 반환합니다. 수정", tags = "Deprecated")
     public ResponseEntity<List<ProblemTypeResultDto>> getProblemTypeResults(@RequestParam Long examInformationId) {
-        List<ProblemTypeResultDto> results = examService.getProblemTypeResults(examInformationId);
+        List<ProblemTypeResultDto> results = examServiceL.getProblemTypeResults(examInformationId);
         return ResponseEntity.ok(results);
     }
 
@@ -229,12 +229,12 @@ public class ExamController {
     public ResponseEntity<ExamInformationDetailDto> getRecentExamInformation(
         @RequestParam Long memberId) {
 
-        return ResponseEntity.ok(examService.getRecentExamInformation(memberId));
+        return ResponseEntity.ok(examServiceL.getRecentExamInformation(memberId));
     }
 
     @PostMapping("/mock-exam/grade")
     @Operation(summary = "모의고사 채점", description = "모의고사를 채점한 뒤, 채점 결과를 반환합니다.", tags = "Deprecated")
     public ResponseEntity<ExamGrade.Response> grade(@RequestBody ExamGrade.Request request) {
-        return ResponseEntity.ok(examService.grade(request));
+        return ResponseEntity.ok(examServiceL.grade(request));
     }
 }

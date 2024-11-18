@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pull_up.api.answer.dto.AnswerDto;
 import pull_up.api.answer.dto.AnswerSolved;
 import pull_up.api.answer.dto.AnswerSubmit;
-import pull_up.domain.deprecated.AnswerService;
+import pull_up.domain.deprecated.AnswerServiceL;
 
 import java.util.List;
 
@@ -24,14 +24,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class AnswerLControllerTest {
 
-    AnswerService mockService;
+    AnswerServiceL mockService;
     AnswerController suit;
     MockMvc mockMvc;
     Gson gson;
 
     @BeforeEach
     void init() {
-        mockService = Mockito.mock(AnswerService.class);
+        mockService = Mockito.mock(AnswerServiceL.class);
         suit = new AnswerController(mockService);
         mockMvc = MockMvcBuilders.standaloneSetup(suit).build();
         gson = new Gson();
