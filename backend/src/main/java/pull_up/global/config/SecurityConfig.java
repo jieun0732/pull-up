@@ -32,6 +32,9 @@ public class SecurityConfig {
     @Value("${auth.domain.frontend}")
     private String frontendDomain;
 
+    @Value("${auth.with-credential}")
+    private Boolean withCredential;
+
     private final CustomOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final AuthenticationExceptionHandler exceptionHandler;
@@ -72,7 +75,7 @@ public class SecurityConfig {
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-//        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setAllowCredentials(withCredential);
         corsConfiguration.addAllowedOrigin(frontendDomain);
         corsConfiguration.addAllowedOrigin("https://pullup-api.shop");
         corsConfiguration.addAllowedOrigin("https://appleid.apple.com");
@@ -81,9 +84,6 @@ public class SecurityConfig {
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setExposedHeaders((List.of("Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-
-        // for frontend local test
-        corsConfiguration.addAllowedOrigin("http://localhost:3000");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);

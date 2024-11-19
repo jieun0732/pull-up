@@ -1,17 +1,55 @@
+spring:
+  profiles:
+    group:
+      prod:
+      - prod
+      - common
+      dev:
+      - dev
+      - common
+      local:
+      - local
+      - common
+    default: local
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+    import:
+      - file:./config/prod/pull-up-config.yml
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+    import: file:./config/dev/pull-up-config.yml
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+    import: classpath:pull-up-config.yml
+---
+logging:
+  level:
+    org.hibernate.SQL: ${log.level.jpa}
+    root: ${log.level.root}
+
 server:
   port: ${basic-server.port}
 
 spring:
+  config:
+    activate:
+      on-profile: common
+
   mvc:
     static-path-pattern: /admin/**
 
   application:
     name: pull-up
-
-  config:
-    import:
-      - optional:classpath:${spring.application.name}-local.yml
-      - optional:file:${spring.application.name}-server.yml
 
   datasource:
     driver-class-name: ${database.jdbc-driver}
@@ -22,13 +60,12 @@ spring:
   # jpa
   jpa:
     hibernate:
-      ddl-auto: ${jpa.ddl-auto}
+      ddl-auto: ${database.jpa.ddl-auto}
     properties:
       hibernate:
-        dialect: ${jpa.dialect}
-        default_batch_fetch_size: ${jpa.batch-fetch}
-        format_sql: ${jpa.format-sql}
-
+        dialect: ${database.jpa.dialect}
+        default_batch_fetch_size: ${database.jpa.batch-fetch}
+        format_sql: ${database.jpa.format-sql}
 
   # social security
   security:
@@ -36,17 +73,17 @@ spring:
       client:
         registration:
           kakao:
-            client-id: ${oauth2.kakao.client-id}
-            client-secret: ${oauth2.kakao.client-secret}
-            redirect-uri: ${oauth2.kakao.redirect-uri}
+            client-id: ${security.oauth2.kakao.client-id}
+            client-secret: ${security.oauth2.kakao.client-secret}
+            redirect-uri: ${security.oauth2.kakao.redirect-uri}
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
             client-name: kakao
             scope:
               - profile_nickname
           apple:
-            client-id: ${oauth2.apple.client-id}
-            redirect-uri: ${oauth2.apple.redirect-uri}
+            client-id: ${security.oauth2.apple.client-id}
+            redirect-uri: ${security.oauth2.apple.redirect-uri}
             authorization-grant-type: authorization_code
             client-authentication-method: form_post
             scope:
@@ -66,33 +103,28 @@ spring:
 # custom auth config
 auth:
   kakao:
-    frontend-redirect-uri: ${oauth2.kakao.frontend-redirect-uri}
+    frontend-redirect-uri: ${security.oauth2.kakao.frontend-redirect-uri}
   apple:
-    frontend-redirect-uri: ${oauth2.apple.frontend-redirect-uri}
+    frontend-redirect-uri: ${security.oauth2.apple.frontend-redirect-uri}
     token:
-      key-path: ${oauth2.apple.token.key-path}
-      key-id: ${oauth2.apple.token.key-id}
-      team-id: ${oauth2.apple.token.team-id}
-      base-uri: ${oauth2.apple.token.base-uri}
-      expire: ${oauth2.apple.token.expire}
+      key-path: ${security.oauth2.apple.token.key-path}
+      key-id: ${security.oauth2.apple.token.key-id}
+      team-id: ${security.oauth2.apple.token.team-id}
+      base-uri: ${security.oauth2.apple.token.base-uri}
+      expire: ${security.oauth2.apple.token.expire}
   jwt:
-    key: ${jwt.key}
-    subject: ${jwt.subject}
-    issuer: ${jwt.issuer}
-    audience: ${jwt.audience}
-    expire: ${jwt.expire}
+    key: ${security.jwt.key}
+    subject: ${security.jwt.subject}
+    issuer: ${security.jwt.issuer}
+    audience: ${security.jwt.audience}
+    expire: ${security.jwt.expire}
   cookie:
-    domain: ${cookie.domain}
-    path: ${cookie.path}
-    max-age: ${cookie.max-age}
+    domain: ${security.cookie.domain}
+    path: ${security.cookie.path}
+    max-age: ${security.cookie.max-age}
   domain:
     frontend: ${basic-server.frontend-domain}
+  with-credential: ${security.with-credential}
 
 springdoc:
   use-fqn: true
-
-#logging
-logging:
-  level:
-    org.hibernate.SQL: ${log.level.jpa}
-    root: ${log.level.root}

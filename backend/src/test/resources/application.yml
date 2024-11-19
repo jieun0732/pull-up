@@ -9,7 +9,7 @@ spring:
 
   config:
     import:
-      - optional:classpath:${spring.application.name}-local-test.yml
+      - optional:classpath:${spring.application.name}-config.yml
 
   datasource:
     driver-class-name: ${database.jdbc-driver}
@@ -83,6 +83,7 @@ auth:
     max-age: 1234
   domain:
     frontend: http://localhost:8080
+  with-credential: false
 
 springdoc:
   use-fqn: true

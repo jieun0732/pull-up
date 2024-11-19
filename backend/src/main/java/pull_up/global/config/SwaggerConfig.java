@@ -14,8 +14,8 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .addServersItem(new Server().url("https://pullup-api.shop").description("https 요청 server"))
-                .addServersItem(new Server().url("http://43.203.236.62:8080").description("요청 server"))
+                .addServersItem(new Server().url("https://pullup-api.shop").description("Production server"))
+                .addServersItem(new Server().url("http://pullup-api.shop:3000").description("Development server"))
                 .addServersItem(new Server().url("http://localhost:8080").description("Local server"))
                 .info(new Info()
                         .title("pull-up API")
