@@ -37,7 +37,7 @@ public class ExamController {
         return new ResponseEntity<>(examService.next(examId, problemNumber), HttpStatus.OK);
     }
 
-    @Operation(summary = "시험 종료", description = "시험을 종료합니다.", tags = "골고루")
+    @Operation(summary = "시험 종료", description = "시험을 종료합니다.", tags = "골고루/유형별")
     @PatchMapping("/end/{examId}")
     public ResponseEntity<End.Response> end(@PathVariable Long examId) {
         return new ResponseEntity<>(examService.end(examId), HttpStatus.OK);

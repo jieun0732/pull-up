@@ -13,8 +13,7 @@ import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.problem.Entry;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ByProblemTypeExamLControllerTest {
