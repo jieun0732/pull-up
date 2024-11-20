@@ -2,20 +2,27 @@ package pull_up.domain.exam.dto;
 
 import pull_up.domain.exam.ExamType;
 import pull_up.domain.problem.Entry;
-import pull_up.infra.database.entity.Answer;
-import pull_up.infra.database.entity.Exam;
-import pull_up.infra.database.entity.Problem;
+import pull_up.infra.database.jpa.entity.Answer;
+import pull_up.infra.database.jpa.entity.Exam;
+import pull_up.infra.database.jpa.entity.Problem;
 
 import java.util.List;
 
 public record Start() {
-    public record Request(
+    public record EvenlyRequest(
             Long memberId,
             ExamType examType,
             Entry entry
-    ) {
+    ) {}
 
-    }
+    public record ByProblemTypeRequest(
+            Long memberId,
+            ExamType examType,
+            Entry entry,
+            String problemType
+    ){}
+
+
     public record Response(
             Long examId,
             Integer totalProblemCount,

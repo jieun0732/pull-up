@@ -13,7 +13,7 @@ import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.domain.auth.SNSProvider;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.global.security.util.AppleTokenDecoder;
-import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.jpa.entity.Member;
 import pull_up.infra.external_api.auth.KakaoAuthRestApi;
 
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class OAuth2LoginService {
     private final Gson gson = new Gson();
 
     public OAuth2LoginResponseDto getKakaoUser(KakaoUserInfoDto dto) {
-        Optional<pull_up.infra.database.entity.Member> member = memberRepository.findBySnsId(dto.id());
+        Optional<Member> member = memberRepository.findBySnsId(dto.id());
 
         return member.map(value -> OAuth2LoginResponseDto.of(value, false, KAKAO))
                 .orElseGet(() -> OAuth2LoginResponseDto.of(registKakaoMember(dto), true, KAKAO));

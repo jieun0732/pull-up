@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pull_up.config.annotation.IntegrationTest;
 import pull_up.domain.dao.MemberRepository;
-import pull_up.infra.database.entity.Member;
-import pull_up.infra.database.fixture.MemberFixture;
+import pull_up.infra.database.jpa.entity.Member;
+import pull_up.infra.database.jpa.fixture.MemberFixture;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

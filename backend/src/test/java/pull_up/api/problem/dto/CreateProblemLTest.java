@@ -2,8 +2,7 @@ package pull_up.api.problem.dto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pull_up.infra.database.entity.Problem;
-import pull_up.infra.database.entity.legacy.ProblemL;
+import pull_up.infra.database.jpa.entity.Problem;
 
 import java.util.List;
 

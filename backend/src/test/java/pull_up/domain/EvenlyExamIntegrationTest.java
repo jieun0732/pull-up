@@ -5,9 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pull_up.config.annotation.IntegrationTest;
-import pull_up.domain.dao.AnswerRepository;
 import pull_up.domain.answer.AnswerService;
-import pull_up.domain.exam.EvenlyExamService;
+import pull_up.domain.exam.ExamService;
 import pull_up.domain.dao.ExamRepository;
 import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.dto.End;
@@ -17,21 +16,19 @@ import pull_up.domain.exam.dto.Submit;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.problem.Entry;
 import pull_up.domain.dao.ProblemRepository;
-import pull_up.infra.database.entity.Member;
-import pull_up.infra.database.fixture.MemberFixture;
+import pull_up.infra.database.jpa.entity.Member;
+import pull_up.infra.database.jpa.fixture.MemberFixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @IntegrationTest
 public class EvenlyExamIntegrationTest {
 
-    EvenlyExamService evenlyExamService;
+    ExamService examService;
     AnswerService answerService;
 
     @Autowired
     ExamRepository examRepository;
-    @Autowired
-    AnswerRepository answerRepository;
     @Autowired
     MemberRepository memberRepository;
     @Autowired
@@ -39,7 +36,7 @@ public class EvenlyExamIntegrationTest {
 
     @BeforeEach
     void init() {
-        evenlyExamService = new EvenlyExamService(examRepository, answerRepository, memberRepository, problemRepository);
+        examService = new ExamService(examRepository, memberRepository, problemRepository);
         answerService = new AnswerService();
     }
 
@@ -52,10 +49,10 @@ public class EvenlyExamIntegrationTest {
         /* 1. 시험 시작 */
 
         // given [프론트] 시험 시작버튼 클릭(POST)
-        Start.Request startReq = new Start.Request(member.getId(), ExamType.EVENLY, Entry.LANGUAGE);
+        Start.EvenlyRequest startReq = new Start.EvenlyRequest(member.getId(), ExamType.EVENLY, Entry.LANGUAGE);
 
         // when [ExamService] 시험 시작
-        Start.Response startRes = evenlyExamService.start(startReq);
+        Start.Response startRes = examService.start(startReq);
 
         // then [백] 1번 문제 전달
         assertThat(startRes).isInstanceOf(Start.Response.class);
@@ -71,7 +68,7 @@ public class EvenlyExamIntegrationTest {
         Submit.Request submitReq1 = new Submit.Request(startRes.examId(), 1, 3);
 
         // when [ExamService] 정답 채점
-        Submit.Response submitRes1 = evenlyExamService.submit(submitReq1);
+        Submit.Response submitRes1 = examService.submit(submitReq1);
 
         // then [백] 채점 후 결과전송
         assertThat(submitRes1).isInstanceOf(Submit.Response.class);
@@ -84,7 +81,7 @@ public class EvenlyExamIntegrationTest {
         // [프론트] 다음 문제 요청(GET)
 
         // [ExamService] 다음 문제 조회
-        Next.Response next1Res = evenlyExamService.next(startRes.examId(), 2);
+        Next.Response next1Res = examService.next(startRes.examId(), 2);
 
         // [백] 다음 문제 전송
         assertThat(next1Res).isInstanceOf(Next.Response.class);
@@ -97,10 +94,10 @@ public class EvenlyExamIntegrationTest {
         /* 4. 2번 문제 풀기 */
 
         // [프론트] 2번문제 정답 제출 및 요청(POST)
-        Submit.Request submitReq2 = new Submit.Request(1L, 2, 3);
+        Submit.Request submitReq2 = new Submit.Request(startRes.examId(), 2, 3);
 
         // [ExamService] 정답 채점
-        Submit.Response submitRes2 = evenlyExamService.submit(submitReq2);
+        Submit.Response submitRes2 = examService.submit(submitReq2);
 
         // [백] 2번 문제 채점 후 결과 전송
         assertThat(submitRes2).isInstanceOf(Submit.Response.class);
@@ -114,7 +111,7 @@ public class EvenlyExamIntegrationTest {
         Long endExamId = submitReq2.examId();
 
         // [ExamService] 시험 종료
-        End.Response endRes = evenlyExamService.end(endExamId);
+        End.Response endRes = examService.end(endExamId);
 
         // [백] 요청결과 전송
         assertThat(endRes).isInstanceOf(End.Response.class);

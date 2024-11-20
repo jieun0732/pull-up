@@ -2,8 +2,7 @@ package pull_up.api.problem.dto;
 
 import lombok.extern.slf4j.Slf4j;
 import pull_up.domain.problem.Entry;
-import pull_up.infra.database.entity.Problem;
-import pull_up.infra.database.entity.legacy.ProblemL;
+import pull_up.infra.database.jpa.entity.Problem;
 
 import java.util.ArrayList;
 import java.util.Arrays;

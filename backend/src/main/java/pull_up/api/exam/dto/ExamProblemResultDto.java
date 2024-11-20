@@ -2,7 +2,7 @@ package pull_up.api.exam.dto;
 
 import java.io.Serializable;
 
-import pull_up.infra.database.entity.legacy.AnswerL;
+import pull_up.infra.database.jpa.entity.legacy.AnswerL;
 import pull_up.api.problem.dto.ProblemResultDto;
 
 public record ExamProblemResultDto(Long id, ExamInformationDto examInformation,

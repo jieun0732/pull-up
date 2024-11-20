@@ -19,7 +19,6 @@ import pull_up.global.security.handler.AuthorizationEntryPoint;
 import pull_up.global.security.filter.JwtAuthenticationFilter;
 import pull_up.global.security.handler.OAuth2SuccessHandler;
 import pull_up.domain.auth.service.CustomOAuth2UserService;
-import pull_up.infra.database.entity.Member;
 
 import java.util.List;
 

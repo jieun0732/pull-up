@@ -5,7 +5,8 @@ import org.springframework.stereotype.Service;
 import pull_up.api.problem.dto.ProblemDto;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.global.dto.ListDto;
-import pull_up.infra.database.entity.legacy.ProblemL;
+import pull_up.infra.database.jpa.entity.legacy.ProblemL;
+import pull_up.infra.database.jpa.repository.legacy.ProblemLRepository;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProblemServiceL {
 
-    private final ProblemRepository problemRepository;
+    private final ProblemLRepository problemRepository;
 
     @Deprecated
     public ListDto<ProblemDto> getList(String entry, String category, String type) {

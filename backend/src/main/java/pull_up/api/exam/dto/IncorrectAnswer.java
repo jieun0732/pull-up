@@ -1,6 +1,6 @@
 package pull_up.api.exam.dto;
 
-import pull_up.infra.database.entity.legacy.AnswerL;
+import pull_up.infra.database.jpa.entity.legacy.AnswerL;
 
 import java.time.LocalDateTime;
 import java.util.List;

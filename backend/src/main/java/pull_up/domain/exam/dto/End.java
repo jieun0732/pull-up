@@ -2,8 +2,8 @@ package pull_up.domain.exam.dto;
 
 import pull_up.domain.exam.ProblemSummation;
 import pull_up.domain.problem.Entry;
-import pull_up.infra.database.entity.Answer;
-import pull_up.infra.database.entity.Exam;
+import pull_up.infra.database.jpa.entity.Answer;
+import pull_up.infra.database.jpa.entity.Exam;
 
 import java.util.List;
 

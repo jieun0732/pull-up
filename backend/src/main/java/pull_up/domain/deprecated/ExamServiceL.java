@@ -16,13 +16,13 @@ import pull_up.domain.member.exception.MemberErrorCode;
 import pull_up.domain.member.exception.MemberException;
 import pull_up.domain.problem.exception.ProblemErrorCode;
 import pull_up.domain.problem.exception.ProblemException;
-import pull_up.infra.database.entity.legacy.*;
-import pull_up.infra.database.repository.answer.AnswerRepositoryL;
-import pull_up.infra.database.repository.exam.ExamRepositoryL;
-import pull_up.infra.database.repository.legacy.IncorrectAnswerRepository;
-import pull_up.infra.database.repository.legacy.MemberAnswerRepository;
-import pull_up.infra.database.repository.member.MemberRepositoryL;
-import pull_up.infra.database.repository.problem.ProblemRepositoryL;
+import pull_up.infra.database.jpa.entity.legacy.*;
+import pull_up.infra.database.jpa.repository.answer.AnswerRepositoryL;
+import pull_up.infra.database.jpa.repository.legacy.ExamLRepository;
+import pull_up.infra.database.jpa.repository.legacy.IncorrectAnswerRepository;
+import pull_up.infra.database.jpa.repository.legacy.MemberAnswerRepository;
+import pull_up.infra.database.jpa.repository.member.MemberRepositoryL;
+import pull_up.infra.database.jpa.repository.legacy.ProblemLRepository;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -40,11 +40,11 @@ import static pull_up.domain.exam.exception.ExamErrorCode.NOT_FOUND_EXAM;
 @RequiredArgsConstructor
 public class ExamServiceL {
 
-    private final ProblemRepositoryL problemRepositoryL;
+    private final ProblemLRepository problemLRepository;
     private final MemberRepositoryL memberRepositoryL;
     private final MemberAnswerRepository memberAnswerRepository;
     private final IncorrectAnswerRepository incorrectAnswerRepository;
-    private final ExamRepositoryL examRepositoryL;
+    private final ExamLRepository examRepositoryL;
     private final AnswerRepositoryL answerRepositoryL;
 
     /**
@@ -103,7 +103,7 @@ public class ExamServiceL {
     private List<ProblemTypeSummaryDto> getProblemSummaryByEntry(Long memberId, String entry,
                                                                  String category) {
         // 모든 문제를 entry와 category에 따라 조회
-        List<ProblemDto> problemDtos = problemRepositoryL.findByEntryAndCategory(entry, category);
+        List<ProblemDto> problemDtos = problemLRepository.findByEntryAndCategory(entry, category);
 
         // 각 type별로 문제 개수를 세고, 선택된 답변의 개수도 세기
         Map<String, Long> totalProblemsByType = problemDtos.stream()
@@ -224,7 +224,7 @@ public class ExamServiceL {
      * 모의고사 문제 리스트 조회.
      */
     public List<ProblemResultDto> getMockExamProblems() {
-        List<ProblemL> problemLS = problemRepositoryL.findByCategory("모의고사");
+        List<ProblemL> problemLS = problemLRepository.findByCategory("모의고사");
         Collections.shuffle(problemLS);
         return problemLS.stream().limit(20).map(ProblemResultDto::from).collect(Collectors.toList());
     }
@@ -268,7 +268,7 @@ public class ExamServiceL {
             log.info("limit: " + limit);
 
             // "모의고사" 카테고리와 entry별로 문제를 필터링
-            List<ProblemL> problemLS = problemRepositoryL.findByCategoryAndEntry("모의고사", entryName);
+            List<ProblemL> problemLS = problemLRepository.findByCategoryAndEntry("모의고사", entryName);
             log.info("problems1: " + problemLS);
 
             // 문제를 랜덤으로 섞음
@@ -372,7 +372,7 @@ public class ExamServiceL {
 
         // 6. IncorrectAnswer 처리
         MemberL memberL = answerL.getExamL().getMemberL();
-        Optional<pull_up.infra.database.entity.legacy.IncorrectAnswer> existingIncorrectAnswer = incorrectAnswerRepository.findByMemberLAndProblemLAndExamL(
+        Optional<pull_up.infra.database.jpa.entity.legacy.IncorrectAnswer> existingIncorrectAnswer = incorrectAnswerRepository.findByMemberLAndProblemLAndExamL(
                 memberL, problemL, answerL.getExamL());
 
         if (isCorrect) {
@@ -381,13 +381,13 @@ public class ExamServiceL {
         } else {
             if (existingIncorrectAnswer.isPresent()) {
                 // 오답일 경우 기존 오답 기록이 있으면 LocalDateTime 업데이트
-                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = existingIncorrectAnswer.get();
+                pull_up.infra.database.jpa.entity.legacy.IncorrectAnswer incorrectAnswer = existingIncorrectAnswer.get();
                 incorrectAnswer.setIncorrectTime(LocalDateTime.now());
                 incorrectAnswer.setChosenAnswer(examProblemResponseDto.chosenAnswer());
                 incorrectAnswerRepository.save(incorrectAnswer);
             } else {
                 // 오답일 경우 기존 오답 기록이 없으면 새로 저장
-                pull_up.infra.database.entity.legacy.IncorrectAnswer incorrectAnswer = pull_up.infra.database.entity.legacy.IncorrectAnswer.of(memberL, problemL,
+                pull_up.infra.database.jpa.entity.legacy.IncorrectAnswer incorrectAnswer = pull_up.infra.database.jpa.entity.legacy.IncorrectAnswer.of(memberL, problemL,
                         answerL.getExamL(), examProblemResponseDto.chosenAnswer(),
                         LocalDateTime.now());
                 incorrectAnswerRepository.save(incorrectAnswer);
@@ -424,7 +424,7 @@ public class ExamServiceL {
      * 문제의 답과 사용의 답 확인하기.
      */
     private boolean checkAnswer(Long problemId, String chosenAnswer) {
-        ProblemL problemL = problemRepositoryL.findById(problemId).orElseThrow();
+        ProblemL problemL = problemLRepository.findById(problemId).orElseThrow();
         return problemL.getAnswer().equals(chosenAnswer);
     }
 

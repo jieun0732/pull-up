@@ -1,6 +1,6 @@
 package pull_up.api.problem.dto;
 
-import pull_up.infra.database.entity.legacy.ProblemL;
+import pull_up.infra.database.jpa.entity.legacy.ProblemL;
 
 import java.util.List;
 

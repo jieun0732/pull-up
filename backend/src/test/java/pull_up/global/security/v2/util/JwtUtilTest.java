@@ -8,7 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
 import pull_up.global.security.util.JwtUtil;
-import pull_up.infra.database.entity.legacy.MemberL;
+import pull_up.infra.database.jpa.entity.legacy.MemberL;
 import pull_up.domain.auth.dto.JwtUserInfoDto;
 import pull_up.domain.auth.exception.AuthError;
 import pull_up.domain.auth.exception.AuthException;

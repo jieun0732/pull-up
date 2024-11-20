@@ -2,7 +2,7 @@ package pull_up.domain.auth.dto;
 
 import lombok.Builder;
 import pull_up.domain.auth.SNSProvider;
-import pull_up.infra.database.entity.Member;
+import pull_up.infra.database.jpa.entity.Member;
 
 @Builder
 public record OAuth2LoginResponseDto(

@@ -3,17 +3,10 @@ package pull_up.domain.problem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import pull_up.api.problem.dto.CreateProblem;
-import pull_up.api.problem.dto.ProblemDto;
 import pull_up.domain.dao.ProblemRepository;
-import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
-import pull_up.infra.database.entity.Problem;
-import pull_up.infra.database.entity.legacy.ProblemL;
-import pull_up.infra.database.fixture.legacy.ProblemFixture;
-
-import java.util.List;
+import pull_up.infra.database.jpa.entity.Problem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;

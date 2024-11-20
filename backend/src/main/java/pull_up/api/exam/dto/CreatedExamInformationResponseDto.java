@@ -1,7 +1,7 @@
 package pull_up.api.exam.dto;
 
 import java.io.Serializable;
-import pull_up.infra.database.entity.legacy.ExamL;
+import pull_up.infra.database.jpa.entity.legacy.ExamL;
 import pull_up.api.member.dto.MemberDto;
 
 /**

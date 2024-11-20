@@ -10,11 +10,11 @@ import pull_up.api.answer.dto.AnswerSubmit;
 import pull_up.domain.deprecated.AnswerServiceL;
 import pull_up.domain.answer.exception.AnswerErrorCode;
 import pull_up.domain.answer.exception.AnswerException;
-import pull_up.infra.database.entity.legacy.AnswerL;
-import pull_up.infra.database.fixture.legacy.ExamFixture;
-import pull_up.infra.database.fixture.legacy.MemberFixture;
-import pull_up.infra.database.repository.answer.AnswerRepositoryL;
-import pull_up.infra.database.repository.exam.ExamRepositoryL;
+import pull_up.infra.database.jpa.entity.legacy.AnswerL;
+import pull_up.infra.database.jpa.fixture.legacy.ExamFixture;
+import pull_up.infra.database.jpa.fixture.legacy.MemberFixture;
+import pull_up.infra.database.jpa.repository.answer.AnswerRepositoryL;
+import pull_up.infra.database.jpa.repository.legacy.ExamLRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,20 +22,19 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static pull_up.infra.database.fixture.legacy.AnswerFixture.*;
-import static pull_up.infra.database.fixture.legacy.AnswerFixture.SOLVED_5;
+import static pull_up.infra.database.jpa.fixture.legacy.AnswerFixture.*;
 
 class AnswerLServiceTest {
 
     AnswerServiceL suit;
 
-    ExamRepositoryL mockExamRepositoryL;
+    ExamLRepository mockExamRepositoryL;
 
     AnswerRepositoryL mockAnswerRepositoryL;
 
     @BeforeEach
     void init() {
-        mockExamRepositoryL = Mockito.mock(ExamRepositoryL.class);
+        mockExamRepositoryL = Mockito.mock(ExamLRepository.class);
         mockAnswerRepositoryL = Mockito.mock(AnswerRepositoryL.class);
         suit = new AnswerServiceL(mockExamRepositoryL, mockAnswerRepositoryL);
     }

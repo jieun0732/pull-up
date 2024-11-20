@@ -2,7 +2,7 @@ package pull_up.api.member.dto;
 
 import java.io.Serializable;
 
-import pull_up.infra.database.entity.legacy.MemberL;
+import pull_up.infra.database.jpa.entity.legacy.MemberL;
 
 /**
  * DTO for {@link MemberL}

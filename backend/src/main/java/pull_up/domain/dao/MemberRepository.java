@@ -1,8 +1,8 @@
 package pull_up.domain.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pull_up.infra.database.entity.Member;
-import pull_up.infra.database.repository.member.CustomMemberRepository;
+import pull_up.infra.database.jpa.entity.Member;
+import pull_up.infra.database.jpa.repository.member.CustomMemberRepository;
 
 import java.util.Optional;
 

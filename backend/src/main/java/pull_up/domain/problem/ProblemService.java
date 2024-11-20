@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pull_up.api.problem.dto.CreateProblem;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.global.dto.MessageDto;
-import pull_up.infra.database.entity.Problem;
+import pull_up.infra.database.jpa.entity.Problem;
 
 import java.util.List;
 

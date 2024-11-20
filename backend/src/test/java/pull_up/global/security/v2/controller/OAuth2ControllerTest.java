@@ -15,8 +15,8 @@ import pull_up.domain.auth.SNSProvider;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.global.security.util.CookieUtil;
 import pull_up.global.security.util.JwtUtil;
-import pull_up.infra.database.entity.Member;
-import pull_up.infra.database.fixture.MemberFixture;
+import pull_up.infra.database.jpa.entity.Member;
+import pull_up.infra.database.jpa.fixture.MemberFixture;
 
 import java.net.URI;
 

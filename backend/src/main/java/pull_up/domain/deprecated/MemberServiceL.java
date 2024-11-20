@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pull_up.api.member.dto.MemberDto;
 import pull_up.api.member.dto.MemberScoreDto;
-import pull_up.infra.database.entity.legacy.MemberL;
+import pull_up.infra.database.jpa.entity.legacy.MemberL;
 import pull_up.domain.member.exception.MemberErrorCode;
 import pull_up.domain.member.exception.MemberException;
-import pull_up.infra.database.repository.member.MemberRepositoryL;
+import pull_up.infra.database.jpa.repository.member.MemberRepositoryL;
 
 import java.util.Optional;
 
@@ -64,7 +64,7 @@ public class MemberServiceL {
     }
 
     public void deleteMemberHard(Long id) {
-        MemberL memberL = memberRepositoryL.findMemberByIdWithRelation(id);
-        memberRepositoryL.delete(memberL);
+//        MemberL memberL = memberRepositoryL.findMemberSolvedInfo(id);
+//        memberRepositoryL.delete(memberL);
     }
 }

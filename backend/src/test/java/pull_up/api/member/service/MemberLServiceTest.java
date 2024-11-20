@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pull_up.api.member.dto.MemberScoreDto;
 import pull_up.config.annotation.IntegrationTest;
 import pull_up.domain.deprecated.MemberServiceL;
-import pull_up.infra.database.entity.legacy.MemberL;
-import pull_up.infra.database.repository.member.MemberRepositoryL;
+import pull_up.infra.database.jpa.entity.legacy.MemberL;
+import pull_up.infra.database.jpa.repository.member.MemberRepositoryL;
 import pull_up.domain.auth.SNSProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;

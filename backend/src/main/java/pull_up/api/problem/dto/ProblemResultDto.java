@@ -2,7 +2,7 @@ package pull_up.api.problem.dto;
 
 import java.io.Serializable;
 import java.util.List;
-import pull_up.infra.database.entity.legacy.ProblemL;
+import pull_up.infra.database.jpa.entity.legacy.ProblemL;
 
 /**
  * DTO for {@link ProblemL} with choices as a list.

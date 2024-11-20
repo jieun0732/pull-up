@@ -1,11 +1,17 @@
+-- drop all entity
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE member;
+TRUNCATE TABLE problem;
+TRUNCATE TABLE exam;
+TRUNCATE TABLE answer;
+SET FOREIGN_KEY_CHECKS = 1;
+
 --  insert member fixture
 INSERT INTO member(id, tutorial_finished, name, email, sns_id, sns_provider, role) VALUES
 ('1', false, 'apple test user', 'test@apple.com', 'test1234', 'apple', 'user'),
 ('2', false, 'apple test user', 'test@kakao.com', 'test1234', 'apple', 'user'),
 ('3', true, 'tutorial finished user', 'test@apple.com', 'test1234', 'apple', 'user'),
 ('4', false, 'conceal email user', 'test@privaterelay.appleid.com', 'test1234', 'apple', 'user');
-
--- insert exam fixture
 
 -- insert problem fixture
 INSERT INTO problem (id, total_attempts, incorrect_attempts, incorrect_rate, entry, problem_type, question, example, choice1, choice2, choice3, choice4, choice5, correct_answer, explanation) VALUES
@@ -21,3 +27,22 @@ INSERT INTO problem (id, total_attempts, incorrect_attempts, incorrect_rate, ent
 (10, 0, 0, 0.0, 'LANGUAGE', '관계비교',CAST('다음 중 관계가 다른 하나는?' AS BINARY),CAST('' AS BINARY),'숙고 - 심려', '속박 - 구속', '채근 - 독촉', '추위 - 동상', '보호 - 보전','4',CAST('숙고 - 심려 : 유의관계 속박 - 구속 : 유의관계 채근 - 독촉 : 유의관계 추위 - 동상 : 원인- 결과 관계 보호 - 보전 : 유의관계 따라서, 관계가 다른 것은 4번 ''추위 - 동상 ''입니다. 다른 항목들은 서로 유사한 의미를 가지지만, 추위와 동상은 원인과 결과 관계를 가지고 있습니다.' AS BINARY)),
 (11, 0, 0, 0.0, 'LANGUAGE', '어휘추론',CAST('다음 중 괄호 안에 상응하는 단어로 적합한 것은?' AS BINARY),CAST('응고하다 : 굳어지다 = 방자하다 : ( )' AS BINARY),'공손하다', '누설하다', '교만하다', '겸양하다', '정중하다','3',CAST('제시된 단어 응고하다와 굳어지다는 모두 액체 따위가 엉겨서 뭉쳐 딱딱하게 굳음을 뜻하므로 유의관계입니다. 따라서 어려워하거나 조심스러워하는 태도가 없이 무례하고 건방지다는 의미의 ''방자하다''와 유의관계인 ''교만하다''가 적절합니다.' AS BINARY)),
 (12, 0, 0, 0.0, 'LANGUAGE', '어휘추론',CAST('다음 중 괄호 안에 상응하는 단어로 적합한 것은?' AS BINARY),CAST('감성 : 자극 = 화석 : ( )' AS BINARY),'증명', '발명', '발굴', '퇴적', '생산','3',CAST('제시된 단어 공감대와 형성은 ''공감대를 형성하다''로 쓸 수 있으므로 목적어와 서술어의 관계입니다. 따라서 ''체력''을 목적어로 쓸 수 있는 ''''발굴''이 적절합니다.' AS BINARY));
+
+-- insert exam fixture
+INSERT INTO exam(id, is_finished, score, exam_type, start_time, end_time, duration, member_id) VALUES
+(1, false, 0, 'EVENLY', '2024-11-16 12:25:00', NULL, NULL, 1),
+(2, true, 50, 'EVENLY', '2024-11-16 12:25:00', '2024-11-16 12:35:00', '10.0', 1),
+(3, false, 0, 'BY_PROBLEM_TYPE', '2024-11-16 12:25:00', NULL, NULL, 1),
+(4, true, 50, 'BY_PROBLEM_TYPE', '2024-11-16 12:25:00', '2024-11-16 12:40:00', '15.0', 1),
+(5, true, 0, 'MOCK_EXAM', '2024-11-16 12:25:00', NULL, NULL, 1),
+(6, true, 70, 'MOCK_EXAM', '2024-11-16 12:25:00', '2024-11-16 12:45:00', '20.0', 1);
+
+-- insert answer fixture
+INSERT INTO answer(id, is_correct, is_submitted, problem_number, submit_count, submit_answer, submit_time, exam_id, problem_id) VALUES
+(1, false, true, 1, 1, '3', '2024-11-16 12:26:00', 1,  9),
+(2, true, true, 1, 1, '3', '2024-11-16 12:25:30', 4,  1),
+(3, false, true, 2, 1, '3', '2024-11-16 12:26:00', 4,  2);
+
+
+
+

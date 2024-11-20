@@ -2,7 +2,7 @@ package pull_up.api.problem.dto;
 
 import java.io.Serializable;
 
-import pull_up.infra.database.entity.legacy.AnswerL;
+import pull_up.infra.database.jpa.entity.legacy.AnswerL;
 
 public record ProblemSolvedDto(Long id, Long problemNumber, ProblemDto problem, String chosenAnswer, Boolean isCorrect) implements Serializable {
 

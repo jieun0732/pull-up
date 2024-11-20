@@ -1,7 +1,7 @@
 package pull_up.api.answer.dto;
 
 import pull_up.api.problem.dto.ProblemDto;
-import pull_up.infra.database.entity.legacy.AnswerL;
+import pull_up.infra.database.jpa.entity.legacy.AnswerL;
 
 public record AnswerDto(
         Integer chosenAnswer,

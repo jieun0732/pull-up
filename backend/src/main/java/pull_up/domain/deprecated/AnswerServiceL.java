@@ -8,10 +8,10 @@ import pull_up.api.answer.dto.AnswerSubmit;
 import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.exam.exception.ExamException;
 import pull_up.domain.answer.exception.AnswerException;
-import pull_up.infra.database.entity.legacy.AnswerL;
-import pull_up.infra.database.entity.legacy.ExamL;
-import pull_up.infra.database.repository.answer.AnswerRepositoryL;
-import pull_up.infra.database.repository.exam.ExamRepositoryL;
+import pull_up.infra.database.jpa.entity.legacy.AnswerL;
+import pull_up.infra.database.jpa.entity.legacy.ExamL;
+import pull_up.infra.database.jpa.repository.answer.AnswerRepositoryL;
+import pull_up.infra.database.jpa.repository.legacy.ExamLRepository;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import static pull_up.domain.answer.exception.AnswerErrorCode.NOT_FOUND;
 @RequiredArgsConstructor
 public class AnswerServiceL {
 
-    private final ExamRepositoryL examRepositoryL;
+    private final ExamLRepository examRepositoryL;
     private final AnswerRepositoryL answerRepositoryL;
 
     public AnswerSubmit.Response submit(AnswerSubmit.Request request) {

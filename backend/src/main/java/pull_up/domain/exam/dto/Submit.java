@@ -1,6 +1,6 @@
 package pull_up.domain.exam.dto;
 
-import pull_up.infra.database.entity.Answer;
+import pull_up.infra.database.jpa.entity.Answer;
 
 public record Submit() {
     public record Request(

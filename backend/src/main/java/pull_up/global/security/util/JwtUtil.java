@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Component;
-import pull_up.infra.database.entity.legacy.MemberL;
+import pull_up.infra.database.jpa.entity.legacy.MemberL;
 import pull_up.domain.auth.dto.JwtUserInfoDto;
 import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.domain.auth.exception.AuthError;

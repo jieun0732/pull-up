@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import pull_up.infra.database.entity.legacy.ExamL;
+import pull_up.infra.database.jpa.entity.legacy.ExamL;
 import pull_up.api.member.dto.MemberDto;
 
 /**
