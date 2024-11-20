@@ -43,7 +43,7 @@ public class ExamService {
                 .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
 
         List<Problem> problemList = problemRepository.findAllByEntry(startReq.entry());
-        Exam startedExam = Exam.start(startReq.examType(), startMember, problemList);
+        Exam startedExam = Exam.start(ExamType.EVENLY, startMember, problemList);
         examRepository.save(startedExam);
 
         return Start.Response.toDto(startedExam);
@@ -54,7 +54,7 @@ public class ExamService {
                 .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
 
         List<Problem> problemList = problemRepository.findAllByEntryAndProblemType(startReq.entry(), startReq.problemType());
-        Exam startedExam = Exam.start(startReq.examType(), startMember, problemList);
+        Exam startedExam = Exam.start(ExamType.BY_PROBLEM_TYPE, startMember, problemList);
         examRepository.save(startedExam);
 
         return Start.Response.toDto(startedExam);

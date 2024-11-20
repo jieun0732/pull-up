@@ -9,12 +9,7 @@ import pull_up.domain.dao.ExamRepository;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
-import pull_up.domain.exam.ExamType;
-import pull_up.domain.exam.dto.End;
-import pull_up.domain.exam.dto.Next;
-import pull_up.domain.exam.dto.Start;
-import pull_up.domain.exam.dto.Submit;
-import pull_up.domain.exam.dto.SolvedInfo;
+import pull_up.domain.exam.dto.*;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Member;
 import pull_up.infra.database.jpa.fixture.MemberFixture;
@@ -67,7 +62,7 @@ public class ByProblemTypeExamIntegrationTest {
         /* 2. 유형별 시험 시작 */
 
         // given [프론트] 시험 시작버튼 클릭(POST)
-        Start.ByProblemTypeRequest startReq = new Start.ByProblemTypeRequest(member.getId(), ExamType.BY_PROBLEM_TYPE, Entry.MATH, "용액의 농도");
+        Start.ByProblemTypeRequest startReq = new Start.ByProblemTypeRequest(member.getId(), Entry.MATH, "용액의 농도");
 
         // when [ExamService] 시험 시작
         Start.Response startRes = examService.start(startReq);

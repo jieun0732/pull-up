@@ -145,7 +145,7 @@ class ExamServiceTest {
     void testStartExam() {
         // given
         Problem problem1 = ProblemFixture.LANGUAGE_COMPARE_1.get();
-        Start.EvenlyRequest startReq = new Start.EvenlyRequest(member.getId(), ExamType.EVENLY, Entry.LANGUAGE);
+        Start.EvenlyRequest startReq = new Start.EvenlyRequest(member.getId(), Entry.LANGUAGE);
 
         // when
         when(mockMemberRepository.findById(member.getId())).thenReturn(Optional.of(member));

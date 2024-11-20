@@ -9,14 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pull_up.domain.exam.ExamService;
-import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.problem.Entry;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ByProblemTypeExamLControllerTest {
+class ByProblemTypeExamControllerTest {
 
     MockMvc mockMvc;
 
@@ -33,7 +32,7 @@ class ByProblemTypeExamLControllerTest {
     @Test
     @DisplayName("전체 요청 테스트")
     void testAllRequest() throws Exception {
-        Start.ByProblemTypeRequest startByProblemTypeRequest = new Start.ByProblemTypeRequest(1L, ExamType.EVENLY, Entry.MATH, "test");
+        Start.ByProblemTypeRequest startByProblemTypeRequest = new Start.ByProblemTypeRequest(1L, Entry.MATH, "test");
         mockMvc.perform(post("/api/exams/by-problem-type/start").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(startByProblemTypeRequest)))
                 .andExpect(status().is(200));
     }

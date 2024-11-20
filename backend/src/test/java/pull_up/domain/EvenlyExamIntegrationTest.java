@@ -49,7 +49,7 @@ public class EvenlyExamIntegrationTest {
         /* 1. 시험 시작 */
 
         // given [프론트] 시험 시작버튼 클릭(POST)
-        Start.EvenlyRequest startReq = new Start.EvenlyRequest(member.getId(), ExamType.EVENLY, Entry.LANGUAGE);
+        Start.EvenlyRequest startReq = new Start.EvenlyRequest(member.getId(), Entry.LANGUAGE);
 
         // when [ExamService] 시험 시작
         Start.Response startRes = examService.start(startReq);

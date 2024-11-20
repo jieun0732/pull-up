@@ -11,13 +11,11 @@ import java.util.List;
 public record Start() {
     public record EvenlyRequest(
             Long memberId,
-            ExamType examType,
             Entry entry
     ) {}
 
     public record ByProblemTypeRequest(
             Long memberId,
-            ExamType examType,
             Entry entry,
             String problemType
     ){}
