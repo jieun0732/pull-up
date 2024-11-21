@@ -67,6 +67,8 @@ public class JwtUtil {
             return getAccessToken(dto.memberId(), dto.name(), dto.email(), "apple-user");
         else if (dto.provider().equalsIgnoreCase("kakao"))
             return getAccessToken(dto.memberId(), dto.name(), dto.email(), "kakao-user");
+        else if (dto.provider().equalsIgnoreCase("local"))
+            return getAccessToken(dto.memberId(), dto.name(), dto.email(), "local-user");
 
         throw new AuthException(AuthError.NOT_PROVIDED_OAUTH2_VENDOR_REQUEST);
     }

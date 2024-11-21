@@ -1,4 +1,4 @@
-package pull_up.global.security.v2.service;
+package pull_up.domain.auth;
 
 import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
@@ -150,5 +150,21 @@ class OAuth2LoginServiceTest {
         // then
         assertUser(appleUser, "spearoad15@gmail.com", "apple", "남상엽");
         assertThat(appleUser).usingRecursiveComparison().ignoringFields("firstLogin").isEqualTo(appleUser2);
+    }
+    
+    @Test
+    @DisplayName("임시 로그인 테스트")
+    void testLocalLogin() {
+        // given
+    
+        // when
+        OAuth2LoginResponseDto localUser = suit.getLocalUser();
+
+        // then
+        assertThat(localUser.email()).isEqualTo("test@example.com");
+        assertThat(localUser.name()).isEqualTo("test user");
+        assertThat(localUser.memberId()).isEqualTo(99999999);
+        assertThat(localUser.provider()).isEqualTo("local");
+        assertThat(localUser.firstLogin()).isTrue();
     }
 }

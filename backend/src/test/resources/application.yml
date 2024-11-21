@@ -71,6 +71,8 @@ auth:
       team-id: test team id
       base-uri: https://appleid.apple.com
       expire: 3600
+  local:
+    frontend-redirect-uri: localhost:3000
   jwt:
     key: bvTAyAcnI3j1NPxTfJh9KLhBLQrrKdoS
     subject: test subject

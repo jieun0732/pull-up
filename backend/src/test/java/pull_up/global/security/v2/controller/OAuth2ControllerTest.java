@@ -24,23 +24,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class OAuth2ControllerTest {
 
     MockMvc mockMvc;
     OAuth2Controller suit;
-    OAuth2LoginService service;
+    OAuth2LoginService mockService;
 
     @BeforeEach
     void init() {
-        service = Mockito.mock(OAuth2LoginService.class);
+        mockService = Mockito.mock(OAuth2LoginService.class);
         JwtUtil jwtUtil = new JwtUtil();
         CookieUtil cookieUtil = new CookieUtil();
-        suit = new OAuth2Controller(service, jwtUtil, cookieUtil);
+        suit = new OAuth2Controller(mockService, jwtUtil, cookieUtil);
         mockMvc = MockMvcBuilders.standaloneSetup(suit).build();
         ReflectionTestUtils.setField(suit, "appleRedirectUri", "https//example.com");
         ReflectionTestUtils.setField(suit, "kakaoRedirectUri", "https//example.com");
+        ReflectionTestUtils.setField(suit, "localRedirectUri", "https//example.com");
         ReflectionTestUtils.setField(jwtUtil, "key", "bvTAyAcnI3j1NPxTfJh9KLhBLQrrKdoS");
         ReflectionTestUtils.setField(jwtUtil, "subject", "test subject");
         ReflectionTestUtils.setField(jwtUtil, "issuer", "test issuer");
@@ -81,14 +83,14 @@ class OAuth2ControllerTest {
         OAuth2LoginResponseDto appleUser = OAuth2LoginResponseDto.of(member, true, SNSProvider.APPLE);
 
         // when
-        when(service.getAppleUser(any(), any())).thenReturn(appleUser);
+        when(mockService.getAppleUser(any(), any())).thenReturn(appleUser);
         ResultActions result = mockMvc.perform(post(url).param("id_token", "test"));
 
         // when 2
         Member member2 = MemberFixture.KAKAO_USER.get();
         member2.setId(1L);
         OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(member2, true, SNSProvider.APPLE);
-        when(service.getKakaoUser((String) any())).thenReturn(kakaoUser);
+        when(mockService.getKakaoUser((String) any())).thenReturn(kakaoUser);
         ResultActions result2 = mockMvc.perform(get(url2).param("code", "test"));
 
         // then
@@ -99,5 +101,13 @@ class OAuth2ControllerTest {
         result2.andExpect(cookie().exists("accessToken"))
                 .andExpect(cookie().httpOnly("accessToken", true))
                 .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    @DisplayName("로컬 로그인 테스트")
+    void testLocalLogin() throws Exception {
+        when(mockService.getLocalUser()).thenReturn(new OAuth2LoginResponseDto(true,99999999L, "local", "test user", "test@example.com"));
+        mockMvc.perform(post("/api/oauth2/callback/local")).andDo(print())
+                .andExpect(status().is(302));
     }
 }

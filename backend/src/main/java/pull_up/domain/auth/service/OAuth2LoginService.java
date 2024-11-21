@@ -47,14 +47,6 @@ public class OAuth2LoginService {
         return getKakaoUser(userInfo);
     }
 
-    private Member registKakaoMember(KakaoUserInfoDto dto) {
-
-        Member firstLoginMember = Member.getFirstLoginMember(dto.kakao_account().profile().nickname(), dto.kakao_account().email(), dto.id(), KAKAO);
-        memberRepository.save(firstLoginMember);
-
-        return firstLoginMember;
-    }
-
     public OAuth2LoginResponseDto getAppleUser(String idToken, String userJson) {
         Claims decodedToken = appleTokenDecoder.decode(idToken);
         String id = (String) decodedToken.get("sub");
@@ -63,6 +55,18 @@ public class OAuth2LoginService {
 
         return member.map(value -> OAuth2LoginResponseDto.of(value, false, SNSProvider.APPLE))
                 .orElseGet(() -> OAuth2LoginResponseDto.of(registAppleMember(id, userJson), true, APPLE));
+    }
+
+    public OAuth2LoginResponseDto getLocalUser() {
+        return new OAuth2LoginResponseDto(true,99999999L, "local", "test user", "test@example.com");
+    }
+
+    private Member registKakaoMember(KakaoUserInfoDto dto) {
+
+        Member firstLoginMember = Member.getFirstLoginMember(dto.kakao_account().profile().nickname(), dto.kakao_account().email(), dto.id(), KAKAO);
+        memberRepository.save(firstLoginMember);
+
+        return firstLoginMember;
     }
 
     private Member registAppleMember(String id, String userJson) {

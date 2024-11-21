@@ -7,14 +7,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
+import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.domain.auth.exception.AuthError;
 import pull_up.domain.auth.exception.AuthException;
+import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.global.security.util.CookieUtil;
 import pull_up.global.security.util.JwtUtil;
-import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
-import pull_up.domain.auth.service.OAuth2LoginService;
 
 import java.util.Map;
 import java.util.Properties;
@@ -25,16 +27,15 @@ import java.util.Properties;
 @RequestMapping("/api/oauth2/callback")
 public class OAuth2Controller {
 
-    @Value("${auth.apple.frontend-redirect-uri}")
-    private String appleRedirectUri;
-
-    @Value("${auth.kakao.frontend-redirect-uri}")
-    private String kakaoRedirectUri;
-
-
     private final OAuth2LoginService oAuth2LoginService;
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
+    @Value("${auth.apple.frontend-redirect-uri}")
+    private String appleRedirectUri;
+    @Value("${auth.kakao.frontend-redirect-uri}")
+    private String kakaoRedirectUri;
+    @Value("${auth.local.frontend-redirect-uri}")
+    private String localRedirectUri;
 
     @Operation(summary = "애플 SNS 로그인", description = "애플 SNS 로그인을 시도합니다.", tags = "인증")
     @PostMapping("/apple")
@@ -43,7 +44,7 @@ public class OAuth2Controller {
 
         OAuth2LoginResponseDto appleUser = oAuth2LoginService.getAppleUser(
                 parameterMap.get("id_token")[0],
-                parameterMap.getOrDefault("user", new String[] {"ALREADY_REGISTERED_USER"})[0]
+                parameterMap.getOrDefault("user", new String[]{"ALREADY_REGISTERED_USER"})[0]
         );
 
         response.addCookie(cookieUtil.getSecureCookie(jwtUtil.getAccessToken(appleUser)));
@@ -61,6 +62,14 @@ public class OAuth2Controller {
         return setRedirect(kakaoUser);
     }
 
+    @Operation(summary = "로컬 SNS 로그인[로컬 전용]", description = "로컬 SNS 로그인을 시도합니다.", tags = "인증")
+    @PostMapping("/local")
+    RedirectView localLogin(HttpServletRequest request, HttpServletResponse response) {
+        OAuth2LoginResponseDto localUser = oAuth2LoginService.getLocalUser();
+        response.addCookie(cookieUtil.getSecureCookie(jwtUtil.getAccessToken(localUser)));
+        return setRedirect(localUser);
+    }
+
     public RedirectView setRedirect(OAuth2LoginResponseDto userDto) {
         Properties attributes = new Properties();
         attributes.setProperty("firstLogin", userDto.firstLogin().toString());
@@ -75,10 +84,12 @@ public class OAuth2Controller {
             redirectView.setUrl(appleRedirectUri);
         else if (userDto.provider().equalsIgnoreCase("kakao"))
             redirectView.setUrl(kakaoRedirectUri);
-        else
-            throw new AuthException(AuthError.NOT_PROVIDED_OAUTH2_VENDOR_REQUEST);
+        else if (userDto.provider().equalsIgnoreCase("local"))
+            redirectView.setUrl(localRedirectUri);
+        else throw new AuthException(AuthError.NOT_PROVIDED_OAUTH2_VENDOR_REQUEST);
 
         redirectView.setAttributes(attributes);
+
         return redirectView;
     }
 }
