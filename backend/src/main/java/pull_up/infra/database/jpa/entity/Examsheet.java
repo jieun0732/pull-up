@@ -3,6 +3,7 @@ package pull_up.infra.database.jpa.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import pull_up.global.entity.BaseEntity;
 
 import java.time.Duration;
 import java.util.List;
@@ -12,15 +13,12 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Examsheet {
+public class Examsheet extends BaseEntity {
 
     @Id
     @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
-    private Integer problemNumber;
 
     @Column(nullable = false)
     private String examTitle;
@@ -37,9 +35,9 @@ public class Examsheet {
     @ColumnDefault("0")
     private Duration averageDuration;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "problem_id", nullable = false)
-    private Problem problem;
+    @ElementCollection
+    @CollectionTable(name = "problemsheet", joinColumns = @JoinColumn(name = "examsheet_id"))
+    private List<Problemsheet> problemsheets;
 
     @OneToMany(mappedBy = "examsheet", fetch = FetchType.LAZY)
     private List<Exam> exams;
