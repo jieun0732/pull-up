@@ -1,5 +1,6 @@
 package pull_up.domain.exam.dto;
 
+import pull_up.domain.exam.ProblemSummation;
 import pull_up.domain.exam.TempExam;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Exam;
@@ -11,6 +12,7 @@ public record SolvedInfo() {
             Entry entry,
             Boolean isEvenlyExamStarted,
             Boolean isEvenlyExamFinished,
+            Integer lastSolvedEvenlyExamProblemNumber,
             Integer problemTypeCount,
             List<ProblemTypeInfo> problemTypeInfos
     ) {
@@ -19,6 +21,8 @@ public record SolvedInfo() {
                 Boolean isStarted,
                 String problemType,
                 Integer solvedProblemCount,
+                Integer correctProblemCount,
+                Integer incorrectProblemCount,
                 Integer totalProblemCount
         ) {
 
@@ -31,11 +35,14 @@ public record SolvedInfo() {
             }
 
             public static ProblemTypeInfo toDto(String problemType, Exam exam) {
+                ProblemSummation problemSummation = exam.getProblemSummation();
                 return new ProblemTypeInfo(exam.getId(),
                         !(exam instanceof TempExam),
                         problemType,
-                        exam.getProblemSummation().getSolvedProblemCount(),
-                        exam.getProblemSummation().getTotalProblemCount());
+                        problemSummation.getSolvedProblemCount(),
+                        problemSummation.getCorrectProblemCount(),
+                        problemSummation.getIncorrectProblemCount(),
+                        problemSummation.getTotalProblemCount());
             }
         }
 
@@ -65,6 +72,7 @@ public record SolvedInfo() {
             return new Response(entry,
                     evenlyExam != null,
                     evenlyExam != null && evenlyExam.getIsFinished(),
+                    evenlyExam != null && evenlyExam.getLastSolvedProblem() != null? evenlyExam.getLastSolvedProblem() : -1,
                     problemTypeExamMap.size(),
                     ProblemTypeInfo.toList(problemTypeExamMap));
         }

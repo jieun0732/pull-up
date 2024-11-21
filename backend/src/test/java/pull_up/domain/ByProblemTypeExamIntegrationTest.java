@@ -52,11 +52,14 @@ public class ByProblemTypeExamIntegrationTest {
         assertThat(solvedInfoRes).isInstanceOf(SolvedInfo.Response.class);
         assertThat(solvedInfoRes.isEvenlyExamStarted()).isTrue();
         assertThat(solvedInfoRes.isEvenlyExamFinished()).isFalse();
+        assertThat(solvedInfoRes.lastSolvedEvenlyExamProblemNumber()).isEqualTo(1);
         assertThat(solvedInfoRes.problemTypeCount()).isEqualTo(2);
         assertThat(solvedInfoRes.problemTypeInfos()).anySatisfy(problemTypeInfo -> {
             assertThat(problemTypeInfo.isStarted()).isTrue();
             assertThat(problemTypeInfo.totalProblemCount()).isEqualTo(2);
             assertThat(problemTypeInfo.solvedProblemCount()).isEqualTo(2);
+            assertThat(problemTypeInfo.incorrectProblemCount()).isEqualTo(1);
+            assertThat(problemTypeInfo.correctProblemCount()).isEqualTo(1);
         });
 
         /* 2. 유형별 시험 시작 */

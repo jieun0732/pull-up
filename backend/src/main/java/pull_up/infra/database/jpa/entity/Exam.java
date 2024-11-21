@@ -12,6 +12,7 @@ import pull_up.global.entity.BaseEntity;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -157,5 +158,14 @@ public class Exam extends BaseEntity {
 
     private boolean notSaved() {
         return endTime == null;
+    }
+
+    public Integer getLastSolvedProblem() {
+        Integer problemNumber = null;
+        answers.sort(Comparator.comparing(Answer::getProblemNumber));
+        for (Answer answer : answers) {
+            if (answer.getIsSubmitted()) problemNumber = answer.getProblemNumber();
+        }
+        return problemNumber;
     }
 }

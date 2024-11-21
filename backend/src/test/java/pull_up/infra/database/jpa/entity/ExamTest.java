@@ -136,4 +136,31 @@ class ExamTest {
         assertThat(exam.getScore()).isEqualTo(50);
         assertThat(exam.getDuration()).isGreaterThan(duration2);
     }
+
+    @Test
+    @DisplayName("마지막으로 푼 문제번호 가져오기 테스트")
+    void testGetLastSolvedProblem() {
+        // given
+        Exam exam = FixtureRepository.getEvenlyExam(MemberFixture.APPLE_USER.get().getId(), Entry.LANGUAGE);
+
+        // when
+        Integer lastSolvedProblem = exam.getLastSolvedProblem();
+
+        // then
+        assertThat(lastSolvedProblem).isEqualTo(null);
+
+        // when2 : 1번문제 풀이 후
+        exam.submit(1, 3);
+        lastSolvedProblem = exam.getLastSolvedProblem();
+
+        // then2
+        assertThat(lastSolvedProblem).isEqualTo(1);
+
+        // when3 : 2번문제 풀이 후
+        exam.submit(2, 3);
+        lastSolvedProblem = exam.getLastSolvedProblem();
+
+        // then2
+        assertThat(lastSolvedProblem).isEqualTo(2);
+    }
 }
