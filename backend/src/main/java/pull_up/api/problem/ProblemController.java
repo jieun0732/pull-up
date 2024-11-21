@@ -5,10 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pull_up.api.problem.dto.CreateProblem;
-import pull_up.api.problem.dto.ProblemDto;
+import pull_up.domain.problem.dto.CreateProblem;
 import pull_up.domain.problem.ProblemService;
-import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
 
 @RestController

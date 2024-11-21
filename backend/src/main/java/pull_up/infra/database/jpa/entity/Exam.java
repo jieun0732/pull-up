@@ -3,7 +3,6 @@ package pull_up.infra.database.jpa.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.convert.Jsr310Converters;
 import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.ProblemSummation;
 import pull_up.domain.exam.exception.ExamErrorCode;
@@ -52,8 +51,12 @@ public class Exam extends BaseEntity {
     private Duration duration;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "examsheet_id", nullable = true)
+    private Examsheet examsheet;
 
     @OneToMany(mappedBy = "exam", fetch = FetchType.LAZY)
     private List<Answer> answers;
@@ -122,7 +125,7 @@ public class Exam extends BaseEntity {
         for (Answer answer : answers) {
             if (answer.getIsSubmitted() && answer.getIsCorrect()) correctCount++;
         }
-        return (int)((double) correctCount / answers.size() * 100);
+        return (int) ((double) correctCount / answers.size() * 100);
     }
 
     public Answer getAnswerByProblemNumber(Integer problemNumber) {

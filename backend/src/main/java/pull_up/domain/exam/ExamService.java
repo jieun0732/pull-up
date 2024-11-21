@@ -3,15 +3,11 @@ package pull_up.domain.exam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pull_up.domain.dao.ExamRepository;
-import pull_up.domain.exam.dto.End;
-import pull_up.domain.exam.dto.Next;
-import pull_up.domain.exam.dto.Start;
-import pull_up.domain.exam.dto.Submit;
+import pull_up.domain.exam.dto.*;
 import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.exam.exception.ExamException;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
-import pull_up.domain.exam.dto.SolvedInfo;
 import pull_up.domain.member.exception.MemberException;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Answer;
@@ -60,6 +56,10 @@ public class ExamService {
         return Start.Response.toDto(startedExam);
     }
 
+    public Start.Response start(Start.MockExamRequest startReq) {
+        return Start.Response.toDto(null);
+    }
+
     public Submit.Response submit(Submit.Request submitReq) {
         Exam examInDB = examRepository.findById(submitReq.examId())
                 .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
@@ -74,6 +74,10 @@ public class ExamService {
                 .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
 
         return Next.Response.toDto(examInDB, problemNumber);
+    }
+
+    public Grade.Response grade(Grade.Request gradeReq) {
+        return null;
     }
 
     public End.Response end(Long examId) {

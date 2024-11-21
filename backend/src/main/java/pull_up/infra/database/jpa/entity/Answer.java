@@ -40,11 +40,11 @@ public class Answer extends BaseEntity {
     private LocalDateTime submitTime;
 
     @ManyToOne
-    @JoinColumn(name = "exam_id")
+    @JoinColumn(name = "exam_id", nullable = false)
     private Exam exam;
 
     @ManyToOne
-    @JoinColumn(name = "problem_id")
+    @JoinColumn(name = "problem_id", nullable = false)
     private Problem problem;
 
     private Answer(Exam exam, Problem problem, Integer problemNumber) {

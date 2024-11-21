@@ -9,14 +9,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pull_up.api.problem.dto.CreateProblem;
-import pull_up.api.problem.dto.ProblemDto;
+import pull_up.domain.problem.dto.CreateProblem;
 import pull_up.domain.problem.Entry;
 import pull_up.domain.problem.ProblemService;
-import pull_up.global.dto.ListDto;
 import pull_up.global.dto.MessageDto;
-
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;

@@ -1,4 +1,4 @@
-package pull_up.api.problem.dto;
+package pull_up.domain.problem.dto;
 
 import lombok.extern.slf4j.Slf4j;
 import pull_up.domain.problem.Entry;

@@ -20,6 +20,10 @@ public record Start() {
             String problemType
     ){}
 
+    public record MockExamRequest(
+            Long memberId
+    ) {
+    }
 
     public record Response(
             Long examId,
