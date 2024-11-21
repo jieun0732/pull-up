@@ -36,7 +36,7 @@ public class EvenlyExamIntegrationTest {
 
     @BeforeEach
     void init() {
-        examService = new ExamService(examRepository, memberRepository, problemRepository);
+        examService = new ExamService(examRepository, memberRepository, problemRepository, null);
         answerService = new AnswerService();
     }
 

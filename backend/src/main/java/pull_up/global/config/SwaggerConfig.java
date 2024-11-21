@@ -16,6 +16,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .addServersItem(new Server().url("https://pullup-api.shop").description("Production server"))
                 .addServersItem(new Server().url("http://pullup-api.shop:3000").description("Development server"))
+                .addServersItem(new Server().url("http://localhost:3000").description("Development server2"))
                 .addServersItem(new Server().url("http://localhost:8080").description("Local server"))
                 .info(new Info()
                         .title("pull-up API")

@@ -112,6 +112,8 @@ auth:
       team-id: ${security.oauth2.apple.token.team-id}
       base-uri: ${security.oauth2.apple.token.base-uri}
       expire: ${security.oauth2.apple.token.expire}
+  local:
+    frontend-redirect-uri: http://localhost:3000/mocklogin
   jwt:
     key: ${security.jwt.key}
     subject: ${security.jwt.subject}

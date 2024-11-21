@@ -6,7 +6,10 @@ import org.hibernate.annotations.ColumnDefault;
 import pull_up.global.entity.BaseEntity;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "examsheet")
@@ -41,4 +44,27 @@ public class Examsheet extends BaseEntity {
 
     @OneToMany(mappedBy = "examsheet", fetch = FetchType.LAZY)
     private List<Exam> exams;
+
+    private Examsheet(String examTitle, Map<Integer, Long> problemMap) {
+        this.examTitle = examTitle;
+        this.problemsheets = new ArrayList<>();
+        for (Map.Entry<Integer, Long> entry : problemMap.entrySet()) {
+            problemsheets.add(new Problemsheet(entry.getKey(), entry.getValue()));
+        }
+        this.examCount = 0;
+        this.averageScore = 0.0;
+        this.averageDuration = Duration.ZERO;
+    }
+
+    public static Examsheet create(String examTitle, Map<Integer, Long> problemMap) {
+        return new Examsheet(examTitle, problemMap);
+    }
+
+    public Map<Integer, Long> getProblemMap() {
+        Map<Integer, Long> problemMap = new HashMap<>();
+        for (Problemsheet problemsheet : problemsheets) {
+            problemMap.put(problemsheet.getProblemNumber(), problemsheet.getProblemId());
+        }
+        return problemMap;
+    }
 }

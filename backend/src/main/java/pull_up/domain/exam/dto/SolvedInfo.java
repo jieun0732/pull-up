@@ -10,6 +10,7 @@ import java.util.*;
 public record SolvedInfo() {
     public record Response(
             Entry entry,
+            Long evenlyExamId,
             Boolean isEvenlyExamStarted,
             Boolean isEvenlyExamFinished,
             Integer lastSolvedEvenlyExamProblemNumber,
@@ -70,6 +71,7 @@ public record SolvedInfo() {
             }
 
             return new Response(entry,
+                    evenlyExam != null ? evenlyExam.getId() : null,
                     evenlyExam != null,
                     evenlyExam != null && evenlyExam.getIsFinished(),
                     evenlyExam != null && evenlyExam.getLastSolvedProblem() != null? evenlyExam.getLastSolvedProblem() : -1,

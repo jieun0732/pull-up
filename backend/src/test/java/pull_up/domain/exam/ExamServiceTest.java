@@ -42,7 +42,7 @@ class ExamServiceTest {
         mockExamRepository = mock(ExamRepository.class);
         mockMemberRepository = mock(MemberRepository.class);
         mockProblemRepository = mock(ProblemRepository.class);
-        suit = new ExamService(mockExamRepository, mockMemberRepository, mockProblemRepository);
+        suit = new ExamService(mockExamRepository, mockMemberRepository, mockProblemRepository, null);
 
         member = MemberFixture.APPLE_USER.get();
     }
@@ -141,8 +141,8 @@ class ExamServiceTest {
     }
 
     @Test
-    @DisplayName("시험 시작 테스트")
-    void testStartExam() {
+    @DisplayName("시험 시작 테스트 - 골고루")
+    void testStartEvenlyExam() {
         // given
         Problem problem1 = ProblemFixture.LANGUAGE_COMPARE_1.get();
         Start.EvenlyRequest startReq = new Start.EvenlyRequest(member.getId(), Entry.LANGUAGE);
@@ -161,6 +161,20 @@ class ExamServiceTest {
         assertThat(startRes.question()).isEqualTo(problem1.getQuestionAsString());
         assertThat(startRes.example()).isEqualTo(problem1.getExampleAsString());
         assertThat(startRes.choices()).contains(problem1.getChoice1(), problem1.getChoice2(), problem1.getChoice3(), problem1.getChoice4(), problem1.getChoice5());
+    }
+
+    @Test
+    @DisplayName("시험 시작 테스트 - 모의고사")
+    void testStartMockExam() {
+        // given
+        Member member = MemberFixture.APPLE_USER.get();
+        Start.MockExamRequest startReq = new Start.MockExamRequest(member.getId());
+
+        // when
+        Start.Response startRes = suit.start(startReq);
+
+        // then
+        assertThat(startRes).isNotNull();
     }
 
     @Test

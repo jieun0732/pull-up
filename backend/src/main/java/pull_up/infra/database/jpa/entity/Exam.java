@@ -11,10 +11,7 @@ import pull_up.global.entity.BaseEntity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static pull_up.domain.exam.ExamType.*;
 
@@ -110,6 +107,11 @@ public class Exam extends BaseEntity {
             problemTypes.add(problem.getNormalProblemType());
         }
         return problems;
+    }
+
+    public static Exam startMockExam(ExamType examType, Member startMember, Map<Integer, Long> examSheet, List<Problem> problemList) {
+        // TODO: 모의고사 시작 로직 구현
+        return null;
     }
 
     public Answer submit(Integer problemNumber, Integer submitAnswer) {

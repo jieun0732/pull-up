@@ -8,6 +8,7 @@ import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.exam.exception.ExamException;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
+import pull_up.domain.examsheet.ExamsheetRepository;
 import pull_up.domain.member.exception.MemberException;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Answer;
@@ -27,6 +28,7 @@ public class ExamService {
     private final ExamRepository examRepository;
     private final MemberRepository memberRepository;
     private final ProblemRepository problemRepository;
+    private final ExamsheetRepository examsheetRepository;
 
     public SolvedInfo.Response getSolvedInfo(Long memberId, Entry entry) {
         List<Exam> solvedExamsInDB = examRepository.findAllByMemberIdAndEntry(memberId, entry);
@@ -57,6 +59,13 @@ public class ExamService {
     }
 
     public Start.Response start(Start.MockExamRequest startReq) {
+        Member startMember = memberRepository.findById(startReq.memberId())
+                .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
+
+        Map<Integer, Long> examSheet = examsheetRepository.findByExamTitle("모의고사").getProblemMap();
+        List<Problem> problemList = problemRepository.findAllById(examSheet.values());
+        Exam startedExam = Exam.startMockExam(ExamType.MOCK_EXAM, startMember, examSheet, problemList);
+
         return Start.Response.toDto(null);
     }
 

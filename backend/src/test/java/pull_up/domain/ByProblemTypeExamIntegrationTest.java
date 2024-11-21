@@ -30,7 +30,7 @@ public class ByProblemTypeExamIntegrationTest {
 
     @BeforeEach
     void init() {
-        examService = new ExamService(examRepository, memberRepository, problemRepository);
+        examService = new ExamService(examRepository, memberRepository, problemRepository, null);
     }
 
     @Test
@@ -50,6 +50,7 @@ public class ByProblemTypeExamIntegrationTest {
 
         // then [백] 시험현황 전송
         assertThat(solvedInfoRes).isInstanceOf(SolvedInfo.Response.class);
+        assertThat(solvedInfoRes.evenlyExamId()).isNotNull();
         assertThat(solvedInfoRes.isEvenlyExamStarted()).isTrue();
         assertThat(solvedInfoRes.isEvenlyExamFinished()).isFalse();
         assertThat(solvedInfoRes.lastSolvedEvenlyExamProblemNumber()).isEqualTo(1);
