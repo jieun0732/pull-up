@@ -53,7 +53,7 @@ public class ExamController {
     }
 
     @Operation(summary = "채점", description = "답안을 채점합니다.", tags = "모의고사")
-    @PostMapping("/grade")
+    @PostMapping("/mock-exam/grade")
     public ResponseEntity<Grade.Response> grade(@RequestBody Grade.Request request) {
         return new ResponseEntity<>(examService.grade(request), HttpStatus.OK);
     }

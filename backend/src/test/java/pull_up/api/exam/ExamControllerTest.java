@@ -9,9 +9,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pull_up.domain.exam.ExamService;
+import pull_up.domain.exam.dto.Grade;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.exam.dto.Submit;
 import pull_up.domain.problem.Entry;
+
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,7 +55,11 @@ class ExamControllerTest {
         mockMvc.perform(post("/api/exams/submit").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(submitRequest)))
                 .andExpect(status().is(200));
 
-        mockMvc.perform(get("/api/exams/next/1").param("problemNumber", "1"))
+        Grade.Request gradeRequest = new Grade.Request(1L, List.of());
+        mockMvc.perform(post("/api/exams/mock-exam/grade").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(gradeRequest)))
+                .andExpect(status().is(200));
+
+        mockMvc.perform(get("/api/exams/next/1").param("problemNumber", "2"))
                 .andExpect(status().is(200));
 
         mockMvc.perform(patch("/api/exams/end/1"))
