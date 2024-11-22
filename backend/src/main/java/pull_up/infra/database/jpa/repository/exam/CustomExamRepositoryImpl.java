@@ -6,8 +6,7 @@ import pull_up.domain.exam.ExamType;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static pull_up.infra.database.jpa.entity.QAnswer.answer;
 import static pull_up.infra.database.jpa.entity.QExam.exam;
@@ -24,12 +23,13 @@ public class CustomExamRepositoryImpl implements CustomExamRepository {
 
 
     @Override
-    public List<Exam> findAllByMemberIdAndEntry(Long memberId, Entry entry) {
-        List<Exam> exams = qf.selectFrom(exam)
+    public Map<String, Exam> findAllEvenlyAndProblemTypeExamMap(Long memberId, Entry entry) {
+        List<Exam> byProblemTypeExam = qf.selectFrom(exam)
                 .leftJoin(exam.member, member)
                 .leftJoin(exam.answers, answer).fetchJoin()
                 .leftJoin(answer.problem, problem).fetchJoin()
                 .where(exam.member.id.eq(memberId)
+                        .and(exam.examType.eq(ExamType.BY_PROBLEM_TYPE))
                         .and(answer.problem.entry.eq(entry)))
                 .fetch();
 
@@ -41,7 +41,13 @@ public class CustomExamRepositoryImpl implements CustomExamRepository {
                         .and(exam.examType.eq(ExamType.EVENLY)))
                 .fetchFirst();
 
-        exams.add(evenlyExam);
-        return exams;
+        Map<String, Exam> examMap = new HashMap<>();
+
+        if (evenlyExam != null) examMap.put(ExamType.EVENLY.name(), evenlyExam);
+        for (Exam exam : byProblemTypeExam) {
+            examMap.put(exam.getAnswers().get(0).getProblem().getProblemType(), exam);
+        }
+
+        return examMap;
     }
 }

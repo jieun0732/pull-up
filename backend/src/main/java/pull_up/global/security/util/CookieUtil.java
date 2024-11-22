@@ -24,13 +24,16 @@ public class CookieUtil {
     @Value("${auth.cookie.max-age}")
     private Integer maxAge;
 
+    @Value("${auth.with-credential}")
+    private Boolean withCredential;
+
     public Cookie getSecureCookie(String token) {
         Cookie cookie = new Cookie("accessToken", token);
         cookie.setDomain(domain);
         cookie.setPath(path);
         cookie.setMaxAge(maxAge);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setHttpOnly(withCredential);
+        cookie.setSecure(withCredential);
         cookie.setAttribute("SameSite", "None");
 
         return cookie;

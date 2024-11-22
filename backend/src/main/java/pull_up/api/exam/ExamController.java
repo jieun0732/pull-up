@@ -19,7 +19,7 @@ public class ExamController {
 
     private final ExamService examService;
 
-    @Operation(summary = "푼 문제 확인", description = "답안을 제출합니다.", tags = "골고루/유형별")
+    @Operation(summary = "푼 시험 확인", description = "풀었던 골고루 / 유형별 시험 현황을 확인합니다.", tags = "골고루/유형별")
     @GetMapping("/solved")
     public ResponseEntity<SolvedInfo.Response> getSolvedInfo(@RequestParam Long memberId, @RequestParam Entry entry) {
         return new ResponseEntity<>(examService.getSolvedInfo(memberId, entry), HttpStatus.OK);

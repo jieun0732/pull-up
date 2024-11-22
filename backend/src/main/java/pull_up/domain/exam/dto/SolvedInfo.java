@@ -1,5 +1,7 @@
 package pull_up.domain.exam.dto;
 
+import org.apache.catalina.core.FrameworkListener;
+import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.ProblemSummation;
 import pull_up.domain.exam.TempExam;
 import pull_up.domain.problem.Entry;
@@ -30,6 +32,7 @@ public record SolvedInfo() {
             public static List<ProblemTypeInfo> toList(Map<String, Exam> problemMap) {
                 List<ProblemTypeInfo> ret = new ArrayList<>();
                 for (Map.Entry<String, Exam> examEntry: problemMap.entrySet()) {
+                    if (examEntry.getKey().equals(ExamType.EVENLY.name())) continue;
                     ret.add(toDto(examEntry.getKey(), examEntry.getValue()));
                 }
                 return ret;
@@ -47,36 +50,26 @@ public record SolvedInfo() {
             }
         }
 
-        public static Response toDto(Entry entry, List<Exam> exams, Map<String, Integer> problemTypes) {
-            Exam evenlyExam = null;
-            Map<String, Exam> problemTypeExamMap = new HashMap<>();
+        public static Response toDto(Entry entry, Map<String, Exam> examMap) {
+            Exam evenlyExam = examMap.get(ExamType.EVENLY.name());
+            int problemTypeCount = evenlyExam != null? examMap.size() - 1 : examMap.size();  // evenly exam 제외
+            List<ProblemTypeInfo> problemTypeInfoList = ProblemTypeInfo.toList(examMap);
 
-            for (Exam exam : exams) {
-                switch (exam.getExamType()) {
-                    case EVENLY -> {
-                        evenlyExam = exam;
-                    }
-                    case BY_PROBLEM_TYPE -> {
-                        problemTypeExamMap.put(exam.getAnswers().get(0).getProblem().getProblemType(), exam);
-                    }
-                    case MOCK_EXAM -> {
-                        throw new IllegalArgumentException("Illegal Problem Type : " + exam.getExamType());
-                    }
-                }
-            }
-
-            for (Map.Entry<String, Integer> problemTypeEntry : problemTypes.entrySet()) {
-                if (problemTypeExamMap.containsKey(problemTypeEntry.getKey())) continue;
-                problemTypeExamMap.put(problemTypeEntry.getKey(), new TempExam(problemTypeEntry.getValue()));
-            }
+            if (evenlyExam == null) return new Response(entry,
+                    null,
+                    false,
+                    false,
+                    -1,
+                    problemTypeCount,
+                    problemTypeInfoList);
 
             return new Response(entry,
-                    evenlyExam != null ? evenlyExam.getId() : null,
-                    evenlyExam != null,
-                    evenlyExam != null && evenlyExam.getIsFinished(),
-                    evenlyExam != null && evenlyExam.getLastSolvedProblem() != null? evenlyExam.getLastSolvedProblem() : -1,
-                    problemTypeExamMap.size(),
-                    ProblemTypeInfo.toList(problemTypeExamMap));
+                    evenlyExam.getId(),
+                    true,
+                    evenlyExam.getIsFinished(),
+                    evenlyExam.getLastSolvedProblem() != null? evenlyExam.getLastSolvedProblem() : -1,
+                    problemTypeCount,
+                    problemTypeInfoList);
         }
     }
 }

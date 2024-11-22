@@ -17,18 +17,20 @@
       <br>
       With Apple: <a href="/oauth2/authorization/apple">click here</a>
       <br>
-      get Fetch with token(local): <a href="javascript:getFetchTest(localBaseUrl)" >click here</a>
+      Local Login: <a href="javascript:postLocalLogin(localBaseUrl)">click here</a>
       <br>
-      get Fetch with token(server): <a href="javascript:getFetchTest(serverBaseUrl)" >click here</a>
+      get Solved Info: <a href="javascript:getSolvedInfo(localBaseUrl)">click here</a>
+      <br>
     </div>
     <div class="container authenticated" style="display: none">Logged in as: <span id="user"></span></div>
     <script type="text/javascript">
-      const localBaseUrl = "http://localhost:8080";
+      const localBaseUrl = "http://localhost:3000";
       const serverBaseUrl = "https://pullup-api.shop";
-      async function getFetchTest(baseUrl) {
-        const params = new URLSearchParams(location.search);
-        const response = await fetch(baseUrl + "/api/pull-up/examLS/incorrect-answerLS/1?memberId=" + params.get("memberId"), {
-          method: "GET",
+      let memberId;
+
+      async function postLocalLogin(baseUrl) {
+        const response = await fetch(baseUrl + "/api/oauth2/callback/local", {
+          method: "POST",
           mode: "cors",
           headers: {
             "Content-Type": "application/json"
@@ -36,6 +38,11 @@
         });
         const jsonData = await response.json();
         console.log(jsonData);
+        memberId = jsonData.memberId
+      }
+
+      async function getSolvedInfo(baseUrl) {
+        const response = await fetch(baseUrl + "/api/exams/solved?memberId=" + memberId + "&entry=MATH")
       }
     </script>
   </body>

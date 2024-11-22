@@ -42,7 +42,6 @@ class OAuth2ControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(suit).build();
         ReflectionTestUtils.setField(suit, "appleRedirectUri", "https//example.com");
         ReflectionTestUtils.setField(suit, "kakaoRedirectUri", "https//example.com");
-        ReflectionTestUtils.setField(suit, "localRedirectUri", "https//example.com");
         ReflectionTestUtils.setField(jwtUtil, "key", "bvTAyAcnI3j1NPxTfJh9KLhBLQrrKdoS");
         ReflectionTestUtils.setField(jwtUtil, "subject", "test subject");
         ReflectionTestUtils.setField(jwtUtil, "issuer", "test issuer");
@@ -108,6 +107,6 @@ class OAuth2ControllerTest {
     void testLocalLogin() throws Exception {
         when(mockService.getLocalUser()).thenReturn(new OAuth2LoginResponseDto(true,99999999L, "local", "test user", "test@example.com"));
         mockMvc.perform(post("/api/oauth2/callback/local")).andDo(print())
-                .andExpect(status().is(302));
+                .andExpect(status().is(200));
     }
 }

@@ -9,6 +9,7 @@ import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Exam;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,11 +27,11 @@ class ExamRepositoryTest {
         Entry entry = Entry.MATH;
 
         // when
-        List<Exam> exams = suit.findAllByMemberIdAndEntry(memberId, entry);
+        Map<String, Exam> exams = suit.findAllEvenlyAndProblemTypeExamMap(memberId, entry);
 
         // then
         assertThat(exams).hasSize(2);
-        assertThat(exams).anySatisfy(exam -> assertThat(exam.getExamType()).isEqualTo(ExamType.EVENLY))
-                .anySatisfy(exam -> assertThat(exam.getExamType()).isEqualTo(ExamType.BY_PROBLEM_TYPE));
+        assertThat(exams).hasFieldOrProperty(ExamType.EVENLY.name());
+        assertThat(exams).hasFieldOrProperty("속력");
     }
 }

@@ -4,7 +4,8 @@ import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Exam;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CustomExamRepository {
-    List<Exam> findAllByMemberIdAndEntry(Long memberId, Entry entry);
+    Map<String, Exam> findAllEvenlyAndProblemTypeExamMap(Long memberId, Entry entry);
 }

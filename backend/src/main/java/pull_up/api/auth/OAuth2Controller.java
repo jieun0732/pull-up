@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,12 +32,12 @@ public class OAuth2Controller {
     private final OAuth2LoginService oAuth2LoginService;
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
+
     @Value("${auth.apple.frontend-redirect-uri}")
     private String appleRedirectUri;
+
     @Value("${auth.kakao.frontend-redirect-uri}")
     private String kakaoRedirectUri;
-    @Value("${auth.local.frontend-redirect-uri}")
-    private String localRedirectUri;
 
     @Operation(summary = "애플 SNS 로그인", description = "애플 SNS 로그인을 시도합니다.", tags = "인증")
     @PostMapping("/apple")
@@ -64,32 +66,34 @@ public class OAuth2Controller {
 
     @Operation(summary = "로컬 SNS 로그인[로컬 전용]", description = "로컬 SNS 로그인을 시도합니다.", tags = "인증")
     @PostMapping("/local")
-    RedirectView localLogin(HttpServletRequest request, HttpServletResponse response) {
+    ResponseEntity<Properties> localLogin(HttpServletResponse response) {
         OAuth2LoginResponseDto localUser = oAuth2LoginService.getLocalUser();
         response.addCookie(cookieUtil.getSecureCookie(jwtUtil.getAccessToken(localUser)));
-        return setRedirect(localUser);
+        return new ResponseEntity<>(getUserDtoProperty(localUser), HttpStatus.OK);
     }
 
     public RedirectView setRedirect(OAuth2LoginResponseDto userDto) {
-        Properties attributes = new Properties();
-        attributes.setProperty("firstLogin", userDto.firstLogin().toString());
-        attributes.setProperty("memberId", userDto.memberId().toString());
-        attributes.setProperty("name", userDto.name());
-        attributes.setProperty("email", userDto.email());
-        attributes.setProperty("provider", userDto.provider());
-
+        Properties attributes = getUserDtoProperty(userDto);
         RedirectView redirectView = new RedirectView();
 
         if (userDto.provider().equalsIgnoreCase("apple"))
             redirectView.setUrl(appleRedirectUri);
         else if (userDto.provider().equalsIgnoreCase("kakao"))
             redirectView.setUrl(kakaoRedirectUri);
-        else if (userDto.provider().equalsIgnoreCase("local"))
-            redirectView.setUrl(localRedirectUri);
         else throw new AuthException(AuthError.NOT_PROVIDED_OAUTH2_VENDOR_REQUEST);
 
         redirectView.setAttributes(attributes);
 
         return redirectView;
+    }
+
+    private Properties getUserDtoProperty(OAuth2LoginResponseDto userDto) {
+        Properties attributes = new Properties();
+        attributes.setProperty("firstLogin", userDto.firstLogin().toString());
+        attributes.setProperty("memberId", userDto.memberId().toString());
+        attributes.setProperty("name", userDto.name());
+        attributes.setProperty("email", userDto.email());
+        attributes.setProperty("provider", userDto.provider());
+        return attributes;
     }
 }

@@ -2,6 +2,9 @@ package pull_up.domain.member.dto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pull_up.domain.exam.ExamService;
+import pull_up.domain.exam.ExamType;
+import pull_up.domain.exam.TempExam;
 import pull_up.domain.exam.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Exam;
@@ -36,14 +39,14 @@ class SolvedInfoTest {
     @Test
     @DisplayName("Exams -> SolvedInfo 변환 테스트 : [case1] 아무 문제도 조회되지 않았을 때")
     void testToDto() {
-        Entry entry = Entry.MATH;
-        Map<String, Integer> problemTypesMap = FixtureRepository.getProblemTypesMap(entry, "용액의 농도");
-
         // given
-        List<Exam> exams = new ArrayList<>();
+        Entry entry = Entry.MATH;
+        Map<String, Exam> examMap = new HashMap<>();
+        examMap.put("용액의 농도", new TempExam(1));
+
 
         // when
-        SolvedInfo.Response response = SolvedInfo.Response.toDto(entry, exams, problemTypesMap);
+        SolvedInfo.Response response = SolvedInfo.Response.toDto(entry, examMap);
 
         // then
         assertThat(response.isEvenlyExamStarted()).isFalse();
@@ -55,17 +58,15 @@ class SolvedInfoTest {
     @Test
     @DisplayName("Exams -> SolvedInfo 변환 테스트 : [case2] 유형별 문제 다 풀었을 때")
     void testToDto2() {
-        Entry entry = Entry.MATH;
-        Map<String, Integer> problemTypesMap = FixtureRepository.getProblemTypesMap(entry, "용액의 농도");
-
         // given
-        List<Exam> exams = new ArrayList<>();
+        Entry entry = Entry.MATH;
         Exam problemTypeExam = FixtureRepository.getProblemTypeExam(1L, Entry.MATH, "용액의 농도");
         problemTypeExam.submit(1, 1);
-        exams.add(problemTypeExam);
+        Map<String, Exam> examMap = new HashMap<>();
+        examMap.put("용액의 농도", problemTypeExam);
 
         // when
-        SolvedInfo.Response response = SolvedInfo.Response.toDto(entry, exams, problemTypesMap);
+        SolvedInfo.Response response = SolvedInfo.Response.toDto(entry, examMap);
 
         // then
         assertThat(response.isEvenlyExamStarted()).isFalse();
@@ -80,21 +81,20 @@ class SolvedInfoTest {
     @Test
     @DisplayName("Exams -> SolvedInfo 변환 테스트 : [case3] 골고루 문제 / 유형별 문제 다 풀었을 때")
     void testToDto3() {
-        Entry entry = Entry.MATH;
-        Map<String, Integer> problemTypesMap = FixtureRepository.getProblemTypesMap(entry, "용액의 농도");
-
         // given
-        List<Exam> exams = new ArrayList<>();
+        Entry entry = Entry.MATH;
         Exam evenlyExam = FixtureRepository.getEvenlyExam(1L, Entry.MATH);
         Exam problemTypeExam = FixtureRepository.getProblemTypeExam(1L, Entry.MATH, "용액의 농도");
         evenlyExam.submit(1, 1);
         evenlyExam.submit(2, 1);
         problemTypeExam.submit(1, 1);
-        exams.add(evenlyExam);
-        exams.add(problemTypeExam);
+
+        Map<String, Exam> examMap = new HashMap<>();
+        examMap.put(ExamType.EVENLY.name(), evenlyExam);
+        examMap.put("용액의 농도",problemTypeExam);
 
         // when
-        SolvedInfo.Response response = SolvedInfo.Response.toDto(entry, exams, problemTypesMap);
+        SolvedInfo.Response response = SolvedInfo.Response.toDto(entry, examMap);
 
         // then
         assertThat(response.isEvenlyExamStarted()).isTrue();

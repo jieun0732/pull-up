@@ -57,7 +57,7 @@ class ExamServiceTest {
         problemTypesMap.put("용액의 농도", 2);
 
         // when
-        when(mockExamRepository.findAllByMemberIdAndEntry(memberId, entry)).thenReturn(List.of());
+        when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(new HashMap<>());
         when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
         SolvedInfo.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
 
@@ -83,13 +83,16 @@ class ExamServiceTest {
         Entry entry = Entry.MATH;
         Map<String, Integer> problemTypesMap = new HashMap<>();
         problemTypesMap.put("용액의 농도", 2);
+
+        Map<String, Exam> examMap = new HashMap<>();
         Exam evenlyExam = FixtureRepository.getEvenlyExam(memberId, entry);
         evenlyExam.submit(1, 2);
         evenlyExam.submit(2, 2);
         evenlyExam.end();
+        examMap.put(ExamType.EVENLY.name(), evenlyExam);
 
         // when
-        when(mockExamRepository.findAllByMemberIdAndEntry(memberId, entry)).thenReturn(List.of(evenlyExam));
+        when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(examMap);
         when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
         SolvedInfo.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
 
@@ -115,13 +118,17 @@ class ExamServiceTest {
         Entry entry = Entry.MATH;
         Map<String, Integer> problemTypesMap = new HashMap<>();
         problemTypesMap.put("용액의 농도", 2);
+
+        Map<String, Exam> examMap = new HashMap<>();
         Exam evenlyExam = FixtureRepository.getEvenlyExam(memberId, entry);
         Exam problemTypeExam = FixtureRepository.getProblemTypeExam(memberId, Entry.MATH, "용액의 농도");
         problemTypeExam.setId(1L);
         problemTypeExam.submit(1, 1);
+        examMap.put(ExamType.EVENLY.name(), evenlyExam);
+        examMap.put("용액의 농도", problemTypeExam);
 
         // when
-        when(mockExamRepository.findAllByMemberIdAndEntry(memberId, entry)).thenReturn(List.of(evenlyExam, problemTypeExam));
+        when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(examMap);
         when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
         SolvedInfo.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
 

@@ -16,8 +16,10 @@ import pull_up.infra.database.jpa.entity.Exam;
 import pull_up.infra.database.jpa.entity.Member;
 import pull_up.infra.database.jpa.entity.Problem;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static pull_up.domain.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
 
@@ -31,9 +33,15 @@ public class ExamService {
     private final ExamsheetRepository examsheetRepository;
 
     public SolvedInfo.Response getSolvedInfo(Long memberId, Entry entry) {
-        List<Exam> solvedExamsInDB = examRepository.findAllByMemberIdAndEntry(memberId, entry);
+        Map<String, Exam> examMap = examRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry);
         Map<String, Integer> problemTypesMap = problemRepository.findAllProblemTypeAndCountByEntry(entry);
-        return SolvedInfo.Response.toDto(entry, solvedExamsInDB, problemTypesMap);
+
+        for (Map.Entry<String, Integer> problemTypeEntry : problemTypesMap.entrySet()) {
+            if (examMap.containsKey(problemTypeEntry.getKey())) continue;
+            examMap.put(problemTypeEntry.getKey(), new TempExam(problemTypeEntry.getValue()));
+        }
+
+        return SolvedInfo.Response.toDto(entry, examMap);
     }
 
     public Start.Response start(Start.EvenlyRequest startReq) {
