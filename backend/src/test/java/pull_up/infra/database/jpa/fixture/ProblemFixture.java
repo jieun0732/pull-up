@@ -21,7 +21,7 @@ public enum ProblemFixture implements Fixture<Problem>{
     LANGUAGE_COMPARE_2(10L, 0, 0, 0D, LANGUAGE, "관계비교", "다음 중 관계가 다른 하나는?".getBytes(UTF_8), "".getBytes(UTF_8), "숙고 - 심려", "속박 - 구속", "채근 - 독촉", "추위 - 동상", "보호 - 보전", "4", "숙고 - 심려 : 유의관계 속박 - 구속 : 유의관계 채근 - 독촉 : 유의관계 추위 - 동상 : 원인- 결과 관계 보호 - 보전 : 유의관계 따라서, 관계가 다른 것은 4번 '추위 - 동상 '입니다. 다른 항목들은 서로 유사한 의미를 가지지만, 추위와 동상은 원인과 결과 관계를 가지고 있습니다.".getBytes(UTF_8)),
     LANGUAGE_REASONING_1(11L, 0, 0, 0D, LANGUAGE, "어휘추론", "다음 중 괄호 안에 상응하는 단어로 적합한 것은?".getBytes(UTF_8), "응고하다 : 굳어지다 = 방자하다 : ( )".getBytes(UTF_8), "공손하다", "누설하다", "교만하다", "겸양하다", "정중하다", "3", "제시된 단어 응고하다와 굳어지다는 모두 액체 따위가 엉겨서 뭉쳐 딱딱하게 굳음을 뜻하므로 유의관계입니다. 따라서 어려워하거나 조심스러워하는 태도가 없이 무례하고 건방지다는 의미의 '방자하다'와 유의관계인 '교만하다'가 적절합니다.".getBytes(UTF_8)),
     LANGUAGE_REASONING_2(12L, 0, 0, 0D, LANGUAGE, "어휘추론", "다음 중 괄호 안에 상응하는 단어로 적합한 것은?".getBytes(UTF_8), "감성 : 자극 = 화석 : ( )".getBytes(UTF_8), "증명", "발명", "발굴", "퇴적", "생산", "3", "제시된 단어 공감대와 형성은 '공감대를 형성하다'로 쓸 수 있으므로 목적어와 서술어의 관계입니다. 따라서 '체력'을 목적어로 쓸 수 있는 ''발굴'이 적절합니다.".getBytes(UTF_8));
-
+    // 정답 : 32211 / 44324 / 33
     private final Long id;
     private final Integer totalAttempts;
     private final Integer incorrectAttempts;

@@ -9,7 +9,9 @@ import pull_up.infra.database.jpa.fixture.MemberFixture;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,7 +44,7 @@ class ExamTest {
         Member member = MemberFixture.APPLE_USER.get();
 
         // when
-        Exam start = Exam.start(ExamType.EVENLY, member, problemList);
+        Exam start = Exam.startEvenlyExam(member, problemList);
 
         // then
         assertThat(start.getExamType()).isEqualTo(ExamType.EVENLY);
@@ -58,16 +60,33 @@ class ExamTest {
         Member member = MemberFixture.APPLE_USER.get();
 
         // when
-        Exam start = Exam.start(ExamType.BY_PROBLEM_TYPE, member, problemList);
+        Exam start = Exam.startByProblemTypeExam(member, problemList);
 
         // then
         assertThat(start.getExamType()).isEqualTo(ExamType.BY_PROBLEM_TYPE);
         assertThat(start.getMember()).isEqualTo(member);
         assertThat(start.getAnswers()).hasSize(2);
     }
+
+    @Test
+    @DisplayName("모의고사 생성 테스트")
+    void testStartMockExam() {
+        // given
+        Member member = MemberFixture.APPLE_USER.get();
+        List<Problem> problemList = FixtureRepository.getProblemList();
+        Examsheet examsheet = FixtureRepository.getExamsheet("모의고사");
+
+        // when
+        Exam start = Exam.startMockExam(member, problemList, examsheet);
+
+        // then
+        assertThat(start.getExamType()).isEqualTo(ExamType.MOCK_EXAM);
+        assertThat(start.getMember()).isEqualTo(member);
+        assertThat(start.getAnswers()).hasSize(12);
+    }
     
     @Test
-    @DisplayName("골고루 문제 답안 제출 테스트")
+    @DisplayName("문제 답안 제출 테스트")
     void testSubmit() {
         // given
         Member member = MemberFixture.APPLE_USER.get();
@@ -98,6 +117,38 @@ class ExamTest {
         // then2
         assertThat(exam.getAnswers()).contains(submittedAnswer);
         assertThat(exam.getScore()).isEqualTo(50);
+    }
+
+    @Test
+    @DisplayName("모의고사 채점 테스트")
+    void testGrade() {
+        // given
+        Member member = MemberFixture.APPLE_USER.get();
+        Exam exam = FixtureRepository.getMockExam(member.getId());
+        Map<Integer, Integer> answerSheet = new HashMap<>();
+        answerSheet.put(1, 3);
+        answerSheet.put(2, 3);
+        answerSheet.put(3, 3);
+        answerSheet.put(4, 3);
+        answerSheet.put(5, 3);
+        answerSheet.put(6, 3);
+        answerSheet.put(7, 3);
+        answerSheet.put(8, 3);
+        answerSheet.put(9, 3);
+        answerSheet.put(10, 3);
+        answerSheet.put(11, 3);
+        answerSheet.put(12, 3);
+
+        // when
+        exam.grade(answerSheet);
+
+        // then
+        assertThat(exam.getAnswers()).hasSize(12)
+                .allSatisfy(answer -> assertThat(answer.getIsSubmitted()).isTrue());
+        assertThat(exam.getScore()).isEqualTo(33);
+        assertThat(exam.getDuration()).isNotNull();
+        assertThat(exam.getExamsheet().getExamCount()).isEqualTo(1);
+        assertThat(exam.getExamsheet().getAverageScore()).isEqualTo(33);
     }
 
     @Test

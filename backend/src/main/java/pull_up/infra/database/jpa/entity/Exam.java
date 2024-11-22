@@ -8,6 +8,7 @@ import pull_up.domain.exam.ProblemSummation;
 import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.exam.exception.ExamException;
 import pull_up.global.entity.BaseEntity;
+import pull_up.infra.database.jpa.embedded.Problemsheet;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -67,33 +68,48 @@ public class Exam extends BaseEntity {
         this.member = member;
     }
 
-    public static Exam start(ExamType examType, Member member, List<Problem> problemList) {
-        return switch (examType) {
-            case EVENLY -> startEvenlyExam(member, problemList);
-            case BY_PROBLEM_TYPE -> startByProblemTypeExam(member, problemList);
-            case MOCK_EXAM -> throw new UnsupportedOperationException();
-        };
+    public Integer getLastSolvedProblem() {
+        Integer problemNumber = null;
+        answers.sort(Comparator.comparing(Answer::getProblemNumber));
+        for (Answer answer : answers) {
+            if (answer.getIsSubmitted()) problemNumber = answer.getProblemNumber();
+        }
+        return problemNumber;
     }
 
-    private static Exam startByProblemTypeExam(Member member, List<Problem> problems) {
+    public static Exam startEvenlyExam(Member member, List<Problem> problemList) {
+        Exam exam = new Exam(EVENLY, member);
+        List<Problem> problems = selectEvenlyProblems(problemList);
+        setEmptyAnswers(problems, exam);
+        return exam;
+    }
+
+    public static Exam startByProblemTypeExam(Member member, List<Problem> problems) {
         Exam exam = new Exam(BY_PROBLEM_TYPE, member);
         setEmptyAnswers(problems, exam);
         return exam;
     }
 
+    public static Exam startMockExam(Member member, List<Problem> problemList, Examsheet examSheet) {
+        Exam exam = new Exam(MOCK_EXAM, member);
+        setEmptyAnswers(Problemsheet.getProblemSheetMap(problemList, examSheet), exam);
+        exam.examsheet = examSheet;
+        return exam;
+    }
+
+    private static void setEmptyAnswers(Map<Integer, Problem> problemSheet, Exam exam) {
+        List<Answer> answers = new ArrayList<>(problemSheet.size());
+        for (Map.Entry<Integer, Problem> entry : problemSheet.entrySet()) {
+            answers.add(Answer.makeEmptyAnswer(exam, entry.getValue(), entry.getKey()));
+        }
+        exam.answers = answers;
+    }
     private static void setEmptyAnswers(List<Problem> problems, Exam exam) {
         List<Answer> answers = new ArrayList<>(problems.size());
         for (int i = 1; i <= problems.size(); i++) {
             answers.add(Answer.makeEmptyAnswer(exam, problems.get(i - 1), i));
         }
         exam.answers = answers;
-    }
-
-    static Exam startEvenlyExam(Member member, List<Problem> problemList) {
-        Exam exam = new Exam(EVENLY, member);
-        List<Problem> problems = selectEvenlyProblems(problemList);
-        setEmptyAnswers(problems, exam);
-        return exam;
     }
 
     // 유형별로 1개의 문제씩 총 10개만 담기
@@ -109,11 +125,6 @@ public class Exam extends BaseEntity {
         return problems;
     }
 
-    public static Exam startMockExam(ExamType examType, Member startMember, Map<Integer, Long> examSheet, List<Problem> problemList) {
-        // TODO: 모의고사 시작 로직 구현
-        return null;
-    }
-
     public Answer submit(Integer problemNumber, Integer submitAnswer) {
         Answer answer = getAnswerByProblemNumber(problemNumber);
         answer.mark(submitAnswer);
@@ -121,6 +132,16 @@ public class Exam extends BaseEntity {
         calculateDuration();
         isFinished = getProblemSummation().getLeftProblemCount() == 0;
         return answer;
+    }
+
+    public void grade(Map<Integer, Integer> answerSheet) {
+        for (Answer answer : answers) {
+            answer.mark(answerSheet.get(answer.getProblemNumber()));
+        }
+        score = calculateScore();
+        calculateDuration();
+        examsheet.mark(score, duration);
+        isFinished = true;
     }
 
     private Integer calculateScore() {
@@ -149,25 +170,12 @@ public class Exam extends BaseEntity {
 
     private void calculateDuration() {
         LocalDateTime now = LocalDateTime.now();
-        if (notSaved()) {
+        if (endTime == null) {
             endTime = now;
             duration = Duration.between(startTime, endTime);
         } else {
             duration = duration.plus(Duration.between(endTime, now));
             endTime = now;
         }
-    }
-
-    private boolean notSaved() {
-        return endTime == null;
-    }
-
-    public Integer getLastSolvedProblem() {
-        Integer problemNumber = null;
-        answers.sort(Comparator.comparing(Answer::getProblemNumber));
-        for (Answer answer : answers) {
-            if (answer.getIsSubmitted()) problemNumber = answer.getProblemNumber();
-        }
-        return problemNumber;
     }
 }

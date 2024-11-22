@@ -2,7 +2,9 @@ package pull_up.infra.database.jpa.entity;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pull_up.infra.database.jpa.fixture.FixtureRepository;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +38,37 @@ class ExamsheetTest {
                     assertThat(problemsheet.getProblemNumber()).isEqualTo(3);
                     assertThat(problemsheet.getProblemId()).isEqualTo(3L);
                 });
+    }
+
+    @Test
+    @DisplayName("시험지 표시 테스트")
+    void testMark() {
+        // given
+        Examsheet examsheet = FixtureRepository.getExamsheet("모의고사");
+
+        // when
+        examsheet.mark(30, Duration.ofSeconds(10));
+
+        // then
+        assertThat(examsheet.getExamCount()).isEqualTo(1);
+        assertThat(examsheet.getAverageScore()).isEqualTo(30);
+        assertThat(examsheet.getAverageDuration()).isEqualTo(Duration.ofSeconds(10));
+
+        // when 2
+        examsheet.mark(50, Duration.ofSeconds(20));
+
+        // then 2
+        assertThat(examsheet.getExamCount()).isEqualTo(2);
+        assertThat(examsheet.getAverageScore()).isEqualTo(40);
+        assertThat(examsheet.getAverageDuration()).isEqualTo(Duration.ofSeconds(15));
+
+        // when 3
+        examsheet.mark(0, Duration.ofSeconds(0));
+
+        // then 2
+        assertThat(examsheet.getExamCount()).isEqualTo(3);
+        assertThat(examsheet.getAverageScore()).isEqualTo((double) 80 / 3);
+        assertThat(examsheet.getAverageDuration()).isEqualTo(Duration.ofSeconds(10));
     }
 
 }

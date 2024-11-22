@@ -1,4 +1,4 @@
-package pull_up.api.exam;
+package pull_up.api.examsheet;
 
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,14 +8,19 @@ import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import pull_up.api.exam.ExamController;
 import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.dto.Start;
+import pull_up.domain.examsheet.ExamsheetService;
+import pull_up.domain.examsheet.dto.CreateExamsheet;
 import pull_up.domain.problem.Entry;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ByProblemTypeExamControllerTest {
+
+class ExamsheetControllerTest {
 
     MockMvc mockMvc;
 
@@ -23,17 +28,17 @@ class ByProblemTypeExamControllerTest {
 
     @BeforeEach
     void init() {
-        ExamService examService = Mockito.mock(ExamService.class);
-        ByProblemTypeExamController controller = new ByProblemTypeExamController(examService);
+        ExamsheetService mockService = Mockito.mock(ExamsheetService.class);
+        ExamsheetController controller = new ExamsheetController(mockService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         gson = new Gson();
     }
-
+    
     @Test
-    @DisplayName("전체 요청 테스트")
-    void testAllRequest() throws Exception {
-        Start.ByProblemTypeRequest startByProblemTypeRequest = new Start.ByProblemTypeRequest(1L, Entry.MATH, "test");
-        mockMvc.perform(post("/api/exams/by-problem-type/start").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(startByProblemTypeRequest)))
+    @DisplayName("전체 api 테스트")
+    void testAllAPI() throws Exception {
+        CreateExamsheet.Request request = new CreateExamsheet.Request("모의고사", null);
+        mockMvc.perform(post("/api/examsheets").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(request)))
                 .andExpect(status().is(200));
     }
 }

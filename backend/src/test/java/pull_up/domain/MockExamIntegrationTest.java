@@ -1,18 +1,21 @@
 package pull_up.domain;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pull_up.config.annotation.IntegrationTest;
 import pull_up.domain.dao.ExamRepository;
+import pull_up.domain.dao.MemberRepository;
+import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.dto.Grade;
+import pull_up.domain.exam.dto.Next;
 import pull_up.domain.exam.dto.Start;
-import pull_up.domain.examsheet.ExamsheetRepository;
+import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.examsheet.dto.CreateExamsheet;
 import pull_up.domain.examsheet.ExamsheetService;
+import pull_up.domain.problem.Entry;
 import pull_up.global.dto.MessageDto;
 import pull_up.infra.database.jpa.entity.Examsheet;
 
@@ -27,6 +30,12 @@ public class MockExamIntegrationTest {
     ExamRepository examRepository;
 
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    ProblemRepository problemRepository;
+
+    @Autowired
     ExamsheetRepository examsheetRepository;
 
     ExamsheetService examsheetService;
@@ -35,7 +44,7 @@ public class MockExamIntegrationTest {
     @BeforeEach
     void init() {
         examsheetService = new ExamsheetService(examsheetRepository);
-        examService = new ExamService(null, null, null, null);
+        examService = new ExamService(examRepository, memberRepository, problemRepository, examsheetRepository);
     }
 
     @Test
@@ -69,13 +78,29 @@ public class MockExamIntegrationTest {
         // when : [mockExamService] 모의고사 시작
         Start.Response startRes = examService.start(startReq);
 
-        // then : [backend] 전체 문제 전송
+        // then : [backend] 1번 문제 전송
         assertThat(startRes).isInstanceOf(Start.Response.class);
+        assertThat(startRes.examId()).isNotNull();
+        assertThat(startRes.totalProblemCount()).isEqualTo(4);
+        assertThat(startRes.leftProblemCount()).isEqualTo(3);
+        assertThat(startRes.entry()).isEqualTo(Entry.REASONING);
+        assertThat(startRes.problemNumber()).isEqualTo(1);
 
-        /* 3. 모의고사 채점(grade) */
+        /* 3. 특정문제 조회(next) */
+
+        Next.Response next = examService.next(startRes.examId(), 3);
+
+        assertThat(next).isInstanceOf(Next.Response.class);
+        assertThat(next.examId()).isEqualTo(startRes.examId());
+        assertThat(next.totalProblemCount()).isEqualTo(4);
+        assertThat(next.leftProblemCount()).isEqualTo(1);
+        assertThat(next.problemNumber()).isEqualTo(3);
+        assertThat(next.entry()).isEqualTo(Entry.REASONING);
+
+        /* 4. 모의고사 채점(grade) */
 
         // given : [frontend] grade.Request 문제별 답안 전송
-        Grade.Request gradeReq = new Grade.Request(1L, List.of(
+        Grade.Request gradeReq = new Grade.Request(startRes.examId(), List.of(
                 new Grade.Request.AnswerSheet(1, 3),
                 new Grade.Request.AnswerSheet(2, 3),
                 new Grade.Request.AnswerSheet(3, 3),
@@ -86,5 +111,10 @@ public class MockExamIntegrationTest {
 
         // then : [backend] grade.Response 채점결과 전송
         assertThat(gradeRes).isInstanceOf(Grade.Response.class);
+        assertThat(gradeRes.score()).isEqualTo(25);
+        assertThat(gradeRes.totalProblemCount()).isEqualTo(4);
+        assertThat(gradeRes.correctProblemCount()).isEqualTo(1);
+        assertThat(gradeRes.incorrectProblemCount()).isEqualTo(3);
+        assertThat(gradeRes.durationSecond()).isLessThan(1);
     }
 }

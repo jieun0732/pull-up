@@ -1,6 +1,11 @@
 package pull_up.domain.exam.dto;
 
+import pull_up.domain.exam.ProblemSummation;
+import pull_up.infra.database.jpa.entity.Exam;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public record Grade() {
     public record Request(
@@ -13,8 +18,32 @@ public record Grade() {
                 Integer submitAnswer
         ) {
         }
+
+        public Map<Integer, Integer> getAnswerSheet() {
+            Map<Integer, Integer> ret = new HashMap<>(answerSheets.size());
+            for (AnswerSheet answerSheet : answerSheets) {
+                ret.put(answerSheet.problemNumber(), answerSheet.submitAnswer());
+            }
+            return ret;
+        }
     }
 
     public record Response(
-    ) {}
+            Integer totalProblemCount,
+            Integer correctProblemCount,
+            Integer incorrectProblemCount,
+            Integer score,
+            Long durationSecond
+    ) {
+        public static Response toDto(Exam examInDB) {
+            ProblemSummation problemSummation = examInDB.getProblemSummation();
+            return new Response(
+                    problemSummation.getTotalProblemCount(),
+                    problemSummation.getCorrectProblemCount(),
+                    problemSummation.getIncorrectProblemCount(),
+                    examInDB.getScore(),
+                    examInDB.getDuration().toSeconds()
+            );
+        }
+    }
 }

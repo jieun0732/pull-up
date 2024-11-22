@@ -30,6 +30,7 @@ class CookieUtilTest {
         ReflectionTestUtils.setField(suit, "domain", domain);
         ReflectionTestUtils.setField(suit, "maxAge", maxAge);
         ReflectionTestUtils.setField(suit, "path", path);
+        ReflectionTestUtils.setField(suit, "withCredential", true);
 
         token = "1234";
         goodCookie = new Cookie("accessToken", token);

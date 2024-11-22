@@ -10,9 +10,11 @@ import pull_up.domain.exam.dto.Start;
 import pull_up.domain.exam.dto.Submit;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.exam.dto.SolvedInfo;
+import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.problem.Entry;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.infra.database.jpa.entity.Exam;
+import pull_up.infra.database.jpa.entity.Examsheet;
 import pull_up.infra.database.jpa.entity.Member;
 import pull_up.infra.database.jpa.entity.Problem;
 import pull_up.infra.database.jpa.fixture.FixtureRepository;
@@ -34,6 +36,7 @@ class ExamServiceTest {
     ExamRepository mockExamRepository;
     MemberRepository mockMemberRepository;
     ProblemRepository mockProblemRepository;
+    ExamsheetRepository mockExamsheetRepository;
 
     Member member;
 
@@ -42,7 +45,8 @@ class ExamServiceTest {
         mockExamRepository = mock(ExamRepository.class);
         mockMemberRepository = mock(MemberRepository.class);
         mockProblemRepository = mock(ProblemRepository.class);
-        suit = new ExamService(mockExamRepository, mockMemberRepository, mockProblemRepository, null);
+        mockExamsheetRepository = mock(ExamsheetRepository.class);
+        suit = new ExamService(mockExamRepository, mockMemberRepository, mockProblemRepository, mockExamsheetRepository);
 
         member = MemberFixture.APPLE_USER.get();
     }
@@ -175,13 +179,26 @@ class ExamServiceTest {
     void testStartMockExam() {
         // given
         Member member = MemberFixture.APPLE_USER.get();
+        Examsheet examSheet = FixtureRepository.getExamsheet("모의고사");
+        List<Problem> problemList = FixtureRepository.getProblemList();
         Start.MockExamRequest startReq = new Start.MockExamRequest(member.getId());
 
         // when
+        when(mockMemberRepository.findById(member.getId())).thenReturn(Optional.of(member));
+        when(mockExamsheetRepository.findByExamTitle("모의고사")).thenReturn(examSheet);
+        when(mockProblemRepository.findAllById(any())).thenReturn(problemList);
         Start.Response startRes = suit.start(startReq);
 
         // then
-        assertThat(startRes).isNotNull();
+        Problem problem1 = problemList.get(0);
+        assertThat(startRes.totalProblemCount()).isEqualTo(12);
+        assertThat(startRes.leftProblemCount()).isEqualTo(11);
+        assertThat(startRes.problemNumber()).isEqualTo(1);
+        assertThat(startRes.entry()).isEqualTo(problem1.getEntry());
+        assertThat(startRes.problemType()).isEqualTo(problem1.getProblemType());
+        assertThat(startRes.question()).isEqualTo(problem1.getQuestionAsString());
+        assertThat(startRes.example()).isEqualTo(problem1.getExampleAsString());
+        assertThat(startRes.choices()).contains(problem1.getChoice1(), problem1.getChoice2(), problem1.getChoice3(), problem1.getChoice4(), problem1.getChoice5());
     }
 
     @Test

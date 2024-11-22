@@ -9,7 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pull_up.domain.exam.ExamService;
+import pull_up.domain.exam.dto.Start;
 import pull_up.domain.exam.dto.Submit;
+import pull_up.domain.problem.Entry;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,9 +31,21 @@ class ExamControllerTest {
     }
 
     @Test
-    @DisplayName("전체 요청 테스트")
-    void testAllRequest() throws Exception {
+    @DisplayName("전체 api 테스트")
+    void testAllAPI() throws Exception {
         mockMvc.perform(get("/api/exams/solved").param("memberId", "1").param("entry", "MATH").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(200));
+
+        Start.EvenlyRequest startEvenlyRequest = new Start.EvenlyRequest(1L, Entry.MATH);
+        mockMvc.perform(post("/api/exams/evenly/start").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(startEvenlyRequest)))
+                .andExpect(status().is(200));
+
+        Start.ByProblemTypeRequest startByProblemTypeRequest = new Start.ByProblemTypeRequest(1L, Entry.MATH, "test");
+        mockMvc.perform(post("/api/exams/by-problem-type/start").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(startByProblemTypeRequest)))
+                .andExpect(status().is(200));
+
+        Start.MockExamRequest startMockExamRequest = new Start.MockExamRequest(1L);
+        mockMvc.perform(post("/api/exams/mock-exam/start").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(startMockExamRequest)))
                 .andExpect(status().is(200));
 
         Submit.Request submitRequest = new Submit.Request(1L, 1, 1);

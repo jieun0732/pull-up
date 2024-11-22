@@ -52,6 +52,7 @@ class OAuth2SuccessHandlerTest {
         ReflectionTestUtils.setField(cookieUtil, "domain", "https://example.com");
         ReflectionTestUtils.setField(cookieUtil, "maxAge", 1234);
         ReflectionTestUtils.setField(cookieUtil, "path", "/");
+        ReflectionTestUtils.setField(cookieUtil, "withCredential", true);
     }
 
     @Test

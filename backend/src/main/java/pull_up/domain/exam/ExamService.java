@@ -8,18 +8,14 @@ import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.exam.exception.ExamException;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
-import pull_up.domain.examsheet.ExamsheetRepository;
+import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.member.exception.MemberException;
 import pull_up.domain.problem.Entry;
-import pull_up.infra.database.jpa.entity.Answer;
-import pull_up.infra.database.jpa.entity.Exam;
-import pull_up.infra.database.jpa.entity.Member;
-import pull_up.infra.database.jpa.entity.Problem;
+import pull_up.infra.database.jpa.embedded.Problemsheet;
+import pull_up.infra.database.jpa.entity.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static pull_up.domain.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
 
@@ -47,9 +43,10 @@ public class ExamService {
     public Start.Response start(Start.EvenlyRequest startReq) {
         Member startMember = memberRepository.findById(startReq.memberId())
                 .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
-
         List<Problem> problemList = problemRepository.findAllByEntry(startReq.entry());
-        Exam startedExam = Exam.start(ExamType.EVENLY, startMember, problemList);
+
+        Exam startedExam = Exam.startEvenlyExam(startMember, problemList);
+
         examRepository.save(startedExam);
 
         return Start.Response.toDto(startedExam);
@@ -58,9 +55,10 @@ public class ExamService {
     public Start.Response start(Start.ByProblemTypeRequest startReq) {
         Member startMember = memberRepository.findById(startReq.memberId())
                 .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
-
         List<Problem> problemList = problemRepository.findAllByEntryAndProblemType(startReq.entry(), startReq.problemType());
-        Exam startedExam = Exam.start(ExamType.BY_PROBLEM_TYPE, startMember, problemList);
+
+        Exam startedExam = Exam.startByProblemTypeExam(startMember, problemList);
+
         examRepository.save(startedExam);
 
         return Start.Response.toDto(startedExam);
@@ -69,12 +67,14 @@ public class ExamService {
     public Start.Response start(Start.MockExamRequest startReq) {
         Member startMember = memberRepository.findById(startReq.memberId())
                 .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
+        Examsheet examSheet = examsheetRepository.findByExamTitle("모의고사");
+        List<Problem> problemList = problemRepository.findAllById(examSheet.getProblemMap().values());
 
-        Map<Integer, Long> examSheet = examsheetRepository.findByExamTitle("모의고사").getProblemMap();
-        List<Problem> problemList = problemRepository.findAllById(examSheet.values());
-        Exam startedExam = Exam.startMockExam(ExamType.MOCK_EXAM, startMember, examSheet, problemList);
+        Exam startedExam = Exam.startMockExam(startMember, problemList, examSheet);
 
-        return Start.Response.toDto(null);
+        examRepository.save(startedExam);
+
+        return Start.Response.toDto(startedExam);
     }
 
     public Submit.Response submit(Submit.Request submitReq) {
@@ -94,7 +94,12 @@ public class ExamService {
     }
 
     public Grade.Response grade(Grade.Request gradeReq) {
-        return null;
+        Exam examInDB = examRepository.findById(gradeReq.examId())
+                .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
+
+        examInDB.grade(gradeReq.getAnswerSheet());
+
+        return Grade.Response.toDto(examInDB);
     }
 
     public End.Response end(Long examId) {

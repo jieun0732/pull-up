@@ -49,6 +49,7 @@ class OAuth2ControllerTest {
         ReflectionTestUtils.setField(cookieUtil, "domain", "https://example.com");
         ReflectionTestUtils.setField(cookieUtil, "maxAge", 1234);
         ReflectionTestUtils.setField(cookieUtil, "path", "/");
+        ReflectionTestUtils.setField(cookieUtil, "withCredential", true);
     }
 
     @Test
@@ -75,22 +76,20 @@ class OAuth2ControllerTest {
     @DisplayName("로그인 완료 후 토큰 추가")
     void testAddRequestToken() throws Exception {
         // given
-        URI url = new URI("/api/oauth2/callback/apple");
-        URI url2 = new URI("/api/oauth2/callback/kakao");
         Member member = MemberFixture.APPLE_USER.get();
         member.setId(1L);
         OAuth2LoginResponseDto appleUser = OAuth2LoginResponseDto.of(member, true, SNSProvider.APPLE);
 
         // when
         when(mockService.getAppleUser(any(), any())).thenReturn(appleUser);
-        ResultActions result = mockMvc.perform(post(url).param("id_token", "test"));
+        ResultActions result = mockMvc.perform(post("/api/oauth2/callback/apple").param("id_token", "test"));
 
         // when 2
         Member member2 = MemberFixture.KAKAO_USER.get();
         member2.setId(1L);
         OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(member2, true, SNSProvider.APPLE);
         when(mockService.getKakaoUser((String) any())).thenReturn(kakaoUser);
-        ResultActions result2 = mockMvc.perform(get(url2).param("code", "test"));
+        ResultActions result2 = mockMvc.perform(get("/api/oauth2/callback/kakao").param("code", "test"));
 
         // then
         result.andExpect(cookie().exists("accessToken"))

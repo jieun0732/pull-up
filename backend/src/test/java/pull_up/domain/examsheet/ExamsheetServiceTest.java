@@ -3,6 +3,7 @@ package pull_up.domain.examsheet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.examsheet.dto.CreateExamsheet;
 import pull_up.global.dto.MessageDto;
 import pull_up.infra.database.jpa.entity.Examsheet;

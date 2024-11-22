@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import pull_up.global.entity.BaseEntity;
+import pull_up.infra.database.jpa.embedded.Problemsheet;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -66,5 +67,14 @@ public class Examsheet extends BaseEntity {
             problemMap.put(problemsheet.getProblemNumber(), problemsheet.getProblemId());
         }
         return problemMap;
+    }
+
+    public void mark(Integer score, Duration duration) {
+        Double totalScore = averageScore * examCount;
+        Duration totalDuration = averageDuration.multipliedBy(examCount);
+
+        this.examCount++;
+        this.averageScore = (totalScore + score) / examCount;
+        this.averageDuration = totalDuration.plus(duration).dividedBy(examCount);
     }
 }

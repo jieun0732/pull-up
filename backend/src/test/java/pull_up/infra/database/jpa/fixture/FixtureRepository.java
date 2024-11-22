@@ -1,16 +1,17 @@
 package pull_up.infra.database.jpa.fixture;
 
-import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.TempExam;
 import pull_up.domain.problem.Entry;
-import pull_up.infra.database.jpa.entity.Answer;
-import pull_up.infra.database.jpa.entity.Exam;
-import pull_up.infra.database.jpa.entity.Member;
-import pull_up.infra.database.jpa.entity.Problem;
+import pull_up.infra.database.jpa.embedded.Problemsheet;
+import pull_up.infra.database.jpa.entity.*;
 
 import java.util.*;
 
 public class FixtureRepository {
+
+    public static List<Problem> getProblemList() {
+        return getProblemList(ProblemFixture.values().length);
+    }
 
     public static List<Problem> getProblemList(int size) {
         if (size > ProblemFixture.values().length) throw new IllegalArgumentException();
@@ -18,6 +19,15 @@ public class FixtureRepository {
         List<Problem> problemList = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             problemList.add(ProblemFixture.values()[i].get());
+        }
+        return problemList;
+    }
+
+    public static List<Problem> getProblemList(Entry entry) {
+        List<Problem> problemList = new ArrayList<>();
+        for (ProblemFixture problemFixture : ProblemFixture.values()) {
+            if (problemFixture.get().getEntry() != entry) continue;
+            problemList.add(problemFixture.get());
         }
         return problemList;
     }
@@ -32,24 +42,40 @@ public class FixtureRepository {
         return problemList;
     }
 
-    public static List<Problem> getProblemList(Entry entry) {
-        List<Problem> problemList = new ArrayList<>();
-        for (ProblemFixture problemFixture : ProblemFixture.values()) {
-            if (problemFixture.get().getEntry() != entry) continue;
-            problemList.add(problemFixture.get());
-        }
-        return problemList;
+    public static Map<Integer, Long> getProblemsheet() {
+        List<Problem> problemList = FixtureRepository.getProblemList();
+        Map<Integer, Long> problemMap = new HashMap<>();
+        for (int i = 0; i < problemList.size(); i++)
+            problemMap.put(i + 1, problemList.get(i).getId());
+        return problemMap;
+    }
+
+    public static Map<Integer, Problem> getProblemSheetMap() {
+        List<Problem> problemList = FixtureRepository.getProblemList();
+        Examsheet examsheet = FixtureRepository.getExamsheet("모의고사");
+        return Problemsheet.getProblemSheetMap(problemList, examsheet);
+    }
+
+    public static Examsheet getExamsheet(String examTitle) {
+        return Examsheet.create(examTitle, getProblemsheet());
     }
 
     public static Exam getEvenlyExam(Long memberId, Entry entry) {
         Member member = getMember(memberId);
-        return Exam.start(ExamType.EVENLY, member, getProblemList(entry));
+        return Exam.startEvenlyExam(member, getProblemList(entry));
     }
 
     public static Exam getProblemTypeExam(Long memberId, Entry entry, String problemType) {
         Member member = getMember(memberId);
         List<Problem> problemList = getProblemList(entry, problemType);
-        return Exam.start(ExamType.BY_PROBLEM_TYPE, member, problemList);
+        return Exam.startByProblemTypeExam(member, problemList);
+    }
+
+    public static Exam getMockExam(Long memberId) {
+        Member member = getMember(memberId);
+        List<Problem> problemList = getProblemList();
+        Examsheet examsheet = getExamsheet("모의고사");
+        return Exam.startMockExam(member, problemList, examsheet);
     }
 
     public static Exam getEmptyProblemTypeExam(Entry entry, String problemType) {
