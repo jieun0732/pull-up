@@ -11,11 +11,11 @@ import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.member.exception.MemberException;
 import pull_up.domain.problem.Entry;
-import pull_up.infra.database.jpa.embedded.Problemsheet;
 import pull_up.infra.database.jpa.entity.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static pull_up.domain.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
 
@@ -28,7 +28,7 @@ public class ExamService {
     private final ProblemRepository problemRepository;
     private final ExamsheetRepository examsheetRepository;
 
-    public SolvedInfo.Response getSolvedInfo(Long memberId, Entry entry) {
+    public Solved.ByEntry.Response getSolvedInfo(Long memberId, Entry entry) {
         Map<String, Exam> examMap = examRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry);
         Map<String, Integer> problemTypesMap = problemRepository.findAllProblemTypeAndCountByEntry(entry);
 
@@ -37,7 +37,13 @@ public class ExamService {
             examMap.put(problemTypeEntry.getKey(), new TempExam(problemTypeEntry.getValue()));
         }
 
-        return SolvedInfo.Response.toDto(entry, examMap);
+        return Solved.ByEntry.Response.toDto(entry, examMap);
+    }
+
+    public Solved.MockExam.Response getSolvedInfo(Long memberId) {
+        Optional<Exam> exam = examRepository.findByMemberId(memberId);
+        return exam.map(Solved.MockExam.Response::toDto)
+                .orElseGet(Solved.MockExam.Response::empty);
     }
 
     public Start.Response start(Start.EvenlyRequest startReq) {

@@ -9,7 +9,7 @@ import pull_up.domain.exam.dto.Next;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.exam.dto.Submit;
 import pull_up.domain.dao.MemberRepository;
-import pull_up.domain.exam.dto.SolvedInfo;
+import pull_up.domain.exam.dto.Solved;
 import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.problem.Entry;
 import pull_up.domain.dao.ProblemRepository;
@@ -63,14 +63,14 @@ class ExamServiceTest {
         // when
         when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(new HashMap<>());
         when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
-        SolvedInfo.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
+        Solved.ByEntry.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
 
         // then
         assertThat(solvedInfo.entry()).isEqualTo(entry);
-        assertThat(solvedInfo.isEvenlyExamStarted()).isFalse();
-        assertThat(solvedInfo.isEvenlyExamFinished()).isFalse();
+        assertThat(solvedInfo.evenlyExamInfo().isStarted()).isFalse();
+        assertThat(solvedInfo.evenlyExamInfo().isFinished()).isFalse();
         assertThat(solvedInfo.problemTypeCount()).isEqualTo(1);
-        assertThat(solvedInfo.problemTypeInfos())
+        assertThat(solvedInfo.problemTypeExamInfos())
                 .anySatisfy(problemTypeInfo -> {
                     assertThat(problemTypeInfo.examId()).isNull();
                     assertThat(problemTypeInfo.problemType()).isEqualTo("용액의 농도");
@@ -98,14 +98,14 @@ class ExamServiceTest {
         // when
         when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(examMap);
         when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
-        SolvedInfo.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
+        Solved.ByEntry.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
 
         // then
         assertThat(solvedInfo.entry()).isEqualTo(entry);
-        assertThat(solvedInfo.isEvenlyExamStarted()).isTrue();
-        assertThat(solvedInfo.isEvenlyExamFinished()).isTrue();
+        assertThat(solvedInfo.evenlyExamInfo().isStarted()).isTrue();
+        assertThat(solvedInfo.evenlyExamInfo().isFinished()).isTrue();
         assertThat(solvedInfo.problemTypeCount()).isEqualTo(1);
-        assertThat(solvedInfo.problemTypeInfos())
+        assertThat(solvedInfo.problemTypeExamInfos())
                 .anySatisfy(problemTypeInfo -> {
                     assertThat(problemTypeInfo.examId()).isNull();
                     assertThat(problemTypeInfo.problemType()).isEqualTo("용액의 농도");
@@ -134,14 +134,14 @@ class ExamServiceTest {
         // when
         when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(examMap);
         when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
-        SolvedInfo.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
+        Solved.ByEntry.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
 
         // then
         assertThat(solvedInfo.entry()).isEqualTo(entry);
-        assertThat(solvedInfo.isEvenlyExamStarted()).isTrue();
-        assertThat(solvedInfo.isEvenlyExamFinished()).isFalse();
+        assertThat(solvedInfo.evenlyExamInfo().isStarted()).isTrue();
+        assertThat(solvedInfo.evenlyExamInfo().isFinished()).isFalse();
         assertThat(solvedInfo.problemTypeCount()).isEqualTo(1);
-        assertThat(solvedInfo.problemTypeInfos())
+        assertThat(solvedInfo.problemTypeExamInfos())
                 .anySatisfy(problemTypeInfo -> {
                     assertThat(problemTypeInfo.examId()).isNotNull();
                     assertThat(problemTypeInfo.isStarted()).isTrue();

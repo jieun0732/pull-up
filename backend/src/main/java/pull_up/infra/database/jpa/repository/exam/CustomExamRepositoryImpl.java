@@ -50,4 +50,12 @@ public class CustomExamRepositoryImpl implements CustomExamRepository {
 
         return examMap;
     }
+
+    @Override
+    public Optional<Exam> findByMemberId(Long memberId) {
+        return Optional.ofNullable(
+                qf.selectFrom(exam)
+                        .where(exam.member.id.eq(memberId))
+                        .fetchFirst());
+    }
 }

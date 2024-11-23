@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-class CreateProblemLTest {
+class CreateProblemTest {
 
     private String formatString = """
                  언어/col/관계비교/col/다음 중 관계가 다른 하나는?/col//col/희망(希望) - 기대(期待)/col/위기(危機) - 기회(機會)/col/절망(絶望) - 낙담(落膽)/col/승리(勝利) - 성공(成功)/col/도전(挑戰) - 시도(試圖)/col/2/col/희망- 기대: 유의관계

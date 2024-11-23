@@ -1,11 +1,9 @@
-package pull_up.domain.member.dto;
+package pull_up.domain.exam.dto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.TempExam;
-import pull_up.domain.exam.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Exam;
 import pull_up.infra.database.jpa.fixture.FixtureRepository;
@@ -14,7 +12,7 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SolvedInfoTest {
+class SolvedTest {
 
     @Test
     @DisplayName("Map -> ProblemTypeInfo 변환 테스트")
@@ -27,13 +25,13 @@ class SolvedInfoTest {
         problemMap.put(problemType2, FixtureRepository.getEmptyProblemTypeExam(Entry.MATH, problemType2));
 
         // when
-        List<SolvedInfo.Response.ProblemTypeInfo> list = SolvedInfo.Response.ProblemTypeInfo.toList(problemMap);
+        List<Solved.ByEntry.Response.ProblemTypeExamInfo> list = Solved.ByEntry.Response.ProblemTypeExamInfo.toList(problemMap);
 
         // then
         assertThat(list).hasSize(2);
-        assertThat(list).allSatisfy(problemTypeInfo -> assertThat(problemTypeInfo.isStarted()).isFalse());
-        assertThat(list).anySatisfy(problemTypeInfo -> assertThat(problemTypeInfo.problemType()).isEqualTo(problemType1))
-                .anySatisfy(problemTypeInfo -> assertThat(problemTypeInfo.problemType()).isEqualTo(problemType2));
+        assertThat(list).allSatisfy(problemTypeExamInfo -> assertThat(problemTypeExamInfo.isStarted()).isFalse());
+        assertThat(list).anySatisfy(problemTypeExamInfo -> assertThat(problemTypeExamInfo.problemType()).isEqualTo(problemType1))
+                .anySatisfy(problemTypeExamInfo -> assertThat(problemTypeExamInfo.problemType()).isEqualTo(problemType2));
     }
 
     @Test
@@ -46,13 +44,13 @@ class SolvedInfoTest {
 
 
         // when
-        SolvedInfo.Response response = SolvedInfo.Response.toDto(entry, examMap);
+        Solved.ByEntry.Response response = Solved.ByEntry.Response.toDto(entry, examMap);
 
         // then
-        assertThat(response.isEvenlyExamStarted()).isFalse();
-        assertThat(response.isEvenlyExamFinished()).isFalse();
+        assertThat(response.evenlyExamInfo().isStarted()).isFalse();
+        assertThat(response.evenlyExamInfo().isFinished()).isFalse();
         assertThat(response.problemTypeCount()).isEqualTo(1);
-        assertThat(response.problemTypeInfos()).allSatisfy(problemTypeInfo -> assertThat(problemTypeInfo.isStarted()).isFalse());
+        assertThat(response.problemTypeExamInfos()).allSatisfy(problemTypeExamInfo -> assertThat(problemTypeExamInfo.isStarted()).isFalse());
     }
 
     @Test
@@ -66,15 +64,15 @@ class SolvedInfoTest {
         examMap.put("용액의 농도", problemTypeExam);
 
         // when
-        SolvedInfo.Response response = SolvedInfo.Response.toDto(entry, examMap);
+        Solved.ByEntry.Response response = Solved.ByEntry.Response.toDto(entry, examMap);
 
         // then
-        assertThat(response.isEvenlyExamStarted()).isFalse();
-        assertThat(response.isEvenlyExamFinished()).isFalse();
+        assertThat(response.evenlyExamInfo().isStarted()).isFalse();
+        assertThat(response.evenlyExamInfo().isFinished()).isFalse();
         assertThat(response.problemTypeCount()).isEqualTo(1);
-        assertThat(response.problemTypeInfos()).allSatisfy(problemTypeInfo -> {
-            assertThat(problemTypeInfo.isStarted()).isTrue();
-            assertThat(problemTypeInfo.solvedProblemCount()).isEqualTo(1);
+        assertThat(response.problemTypeExamInfos()).allSatisfy(problemTypeExamInfo -> {
+            assertThat(problemTypeExamInfo.isStarted()).isTrue();
+            assertThat(problemTypeExamInfo.solvedProblemCount()).isEqualTo(1);
             });
     }
 
@@ -94,15 +92,15 @@ class SolvedInfoTest {
         examMap.put("용액의 농도",problemTypeExam);
 
         // when
-        SolvedInfo.Response response = SolvedInfo.Response.toDto(entry, examMap);
+        Solved.ByEntry.Response response = Solved.ByEntry.Response.toDto(entry, examMap);
 
         // then
-        assertThat(response.isEvenlyExamStarted()).isTrue();
-        assertThat(response.isEvenlyExamFinished()).isTrue();
+        assertThat(response.evenlyExamInfo().isStarted()).isTrue();
+        assertThat(response.evenlyExamInfo().isFinished()).isTrue();
         assertThat(response.problemTypeCount()).isEqualTo(1);
-        assertThat(response.problemTypeInfos()).allSatisfy(problemTypeInfo -> {
-            assertThat(problemTypeInfo.isStarted()).isTrue();
-            assertThat(problemTypeInfo.solvedProblemCount()).isEqualTo(1);
+        assertThat(response.problemTypeExamInfos()).allSatisfy(problemTypeExamInfo -> {
+            assertThat(problemTypeExamInfo.isStarted()).isTrue();
+            assertThat(problemTypeExamInfo.solvedProblemCount()).isEqualTo(1);
         });
     }
 }

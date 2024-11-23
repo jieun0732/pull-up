@@ -1,4 +1,4 @@
-package pull_up.global.security.v2.util;
+package pull_up.global.security.util;
 
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;

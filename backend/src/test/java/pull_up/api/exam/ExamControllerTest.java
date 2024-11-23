@@ -17,6 +17,7 @@ import pull_up.domain.problem.Entry;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ExamControllerTest {
@@ -36,7 +37,11 @@ class ExamControllerTest {
     @Test
     @DisplayName("전체 api 테스트")
     void testAllAPI() throws Exception {
-        mockMvc.perform(get("/api/exams/solved").param("memberId", "1").param("entry", "MATH").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/exams/entry/MATH/solved").param("memberId", "1").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(200));
+
+        mockMvc.perform(get("/api/exams/mock-exam/solved").param("memberId", "1"))
+                .andDo(print())
                 .andExpect(status().is(200));
 
         Start.EvenlyRequest startEvenlyRequest = new Start.EvenlyRequest(1L, Entry.MATH);

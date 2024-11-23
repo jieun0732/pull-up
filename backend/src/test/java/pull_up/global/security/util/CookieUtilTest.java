@@ -1,4 +1,4 @@
-package pull_up.global.security.v2.util;
+package pull_up.global.security.util;
 
 import jakarta.servlet.http.Cookie;
 import org.assertj.core.api.AbstractThrowableAssert;

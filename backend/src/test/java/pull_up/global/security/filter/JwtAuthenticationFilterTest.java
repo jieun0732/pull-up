@@ -1,4 +1,4 @@
-package pull_up.global.security;
+package pull_up.global.security.filter;
 
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import pull_up.global.security.filter.JwtAuthenticationFilter;
 import pull_up.global.security.util.CookieUtil;
 import pull_up.global.config.SecurityConfig;
 

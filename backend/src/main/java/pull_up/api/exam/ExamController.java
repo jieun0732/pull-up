@@ -16,10 +16,16 @@ public class ExamController {
 
     private final ExamService examService;
 
-    @Operation(summary = "푼 시험 확인", description = "풀었던 골고루 / 유형별 시험 현황을 확인합니다.", tags = "골고루/유형별")
-    @GetMapping("/solved")
-    public ResponseEntity<SolvedInfo.Response> getSolvedInfo(@RequestParam Long memberId, @RequestParam Entry entry) {
+    @Operation(summary = "푼 시험 확인", description = "골고루 / 유형별 시험 현황을 확인합니다.", tags = "골고루/유형별")
+    @GetMapping("/entry/{entry}/solved")
+    public ResponseEntity<Solved.ByEntry.Response> getSolvedInfo(@RequestParam Long memberId, @PathVariable Entry entry) {
         return new ResponseEntity<>(examService.getSolvedInfo(memberId, entry), HttpStatus.OK);
+    }
+
+    @Operation(summary = "푼 시험 확인", description = "모의고사 시험 현황을 확인합니다.", tags = "모의고사")
+    @GetMapping("/mock-exam/solved")
+    public ResponseEntity<Solved.MockExam.Response> getMockExamSolvedInfo(@RequestParam Long memberId) {
+        return new ResponseEntity<>(examService.getSolvedInfo(memberId), HttpStatus.OK);
     }
 
     @Operation(summary = "시험 시작", description = "시험을 시작합니다.", tags = "골고루")

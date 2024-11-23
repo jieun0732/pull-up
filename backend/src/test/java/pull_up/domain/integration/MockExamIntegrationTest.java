@@ -1,4 +1,4 @@
-package pull_up.domain;
+package pull_up.domain.integration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +11,7 @@ import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.dto.Grade;
 import pull_up.domain.exam.dto.Next;
+import pull_up.domain.exam.dto.Solved;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.examsheet.dto.CreateExamsheet;
@@ -18,6 +19,8 @@ import pull_up.domain.examsheet.ExamsheetService;
 import pull_up.domain.problem.Entry;
 import pull_up.global.dto.MessageDto;
 import pull_up.infra.database.jpa.entity.Examsheet;
+import pull_up.infra.database.jpa.entity.Member;
+import pull_up.infra.database.jpa.fixture.MemberFixture;
 
 import java.util.List;
 
@@ -51,6 +54,8 @@ public class MockExamIntegrationTest {
     @DisplayName("모의고사 통합 테스트")
     void testMockExam() {
 
+        Member member = MemberFixture.APPLE_EMAIL_CONCEALED_USER.get();
+
         /* 1. 시험지 생성(createExamSheet) */
 
         // given : [admin] 시험지에 들어갈 문제번호 + 문제 id 목록 전달
@@ -70,10 +75,15 @@ public class MockExamIntegrationTest {
         assertThat(createdExamsheet.getExamTitle()).isEqualTo(examTitle);
         assertThat(createdExamsheet.getProblemsheets()).hasSize(4);
 
+        /* 모의고사 조회 */
+        Solved.MockExam.Response solvedInfo = examService.getSolvedInfo(member.getId());
+        assertThat(solvedInfo.examId()).isNull();
+        assertThat(solvedInfo.isMockExamGraded()).isFalse();
+
         /* 2. 모의고사 시작(start) */
 
         // given : [frontend] 모의고사 시작요청 전송
-        Start.MockExamRequest startReq = new Start.MockExamRequest(1L);
+        Start.MockExamRequest startReq = new Start.MockExamRequest(member.getId());
 
         // when : [mockExamService] 모의고사 시작
         Start.Response startRes = examService.start(startReq);
@@ -85,6 +95,11 @@ public class MockExamIntegrationTest {
         assertThat(startRes.leftProblemCount()).isEqualTo(3);
         assertThat(startRes.entry()).isEqualTo(Entry.REASONING);
         assertThat(startRes.problemNumber()).isEqualTo(1);
+
+        /* 모의고사 조회 2 */
+        solvedInfo = examService.getSolvedInfo(member.getId());
+        assertThat(solvedInfo.examId()).isEqualTo(startRes.examId());
+        assertThat(solvedInfo.isMockExamGraded()).isFalse();
 
         /* 3. 특정문제 조회(next) */
 
@@ -116,5 +131,10 @@ public class MockExamIntegrationTest {
         assertThat(gradeRes.correctProblemCount()).isEqualTo(1);
         assertThat(gradeRes.incorrectProblemCount()).isEqualTo(3);
         assertThat(gradeRes.durationSecond()).isLessThan(1);
+
+        /* 모의고사 조회 3 */
+        solvedInfo = examService.getSolvedInfo(member.getId());
+        assertThat(solvedInfo.examId()).isEqualTo(startRes.examId());
+        assertThat(solvedInfo.isMockExamGraded()).isTrue();
     }
 }
