@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pull_up.api.dto.MessageDto;
 import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.dto.*;
 import pull_up.domain.problem.Entry;
@@ -56,6 +57,18 @@ public class ExamController {
     @PostMapping("/submit")
     public ResponseEntity<Submit.Response> submit(@RequestBody Submit.Request request) {
         return new ResponseEntity<>(examService.submit(request), HttpStatus.OK);
+    }
+
+    @Operation(summary = "이어하기", description = "시험을 이어서 진행합니다.", tags = "골고루/유형별")
+    @GetMapping("/continue/{examId}")
+    public ResponseEntity<Next.Response> continueExam(@PathVariable Long examId) {
+        return new ResponseEntity<>(examService.continueExam(examId), HttpStatus.OK);
+    }
+
+    @Operation(summary = "리셋하기", description = "시험 정보를 삭제합니다.", tags = "골고루/유형별")
+    @DeleteMapping("/reset/{examId}")
+    public ResponseEntity<MessageDto> reset(@PathVariable Long examId) {
+        return new ResponseEntity<>(examService.reset(examId), HttpStatus.OK);
     }
 
     @Operation(summary = "채점", description = "답안을 채점합니다.", tags = "모의고사")

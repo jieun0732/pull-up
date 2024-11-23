@@ -60,6 +60,12 @@ class ExamControllerTest {
         mockMvc.perform(post("/api/exams/submit").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(submitRequest)))
                 .andExpect(status().is(200));
 
+        mockMvc.perform(get("/api/exams/continue/1"))
+                .andExpect(status().is(200));
+
+        mockMvc.perform(delete("/api/exams/reset/1"))
+                .andExpect(status().is(200));
+
         Grade.Request gradeRequest = new Grade.Request(1L, List.of());
         mockMvc.perform(post("/api/exams/mock-exam/grade").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(gradeRequest)))
                 .andExpect(status().is(200));
