@@ -56,7 +56,7 @@ public class Exam extends BaseEntity {
     @JoinColumn(name = "examsheet_id", nullable = true)
     private Examsheet examsheet;
 
-    @OneToMany(mappedBy = "exam", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "exam", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Answer> answers;
 
     private Exam(ExamType examType, Member member) {
@@ -68,7 +68,7 @@ public class Exam extends BaseEntity {
     }
 
     public int getLastSolvedProblem() {
-        int problemNumber = -1;
+        int problemNumber = 0;
         answers.sort(Comparator.comparing(Answer::getProblemNumber));
         for (Answer answer : answers) {
             if (answer.getIsSubmitted()) problemNumber = answer.getProblemNumber();
