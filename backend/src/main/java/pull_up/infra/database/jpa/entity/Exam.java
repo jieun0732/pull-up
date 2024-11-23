@@ -67,8 +67,8 @@ public class Exam extends BaseEntity {
         this.member = member;
     }
 
-    public Integer getLastSolvedProblem() {
-        Integer problemNumber = null;
+    public int getLastSolvedProblem() {
+        int problemNumber = -1;
         answers.sort(Comparator.comparing(Answer::getProblemNumber));
         for (Answer answer : answers) {
             if (answer.getIsSubmitted()) problemNumber = answer.getProblemNumber();

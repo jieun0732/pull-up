@@ -192,7 +192,7 @@ class ExamTest {
         Integer lastSolvedProblem = exam.getLastSolvedProblem();
 
         // then
-        assertThat(lastSolvedProblem).isEqualTo(null);
+        assertThat(lastSolvedProblem).isEqualTo(-1);
 
         // when2 : 1번문제 풀이 후
         exam.submit(1, 3);
