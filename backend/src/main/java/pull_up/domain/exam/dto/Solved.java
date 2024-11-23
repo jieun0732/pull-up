@@ -14,15 +14,16 @@ public record Solved() {
     public record MockExam() {
         public record Response(
                 Long examId,
-                Boolean isMockExamGraded
+                Boolean isMockExamGraded,
+                Boolean tutorialFinished
         ) {
 
-            public static Response empty() {
-                return new Response(null,false);
+            public static Response empty(boolean tutorialFinished) {
+                return new Response(null,false, tutorialFinished);
             }
 
-            public static Response toDto(Exam exam) {
-                return new Response(exam.getId(), exam.getIsFinished());
+            public static Response toDto(boolean tutorialFinished, Exam exam) {
+                return new Response(exam.getId(), exam.getIsFinished(), tutorialFinished);
             }
         }
     }

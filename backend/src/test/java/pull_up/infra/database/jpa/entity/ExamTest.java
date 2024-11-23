@@ -147,6 +147,7 @@ class ExamTest {
                 .allSatisfy(answer -> assertThat(answer.getIsSubmitted()).isTrue());
         assertThat(exam.getScore()).isEqualTo(33);
         assertThat(exam.getDuration()).isNotNull();
+        assertThat(exam.getIsFinished()).isTrue();
         assertThat(exam.getExamsheet().getExamCount()).isEqualTo(1);
         assertThat(exam.getExamsheet().getAverageScore()).isEqualTo(33);
     }

@@ -175,13 +175,13 @@ class ExamServiceTest {
     void testStartMockExam() {
         // given
         Member member = MemberFixture.APPLE_USER.get();
-        Examsheet examSheet = FixtureRepository.getExamsheet("모의고사");
+        Examsheet examSheet = FixtureRepository.getExamsheet(ExamType.MOCK_EXAM.name());
         List<Problem> problemList = FixtureRepository.getProblemList();
-        Start.MockExamRequest startReq = new Start.MockExamRequest(member.getId());
+        Start.MockExamRequest startReq = new Start.MockExamRequest(member.getId(), ExamType.MOCK_EXAM.name());
 
         // when
         when(mockMemberRepository.findById(member.getId())).thenReturn(Optional.of(member));
-        when(mockExamsheetRepository.findByExamTitle("모의고사")).thenReturn(examSheet);
+        when(mockExamsheetRepository.findByExamTitle(ExamType.MOCK_EXAM.name())).thenReturn(examSheet);
         when(mockProblemRepository.findAllById(any())).thenReturn(problemList);
         Start.Response startRes = suit.start(startReq);
 

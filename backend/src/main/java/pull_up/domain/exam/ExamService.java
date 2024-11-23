@@ -1,7 +1,9 @@
 package pull_up.domain.exam;
 
+import ch.qos.logback.classic.html.DefaultThrowableRenderer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pull_up.api.dto.MessageDto;
 import pull_up.domain.dao.ExamRepository;
 import pull_up.domain.exam.dto.*;
@@ -42,11 +44,16 @@ public class ExamService {
     }
 
     public Solved.MockExam.Response getSolvedInfo(Long memberId) {
-        Optional<Exam> exam = examRepository.findByMemberId(memberId);
-        return exam.map(Solved.MockExam.Response::toDto)
-                .orElseGet(Solved.MockExam.Response::empty);
+        boolean tutorialFinished = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER)).getTutorialFinished();
+
+        Optional<Exam> exam = examRepository.findMockExamByMemberId(memberId);
+
+        return exam.map(e -> Solved.MockExam.Response.toDto(tutorialFinished, e))
+                .orElseGet(() -> Solved.MockExam.Response.empty(tutorialFinished));
     }
 
+    @Transactional
     public Start.Response start(Start.EvenlyRequest startReq) {
         Member startMember = memberRepository.findById(startReq.memberId())
                 .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
@@ -59,9 +66,9 @@ public class ExamService {
         return Start.Response.toDto(startedExam);
     }
 
+    @Transactional
     public Start.Response start(Start.ByProblemTypeRequest startReq) {
-        Member startMember = memberRepository.findById(startReq.memberId())
-                .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
+        Member startMember = memberRepository.findById(startReq.memberId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
         List<Problem> problemList = problemRepository.findAllByEntryAndProblemType(startReq.entry(), startReq.problemType());
 
         Exam startedExam = Exam.startByProblemTypeExam(startMember, problemList);
@@ -71,10 +78,12 @@ public class ExamService {
         return Start.Response.toDto(startedExam);
     }
 
+    @Transactional
     public Start.Response start(Start.MockExamRequest startReq) {
-        Member startMember = memberRepository.findById(startReq.memberId())
-                .orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
-        Examsheet examSheet = examsheetRepository.findByExamTitle("모의고사");
+        examRepository.findMockExamByMemberId(startReq.memberId()).ifPresent(e -> {throw new ExamException(ExamErrorCode.ALREADY_STARTED_MOCK_EXAM);});
+
+        Member startMember = memberRepository.findById(startReq.memberId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
+        Examsheet examSheet = examsheetRepository.findByExamTitle(startReq.mockExamName());
         List<Problem> problemList = problemRepository.findAllById(examSheet.getProblemMap().values());
 
         Exam startedExam = Exam.startMockExam(startMember, problemList, examSheet);
@@ -84,6 +93,7 @@ public class ExamService {
         return Start.Response.toDto(startedExam);
     }
 
+    @Transactional
     public Submit.Response submit(Submit.Request submitReq) {
         Exam examInDB = examRepository.findById(submitReq.examId())
                 .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
@@ -107,6 +117,7 @@ public class ExamService {
         return Next.Response.toDto(examInDB, examInDB.getLastSolvedProblem() + 1);
     }
 
+    @Transactional
     public Grade.Response grade(Grade.Request gradeReq) {
         Exam examInDB = examRepository.findById(gradeReq.examId())
                 .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
@@ -116,6 +127,7 @@ public class ExamService {
         return Grade.Response.toDto(examInDB);
     }
 
+    @Transactional
     public End.Response end(Long examId) {
         Exam examInDB = examRepository.findById(examId)
                 .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
@@ -125,6 +137,7 @@ public class ExamService {
         return End.Response.toDto(examInDB);
     }
 
+    @Transactional
     public MessageDto reset(Long examId) {
         Exam examInDB = examRepository.findById(examId)
                 .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));

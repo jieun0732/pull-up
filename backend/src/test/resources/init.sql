@@ -43,6 +43,15 @@ INSERT INTO answer(id, is_correct, is_submitted, problem_number, submit_count, s
 (2, true, true, 1, 1, '3', '2024-11-16 12:25:30', 4,  1),
 (3, false, true, 2, 1, '3', '2024-11-16 12:26:00', 4,  2);
 
+-- insert examsheet fixture
+INSERT INTO examsheet(id, exam_title, exam_count, average_score, average_duration) VALUES
+(1, "MOCK_EXAM", 0, 0, 0);
 
+-- insert problemsheet fixture
+INSERT INTO problemsheet(examsheet_id, problem_number, problem_id) VALUES
+(1, 1, 5),
+(1, 2, 6),
+(1, 3, 7),
+(1, 4, 8);
 
 

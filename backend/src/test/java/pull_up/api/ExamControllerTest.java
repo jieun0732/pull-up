@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pull_up.domain.exam.ExamService;
+import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.dto.Grade;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.exam.dto.Submit;
@@ -52,7 +53,7 @@ class ExamControllerTest {
         mockMvc.perform(post("/api/exams/by-problem-type/start").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(startByProblemTypeRequest)))
                 .andExpect(status().is(200));
 
-        Start.MockExamRequest startMockExamRequest = new Start.MockExamRequest(1L);
+        Start.MockExamRequest startMockExamRequest = new Start.MockExamRequest(1L, ExamType.MOCK_EXAM.name());
         mockMvc.perform(post("/api/exams/mock-exam/start").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(startMockExamRequest)))
                 .andExpect(status().is(200));
 

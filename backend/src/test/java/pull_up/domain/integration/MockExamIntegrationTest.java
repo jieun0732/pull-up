@@ -9,6 +9,7 @@ import pull_up.domain.dao.ExamRepository;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
+import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.dto.Grade;
 import pull_up.domain.exam.dto.Next;
 import pull_up.domain.exam.dto.Solved;
@@ -83,7 +84,7 @@ public class MockExamIntegrationTest {
         /* 2. 모의고사 시작(start) */
 
         // given : [frontend] 모의고사 시작요청 전송
-        Start.MockExamRequest startReq = new Start.MockExamRequest(member.getId());
+        Start.MockExamRequest startReq = new Start.MockExamRequest(member.getId(), ExamType.MOCK_EXAM.name());
 
         // when : [mockExamService] 모의고사 시작
         Start.Response startRes = examService.start(startReq);

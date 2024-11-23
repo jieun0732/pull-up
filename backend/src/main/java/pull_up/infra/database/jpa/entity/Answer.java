@@ -63,7 +63,7 @@ public class Answer extends BaseEntity {
     }
 
     public boolean mark(Integer submitAnswer) {
-        String submitAnswerToString = Integer.toString(submitAnswer);
+        String submitAnswerToString = submitAnswer == null? "0" : Integer.toString(submitAnswer);
         this.submitAnswer = submitAnswerToString;
         isCorrect = problem.getCorrectAnswer().equals(submitAnswerToString);
         problem.addTotalAttempt(isCorrect);

@@ -1,12 +1,17 @@
 package pull_up.infra.database.jpa.repository.exam;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import pull_up.domain.exam.ExamType;
+import pull_up.domain.exam.dto.Solved;
 import pull_up.domain.problem.Entry;
-import pull_up.infra.database.jpa.entity.*;
+import pull_up.infra.database.jpa.entity.Exam;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static pull_up.infra.database.jpa.entity.QAnswer.answer;
 import static pull_up.infra.database.jpa.entity.QExam.exam;
@@ -52,10 +57,24 @@ public class CustomExamRepositoryImpl implements CustomExamRepository {
     }
 
     @Override
-    public Optional<Exam> findByMemberId(Long memberId) {
+    public Optional<Exam> findMockExamByMemberId(Long memberId) {
         return Optional.ofNullable(
                 qf.selectFrom(exam)
-                        .where(exam.member.id.eq(memberId))
+                        .where(exam.member.id.eq(memberId)
+                                .and(exam.examType.eq(ExamType.MOCK_EXAM)))
                         .fetchFirst());
+    }
+
+    @Override
+    public Solved.MockExam.Response findSolvedMockExamInfo(Long memberId) {
+        return qf.select(Projections.constructor(Solved.MockExam.Response.class,
+                        exam.id,
+                        exam.isFinished,
+                        member.tutorialFinished))
+                .from(exam)
+                .leftJoin(exam.member,member)
+                .where(member.id.eq(memberId)
+                        .and(exam.examType.eq(ExamType.MOCK_EXAM)))
+                .fetchFirst();
     }
 }

@@ -21,7 +21,8 @@ public record Start() {
     ){}
 
     public record MockExamRequest(
-            Long memberId
+            Long memberId,
+            String mockExamName
     ) {
     }
 
