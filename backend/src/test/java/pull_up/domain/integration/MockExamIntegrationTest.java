@@ -17,7 +17,7 @@ import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.examsheet.dto.CreateExamsheet;
 import pull_up.domain.examsheet.ExamsheetService;
 import pull_up.domain.problem.Entry;
-import pull_up.global.dto.MessageDto;
+import pull_up.api.dto.MessageDto;
 import pull_up.infra.database.jpa.entity.Examsheet;
 import pull_up.infra.database.jpa.entity.Member;
 import pull_up.infra.database.jpa.fixture.MemberFixture;

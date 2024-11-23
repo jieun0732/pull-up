@@ -2,6 +2,7 @@ package pull_up.domain.exam;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pull_up.api.dto.MessageDto;
 import pull_up.domain.dao.ExamRepository;
 import pull_up.domain.exam.dto.*;
 import pull_up.domain.exam.exception.ExamErrorCode;
@@ -99,6 +100,13 @@ public class ExamService {
         return Next.Response.toDto(examInDB, problemNumber);
     }
 
+    public Next.Response continueExam(Long examId) {
+        Exam examInDB = examRepository.findById(examId)
+                .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
+
+        return Next.Response.toDto(examInDB, examInDB.getLastSolvedProblem() + 1);
+    }
+
     public Grade.Response grade(Grade.Request gradeReq) {
         Exam examInDB = examRepository.findById(gradeReq.examId())
                 .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
@@ -115,5 +123,14 @@ public class ExamService {
         examInDB.end();
 
         return End.Response.toDto(examInDB);
+    }
+
+    public MessageDto reset(Long examId) {
+        Exam examInDB = examRepository.findById(examId)
+                .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
+
+        examRepository.delete(examInDB);
+
+        return new MessageDto(examId + "번 시험이 리셋되었습니다.");
     }
 }

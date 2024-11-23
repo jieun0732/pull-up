@@ -84,7 +84,7 @@ class ExamTest {
         assertThat(start.getMember()).isEqualTo(member);
         assertThat(start.getAnswers()).hasSize(12);
     }
-    
+
     @Test
     @DisplayName("문제 답안 제출 테스트")
     void testSubmit() {
@@ -155,32 +155,26 @@ class ExamTest {
     @DisplayName("시험 종료 테스트")
     void testEndExam() throws InterruptedException {
         // given
-        Exam exam = FixtureRepository.getEvenlyExam(MemberFixture.APPLE_USER.get().getId(), Entry.LANGUAGE);
 
         // when
-        exam.end();
+        Exam exam = FixtureRepository.getEvenlyExam(MemberFixture.APPLE_USER.get().getId(), Entry.LANGUAGE);
 
         // then
-        Duration duration1 = exam.getDuration();
         assertThat(exam.getIsFinished()).isFalse();
         assertThat(exam.getScore()).isEqualTo(0);
-        assertThat(duration1).isNotNull();
 
         // when 2
         Thread.sleep(100);
         exam.submit(1, 3);
-        exam.end();
 
         // then 2
         Duration duration2 = exam.getDuration();
         assertThat(exam.getIsFinished()).isFalse();
         assertThat(exam.getScore()).isEqualTo(0);
-        assertThat(duration2).isGreaterThan(duration1);
 
         // when 3
         Thread.sleep(100);
         exam.submit(2, 3);
-        exam.end();
 
         // then 3
         assertThat(exam.getIsFinished()).isTrue();
@@ -213,5 +207,29 @@ class ExamTest {
 
         // then2
         assertThat(lastSolvedProblem).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("시험 리셋 테스트")
+    void testReset() {
+        // given
+        Exam exam = FixtureRepository.getEvenlyExam(MemberFixture.APPLE_USER.get().getId(), Entry.LANGUAGE);
+        exam.submit(1, 2);
+
+        // when
+        exam.reset();
+
+        // then
+        assertThat(exam.getDuration()).isNull();
+        assertThat(exam.getStartTime()).isNull();
+        assertThat(exam.getEndTime()).isNull();
+        assertThat(exam.getScore()).isZero();
+        assertThat(exam.getAnswers()).allSatisfy(answer -> {
+                    assertThat(answer.getIsSubmitted()).isFalse();
+                    assertThat(answer.getSubmitAnswer()).isNull();
+                    assertThat(answer.getIsCorrect()).isNull();
+                    assertThat(answer.getSubmitCount()).isZero();
+                }
+        );
     }
 }

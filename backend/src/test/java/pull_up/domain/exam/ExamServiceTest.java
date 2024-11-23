@@ -4,13 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pull_up.domain.dao.ExamRepository;
-import pull_up.domain.exam.dto.End;
-import pull_up.domain.exam.dto.Next;
-import pull_up.domain.exam.dto.Start;
-import pull_up.domain.exam.dto.Submit;
+import pull_up.domain.exam.dto.*;
 import pull_up.domain.dao.MemberRepository;
-import pull_up.domain.exam.dto.Solved;
 import pull_up.domain.dao.ExamsheetRepository;
+import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.problem.Entry;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.infra.database.jpa.entity.Exam;
@@ -92,7 +89,6 @@ class ExamServiceTest {
         Exam evenlyExam = FixtureRepository.getEvenlyExam(memberId, entry);
         evenlyExam.submit(1, 2);
         evenlyExam.submit(2, 2);
-        evenlyExam.end();
         examMap.put(ExamType.EVENLY.name(), evenlyExam);
 
         // when
@@ -248,6 +244,30 @@ class ExamServiceTest {
     }
 
     @Test
+    @DisplayName("시험 이어하기 테스트")
+    void testContinue() {
+        // given
+        Exam exam = FixtureRepository.getEvenlyExam(member.getId(), Entry.LANGUAGE);
+        exam.submit(1,3);
+
+        // when
+        when(mockExamRepository.findById(any())).thenReturn(Optional.of(exam));
+        Next.Response continueRes = suit.continueExam(exam.getId());
+
+        // then
+        assertThat(continueRes.leftProblemCount()).isEqualTo(0);
+        assertThat(continueRes.totalProblemCount()).isEqualTo(2);
+        assertThat(continueRes.problemNumber()).isEqualTo(2);
+
+        // when2 : 문제 다 풀었을 경우
+        exam.submit(2, 3);
+
+        // then2 : 오류 발생
+        assertThatThrownBy(() -> suit.continueExam(exam.getId()))
+                .hasMessage(ExamErrorCode.PROBLEM_NUMBER_EXCEED.getMessage());
+    }
+
+    @Test
     @DisplayName("시험 종료 테스트")
     void testEndExam() {
         // given
@@ -259,7 +279,7 @@ class ExamServiceTest {
 
         // then
         assertThat(endRes.entry()).isEqualTo(Entry.LANGUAGE);
-        assertThat(endRes.isFinished()).isFalse();
+        assertThat(endRes.isFinished()).isTrue();
         assertThat(endRes.memberName()).isEqualTo(member.getName());
         assertThat(endRes.totalProblemCount()).isEqualTo(2);
         assertThat(endRes.leftProblemCount()).isEqualTo(2);
@@ -273,7 +293,7 @@ class ExamServiceTest {
         End.Response endRes2 = suit.end(exam.getId());
 
         // then2
-        assertThat(endRes2.isFinished()).isFalse();
+        assertThat(endRes2.isFinished()).isTrue();
         assertThat(endRes2.totalProblemCount()).isEqualTo(2);
         assertThat(endRes2.leftProblemCount()).isEqualTo(1);
         assertThat(endRes2.correctProblemCount()).isEqualTo(1);

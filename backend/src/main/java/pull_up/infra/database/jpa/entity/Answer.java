@@ -3,7 +3,6 @@ package pull_up.infra.database.jpa.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import pull_up.global.entity.BaseEntity;
 
 import java.time.LocalDateTime;
 
@@ -73,5 +72,13 @@ public class Answer extends BaseEntity {
         submitCount++;
 
         return isCorrect;
+    }
+
+    public void reset() {
+        isSubmitted = false;
+        isCorrect = null;
+        submitTime = null;
+        submitAnswer = null;
+        submitCount = 0;
     }
 }

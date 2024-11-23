@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import pull_up.domain.auth.Role;
 import pull_up.domain.auth.SNSProvider;
-import pull_up.global.entity.BaseEntity;
 
 import java.util.regex.Pattern;
 

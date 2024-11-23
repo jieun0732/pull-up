@@ -3,7 +3,6 @@ package pull_up.infra.database.jpa.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import pull_up.global.entity.BaseEntity;
 import pull_up.infra.database.jpa.embedded.Problemsheet;
 
 import java.time.Duration;

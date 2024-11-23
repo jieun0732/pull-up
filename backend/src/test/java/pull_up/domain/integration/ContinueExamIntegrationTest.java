@@ -4,23 +4,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import pull_up.api.dto.MessageDto;
 import pull_up.config.annotation.IntegrationTest;
 import pull_up.domain.dao.ExamRepository;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
-import pull_up.domain.exam.dto.End;
 import pull_up.domain.exam.dto.Next;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.exam.dto.Submit;
+import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Member;
 import pull_up.infra.database.jpa.fixture.MemberFixture;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 @IntegrationTest
-public class EvenlyExamIntegrationTest {
+public class ContinueExamIntegrationTest {
 
     ExamService examService;
 
@@ -37,20 +38,17 @@ public class EvenlyExamIntegrationTest {
     }
 
     @Test
-    @DisplayName("골고루 시험 통합 테스트")
-    void evenlyExamTest() {
+    @DisplayName("시험 이어하기 통합 테스트")
+    void testContinueExam() {
 
         Member member = MemberFixture.APPLE_USER.get();
 
         /* 1. 시험 시작 */
 
-        // given [프론트] 시험 시작버튼 클릭(POST)
         Start.EvenlyRequest startReq = new Start.EvenlyRequest(member.getId(), Entry.LANGUAGE);
 
-        // when [ExamService] 시험 시작
         Start.Response startRes = examService.start(startReq);
 
-        // then [백] 1번 문제 전달
         assertThat(startRes).isInstanceOf(Start.Response.class);
         assertThat(startRes.examId()).isNotNull();
         assertThat(startRes.totalProblemCount()).isEqualTo(2);
@@ -58,64 +56,56 @@ public class EvenlyExamIntegrationTest {
         assertThat(startRes.entry()).isEqualTo(Entry.LANGUAGE);
         assertThat(startRes.problemNumber()).isEqualTo(1);
 
-        /* 2. 1번 문제 풀기 */
+        /* 2. 시험 1개 풀이 */
 
-        // given [프론트] 1번 문제 정답 제출(POST)
         Submit.Request submitReq1 = new Submit.Request(startRes.examId(), 1, 3);
 
-        // when [ExamService] 정답 채점
         Submit.Response submitRes1 = examService.submit(submitReq1);
 
-        // then [백] 채점 후 결과전송
         assertThat(submitRes1).isInstanceOf(Submit.Response.class);
         assertThat(submitRes1.correctAnswer()).isEqualTo(2);
         assertThat(submitRes1.isCorrect()).isEqualTo(false);
         assertThat(submitRes1.incorrectRate()).isEqualTo(100D);
 
-        /* 3. 다음 문제 요청하기 */
+        /* 3. 시험 이어풀기 */
 
-        // [프론트] 다음 문제 요청(GET)
+        Long examId = startRes.examId();
 
-        // [ExamService] 다음 문제 조회
-        Next.Response next1Res = examService.next(startRes.examId(), 2);
+        Next.Response continueRes = examService.continueExam(examId);
 
-        // [백] 다음 문제 전송
-        assertThat(next1Res).isInstanceOf(Next.Response.class);
-        assertThat(next1Res.examId()).isEqualTo(startRes.examId());
-        assertThat(next1Res.totalProblemCount()).isEqualTo(2);
-        assertThat(next1Res.leftProblemCount()).isEqualTo(0);
-        assertThat(next1Res.entry()).isEqualTo(Entry.LANGUAGE);
-        assertThat(next1Res.problemNumber()).isEqualTo(2);
+        assertThat(continueRes).isInstanceOf(Next.Response.class);
+        assertThat(continueRes.examId()).isEqualTo(examId);
+        assertThat(continueRes.leftProblemCount()).isEqualTo(0);
 
-        /* 4. 2번 문제 풀기 */
+        /* 4. 시험 리셋 */
 
-        // [프론트] 2번문제 정답 제출 및 요청(POST)
-        Submit.Request submitReq2 = new Submit.Request(startRes.examId(), 2, 3);
+        MessageDto messageRes = examService.reset(examId);
 
-        // [ExamService] 정답 채점
-        Submit.Response submitRes2 = examService.submit(submitReq2);
+        assertThat(messageRes.message()).isEqualTo(examId + "번 시험이 리셋되었습니다.");
 
-        // [백] 2번 문제 채점 후 결과 전송
+        /* 5. 시험 시작하기 */
+
+        Start.Response startRes2 = examService.start(startReq);
+
+        Long examId2 = startRes2.examId();
+        assertThat(examId2).isNotEqualTo(startRes.examId());
+
+        /* 6. 시험 전체 풀이 */
+
+        Submit.Request submitReq2 = new Submit.Request(examId2, 1, 3);
+        Submit.Request submitReq3 = new Submit.Request(examId2, 2, 3);
+
+        examService.submit(submitReq2);
+        Submit.Response submitRes2 = examService.submit(submitReq3);
+
         assertThat(submitRes2).isInstanceOf(Submit.Response.class);
         assertThat(submitRes2.correctAnswer()).isEqualTo(3);
         assertThat(submitRes2.isCorrect()).isEqualTo(true);
-        assertThat(submitRes2.incorrectRate()).isEqualTo(0D);
+        assertThat(submitRes2.incorrectRate()).isZero();
 
-        /* 5. 시험 종료 */
+        /* 7. 시험 종료 후 시험 이어풀기 */
 
-        // [프론트] 시험 종료 요청(PATCH)
-        Long endExamId = submitReq2.examId();
+        assertThatThrownBy(() -> examService.continueExam(examId2)).hasMessage(ExamErrorCode.PROBLEM_NUMBER_EXCEED.getMessage());
 
-        // [ExamService] 시험 종료
-        End.Response endRes = examService.end(endExamId);
-
-        // [백] 요청결과 전송
-        assertThat(endRes).isInstanceOf(End.Response.class);
-        assertThat(endRes.entry()).isEqualTo(Entry.LANGUAGE);
-        assertThat(endRes.isFinished()).isEqualTo(true);
-        assertThat(endRes.score()).isEqualTo(50);
-        assertThat(endRes.problemResults()).hasSize(2);
-        assertThat(endRes.problemResults()).noneMatch(problemResult -> !problemResult.isSubmitted());
     }
-
 }

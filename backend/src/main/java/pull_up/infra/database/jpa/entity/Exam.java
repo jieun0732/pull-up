@@ -7,7 +7,6 @@ import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.ProblemSummation;
 import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.exam.exception.ExamException;
-import pull_up.global.entity.BaseEntity;
 import pull_up.infra.database.jpa.embedded.Problemsheet;
 
 import java.time.Duration;
@@ -40,7 +39,7 @@ public class Exam extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ExamType examType;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime startTime;
 
     @Column
@@ -57,7 +56,7 @@ public class Exam extends BaseEntity {
     @JoinColumn(name = "examsheet_id", nullable = true)
     private Examsheet examsheet;
 
-    @OneToMany(mappedBy = "exam", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "exam", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Answer> answers;
 
     private Exam(ExamType examType, Member member) {
@@ -159,13 +158,16 @@ public class Exam extends BaseEntity {
         throw new ExamException(ExamErrorCode.PROBLEM_NUMBER_EXCEED);
     }
 
-    public void end() {
-        isFinished = getProblemSummation().getLeftProblemCount() == 0;
-        calculateDuration();
-    }
-
     public ProblemSummation getProblemSummation() {
         return ProblemSummation.createProblemSummation(answers);
+    }
+
+    public void reset() {
+        answers.forEach(Answer::reset);
+        duration = null;
+        startTime = null;
+        endTime = null;
+        score = 0;
     }
 
     private void calculateDuration() {
@@ -177,5 +179,10 @@ public class Exam extends BaseEntity {
             duration = duration.plus(Duration.between(endTime, now));
             endTime = now;
         }
+    }
+
+    public void end() {
+        isFinished = true;
+        calculateDuration();
     }
 }

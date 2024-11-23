@@ -7,16 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
-import pull_up.global.security.util.JwtUtil;
-import pull_up.infra.database.jpa.entity.legacy.MemberL;
 import pull_up.domain.auth.dto.JwtUserInfoDto;
+import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.domain.auth.exception.AuthError;
 import pull_up.domain.auth.exception.AuthException;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 class JwtUtilTest {
 
@@ -35,11 +33,10 @@ class JwtUtilTest {
     @DisplayName("Access Token 정상적으로 가져오는지 테스트")
     void testGetAccessToken() {
         // given
-        MemberL memberL = MemberL.of("leaf", "test@example.com", true, "apple-user");
-        memberL.setId(1L);
+        OAuth2Login.Response dto = new OAuth2Login.Response(false, 1L, "kakao", "leaf", "test@example.com");
 
         // when
-        String accessToken = suit.getAccessToken(memberL);
+        String accessToken = suit.getAccessToken(dto);
         String tokenBody = accessToken.split("\\.")[1];
 
         // then
@@ -52,11 +49,10 @@ class JwtUtilTest {
     @DisplayName("Access Token 정상 검증하는지 테스트")
     void testValidateAccessToken() {
         // given
-        MemberL memberL = MemberL.of("leaf", "test@example.com", true, "apple-user");
-        memberL.setId(1L);
+        OAuth2Login.Response dto = new OAuth2Login.Response(false, 1L, "kakao", "leaf", "test@example.com");
 
         // when
-        String accessToken = suit.getAccessToken(memberL);
+        String accessToken = suit.getAccessToken(dto);
         System.out.println("accessToken = " + accessToken);
 
         // then
