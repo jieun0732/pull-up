@@ -13,8 +13,8 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.test.util.ReflectionTestUtils;
+import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.infra.database.jpa.entity.Member;
-import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.domain.auth.SNSProvider;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.global.security.util.CookieUtil;
@@ -74,7 +74,7 @@ class OAuth2SuccessHandlerTest {
         // mock kakao user
         Member member = MemberFixture.KAKAO_USER.get();
         member.setId(1L);
-        OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(member, true, SNSProvider.KAKAO);
+        OAuth2Login.Response kakaoUser = OAuth2Login.Response.toDto(member, true);
 
         // mock filter param
         HttpServletRequest request = new MockHttpServletRequest();

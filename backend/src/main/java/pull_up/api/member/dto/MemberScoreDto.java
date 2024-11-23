@@ -1,6 +1,5 @@
 package pull_up.api.member.dto;
 
-import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.infra.database.jpa.entity.legacy.ExamL;
 
 import java.util.Comparator;
@@ -22,10 +21,6 @@ public record MemberScoreDto (
                 .map(ExamL::getScore) // Score 반환
                 .orElse(null); // Score가 없으면 null 반환
 
-        return new MemberScoreDto(id, name, getPrivateEmail(email), accessCheck, role, latestScore);
-    }
-
-    public static String getPrivateEmail(String email) {
-        return OAuth2LoginResponseDto.getPrivateEmail(email);
+        return new MemberScoreDto(id, name, email, accessCheck, role, latestScore);
     }
 }

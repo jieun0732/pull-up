@@ -11,9 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import pull_up.domain.auth.dto.KakaoLoginRequestDto;
-import pull_up.domain.auth.dto.KakaoTokenDto;
-import pull_up.domain.auth.dto.KakaoUserInfoDto;
+import pull_up.domain.auth.dto.KakaoDto;
+import pull_up.domain.auth.dto.OAuth2Login;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class KakaoAuthRestApi {
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String redirectUri;
 
-    public KakaoUserInfoDto getUserInfo(KakaoLoginRequestDto request) {
+    public KakaoDto.KakaoUserInfo getUserInfo(OAuth2Login.Request.Kakao request) {
         String token = getToken(request.code());
         return getUserInfo(token);
     }
@@ -60,10 +59,10 @@ public class KakaoAuthRestApi {
 
         HttpEntity<Object> entity = new HttpEntity<>(body, headers);
 
-        return restTemplate.exchange(tokenBaseUri, HttpMethod.POST, entity, KakaoTokenDto.class).getBody().access_token();
+        return restTemplate.exchange(tokenBaseUri, HttpMethod.POST, entity, KakaoDto.KakaoTokenDto.class).getBody().access_token();
     }
 
-    private KakaoUserInfoDto getUserInfo(String token) {
+    private KakaoDto.KakaoUserInfo getUserInfo(String token) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -73,6 +72,6 @@ public class KakaoAuthRestApi {
 
         HttpEntity<Object> entity = new HttpEntity<>(headers);
 
-        return restTemplate.exchange(userInfoBaseUri, HttpMethod.GET, entity, KakaoUserInfoDto.class).getBody();
+        return restTemplate.exchange(userInfoBaseUri, HttpMethod.GET, entity, KakaoDto.KakaoUserInfo.class).getBody();
     }
 }

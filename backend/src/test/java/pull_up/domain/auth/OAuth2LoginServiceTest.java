@@ -12,10 +12,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import pull_up.domain.auth.dto.AppleLoginRequestDto;
-import pull_up.domain.auth.dto.KakaoUserInfoDto;
-import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.config.annotation.IntegrationTest;
+import pull_up.domain.auth.dto.KakaoDto;
+import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.global.security.util.AppleTokenDecoder;
@@ -27,6 +26,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
@@ -43,7 +43,7 @@ class OAuth2LoginServiceTest {
     @Mock
     KakaoAuthRestApi kakaoApi;
 
-    private static void assertUser(OAuth2LoginResponseDto appleUser, String email, String provider, String name) {
+    private static void assertUser(OAuth2Login.Response appleUser, String email, String provider, String name) {
         assertThat(appleUser.email()).isEqualTo(email);
         assertThat(appleUser.provider()).isEqualTo(provider);
         assertThat(appleUser.name()).isEqualTo(name);
@@ -58,20 +58,20 @@ class OAuth2LoginServiceTest {
     @DisplayName("code로 로그인 테스트")
     void testKakaoCodeLogin() {
         // given
-        KakaoUserInfoDto kakaoUserInfoDto = new KakaoUserInfoDto("123",
-                new KakaoUserInfoDto.KakaoAccount("test@examle.com", true, true, true,
-                        new KakaoUserInfoDto.KakaoAccount.Profile("leaf", true)));
+        KakaoDto.KakaoUserInfo kakaoUserInfo = new KakaoDto.KakaoUserInfo("123",
+                new KakaoDto.KakaoUserInfo.KakaoAccount("test@examle.com", true, true, true,
+                        new KakaoDto.KakaoUserInfo.KakaoAccount.Profile("leaf", true)));
 
         // when
-        BDDMockito.when(kakaoApi.getUserInfo(any())).thenReturn(kakaoUserInfoDto);
-        OAuth2LoginResponseDto kakaoUser = suit.getKakaoUser("test code");
+        when(kakaoApi.getUserInfo(any())).thenReturn(kakaoUserInfo);
+        OAuth2Login.Response kakaoUser = suit.getKakaoUser("test code");
 
         // then : 처음 로그인 시도하면 첫번째 로그인 true
         assertUser(kakaoUser, "test@examle.com", "kakao", "leaf");
         assertThat(kakaoUser.firstLogin()).isEqualTo(true);
 
         // when2 : 다시 로그인 시도
-        OAuth2LoginResponseDto kakaoUser2 = suit.getKakaoUser("test code");
+        OAuth2Login.Response kakaoUser2 = suit.getKakaoUser("test code");
 
         // then2 : 다시 로그인하면 첫번째 로그인 false
         assertThat(kakaoUser2.firstLogin()).isEqualTo(false);
@@ -93,13 +93,13 @@ class OAuth2LoginServiceTest {
         DefaultOAuth2User user = new DefaultOAuth2User(new ArrayList<>(), attributes, "id");
 
         // when
-        OAuth2LoginResponseDto kakaoUser = suit.getKakaoUser(user);
+        OAuth2Login.Response kakaoUser = suit.getKakaoUser(user);
 
         // then : 처음 로그인 시도하면 첫번째 로그인 true
         assertUser(kakaoUser, "test@example.com", "kakao", "남상엽");
 
         // when2 : 다시 로그인 시도
-        OAuth2LoginResponseDto kakaoUser2 = suit.getKakaoUser(user);
+        OAuth2Login.Response kakaoUser2 = suit.getKakaoUser(user);
 
         // then2 : 다시 로그인하면 첫번째 로그인 false
         assertThat(kakaoUser2.firstLogin()).isEqualTo(false);
@@ -113,19 +113,19 @@ class OAuth2LoginServiceTest {
         Claims sub = Jwts.claims().add("sub", "user sub").build();
 
         String idToken = "test token";
-        AppleLoginRequestDto dto = new AppleLoginRequestDto(new AppleLoginRequestDto.UserName("상엽", "남"), "spearoad15@gmail.com");
+        OAuth2Login.Request.Apple dto = new OAuth2Login.Request.Apple(new OAuth2Login.Request.Apple.UserName("상엽", "남"), "spearoad15@gmail.com");
         String userJson = gson.toJson(dto);
 
         // when
-        BDDMockito.when(appleTokenDecoder.decode(any())).thenReturn(sub);
-        OAuth2LoginResponseDto appleUser = suit.getAppleUser(idToken, userJson);
+        when(appleTokenDecoder.decode(any())).thenReturn(sub);
+        OAuth2Login.Response appleUser = suit.getAppleUser(idToken, userJson);
 
         // then : 처음 로그인 시도하면 첫번째 로그인 true
         assertUser(appleUser, "spearoad15@gmail.com", "apple", "남상엽");
         assertThat(appleUser.firstLogin()).isEqualTo(true);
 
         // when2 : 다시 로그인 시도
-        OAuth2LoginResponseDto appleUser2 = suit.getAppleUser(idToken, "ALREADY_REGISTERED_USER");
+        OAuth2Login.Response appleUser2 = suit.getAppleUser(idToken, "ALREADY_REGISTERED_USER");
 
         // then2 : 다시 로그인하면 첫번째 로그인 false
         assertThat(appleUser2.firstLogin()).isEqualTo(false);
@@ -139,13 +139,13 @@ class OAuth2LoginServiceTest {
         Claims sub = Jwts.claims().add("sub", "user sub").build();
 
         String idToken = "test token";
-        AppleLoginRequestDto dto = new AppleLoginRequestDto(new AppleLoginRequestDto.UserName("상엽", "남"), "spearoad15@gmail.com");
+        OAuth2Login.Request.Apple dto = new OAuth2Login.Request.Apple(new OAuth2Login.Request.Apple.UserName("상엽", "남"), "spearoad15@gmail.com");
         String userJson = gson.toJson(dto);
 
         // when
-        BDDMockito.when(appleTokenDecoder.decode(any())).thenReturn(sub);
-        OAuth2LoginResponseDto appleUser = suit.getAppleUser(idToken, userJson); // 회원가입
-        OAuth2LoginResponseDto appleUser2 = suit.getAppleUser(idToken, userJson); // 다시 회원가입
+        when(appleTokenDecoder.decode(any())).thenReturn(sub);
+        OAuth2Login.Response appleUser = suit.getAppleUser(idToken, userJson); // 회원가입
+        OAuth2Login.Response appleUser2 = suit.getAppleUser(idToken, userJson); // 다시 회원가입
 
         // then
         assertUser(appleUser, "spearoad15@gmail.com", "apple", "남상엽");
@@ -158,7 +158,7 @@ class OAuth2LoginServiceTest {
         // given
     
         // when
-        OAuth2LoginResponseDto localUser = suit.getLocalUser();
+        OAuth2Login.Response localUser = suit.getLocalUser();
 
         // then
         assertThat(localUser.email()).isEqualTo("test@example.com");

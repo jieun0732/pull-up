@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
-import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
+import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.domain.auth.exception.AuthError;
 import pull_up.domain.auth.exception.AuthException;
 import pull_up.domain.auth.service.OAuth2LoginService;
@@ -44,7 +44,7 @@ public class OAuth2Controller {
     RedirectView appleLogin(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> parameterMap = request.getParameterMap();
 
-        OAuth2LoginResponseDto appleUser = oAuth2LoginService.getAppleUser(
+        OAuth2Login.Response appleUser = oAuth2LoginService.getAppleUser(
                 parameterMap.get("id_token")[0],
                 parameterMap.getOrDefault("user", new String[]{"ALREADY_REGISTERED_USER"})[0]
         );
@@ -58,7 +58,7 @@ public class OAuth2Controller {
     RedirectView kakaoLogin(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> parameterMap = request.getParameterMap();
 
-        OAuth2LoginResponseDto kakaoUser = oAuth2LoginService.getKakaoUser(parameterMap.get("code")[0]);
+        OAuth2Login.Response kakaoUser = oAuth2LoginService.getKakaoUser(parameterMap.get("code")[0]);
 
         response.addCookie(cookieUtil.getSecureCookie(jwtUtil.getAccessToken(kakaoUser)));
         return setRedirect(kakaoUser);
@@ -67,12 +67,12 @@ public class OAuth2Controller {
     @Operation(summary = "로컬 SNS 로그인[로컬 전용]", description = "로컬 SNS 로그인을 시도합니다.", tags = "인증")
     @PostMapping("/local")
     ResponseEntity<Properties> localLogin(HttpServletResponse response) {
-        OAuth2LoginResponseDto localUser = oAuth2LoginService.getLocalUser();
+        OAuth2Login.Response localUser = oAuth2LoginService.getLocalUser();
         response.addCookie(cookieUtil.getSecureCookie(jwtUtil.getAccessToken(localUser)));
         return new ResponseEntity<>(getUserDtoProperty(localUser), HttpStatus.OK);
     }
 
-    public RedirectView setRedirect(OAuth2LoginResponseDto userDto) {
+    public RedirectView setRedirect(OAuth2Login.Response userDto) {
         Properties attributes = getUserDtoProperty(userDto);
         RedirectView redirectView = new RedirectView();
 
@@ -87,7 +87,7 @@ public class OAuth2Controller {
         return redirectView;
     }
 
-    private Properties getUserDtoProperty(OAuth2LoginResponseDto userDto) {
+    private Properties getUserDtoProperty(OAuth2Login.Response userDto) {
         Properties attributes = new Properties();
         attributes.setProperty("firstLogin", userDto.firstLogin().toString());
         attributes.setProperty("memberId", userDto.memberId().toString());

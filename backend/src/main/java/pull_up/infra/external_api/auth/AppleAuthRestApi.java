@@ -10,7 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import pull_up.domain.auth.dto.AppleJwks;
+import pull_up.domain.auth.dto.AppleDto;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class AppleAuthRestApi {
     @Value("${spring.security.oauth2.client.provider.apple.jwk-set-uri}")
     private String jwkSetBaseUri;
 
-    public AppleJwks getKeys() {
+    public AppleDto.Jwks getKeys() {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -31,7 +31,7 @@ public class AppleAuthRestApi {
         HttpEntity<Object> entity = new HttpEntity<>(headers);
 
         return restTemplate.exchange(jwkSetBaseUri, HttpMethod.GET, entity,
-                new ParameterizedTypeReference<AppleJwks>() {
+                new ParameterizedTypeReference<AppleDto.Jwks>() {
                 }).getBody();
     }
 }

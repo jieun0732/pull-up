@@ -10,9 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Component;
+import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.infra.database.jpa.entity.legacy.MemberL;
 import pull_up.domain.auth.dto.JwtUserInfoDto;
-import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.domain.auth.exception.AuthError;
 import pull_up.domain.auth.exception.AuthException;
 
@@ -62,7 +62,7 @@ public class JwtUtil {
         return getAccessToken(memberL.getId(), memberL.getName(), memberL.getEmail(), memberL.getRole());
     }
 
-    public String getAccessToken(OAuth2LoginResponseDto dto) {
+    public String getAccessToken(OAuth2Login.Response dto) {
         if (dto.provider().equalsIgnoreCase("apple"))
             return getAccessToken(dto.memberId(), dto.name(), dto.email(), "apple-user");
         else if (dto.provider().equalsIgnoreCase("kakao"))

@@ -51,6 +51,11 @@ public class Member extends BaseEntity {
         this.role = role;
     }
 
+    public String getPrivateEmail() {
+        if (email.split("@")[1].contains("private")) return "CONCEALED_EMAIL";
+        return email;
+    }
+
     public static Member getFirstLoginMember(String name, String email, String snsId, SNSProvider snsProvider) {
         return new Member(false, name, email, snsId, snsProvider, Role.USER);
     }

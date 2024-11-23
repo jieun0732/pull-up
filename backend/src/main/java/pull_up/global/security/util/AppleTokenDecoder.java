@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import pull_up.domain.auth.dto.AppleDto;
 import pull_up.infra.external_api.auth.AppleAuthRestApi;
-import pull_up.domain.auth.dto.AppleJwks;
 import pull_up.domain.auth.exception.AuthError;
 import pull_up.domain.auth.exception.AuthException;
 
@@ -32,7 +32,7 @@ public class AppleTokenDecoder {
     private String baseUri;
 
     public Claims decode(String token) {
-        AppleJwks keys = appleAuthRestApi.getKeys();
+        AppleDto.Jwks keys = appleAuthRestApi.getKeys();
         log.info("token : {}", token);
         return Jwts.parser()
                 .keyLocator(new AppleKeyLocator(keys))
@@ -45,9 +45,9 @@ public class AppleTokenDecoder {
 
     public class AppleKeyLocator extends LocatorAdapter<Key> {
 
-        private final AppleJwks appleJwks;
+        private final AppleDto.Jwks appleJwks;
 
-        public AppleKeyLocator(AppleJwks appleJwks) {
+        public AppleKeyLocator(AppleDto.Jwks appleJwks) {
             this.appleJwks = appleJwks;
         }
 
@@ -58,7 +58,7 @@ public class AppleTokenDecoder {
 
             // 서명된 keyId, algorithm 으로부터 공개키 찾기
             try {
-                AppleJwks.Jwk publicKey = appleJwks.keys().stream().filter(
+                AppleDto.Jwks.Jwk publicKey = appleJwks.keys().stream().filter(
                                 key -> key.kid().equals(publicKeyId) && key.alg().equals(algorithm))
                         .findFirst()
                         .orElseThrow(() -> new AuthException(AuthError.PARSE_APPLE_PUBLIC_KEY_ERROR));

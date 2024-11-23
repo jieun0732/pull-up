@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
-import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
+import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.global.security.util.CookieUtil;
 import pull_up.global.security.util.JwtUtil;
@@ -36,7 +36,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         DefaultOAuth2User user = (DefaultOAuth2User) authentication.getPrincipal();
-        OAuth2LoginResponseDto kakaoUser = oAuth2LoginService.getKakaoUser(user);
+        OAuth2Login.Response kakaoUser = oAuth2LoginService.getKakaoUser(user);
 
         String redirectUrl = UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("firstLogin", URLEncoder.encode(kakaoUser.firstLogin().toString(), StandardCharsets.UTF_8))

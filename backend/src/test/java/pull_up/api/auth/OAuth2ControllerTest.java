@@ -9,8 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.RedirectView;
-import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.domain.auth.SNSProvider;
+import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.global.security.util.CookieUtil;
 import pull_up.global.security.util.JwtUtil;
@@ -53,13 +53,7 @@ class OAuth2ControllerTest {
     @DisplayName("애플 로그인 시 회원가입 여부 추가")
     void testFirstLoginUser() {
         // given
-        OAuth2LoginResponseDto user = OAuth2LoginResponseDto.builder()
-                .firstLogin(true)
-                .email("test@example.com")
-                .name("leaf")
-                .memberId(1L)
-                .provider("apple")
-                .build();
+        OAuth2Login.Response user = new OAuth2Login.Response(true, 1L,"apple","leaf","test@example.com");
 
         // when
         RedirectView redirectView = suit.setRedirect(user);
@@ -75,7 +69,7 @@ class OAuth2ControllerTest {
         // given
         Member member = MemberFixture.APPLE_USER.get();
         member.setId(1L);
-        OAuth2LoginResponseDto appleUser = OAuth2LoginResponseDto.of(member, true, SNSProvider.APPLE);
+        OAuth2Login.Response appleUser = OAuth2Login.Response.toDto(member, true);
 
         // when
         when(mockService.getAppleUser(any(), any())).thenReturn(appleUser);
@@ -84,7 +78,7 @@ class OAuth2ControllerTest {
         // when 2
         Member member2 = MemberFixture.KAKAO_USER.get();
         member2.setId(1L);
-        OAuth2LoginResponseDto kakaoUser = OAuth2LoginResponseDto.of(member2, true, SNSProvider.APPLE);
+        OAuth2Login.Response kakaoUser = OAuth2Login.Response.toDto(member2, true);
         when(mockService.getKakaoUser((String) any())).thenReturn(kakaoUser);
         ResultActions result2 = mockMvc.perform(get("/api/oauth2/callback/kakao").param("code", "test"));
 
@@ -101,7 +95,7 @@ class OAuth2ControllerTest {
     @Test
     @DisplayName("로컬 로그인 테스트")
     void testLocalLogin() throws Exception {
-        when(mockService.getLocalUser()).thenReturn(new OAuth2LoginResponseDto(true,99999999L, "local", "test user", "test@example.com"));
+        when(mockService.getLocalUser()).thenReturn(new OAuth2Login.Response(true,99999999L, "local", "test user", "test@example.com"));
         mockMvc.perform(post("/api/oauth2/callback/local")).andDo(print())
                 .andExpect(status().is(200));
     }

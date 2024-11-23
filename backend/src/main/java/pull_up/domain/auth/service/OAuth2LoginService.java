@@ -6,11 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
-import pull_up.domain.auth.dto.AppleLoginRequestDto;
-import pull_up.domain.auth.dto.KakaoLoginRequestDto;
-import pull_up.domain.auth.dto.KakaoUserInfoDto;
-import pull_up.domain.auth.dto.OAuth2LoginResponseDto;
 import pull_up.domain.auth.SNSProvider;
+import pull_up.domain.auth.dto.KakaoDto;
+import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.global.security.util.AppleTokenDecoder;
 import pull_up.infra.database.jpa.entity.Member;
@@ -30,38 +28,38 @@ public class OAuth2LoginService {
     private final KakaoAuthRestApi kakaoAuthRestApi;
     private final Gson gson = new Gson();
 
-    public OAuth2LoginResponseDto getKakaoUser(KakaoUserInfoDto dto) {
+    public OAuth2Login.Response getKakaoUser(KakaoDto.KakaoUserInfo dto) {
         Optional<Member> member = memberRepository.findBySnsId(dto.id());
 
-        return member.map(value -> OAuth2LoginResponseDto.of(value, false, KAKAO))
-                .orElseGet(() -> OAuth2LoginResponseDto.of(registKakaoMember(dto), true, KAKAO));
+        return member.map(value -> OAuth2Login.Response.toDto(value, false))
+                .orElseGet(() -> OAuth2Login.Response.toDto(registKakaoMember(dto), true));
     }
 
-    public OAuth2LoginResponseDto getKakaoUser(DefaultOAuth2User user) {
-        KakaoUserInfoDto dto = gson.fromJson(gson.toJson(user.getAttributes()), KakaoUserInfoDto.class);
+    public OAuth2Login.Response getKakaoUser(DefaultOAuth2User user) {
+        KakaoDto.KakaoUserInfo dto = gson.fromJson(gson.toJson(user.getAttributes()), KakaoDto.KakaoUserInfo.class);
         return getKakaoUser(dto);
     }
 
-    public OAuth2LoginResponseDto getKakaoUser(String code) {
-        KakaoUserInfoDto userInfo = kakaoAuthRestApi.getUserInfo(new KakaoLoginRequestDto(code));
+    public OAuth2Login.Response getKakaoUser(String code) {
+        KakaoDto.KakaoUserInfo userInfo = kakaoAuthRestApi.getUserInfo(new OAuth2Login.Request.Kakao(code));
         return getKakaoUser(userInfo);
     }
 
-    public OAuth2LoginResponseDto getAppleUser(String idToken, String userJson) {
+    public OAuth2Login.Response getAppleUser(String idToken, String userJson) {
         Claims decodedToken = appleTokenDecoder.decode(idToken);
         String id = (String) decodedToken.get("sub");
 
         Optional<Member> member = memberRepository.findBySnsId(id);
 
-        return member.map(value -> OAuth2LoginResponseDto.of(value, false, SNSProvider.APPLE))
-                .orElseGet(() -> OAuth2LoginResponseDto.of(registAppleMember(id, userJson), true, APPLE));
+        return member.map(value -> OAuth2Login.Response.toDto(value, false))
+                .orElseGet(() -> OAuth2Login.Response.toDto(registAppleMember(id, userJson), true));
     }
 
-    public OAuth2LoginResponseDto getLocalUser() {
-        return new OAuth2LoginResponseDto(true,99999999L, "local", "test user", "test@example.com");
+    public OAuth2Login.Response getLocalUser() {
+        return new OAuth2Login.Response(true,99999999L, "local", "test user", "test@example.com");
     }
 
-    private Member registKakaoMember(KakaoUserInfoDto dto) {
+    private Member registKakaoMember(KakaoDto.KakaoUserInfo dto) {
 
         Member firstLoginMember = Member.getFirstLoginMember(dto.kakao_account().profile().nickname(), dto.kakao_account().email(), dto.id(), KAKAO);
         memberRepository.save(firstLoginMember);
@@ -70,7 +68,7 @@ public class OAuth2LoginService {
     }
 
     private Member registAppleMember(String id, String userJson) {
-        AppleLoginRequestDto dto = gson.fromJson(userJson, AppleLoginRequestDto.class);
+        OAuth2Login.Request.Apple dto = gson.fromJson(userJson, OAuth2Login.Request.Apple.class);
         Member firstLoginMember = Member.getFirstLoginMember(dto.name().firstName(), dto.name().lastName(), dto.email(), id, APPLE);
         memberRepository.save(firstLoginMember);
 
