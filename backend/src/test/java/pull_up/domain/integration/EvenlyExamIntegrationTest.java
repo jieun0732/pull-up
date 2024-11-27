@@ -118,8 +118,8 @@ public class EvenlyExamIntegrationTest {
         assertThat(endRes.entry()).isEqualTo(Entry.LANGUAGE);
         assertThat(endRes.isFinished()).isEqualTo(true);
         assertThat(endRes.score()).isEqualTo(50);
-        assertThat(endRes.problemResults()).hasSize(2);
-        assertThat(endRes.problemResults()).noneMatch(problemResult -> !problemResult.isSubmitted());
+        assertThat(endRes.results()).hasSize(2);
+        assertThat(endRes.results()).noneMatch(problemResult -> !problemResult.isSubmitted());
     }
 
 }

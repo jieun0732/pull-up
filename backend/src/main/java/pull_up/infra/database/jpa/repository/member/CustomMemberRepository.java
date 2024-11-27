@@ -1,9 +1,9 @@
 package pull_up.infra.database.jpa.repository.member;
 
-import pull_up.infra.database.jpa.entity.Member;
+import pull_up.infra.database.jpa.dto.IncorrectQueryDto;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface CustomMemberRepository {
-    Optional<Member> findMemberSolvedInfo(Long id);
+    List<IncorrectQueryDto> getIncorrectAnswersById(Long memberId);
 }

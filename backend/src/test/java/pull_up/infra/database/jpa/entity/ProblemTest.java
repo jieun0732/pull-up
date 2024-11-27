@@ -112,4 +112,17 @@ class ProblemTest {
         assertThat(problem.getChoice5()).isEqualTo("선택5");
         assertThat(problem.getExplanationAsString()).isEqualTo("해설");
     }
+
+    @Test
+    @DisplayName("문제 앞에서부터 잘라서 반환")
+    void testQuestionSubstring() {
+        // given
+        Problem problem = ProblemFixture.MATH_VELOCITY_1.get();
+
+        // when
+        String questionAsSubstring = problem.getQuestionAsSubstring();
+
+        // then
+        assertThat(questionAsSubstring).hasSize(100);
+    }
 }

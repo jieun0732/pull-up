@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "answer")
@@ -80,5 +81,10 @@ public class Answer extends BaseEntity {
         submitTime = null;
         submitAnswer = null;
         submitCount = 0;
+    }
+
+    public String getSolvedDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일");
+        return this.submitTime.format(formatter);
     }
 }

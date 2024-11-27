@@ -138,12 +138,12 @@ public class MockExamIntegrationTest {
         Grade.Response gradeRes = examService.grade(gradeReq);
 
         // then : [backend] grade.Response 채점결과 전송
-        assertThat(gradeRes).isInstanceOf(Grade.Response.class);
+        assertThat(gradeRes.memberName()).isEqualTo(member.getName());
         assertThat(gradeRes.score()).isEqualTo(25);
         assertThat(gradeRes.totalProblemCount()).isEqualTo(4);
         assertThat(gradeRes.correctProblemCount()).isEqualTo(1);
-        assertThat(gradeRes.incorrectProblemCount()).isEqualTo(3);
         assertThat(gradeRes.durationSecond()).isLessThan(1);
+        assertThat(gradeRes.results()).hasSize(4);
 
         /* 모의고사 조회 3 */
         solvedInfo = examService.getSolvedInfo(member.getId());

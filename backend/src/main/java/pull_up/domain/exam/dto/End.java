@@ -20,22 +20,8 @@ public record End() {
             Integer leftProblemCount,
             Integer correctProblemCount,
             Integer score,
-            List<ProblemResult> problemResults
+            List<Result> results
     ) {
-        public record ProblemResult(
-                Integer problemNumber,
-                String problemType,
-                Boolean isSubmitted,
-                Boolean isCorrect
-        ) {
-            public static ProblemResult toDto(Answer answer) {
-                return new ProblemResult(
-                        answer.getProblemNumber(),
-                        answer.getProblem().getProblemType(),
-                        answer.getIsSubmitted(),
-                        answer.getIsCorrect());
-            }
-        }
 
         public static Response toDto(Exam examInDB) {
             Answer firstAnswer = examInDB.getAnswers().get(0);
@@ -48,7 +34,7 @@ public record End() {
                     problemSummation.getLeftProblemCount(),
                     problemSummation.getCorrectProblemCount(),
                     examInDB.getScore(),
-                    examInDB.getAnswers().stream().map(ProblemResult::toDto).toList());
+                    examInDB.getAnswers().stream().map(Result::toDto).toList());
         }
     }
 }

@@ -29,21 +29,22 @@ public record Grade() {
     }
 
     public record Response(
+            String memberName,
             Integer totalProblemCount,
             Integer correctProblemCount,
-            Integer incorrectProblemCount,
             Integer score,
-            Long durationSecond
+            Long durationSecond,
+            List<Result> results
     ) {
         public static Response toDto(Exam examInDB) {
             ProblemSummation problemSummation = examInDB.getProblemSummation();
             return new Response(
+                    examInDB.getMember().getName(),
                     problemSummation.getTotalProblemCount(),
                     problemSummation.getCorrectProblemCount(),
-                    problemSummation.getIncorrectProblemCount(),
                     examInDB.getScore(),
-                    examInDB.getDuration().toSeconds()
-            );
+                    examInDB.getDuration().toSeconds(),
+                    examInDB.getAnswers().stream().map(Result::toDto).toList());
         }
     }
 }

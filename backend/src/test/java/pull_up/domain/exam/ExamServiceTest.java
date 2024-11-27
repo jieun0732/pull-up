@@ -295,8 +295,8 @@ class ExamServiceTest {
         assertThat(endRes.leftProblemCount()).isEqualTo(2);
         assertThat(endRes.correctProblemCount()).isEqualTo(0);
         assertThat(endRes.score()).isEqualTo(0);
-        assertThat(endRes.problemResults()).hasSize(2);
-        assertThat(endRes.problemResults()).allSatisfy(problemResult -> assertThat(problemResult.isSubmitted()).isFalse());
+        assertThat(endRes.results()).hasSize(2);
+        assertThat(endRes.results()).allSatisfy(problemResult -> assertThat(problemResult.isSubmitted()).isFalse());
 
         // when 2
         suit.submit(new Submit.Request(exam.getId(), 1, 2));
@@ -308,7 +308,7 @@ class ExamServiceTest {
         assertThat(endRes2.leftProblemCount()).isEqualTo(1);
         assertThat(endRes2.correctProblemCount()).isEqualTo(1);
         assertThat(endRes2.score()).isEqualTo(50);
-        assertThat(endRes2.problemResults()).anySatisfy(problemResult -> assertThat(problemResult.isSubmitted()).isTrue());
+        assertThat(endRes2.results()).anySatisfy(problemResult -> assertThat(problemResult.isSubmitted()).isTrue());
 
         // when 3
         suit.submit(new Submit.Request(exam.getId(), 2, 2));
@@ -320,7 +320,7 @@ class ExamServiceTest {
         assertThat(endRes3.leftProblemCount()).isEqualTo(0);
         assertThat(endRes3.correctProblemCount()).isEqualTo(1);
         assertThat(endRes3.score()).isEqualTo(50);
-        assertThat(endRes3.problemResults()).allSatisfy(problemResult -> assertThat(problemResult.isSubmitted()).isTrue());
+        assertThat(endRes3.results()).allSatisfy(problemResult -> assertThat(problemResult.isSubmitted()).isTrue());
 
     }
 }

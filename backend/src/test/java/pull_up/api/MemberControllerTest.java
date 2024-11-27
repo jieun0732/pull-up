@@ -33,5 +33,7 @@ class MemberControllerTest {
     void testAllAPI() throws Exception {
         mockMvc.perform(get("/api/members/1"))
                 .andExpect(status().is(200));
+        mockMvc.perform(get("/api/members/incorrect/1"))
+                .andExpect(status().is(200));
     }
 }
