@@ -12,4 +12,23 @@ public enum Entry {
 
         throw new IllegalStateException("not supported entry : " + entry);
     }
+
+    public String getKorean() {
+        switch (this) {
+            case LANGUAGE -> {
+                return "언어";
+            }
+            case REASONING -> {
+                return "추론";
+            }
+            case MATH -> {
+                return "수리";
+            }
+            case SPATIAL -> {
+                return "공간지각능력";
+            }
+        }
+
+        throw new IllegalStateException("not supported entry");
+    }
 }

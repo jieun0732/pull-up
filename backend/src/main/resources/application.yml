@@ -39,8 +39,15 @@ logging:
 
 server:
   port: ${basic-server.port}
+  error:
+    path: "/error"
 
 spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
   config:
     activate:
       on-profile: common
@@ -122,6 +129,9 @@ auth:
   domain:
     frontend: ${basic-server.frontend-domain}
   with-credential: ${security.with-credential}
+  admin:
+    id: ${security.admin.id}
+    password: ${security.admin.password}
 
 springdoc:
   use-fqn: true

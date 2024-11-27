@@ -1,5 +1,7 @@
 package pull_up.infra.database.jpa.entity;
 
+import org.assertj.core.data.Offset;
+import org.assertj.core.data.TemporalUnitWithinOffset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pull_up.domain.exam.ExamType;
@@ -9,9 +11,14 @@ import pull_up.infra.database.jpa.fixture.MemberFixture;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -222,7 +229,7 @@ class ExamTest {
 
         // then
         assertThat(exam.getDuration()).isNull();
-        assertThat(exam.getStartTime()).isNull();
+        assertThat(exam.getStartTime()).isCloseTo(LocalDateTime.now(), new TemporalUnitWithinOffset(1, ChronoUnit.SECONDS));
         assertThat(exam.getEndTime()).isNull();
         assertThat(exam.getScore()).isZero();
         assertThat(exam.getAnswers()).allSatisfy(answer -> {

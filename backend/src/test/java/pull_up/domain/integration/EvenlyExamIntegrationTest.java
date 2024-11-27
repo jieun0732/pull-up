@@ -9,10 +9,7 @@ import pull_up.domain.dao.ExamRepository;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
-import pull_up.domain.exam.dto.End;
-import pull_up.domain.exam.dto.Next;
-import pull_up.domain.exam.dto.Start;
-import pull_up.domain.exam.dto.Submit;
+import pull_up.domain.exam.dto.*;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Member;
 import pull_up.infra.database.jpa.fixture.MemberFixture;
@@ -64,10 +61,10 @@ public class EvenlyExamIntegrationTest {
         Submit.Request submitReq1 = new Submit.Request(startRes.examId(), 1, 3);
 
         // when [ExamService] 정답 채점
-        Submit.Response submitRes1 = examService.submit(submitReq1);
+        Explanation submitRes1 = examService.submit(submitReq1);
 
         // then [백] 채점 후 결과전송
-        assertThat(submitRes1).isInstanceOf(Submit.Response.class);
+        assertThat(submitRes1).isInstanceOf(Explanation.class);
         assertThat(submitRes1.correctAnswer()).isEqualTo(2);
         assertThat(submitRes1.isCorrect()).isEqualTo(false);
         assertThat(submitRes1.incorrectRate()).isEqualTo(100D);
@@ -93,15 +90,22 @@ public class EvenlyExamIntegrationTest {
         Submit.Request submitReq2 = new Submit.Request(startRes.examId(), 2, 3);
 
         // [ExamService] 정답 채점
-        Submit.Response submitRes2 = examService.submit(submitReq2);
+        Explanation submitRes2 = examService.submit(submitReq2);
 
         // [백] 2번 문제 채점 후 결과 전송
-        assertThat(submitRes2).isInstanceOf(Submit.Response.class);
+        assertThat(submitRes2).isInstanceOf(Explanation.class);
         assertThat(submitRes2.correctAnswer()).isEqualTo(3);
         assertThat(submitRes2.isCorrect()).isEqualTo(true);
         assertThat(submitRes2.incorrectRate()).isEqualTo(0D);
 
-        /* 5. 시험 종료 */
+        /* 5. 2번 조회 */
+
+        Next.Response next2Res = examService.next(startRes.examId(), 2);
+
+        assertThat(next2Res.isSubmitted()).isTrue();
+        assertThat(next2Res.explanation()).isNotNull();
+
+        /* 6. 시험 종료 */
 
         // [프론트] 시험 종료 요청(PATCH)
         Long endExamId = submitReq2.examId();

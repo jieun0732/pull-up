@@ -1,17 +1,20 @@
 package pull_up.infra.database.jpa.entity;
 
-import com.nimbusds.jose.util.StandardCharset;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import pull_up.domain.problem.Entry;
+
+import java.util.Map;
+
+import static com.nimbusds.jose.util.StandardCharset.UTF_8;
 
 @Entity
 @Table(name = "problem")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Problem {
+public class Problem extends BaseEntity{
 
     @Id
     @Setter
@@ -70,22 +73,32 @@ public class Problem {
     private Problem(Entry entry, String problemType, String question, String example, String choice1, String choice2, String choice3, String choice4, String choice5, String correctAnswer, String explanation) {
         this.entry = entry;
         this.problemType = problemType;
-        this.question = question.getBytes(StandardCharset.UTF_8);
-        this.example = example.getBytes(StandardCharset.UTF_8);
+        this.question = question.getBytes(UTF_8);
+        this.example = example.getBytes(UTF_8);
         this.choice1 = choice1;
         this.choice2 = choice2;
         this.choice3 = choice3;
         this.choice4 = choice4;
         this.choice5 = choice5;
         this.correctAnswer = correctAnswer;
-        this.explanation = explanation.getBytes(StandardCharset.UTF_8);
+        this.explanation = explanation.getBytes(UTF_8);
         this.totalAttempts = 0;
         this.incorrectAttempts = 0;
         this.incorrectRate = 0.0;
     }
 
-    public static Problem createProblem(Entry entry, String problemType, String question, String example, String choice1, String choice2, String choice3, String choice4, String choice5, String correctAnswer, String explanation) {
+    public static Problem create(Entry entry, String problemType, String question, String example, String choice1, String choice2, String choice3, String choice4, String choice5, String correctAnswer, String explanation) {
         return new Problem(entry, problemType, question, example, choice1, choice2, choice3, choice4, choice5, correctAnswer, explanation);
+    }
+
+    public static Problem create(Map<String, String> parameters) {
+        Problem newProblem = new Problem(null, null, "", "", null, null, null, null, null, null, "");
+        newProblem.map(parameters);
+        return newProblem;
+    }
+
+    public void modify(Map<String, String> parameters) {
+        map(parameters);
     }
 
     public String getQuestionAsString() {
@@ -116,5 +129,19 @@ public class Problem {
         totalAttempts++;
         if (!isCorrect) incorrectAttempts++;
         incorrectRate = (double) incorrectAttempts / totalAttempts * 100;
+    }
+
+    private void map(Map<String, String> parameters) {
+        this.entry = Entry.getEntry(parameters.get("entry"));
+        this.problemType = parameters.get("problemType");
+        this.question = parameters.get("question").getBytes(UTF_8);
+        this.example = parameters.get("example").getBytes(UTF_8);
+        this.choice1 = parameters.get("choice1");
+        this.choice2 = parameters.get("choice2");
+        this.choice3 = parameters.get("choice3");
+        this.choice4 = parameters.get("choice4");
+        this.choice5 = parameters.get("choice5");
+        this.correctAnswer = parameters.get("correctAnswer");
+        this.explanation = parameters.get("explanation").getBytes(UTF_8);
     }
 }

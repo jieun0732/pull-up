@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pull Up Admin Login</title>
+    <link rel="stylesheet" href="/css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="login-box">
+    <h2>Pull Up Admin</h2>
+    <div class="text-warning" th:if="${param.error}">
+        아이디 혹은 비밀번호가 일치하지 않습니다.</div>
+    <form th:action="@{/admin/login}" method="post">
+        <div class="user-box">
+            <input type="text" name="username" required="">
+            <label>Username</label>
+        </div>
+        <div class="user-box">
+            <input type="password" name="password" required="">
+            <label>Password</label>
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-dark">Login</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

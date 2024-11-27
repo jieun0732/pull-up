@@ -1,0 +1,19 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.index-container {
+    margin: 10vh auto auto;
+    display: flex;
+    flex-wrap: wrap;
+    width: 48vw;
+    height: 64vh;
+}
+
+.index-button {
+    font-size: 1.5rem;
+    width: 20vw;
+    height: 30vh;
+    margin: 3vh 2vw;
+}

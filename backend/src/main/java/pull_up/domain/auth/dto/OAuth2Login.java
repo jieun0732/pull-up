@@ -8,11 +8,16 @@ public record OAuth2Login(
 
 ) {
     public record Request() {
+        public record Local(
+                String snsId,
+                String name,
+                String email
+        ) {}
+
         public record Kakao(
                 String code
-        ) {
+        ) {}
 
-        }
         public record Apple(
                 UserName name,
                 String email

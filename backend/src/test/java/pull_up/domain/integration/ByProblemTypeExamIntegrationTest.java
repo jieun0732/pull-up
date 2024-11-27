@@ -85,10 +85,10 @@ public class ByProblemTypeExamIntegrationTest {
         Submit.Request submitReq1 = new Submit.Request(startRes.examId(), 1, 2);
 
         // when [ExamService] 정답 채점
-        Submit.Response submitRes1 = examService.submit(submitReq1);
+        Explanation submitRes1 = examService.submit(submitReq1);
 
         // then [백] 채점 후 결과전송
-        assertThat(submitRes1).isInstanceOf(Submit.Response.class);
+        assertThat(submitRes1).isInstanceOf(Explanation.class);
         assertThat(submitRes1.correctAnswer()).isEqualTo(2);
         assertThat(submitRes1.isCorrect()).isEqualTo(true);
         assertThat(submitRes1.correctRate()).isEqualTo(100D);
@@ -114,10 +114,10 @@ public class ByProblemTypeExamIntegrationTest {
         Submit.Request submitReq2 = new Submit.Request(startRes.examId(), 2, 3);
 
         // [ExamService] 정답 채점
-        Submit.Response submitRes2 = examService.submit(submitReq2);
+        Explanation submitRes2 = examService.submit(submitReq2);
 
         // [백] 2번 문제 채점 후 결과 전송
-        assertThat(submitRes2).isInstanceOf(Submit.Response.class);
+        assertThat(submitRes2).isInstanceOf(Explanation.class);
         assertThat(submitRes2.correctAnswer()).isEqualTo(1);
         assertThat(submitRes2.isCorrect()).isEqualTo(false);
         assertThat(submitRes2.incorrectRate()).isEqualTo(100D);

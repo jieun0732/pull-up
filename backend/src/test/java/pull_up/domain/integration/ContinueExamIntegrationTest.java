@@ -10,6 +10,7 @@ import pull_up.domain.dao.ExamRepository;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
+import pull_up.domain.exam.dto.Explanation;
 import pull_up.domain.exam.dto.Next;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.exam.dto.Submit;
@@ -60,9 +61,9 @@ public class ContinueExamIntegrationTest {
 
         Submit.Request submitReq1 = new Submit.Request(startRes.examId(), 1, 3);
 
-        Submit.Response submitRes1 = examService.submit(submitReq1);
+        Explanation submitRes1 = examService.submit(submitReq1);
 
-        assertThat(submitRes1).isInstanceOf(Submit.Response.class);
+        assertThat(submitRes1).isInstanceOf(Explanation.class);
         assertThat(submitRes1.correctAnswer()).isEqualTo(2);
         assertThat(submitRes1.isCorrect()).isEqualTo(false);
         assertThat(submitRes1.incorrectRate()).isEqualTo(100D);
@@ -96,9 +97,9 @@ public class ContinueExamIntegrationTest {
         Submit.Request submitReq3 = new Submit.Request(examId2, 2, 3);
 
         examService.submit(submitReq2);
-        Submit.Response submitRes2 = examService.submit(submitReq3);
+        Explanation submitRes2 = examService.submit(submitReq3);
 
-        assertThat(submitRes2).isInstanceOf(Submit.Response.class);
+        assertThat(submitRes2).isInstanceOf(Explanation.class);
         assertThat(submitRes2.correctAnswer()).isEqualTo(3);
         assertThat(submitRes2.isCorrect()).isEqualTo(true);
         assertThat(submitRes2.incorrectRate()).isZero();

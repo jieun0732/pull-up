@@ -1,9 +1,11 @@
 package pull_up.api;
 
+import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -94,8 +96,22 @@ class OAuth2ControllerTest {
     @Test
     @DisplayName("로컬 로그인 테스트")
     void testLocalLogin() throws Exception {
-        when(mockService.getLocalUser()).thenReturn(new OAuth2Login.Response(true,99999999L, "local", "test user", "test@example.com"));
+        // given
+        Gson gson = new Gson();
+        OAuth2Login.Request.Local loginReq = new OAuth2Login.Request.Local("test1234", "test", "test@example.com");
+        OAuth2Login.Response loginRes = new OAuth2Login.Response(true, 99999999L, "local", "test user", "test@example.com");
+
+        // when
+        when(mockService.getLocalUser()).thenReturn(loginRes);
+        when(mockService.getLocalUser((String) any())).thenReturn(loginRes);
+        when(mockService.getLocalUser((OAuth2Login.Request.Local) any())).thenReturn(loginRes);
+
+        // then
         mockMvc.perform(post("/api/oauth2/callback/local")).andDo(print())
+                .andExpect(status().is(200));
+        mockMvc.perform(get("/api/oauth2/callback/local/login/1")).andDo(print())
+                .andExpect(status().is(200));
+        mockMvc.perform(post("/api/oauth2/callback/local/regist").content(gson.toJson(loginReq)).contentType(MediaType.APPLICATION_JSON)).andDo(print())
                 .andExpect(status().is(200));
     }
 }

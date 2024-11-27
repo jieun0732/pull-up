@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Component;
+import pull_up.domain.auth.Role;
 import pull_up.domain.auth.dto.JwtUserInfoDto;
 import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.domain.auth.exception.AuthError;
@@ -37,7 +38,7 @@ public class JwtUtil {
     @Value("${auth.jwt.expire}")
     private Long expire;
 
-    public String getAccessToken(Long id, String name, String email, String role) {
+    public String getAccessToken(Long id, String name, String email, Role role) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + expire);
 
@@ -59,11 +60,11 @@ public class JwtUtil {
 
     public String getAccessToken(OAuth2Login.Response dto) {
         if (dto.provider().equalsIgnoreCase("apple"))
-            return getAccessToken(dto.memberId(), dto.name(), dto.email(), "apple-user");
+            return getAccessToken(dto.memberId(), dto.name(), dto.email(), Role.USER);
         else if (dto.provider().equalsIgnoreCase("kakao"))
-            return getAccessToken(dto.memberId(), dto.name(), dto.email(), "kakao-user");
+            return getAccessToken(dto.memberId(), dto.name(), dto.email(), Role.USER);
         else if (dto.provider().equalsIgnoreCase("local"))
-            return getAccessToken(dto.memberId(), dto.name(), dto.email(), "local-user");
+            return getAccessToken(dto.memberId(), dto.name(), dto.email(), Role.USER);
 
         throw new AuthException(AuthError.NOT_PROVIDED_OAUTH2_VENDOR_REQUEST);
     }

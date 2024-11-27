@@ -165,7 +165,7 @@ public class Exam extends BaseEntity {
     public void reset() {
         answers.forEach(Answer::reset);
         duration = null;
-        startTime = null;
+        startTime = LocalDateTime.now();
         endTime = null;
         score = 0;
     }

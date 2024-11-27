@@ -22,7 +22,10 @@ public enum MemberErrorCode {
     NO_AUTHORITY(HttpStatus.BAD_REQUEST, "권한이 없습니다."),
     // 카카오 로그인 에러코드
     ILLEGAL_OAUTH2CLIENT_NAME(HttpStatus.INTERNAL_SERVER_ERROR, "로그인 실패"),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "카카오 로그인 실패");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "카카오 로그인 실패"),
+
+    // 로컬 로그인 전용
+    DUPLICATED_SNS_ID(HttpStatus.BAD_REQUEST, "이미 존재하는 SNS ID입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

@@ -25,7 +25,7 @@ public record Create() {
             String answerExplanation
     ) {
         public static Problem toEntity(Request createProblemReq) {
-            return Problem.createProblem(
+            return Problem.create(
                     createProblemReq.entry,
                     createProblemReq.problemType,
                     createProblemReq.question,
@@ -48,7 +48,7 @@ public record Create() {
                 String[] values = formatCol.split("/col/");
                 if (values.length != 11) throw new IllegalArgumentException("illegal column size");
                 log.info("입력된 문제 : {}", Arrays.toString(values));
-                ret.add(Problem.createProblem(Entry.getEntry(values[0]), values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8], values[9], values[10]));
+                ret.add(Problem.create(Entry.getEntry(values[0]), values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8], values[9], values[10]));
             }
             return ret;
         }

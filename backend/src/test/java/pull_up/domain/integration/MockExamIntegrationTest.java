@@ -97,6 +97,18 @@ public class MockExamIntegrationTest {
         assertThat(startRes.entry()).isEqualTo(Entry.REASONING);
         assertThat(startRes.problemNumber()).isEqualTo(1);
 
+        /* 모의고사 재시작(restart) */
+
+        startRes = examService.start(startReq);
+
+        assertThat(startRes).isInstanceOf(Start.Response.class);
+        assertThat(startRes.examId()).isNotNull();
+        assertThat(startRes.totalProblemCount()).isEqualTo(4);
+        assertThat(startRes.leftProblemCount()).isEqualTo(3);
+        assertThat(startRes.entry()).isEqualTo(Entry.REASONING);
+        assertThat(startRes.problemNumber()).isEqualTo(1);
+
+
         /* 모의고사 조회 2 */
         solvedInfo = examService.getSolvedInfo(member.getId());
         assertThat(solvedInfo.examId()).isEqualTo(startRes.examId());

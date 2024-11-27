@@ -80,27 +80,31 @@ public class ExamService {
 
     @Transactional
     public Start.Response start(Start.MockExamRequest startReq) {
-        examRepository.findMockExamByMemberId(startReq.memberId()).ifPresent(e -> {throw new ExamException(ExamErrorCode.ALREADY_STARTED_MOCK_EXAM);});
 
         Member startMember = memberRepository.findById(startReq.memberId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
         Examsheet examSheet = examsheetRepository.findByExamTitle(startReq.mockExamName());
         List<Problem> problemList = problemRepository.findAllById(examSheet.getProblemMap().values());
 
-        Exam startedExam = Exam.startMockExam(startMember, problemList, examSheet);
+        Optional<Exam> exam = examRepository.findMockExamByMemberId(startReq.memberId());
+        exam.ifPresent(Exam::reset);
 
-        examRepository.save(startedExam);
+        Exam newExam = exam.orElseGet(() -> {
+            Exam startedExam = Exam.startMockExam(startMember, problemList, examSheet);
+            examRepository.save(startedExam);
+            return startedExam;
+        });
 
-        return Start.Response.toDto(startedExam);
+        return Start.Response.toDto(newExam);
     }
 
     @Transactional
-    public Submit.Response submit(Submit.Request submitReq) {
+    public Explanation submit(Submit.Request submitReq) {
         Exam examInDB = examRepository.findById(submitReq.examId())
                 .orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
 
         Answer answer = examInDB.submit(submitReq.problemNumber(), submitReq.submitAnswer());
 
-        return Submit.Response.toDto(answer);
+        return Explanation.toDto(answer);
     }
 
     public Next.Response next(Long examId, Integer problemNumber) {

@@ -1,0 +1,73 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/list.css" />
+    <title>PULL UP Problems</title>
+</head>
+<body>
+<div th:insert="~{nav :: nav}"></div>
+<div class="position-relative">
+    <div class="container-md">
+        <table class="table">
+            <thead class="bg-light sticky-top top-0">
+            <tr>
+                <th scope="col" class="text-center" colspan="6">
+                    <div class="row">
+                        <div class="col">
+                        <a href="/admin/lists/new">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7"/>
+                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+                            </svg>
+                        </a>
+                        </div>
+                        <div class="col">
+                            <form class="input-group">
+                                <select class="form-select" id="search-col">
+                                    <option selected>검색 옵션</option>
+                                    <option value="1">영역</option>
+                                    <option value="2">유형</option>
+                                    <option value="3">문제</option>
+                                </select>
+                                <input type="text" class="form-control" placeholder="검색어를 입력하세요." aria-label="search-keyword">
+                                <button onclick="javascript: alert('준비중입니다.')" class="btn btn-outline-secondary" type="button" id="search-button">검색</button>
+                            </form>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th scope="col" class="text-center">ID</th>
+                <th scope="col" class="text-center">영역</th>
+                <th scope="col" class="text-center">유형</th>
+                <th scope="col" class="text-center">문제</th>
+                <th scope="col">시도</th>
+                <th scope="col">정답률</th>
+                <th scope="col">수정</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="problemInfo : ${problemInfos}">
+                <td class="text-center" th:text="${problemInfo.id()}">1</td>
+                <td class="text-center" th:text="${problemInfo.entry()}">수리</td>
+                <td class="text-center" th:text="${problemInfo.problemType()}">속력</td>
+                <td th:text="${problemInfo.question()}">문제</td>
+                <td class="text-center" th:text="${problemInfo.totalAttempts()}">2</td>
+                <td th:text="${problemInfo.correctRate()}">70%</td>
+                <td><a href="#" th:href="@{/admin/lists/{problemId}(problemId=${problemInfo.id()})}" class="text-center m-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                    </svg>
+                </a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

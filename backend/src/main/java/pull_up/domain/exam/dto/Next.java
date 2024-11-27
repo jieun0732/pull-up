@@ -10,6 +10,8 @@ import java.util.List;
 public record Next() {
     public record Response(
             Long examId,
+            Boolean isSubmitted,
+            Explanation explanation,
             Integer totalProblemCount,
             Integer leftProblemCount,
             Integer problemNumber,
@@ -24,6 +26,8 @@ public record Next() {
             Problem problem = answer.getProblem();
             return new Next.Response(
                     currentExam.getId(),
+                    answer.getIsSubmitted(),
+                    answer.getIsSubmitted()? Explanation.toDto(answer) : null,
                     currentExam.getAnswers().size(),
                     currentExam.getAnswers().size() - problemNumber,
                     answer.getProblemNumber(),

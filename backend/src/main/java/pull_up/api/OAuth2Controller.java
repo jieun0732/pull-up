@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.domain.auth.exception.AuthError;
@@ -64,10 +62,27 @@ public class OAuth2Controller {
         return setRedirect(kakaoUser);
     }
 
-    @Operation(summary = "로컬 SNS 로그인[로컬 전용]", description = "로컬 SNS 로그인을 시도합니다.", tags = "인증")
+    @Operation(summary = "로컬 SNS 기본계정 로그인[테스트 전용]", description = "로컬 SNS로 로그인합니다.", tags = "인증")
     @PostMapping("/local")
-    ResponseEntity<Properties> localLogin(HttpServletResponse response) {
+    ResponseEntity<Properties> localLoginDefault(HttpServletResponse response) {
         OAuth2Login.Response localUser = oAuth2LoginService.getLocalUser();
+        response.addCookie(cookieUtil.getSecureCookie(jwtUtil.getAccessToken(localUser)));
+        return new ResponseEntity<>(getUserDtoProperty(localUser), HttpStatus.OK);
+    }
+
+    @Operation(summary = "로컬 SNS 로그인[테스트 전용]", description = "로컬 SNS로 로그인합니다.", tags = "인증")
+    @GetMapping("/local/login/{snsId}")
+    ResponseEntity<Properties> localLogin(@PathVariable String snsId, HttpServletResponse response) {
+        OAuth2Login.Response localUser = oAuth2LoginService.getLocalUser(snsId);
+        response.addCookie(cookieUtil.getSecureCookie(jwtUtil.getAccessToken(localUser)));
+        return new ResponseEntity<>(getUserDtoProperty(localUser), HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "로컬 SNS 회원가입[테스트 전용]", description = "로컬 SNS로 회원가입합니다.", tags = "인증")
+    @PostMapping("/local/regist")
+    ResponseEntity<Properties> localRegist(@RequestBody OAuth2Login.Request.Local request, HttpServletResponse response) {
+        OAuth2Login.Response localUser = oAuth2LoginService.getLocalUser(request);
         response.addCookie(cookieUtil.getSecureCookie(jwtUtil.getAccessToken(localUser)));
         return new ResponseEntity<>(getUserDtoProperty(localUser), HttpStatus.OK);
     }

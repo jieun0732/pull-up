@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -36,8 +37,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void setAuthentication(HttpServletRequest request) {
-        String accessToken = cookieUtil.getAccessToken(request);
-        Authentication authentication = jwtUtil.getAuthentication(accessToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (securityContext.getAuthentication() == null || !securityContext.getAuthentication().isAuthenticated()) {
+            String accessToken = cookieUtil.getAccessToken(request);
+            Authentication authentication = jwtUtil.getAuthentication(accessToken);
+            securityContext.setAuthentication(authentication);
+        }
     }
 }

@@ -210,7 +210,7 @@ class ExamServiceTest {
 
         // when
         when(mockExamRepository.findById(any())).thenReturn(Optional.of(exam));
-        Submit.Response submitRes = suit.submit(submitReq);
+        Explanation submitRes = suit.submit(submitReq);
 
         // then
         assertThat(submitRes).isNotNull();
@@ -228,11 +228,13 @@ class ExamServiceTest {
         Exam exam = FixtureRepository.getEvenlyExam(member.getId(), Entry.LANGUAGE);
         Problem problem2 = ProblemFixture.LANGUAGE_REASONING_1.get();
 
-        // when
+        // when : 안푼 문제 조회 시
         when(mockExamRepository.findById(any())).thenReturn(Optional.of(exam));
         Next.Response nextRes = suit.next(exam.getId(), 2);
 
         // then
+        assertThat(nextRes.isSubmitted()).isFalse();
+        assertThat(nextRes.explanation()).isNull();
         assertThat(nextRes.totalProblemCount()).isEqualTo(2);
         assertThat(nextRes.leftProblemCount()).isEqualTo(0);
         assertThat(nextRes.problemNumber()).isEqualTo(2);
@@ -241,6 +243,14 @@ class ExamServiceTest {
         assertThat(nextRes.question()).isEqualTo(problem2.getQuestionAsString());
         assertThat(nextRes.example()).isEqualTo(problem2.getExampleAsString());
         assertThat(nextRes.choices()).contains(problem2.getChoice1(), problem2.getChoice2(), problem2.getChoice3(), problem2.getChoice4(), problem2.getChoice5());
+
+        // when2 : 푼 문제 조회 시
+        exam.submit(1, 1);
+        Next.Response nextRes2 = suit.next(exam.getId(), 1);
+
+        // then2
+        assertThat(nextRes2.isSubmitted()).isTrue();
+        assertThat(nextRes2.explanation()).isNotNull();
     }
 
     @Test

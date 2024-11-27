@@ -43,14 +43,15 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.11.0'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 	implementation "com.querydsl:querydsl-jpa:${querydslVer}:jakarta"
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	annotationProcessor 'org.projectlombok:lombok'
-	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 	annotationProcessor "com.querydsl:querydsl-apt:${querydslVer}:jakarta"
 
 	// jjwt (JSON Web Token)
@@ -60,7 +61,7 @@ dependencies {
 
 	// For Test SNS Login
 	implementation 'org.webjars:jquery:3.4.1'
-	implementation 'org.webjars:bootstrap:4.3.1'
+	implementation 'org.webjars:bootstrap:5.3.1'
 	implementation 'org.webjars:webjars-locator-core'
 
 	// test dependency

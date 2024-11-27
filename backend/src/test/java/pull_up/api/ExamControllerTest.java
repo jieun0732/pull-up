@@ -29,8 +29,8 @@ class ExamControllerTest {
 
     @BeforeEach
     void init() {
-        ExamService examService = Mockito.mock(ExamService.class);
-        ExamController controller = new ExamController(examService);
+        ExamService mockService = Mockito.mock(ExamService.class);
+        ExamController controller = new ExamController(mockService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         gson = new Gson();
     }

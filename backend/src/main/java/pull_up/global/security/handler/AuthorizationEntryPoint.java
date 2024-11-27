@@ -14,6 +14,6 @@ public class AuthorizationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.getWriter().write(authException.getMessage());
-        response.sendError(401);
+        response.sendRedirect("/admin/login");
     }
 }
