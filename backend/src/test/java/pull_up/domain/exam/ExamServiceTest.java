@@ -60,7 +60,7 @@ class ExamServiceTest {
         // when
         when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(new HashMap<>());
         when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
-        Solved.ByEntry.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
+        Solved.ByEntryResponse solvedInfo = suit.getSolvedInfo(memberId, entry);
 
         // then
         assertThat(solvedInfo.entry()).isEqualTo(entry);
@@ -94,7 +94,7 @@ class ExamServiceTest {
         // when
         when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(examMap);
         when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
-        Solved.ByEntry.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
+        Solved.ByEntryResponse solvedInfo = suit.getSolvedInfo(memberId, entry);
 
         // then
         assertThat(solvedInfo.entry()).isEqualTo(entry);
@@ -130,7 +130,7 @@ class ExamServiceTest {
         // when
         when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(examMap);
         when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
-        Solved.ByEntry.Response solvedInfo = suit.getSolvedInfo(memberId, entry);
+        Solved.ByEntryResponse solvedInfo = suit.getSolvedInfo(memberId, entry);
 
         // then
         assertThat(solvedInfo.entry()).isEqualTo(entry);
@@ -278,14 +278,14 @@ class ExamServiceTest {
     }
 
     @Test
-    @DisplayName("시험 종료 테스트")
-    void testEndExam() {
+    @DisplayName("골고루/유형별 시험 종료 테스트")
+    void testEndByEntryExam() {
         // given
         Exam exam = FixtureRepository.getEvenlyExam(member.getId(), Entry.LANGUAGE);
 
         // when
         when(mockExamRepository.findById(any())).thenReturn(Optional.of(exam));
-        End.Response endRes = suit.end(exam.getId());
+        End.ByEntryResponse endRes = suit.endByEntryExam(exam.getId());
 
         // then
         assertThat(endRes.entry()).isEqualTo(Entry.LANGUAGE);
@@ -300,7 +300,7 @@ class ExamServiceTest {
 
         // when 2
         suit.submit(new Submit.Request(exam.getId(), 1, 2));
-        End.Response endRes2 = suit.end(exam.getId());
+        End.ByEntryResponse endRes2 = suit.endByEntryExam(exam.getId());
 
         // then2
         assertThat(endRes2.isFinished()).isTrue();
@@ -312,7 +312,7 @@ class ExamServiceTest {
 
         // when 3
         suit.submit(new Submit.Request(exam.getId(), 2, 2));
-        End.Response endRes3 = suit.end(exam.getId());
+        End.ByEntryResponse endRes3 = suit.endByEntryExam(exam.getId());
 
         // then2
         assertThat(endRes3.isFinished()).isTrue();
@@ -321,6 +321,85 @@ class ExamServiceTest {
         assertThat(endRes3.correctProblemCount()).isEqualTo(1);
         assertThat(endRes3.score()).isEqualTo(50);
         assertThat(endRes3.results()).allSatisfy(problemResult -> assertThat(problemResult.isSubmitted()).isTrue());
+    }
 
+    @Test
+    @DisplayName("모의고사 채점 테스트")
+    void testGradeExam() {
+        // given
+        Exam exam = FixtureRepository.getMockExam(member.getId());
+        Grade.Request gradeReq = new Grade.Request(exam.getId(), List.of(
+                new Grade.Request.AnswerSheet(1, 3),
+                new Grade.Request.AnswerSheet(2, 3),
+                new Grade.Request.AnswerSheet(3, 3),
+                new Grade.Request.AnswerSheet(4, 3),
+                new Grade.Request.AnswerSheet(5, 3),
+                new Grade.Request.AnswerSheet(6, 3),
+                new Grade.Request.AnswerSheet(7, 3),
+                new Grade.Request.AnswerSheet(8, 3),
+                new Grade.Request.AnswerSheet(9, 3),
+                new Grade.Request.AnswerSheet(10, 3),
+                new Grade.Request.AnswerSheet(11, 3),
+                new Grade.Request.AnswerSheet(12, 3)));
+
+        // when
+        when(mockExamRepository.findById(any())).thenReturn(Optional.of(exam));
+        Report.mockExam report = suit.grade(gradeReq);
+
+        // then
+        assertThat(report.examId()).isEqualTo(exam.getId());
+        assertThat(report.name()).isEqualTo(member.getName());
+        assertThat(report.scoreInfo().myScore()).isEqualTo(33);
+        assertThat(report.scoreInfo().averageScore()).isEqualTo(33);
+        assertThat(report.scoreInfo().topRate()).isEqualTo(33);
+        assertThat(report.durationInfo().timeLimit()).isEqualTo(20);
+        assertThat(report.durationInfo().myDurationMinute()).isLessThan(1);
+        assertThat(report.durationInfo().averageDurationMinute()).isLessThan(1);
+        assertThat(report.vulnerableEntryInfo().vulnerableEntry()).contains(Entry.MATH.getKorean(), Entry.REASONING.getKorean());
+        assertThat(report.vulnerableEntryInfo().totalLanguageCount()).isEqualTo(4);
+        assertThat(report.vulnerableEntryInfo().totalMathCount()).isEqualTo(4);
+        assertThat(report.vulnerableEntryInfo().totalReasoningCount()).isEqualTo(4);
+        assertThat(report.vulnerableEntryInfo().incorrectLanguageCount()).isEqualTo(2);
+        assertThat(report.vulnerableEntryInfo().incorrectMathCount()).isEqualTo(3);
+        assertThat(report.vulnerableEntryInfo().incorrectReasoningCount()).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("모의고사 시험 종료 테스트")
+    void testGetMockExamResult() {
+        // given
+        Exam exam = FixtureRepository.getMockExam(member.getId());
+        Map<Integer, Integer> answerSheet = new HashMap<>();
+
+        answerSheet.put(1, 3);
+        answerSheet.put(2, 3);
+        answerSheet.put(3, 3);
+        answerSheet.put(4, 3);
+        answerSheet.put(5, 3);
+        answerSheet.put(6, 3);
+        answerSheet.put(7, 3);
+        answerSheet.put(8, 3);
+        answerSheet.put(9, 3);
+        answerSheet.put(10, 3);
+        answerSheet.put(11, 3);
+        answerSheet.put(12, 3);
+
+        // when(채점 전)
+        when(mockExamRepository.findById(any())).thenReturn(Optional.of(exam));
+
+        // then(오류)
+        assertThatThrownBy(() -> suit.getMockExamResult(exam.getId())).hasMessage(ExamErrorCode.NOT_GRADED_MOCK_EXAM.getMessage());
+
+        // when 2(채점 후)
+        exam.grade(answerSheet);
+        End.MockExamResponse endRes = suit.getMockExamResult(exam.getId());
+
+        // then 2(결과 반환)
+        assertThat(endRes.memberName()).isEqualTo(member.getName());
+        assertThat(endRes.totalProblemCount()).isEqualTo(12);
+        assertThat(endRes.correctProblemCount()).isEqualTo(4);
+        assertThat(endRes.score()).isEqualTo(33);
+        assertThat(endRes.durationSecond()).isLessThan(1L);
+        assertThat(endRes.results()).allSatisfy(problemResult -> assertThat(problemResult.isSubmitted()).isTrue());
     }
 }

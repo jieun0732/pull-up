@@ -46,10 +46,9 @@ public class ByProblemTypeExamIntegrationTest {
         Entry entry = Entry.MATH;
 
         // when [ExamService] 사용자 ID, Entry 로 시험 현황 확인
-        Solved.ByEntry.Response solvedInfoRes = examService.getSolvedInfo(memberId, entry);
+        Solved.ByEntryResponse solvedInfoRes = examService.getSolvedInfo(memberId, entry);
 
         // then [백] 시험현황 전송
-        assertThat(solvedInfoRes).isInstanceOf(Solved.ByEntry.Response.class);
         assertThat(solvedInfoRes.evenlyExamInfo().examId()).isNotNull();
         assertThat(solvedInfoRes.evenlyExamInfo().isStarted()).isTrue();
         assertThat(solvedInfoRes.evenlyExamInfo().isFinished()).isFalse();
@@ -128,10 +127,10 @@ public class ByProblemTypeExamIntegrationTest {
         Long endExamId = submitReq2.examId();
 
         // [ExamService] 시험 종료
-        End.Response endRes = examService.end(endExamId);
+        End.ByEntryResponse endRes = examService.endByEntryExam(endExamId);
 
         // [백] 요청결과 전송
-        assertThat(endRes).isInstanceOf(End.Response.class);
+        assertThat(endRes).isInstanceOf(End.ByEntryResponse.class);
         assertThat(endRes.entry()).isEqualTo(Entry.MATH);
         assertThat(endRes.isFinished()).isEqualTo(true);
         assertThat(endRes.score()).isEqualTo(50);

@@ -25,6 +25,6 @@ public enum ExamFixture implements Fixture<Exam>{
     private final Duration duration;
 
     public Exam get() {
-        return new Exam(id, isFinished, score, examType, startTime, endTime, duration, null, null, null);
+        return new Exam(id, isFinished, score, examType, startTime, endTime, duration, Duration.ofMinutes(20), null, null, null);
     }
 }

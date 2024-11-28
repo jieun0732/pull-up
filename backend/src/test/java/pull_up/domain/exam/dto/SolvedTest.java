@@ -25,7 +25,7 @@ class SolvedTest {
         problemMap.put(problemType2, FixtureRepository.getEmptyProblemTypeExam(Entry.MATH, problemType2));
 
         // when
-        List<Solved.ByEntry.Response.ProblemTypeExamInfo> list = Solved.ByEntry.Response.ProblemTypeExamInfo.toList(problemMap);
+        List<Solved.ByEntryResponse.ProblemTypeExamInfo> list = Solved.ByEntryResponse.ProblemTypeExamInfo.toList(problemMap);
 
         // then
         assertThat(list).hasSize(2);
@@ -44,7 +44,7 @@ class SolvedTest {
 
 
         // when
-        Solved.ByEntry.Response response = Solved.ByEntry.Response.toDto(entry, examMap);
+        Solved.ByEntryResponse response = Solved.ByEntryResponse.toDto(entry, examMap);
 
         // then
         assertThat(response.evenlyExamInfo().isStarted()).isFalse();
@@ -64,7 +64,7 @@ class SolvedTest {
         examMap.put("용액의 농도", problemTypeExam);
 
         // when
-        Solved.ByEntry.Response response = Solved.ByEntry.Response.toDto(entry, examMap);
+        Solved.ByEntryResponse response = Solved.ByEntryResponse.toDto(entry, examMap);
 
         // then
         assertThat(response.evenlyExamInfo().isStarted()).isFalse();
@@ -92,7 +92,7 @@ class SolvedTest {
         examMap.put("용액의 농도",problemTypeExam);
 
         // when
-        Solved.ByEntry.Response response = Solved.ByEntry.Response.toDto(entry, examMap);
+        Solved.ByEntryResponse response = Solved.ByEntryResponse.toDto(entry, examMap);
 
         // then
         assertThat(response.evenlyExamInfo().isStarted()).isTrue();

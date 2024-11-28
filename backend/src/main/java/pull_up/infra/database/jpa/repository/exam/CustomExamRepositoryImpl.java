@@ -66,8 +66,8 @@ public class CustomExamRepositoryImpl implements CustomExamRepository {
     }
 
     @Override
-    public Solved.MockExam.Response findSolvedMockExamInfo(Long memberId) {
-        return qf.select(Projections.constructor(Solved.MockExam.Response.class,
+    public Solved.MockExamResponse findSolvedMockExamInfo(Long memberId) {
+        return qf.select(Projections.constructor(Solved.MockExamResponse.class,
                         exam.id,
                         exam.isFinished,
                         member.tutorialFinished))

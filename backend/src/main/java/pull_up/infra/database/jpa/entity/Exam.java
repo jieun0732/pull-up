@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import pull_up.domain.exam.ExamType;
+import pull_up.domain.exam.MockTopRateSheet;
 import pull_up.domain.exam.ProblemSummation;
 import pull_up.domain.exam.exception.ExamErrorCode;
 import pull_up.domain.exam.exception.ExamException;
@@ -48,6 +49,9 @@ public class Exam extends BaseEntity {
     @Column
     private Duration duration;
 
+    @Column
+    private Duration timeLimit;
+
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -64,6 +68,7 @@ public class Exam extends BaseEntity {
         this.score = 0;
         this.examType = examType;
         this.startTime = LocalDateTime.now();
+        this.timeLimit = Duration.ofMinutes(20);
         this.member = member;
     }
 
@@ -144,11 +149,7 @@ public class Exam extends BaseEntity {
     }
 
     private Integer calculateScore() {
-        int correctCount = 0;
-        for (Answer answer : answers) {
-            if (answer.getIsSubmitted() && answer.getIsCorrect()) correctCount++;
-        }
-        return (int) ((double) correctCount / answers.size() * 100);
+        return (int) ((double) getProblemSummation().getCorrectProblemCount() / answers.size() * 100);
     }
 
     public Answer getAnswerByProblemNumber(Integer problemNumber) {
@@ -159,7 +160,7 @@ public class Exam extends BaseEntity {
     }
 
     public ProblemSummation getProblemSummation() {
-        return ProblemSummation.createProblemSummation(answers);
+        return new ProblemSummation(answers);
     }
 
     public void reset() {
@@ -183,6 +184,10 @@ public class Exam extends BaseEntity {
 
     public void end() {
         isFinished = true;
-        calculateDuration();
+    }
+
+    public Integer getTopRate(ProblemSummation problemSummation) {
+        if (problemSummation.getTotalProblemCount() != 20) return problemSummation.getCorrectProblemCount() * 100 / problemSummation.getTotalProblemCount();
+        return MockTopRateSheet.getTopRateSheet().get(problemSummation.getCorrectProblemCount());
     }
 }

@@ -13,10 +13,7 @@ import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.ExamType;
-import pull_up.domain.exam.dto.Explanation;
-import pull_up.domain.exam.dto.Grade;
-import pull_up.domain.exam.dto.Start;
-import pull_up.domain.exam.dto.Submit;
+import pull_up.domain.exam.dto.*;
 import pull_up.domain.member.MemberService;
 import pull_up.infra.database.jpa.dto.IncorrectQueryDto;
 import pull_up.domain.problem.Entry;
@@ -121,9 +118,9 @@ public class IncorrectAnswerIntegrationTest {
                 new Grade.Request.AnswerSheet(2, 3),
                 new Grade.Request.AnswerSheet(3, 3),
                 new Grade.Request.AnswerSheet(4, 3)));
-        Grade.Response gradeRes = examService.grade(gradeReq);
+        Report.mockExam gradeRes = examService.grade(gradeReq);
 
-        assertThat(gradeRes.score()).isEqualTo(25);
+        assertThat(gradeRes.scoreInfo().myScore()).isEqualTo(25);
 
         /* 7. 사용자 틀린문제 조회(모의고사 틀린문제는 조회하지 않으니 변경X) */
 

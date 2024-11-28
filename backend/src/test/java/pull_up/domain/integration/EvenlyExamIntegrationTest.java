@@ -111,10 +111,10 @@ public class EvenlyExamIntegrationTest {
         Long endExamId = submitReq2.examId();
 
         // [ExamService] 시험 종료
-        End.Response endRes = examService.end(endExamId);
+        End.ByEntryResponse endRes = examService.endByEntryExam(endExamId);
 
         // [백] 요청결과 전송
-        assertThat(endRes).isInstanceOf(End.Response.class);
+        assertThat(endRes).isInstanceOf(End.ByEntryResponse.class);
         assertThat(endRes.entry()).isEqualTo(Entry.LANGUAGE);
         assertThat(endRes.isFinished()).isEqualTo(true);
         assertThat(endRes.score()).isEqualTo(50);

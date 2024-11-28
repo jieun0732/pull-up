@@ -15,11 +15,11 @@
             <span class="input-group-text" id="problem-id">문제 ID</span>
             <input type="text" class="form-control" th:attr="value=${problemInfo.id()}" disabled>
             <span class="input-group-text" id="entry">항목</span>
-            <select class="form-select" aria-label="entry-select" name="entry">
+            <select class="form-select" aria-label="entry-select" name="entry" required>
                 <option th:each="entry : ${entry}" th:value="${entry}" th:text="${entry.getKorean()}" th:selected="${entry}==${problemInfo.entry()}"></option>
             </select>
             <span class="input-group-text" id="problem-type" >문제 유형</span>
-            <input type="text" class="form-control" th:value="${problemInfo.problemType()}" aria-label="problem-type" name="problemType">
+            <input type="text" class="form-control" th:value="${problemInfo.problemType()}" aria-label="problem-type" name="problemType" required>
             <span class="input-group-text" id="total-attempts">제출 횟수</span>
             <input type="text" class="form-control" th:value="${problemInfo.totalAttempts()}" aria-label="total-attempts" disabled>
             <span class="input-group-text" id="correct-rate" >정답률</span>
@@ -32,7 +32,7 @@
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text">질문</span>
-            <textarea class="form-control" aria-label="question" rows="3" th:text="${problemInfo.question()}" name="question"></textarea>
+            <textarea class="form-control" aria-label="question" rows="3" th:text="${problemInfo.question()}" name="question" required></textarea>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text">보기</span>
@@ -41,16 +41,16 @@
         <div th:each="choice : ${problemInfo.choices()}">
             <div class="input-group mb-3">
                 <span class="input-group-text" th:text="${choiceStat.index + 1}"></span>
-                <input type="text" class="form-control" aria-label="choice" th:value="${choice}" th:name="${'choice' + (choiceStat.index + 1)}">
+                <input type="text" class="form-control" aria-label="choice" th:value="${choice}" th:name="${'choice' + (choiceStat.index + 1)}" required>
             </div>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text">정답</span>
-            <input type="text" class="form-control" aria-label="choice" th:value="${problemInfo.correctAnswer()}" th:name="correctAnswer">
+            <input type="text" class="form-control" aria-label="choice" th:value="${problemInfo.correctAnswer()}" th:name="correctAnswer" required>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" th:name="explanation">해설</span>
-            <textarea class="form-control" rows="3" aria-label="explanation" name="explanation" th:text="${problemInfo.explanation()}"></textarea>
+            <textarea class="form-control" rows="3" aria-label="explanation" name="explanation" th:text="${problemInfo.explanation()}" required></textarea>
         </div>
         <div class="d-flex justify-content-center">
             <button type="button" onclick="window.location.href='/admin/lists'" class="btn btn-success m-3">목록으로</button>

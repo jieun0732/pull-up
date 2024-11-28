@@ -10,10 +10,7 @@ import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.ExamType;
-import pull_up.domain.exam.dto.Grade;
-import pull_up.domain.exam.dto.Next;
-import pull_up.domain.exam.dto.Solved;
-import pull_up.domain.exam.dto.Start;
+import pull_up.domain.exam.dto.*;
 import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.examsheet.dto.CreateExamsheet;
 import pull_up.domain.examsheet.ExamsheetService;
@@ -59,7 +56,6 @@ public class MockExamIntegrationTest {
 
         /* 1. 시험지 생성(createExamSheet) */
 
-        // given : [admin] 시험지에 들어갈 문제번호 + 문제 id 목록 전달
         String examTitle = "모의고사";
         CreateExamsheet.Request createExamsheetReq = new CreateExamsheet.Request(examTitle,List.of(
                 new CreateExamsheet.ProblemSheet(1, 5L),
@@ -67,29 +63,25 @@ public class MockExamIntegrationTest {
                 new CreateExamsheet.ProblemSheet(3, 7L),
                 new CreateExamsheet.ProblemSheet(4, 8L)));
 
-        // when : [ExamSheetService] 시험지 객체 생성 : 문제번호, 문제별 id, 시험 제목, 시험 시도횟수, 시험 평균점수
         MessageDto creatExamsheetRes = examsheetService.createExamsheet(createExamsheetReq);
         Examsheet createdExamsheet = examsheetRepository.findByExamTitle(examTitle);
 
-        // then : [backend] messageDto 시험지 객체 생성 성공 메시지
         assertThat(creatExamsheetRes).isInstanceOf(MessageDto.class);
         assertThat(createdExamsheet.getExamTitle()).isEqualTo(examTitle);
         assertThat(createdExamsheet.getProblemsheets()).hasSize(4);
 
         /* 모의고사 조회 */
-        Solved.MockExam.Response solvedInfo = examService.getSolvedInfo(member.getId());
+
+        Solved.MockExamResponse solvedInfo = examService.getSolvedInfo(member.getId());
         assertThat(solvedInfo.examId()).isNull();
         assertThat(solvedInfo.isMockExamGraded()).isFalse();
 
         /* 2. 모의고사 시작(start) */
 
-        // given : [frontend] 모의고사 시작요청 전송
         Start.MockExamRequest startReq = new Start.MockExamRequest(member.getId(), ExamType.MOCK_EXAM.name());
 
-        // when : [mockExamService] 모의고사 시작
         Start.Response startRes = examService.start(startReq);
 
-        // then : [backend] 1번 문제 전송
         assertThat(startRes).isInstanceOf(Start.Response.class);
         assertThat(startRes.examId()).isNotNull();
         assertThat(startRes.totalProblemCount()).isEqualTo(4);
@@ -108,8 +100,8 @@ public class MockExamIntegrationTest {
         assertThat(startRes.entry()).isEqualTo(Entry.REASONING);
         assertThat(startRes.problemNumber()).isEqualTo(1);
 
-
         /* 모의고사 조회 2 */
+
         solvedInfo = examService.getSolvedInfo(member.getId());
         assertThat(solvedInfo.examId()).isEqualTo(startRes.examId());
         assertThat(solvedInfo.isMockExamGraded()).isFalse();
@@ -125,29 +117,40 @@ public class MockExamIntegrationTest {
         assertThat(next.problemNumber()).isEqualTo(3);
         assertThat(next.entry()).isEqualTo(Entry.REASONING);
 
-        /* 4. 모의고사 채점(grade) */
+        /* 4. 모의고사 채점(grade) 및 결과 레포트 확인 */
 
-        // given : [frontend] grade.Request 문제별 답안 전송
         Grade.Request gradeReq = new Grade.Request(startRes.examId(), List.of(
                 new Grade.Request.AnswerSheet(1, 3),
                 new Grade.Request.AnswerSheet(2, 3),
                 new Grade.Request.AnswerSheet(3, 3),
                 new Grade.Request.AnswerSheet(4, 3)));
 
-        // when : [mockExamService] 답안 하나씩 돌며 채점 걸린시간 체크 점수 체크
-        Grade.Response gradeRes = examService.grade(gradeReq);
+        Report.mockExam mockExamReportRes = examService.grade(gradeReq);
 
-        // then : [backend] grade.Response 채점결과 전송
-        assertThat(gradeRes.memberName()).isEqualTo(member.getName());
-        assertThat(gradeRes.score()).isEqualTo(25);
-        assertThat(gradeRes.totalProblemCount()).isEqualTo(4);
-        assertThat(gradeRes.correctProblemCount()).isEqualTo(1);
-        assertThat(gradeRes.durationSecond()).isLessThan(1);
-        assertThat(gradeRes.results()).hasSize(4);
+        assertThat(mockExamReportRes.scoreInfo().myScore()).isEqualTo(25);
+        assertThat(mockExamReportRes.durationInfo().myDurationMinute()).isLessThan(1);
+        assertThat(mockExamReportRes.vulnerableEntryInfo().vulnerableEntry()).containsExactly(Entry.REASONING.getKorean());
+
+        /* 5. 모의고사 결과 확인(End) */
+
+        End.MockExamResponse endRes = examService.getMockExamResult(startRes.examId());
+
+        assertThat(endRes.memberName()).isEqualTo(member.getName());
+        assertThat(endRes.score()).isEqualTo(25);
+        assertThat(endRes.totalProblemCount()).isEqualTo(4);
+        assertThat(endRes.correctProblemCount()).isEqualTo(1);
+        assertThat(endRes.durationSecond()).isLessThan(1);
+        assertThat(endRes.results()).hasSize(4);
 
         /* 모의고사 조회 3 */
+
         solvedInfo = examService.getSolvedInfo(member.getId());
         assertThat(solvedInfo.examId()).isEqualTo(startRes.examId());
         assertThat(solvedInfo.isMockExamGraded()).isTrue();
+
+        /* 6. 모의고사 결과 레포트 조회 */
+        Report.mockExam mockExamReport = examService.getMockExamReport(startRes.examId());
+
+        assertThat(mockExamReport).usingRecursiveComparison().isEqualTo(mockExamReportRes);
     }
 }

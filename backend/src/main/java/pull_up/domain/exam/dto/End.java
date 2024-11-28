@@ -8,11 +8,7 @@ import pull_up.infra.database.jpa.entity.Exam;
 import java.util.List;
 
 public record End() {
-    public record Request() {
-
-    }
-
-    public record Response(
+    public record ByEntryResponse(
             Entry entry,
             Boolean isFinished,
             String memberName,
@@ -23,10 +19,10 @@ public record End() {
             List<Result> results
     ) {
 
-        public static Response toDto(Exam examInDB) {
+        public static ByEntryResponse toDto(Exam examInDB) {
             Answer firstAnswer = examInDB.getAnswers().get(0);
             ProblemSummation problemSummation = examInDB.getProblemSummation();
-            return new Response(
+            return new ByEntryResponse(
                     firstAnswer.getProblem().getEntry(),
                     examInDB.getIsFinished(),
                     examInDB.getMember().getName(),
@@ -35,6 +31,41 @@ public record End() {
                     problemSummation.getCorrectProblemCount(),
                     examInDB.getScore(),
                     examInDB.getAnswers().stream().map(Result::toDto).toList());
+        }
+    }
+
+    public record MockExamResponse(
+            String memberName,
+            Integer totalProblemCount,
+            Integer correctProblemCount,
+            Integer score,
+            Long durationSecond,
+            List<Result> results
+    ) {
+        public static MockExamResponse toDto(Exam examInDB) {
+            ProblemSummation problemSummation = examInDB.getProblemSummation();
+            return new MockExamResponse(
+                    examInDB.getMember().getName(),
+                    problemSummation.getTotalProblemCount(),
+                    problemSummation.getCorrectProblemCount(),
+                    examInDB.getScore(),
+                    examInDB.getDuration().toSeconds(),
+                    examInDB.getAnswers().stream().map(Result::toDto).toList());
+        }
+    }
+
+    public record Result(
+            Integer problemNumber,
+            String problemType,
+            Boolean isSubmitted,
+            Boolean isCorrect
+    ) {
+        public static Result toDto(Answer answer) {
+            return new Result(
+                    answer.getProblemNumber(),
+                    answer.getProblem().getProblemType(),
+                    answer.getIsSubmitted(),
+                    answer.getIsCorrect());
         }
     }
 }

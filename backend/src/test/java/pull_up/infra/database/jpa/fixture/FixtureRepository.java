@@ -134,4 +134,10 @@ public class FixtureRepository {
         }
         throw new IllegalArgumentException();
     }
+
+    public static Answer getEvenlyAnswer(Long memberId, Long problemId, Entry entry, Integer problemNumber) {
+        Problem problem = getProblem(problemId);
+        Exam exam = getEvenlyExam(1L, entry);
+        return Answer.makeEmptyAnswer(exam, problem, problemNumber);
+    }
 }

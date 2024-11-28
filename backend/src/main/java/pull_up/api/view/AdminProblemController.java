@@ -1,15 +1,20 @@
 package pull_up.api.view;
 
 
+import com.querydsl.core.types.Order;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pull_up.domain.problem.Entry;
 import pull_up.domain.problem.ProblemService;
 import pull_up.domain.problem.dto.ProblemDetailInfo;
-import pull_up.domain.problem.dto.ProblemInfo;
+import pull_up.infra.database.jpa.dto.ProblemInfo;
+import pull_up.infra.database.jpa.dto.SearchParam;
+import pull_up.infra.database.jpa.dto.SearchType;
+import pull_up.infra.database.jpa.dto.SortType;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,8 +28,13 @@ public class AdminProblemController {
     private final ProblemService problemService;
 
     @GetMapping
-    public String problemListPage(Model model) {
-        List<ProblemInfo> problemInfos = problemService.getAll();
+    public String problemListPage(Model model,
+                                  @RequestParam(required = false) String searchType,
+                                  @RequestParam(required = false) String keyword,
+                                  @RequestParam(required = false) String sortOrder,
+                                  @RequestParam(required = false) String sortType,
+                                  Pageable pageable) {
+        List<ProblemInfo> problemInfos = problemService.getAll(SearchParam.getSearchParam(searchType, keyword, sortOrder, sortType, pageable));
         model.addAttribute("problemInfos", problemInfos);
         model.addAttribute("navBtnColor","list");
         return "problems/list";

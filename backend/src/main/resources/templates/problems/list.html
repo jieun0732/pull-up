@@ -41,24 +41,60 @@
                 </th>
             </tr>
             <tr>
-                <th scope="col" class="text-center">ID</th>
-                <th scope="col" class="text-center">영역</th>
-                <th scope="col" class="text-center">유형</th>
-                <th scope="col" class="text-center">문제</th>
-                <th scope="col">시도</th>
-                <th scope="col">정답률</th>
+                <th scope="col" class="text-center">ID
+                    <a href="/admin/lists?sortType=ID">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </a>
+                </th>
+                <th scope="col" class="text-center">영역
+                    <a href="/admin/lists?sortType=ENTRY">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </a>
+                </th>
+                <th scope="col" class="text-center">유형
+                    <a href="/admin/lists?sortType=PROBLEM_TYPE">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </a>
+                </th>
+                <th scope="col" class="text-center">문제
+                </th>
+                <th scope="col">시도
+                    <a href="/admin/lists?sortType=ATTEMPT">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </a>
+                </th>
+                <th scope="col">정답률
+                    <a href="/admin/lists?sortType=CORRECT_RATE">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </a>
+                </th>
                 <th scope="col">수정</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="problemInfo : ${problemInfos}">
-                <td class="text-center" th:text="${problemInfo.id()}">1</td>
-                <td class="text-center" th:text="${problemInfo.entry()}">수리</td>
-                <td class="text-center" th:text="${problemInfo.problemType()}">속력</td>
-                <td th:text="${problemInfo.question()}">문제</td>
-                <td class="text-center" th:text="${problemInfo.totalAttempts()}">2</td>
-                <td th:text="${problemInfo.correctRate()}">70%</td>
-                <td><a href="#" th:href="@{/admin/lists/{problemId}(problemId=${problemInfo.id()})}" class="text-center m-auto">
+                <td class="text-center" th:text="${problemInfo.getId()}">1</td>
+                <td class="text-center" th:text="${problemInfo.getEntry()}">수리</td>
+                <td class="text-center" th:text="${problemInfo.getProblemType()}">속력</td>
+                <td th:text="${problemInfo.getQuestion()}">문제</td>
+                <td class="text-center" th:text="${problemInfo.getTotalAttempts()}">2</td>
+                <td th:text="${problemInfo.getCorrectRate()}">70%</td>
+                <td><a href="#" th:href="@{/admin/lists/{problemId}(problemId=${problemInfo.getId()})}" class="text-center m-auto">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>

@@ -12,7 +12,9 @@ import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.ExamType;
+import pull_up.domain.exam.dto.End;
 import pull_up.domain.exam.dto.Grade;
+import pull_up.domain.exam.dto.Report;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.member.MemberService;
 import pull_up.domain.member.dto.MemberInfo;
@@ -72,11 +74,9 @@ public class MemberInfoIntegrationTest {
                 new Grade.Request.AnswerSheet(3, 3),
                 new Grade.Request.AnswerSheet(4, 3)));
 
-        Grade.Response gradeRes = examService.grade(gradeReq);
+        Report.mockExam gradeRes = examService.grade(gradeReq);
 
-        assertThat(gradeRes.score()).isEqualTo(25);
-        assertThat(gradeRes.totalProblemCount()).isEqualTo(4);
-        assertThat(gradeRes.correctProblemCount()).isEqualTo(1);
+        assertThat(gradeRes.scoreInfo().myScore()).isEqualTo(25);
 
         /* 3. 사용자 정보조회 */
 

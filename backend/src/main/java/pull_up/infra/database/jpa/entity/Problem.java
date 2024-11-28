@@ -48,19 +48,19 @@ public class Problem extends BaseEntity{
     @Column(columnDefinition = "BLOB")
     private byte[] example;
 
-    @Column
+    @Column(nullable = false)
     private String choice1;
 
-    @Column
+    @Column(nullable = false)
     private String choice2;
 
-    @Column
+    @Column(nullable = false)
     private String choice3;
 
-    @Column
+    @Column(nullable = false)
     private String choice4;
 
-    @Column
+    @Column(nullable = false)
     private String choice5;
 
     @Column(nullable = false)

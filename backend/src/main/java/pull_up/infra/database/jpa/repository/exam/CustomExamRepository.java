@@ -12,5 +12,5 @@ public interface CustomExamRepository {
 
     Optional<Exam> findMockExamByMemberId(Long memberId);
 
-    Solved.MockExam.Response findSolvedMockExamInfo(Long memberId);
+    Solved.MockExamResponse findSolvedMockExamInfo(Long memberId);
 }

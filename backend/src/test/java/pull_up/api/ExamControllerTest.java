@@ -74,6 +74,12 @@ class ExamControllerTest {
         mockMvc.perform(get("/api/exams/next/1").param("problemNumber", "2"))
                 .andExpect(status().is(200));
 
+        mockMvc.perform(get("/api/exams/mock-exam/result/1"))
+                .andExpect(status().is(200));
+
+        mockMvc.perform(get("/api/exams/mock-exam/report/1"))
+                .andExpect(status().is(200));
+
         mockMvc.perform(patch("/api/exams/end/1"))
                 .andExpect(status().is(200));
     }

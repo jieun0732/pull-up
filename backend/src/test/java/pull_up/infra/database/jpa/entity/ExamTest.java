@@ -1,7 +1,7 @@
 package pull_up.infra.database.jpa.entity;
 
-import org.assertj.core.data.Offset;
 import org.assertj.core.data.TemporalUnitWithinOffset;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pull_up.domain.exam.ExamType;
@@ -11,18 +11,33 @@ import pull_up.infra.database.jpa.fixture.MemberFixture;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.chrono.ChronoLocalDate;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ExamTest {
+
+    Map<Integer, Integer> answerSheet;
+
+    @BeforeEach
+    void init() {
+        answerSheet = new HashMap<>();
+        answerSheet.put(1, 3);
+        answerSheet.put(2, 3);
+        answerSheet.put(3, 3);
+        answerSheet.put(4, 3);
+        answerSheet.put(5, 3);
+        answerSheet.put(6, 3);
+        answerSheet.put(7, 3);
+        answerSheet.put(8, 3);
+        answerSheet.put(9, 3);
+        answerSheet.put(10, 3);
+        answerSheet.put(11, 3);
+        answerSheet.put(12, 3);
+    }
 
     @Test
     @DisplayName("문제 고르기 테스트")
@@ -132,19 +147,6 @@ class ExamTest {
         // given
         Member member = MemberFixture.APPLE_USER.get();
         Exam exam = FixtureRepository.getMockExam(member.getId());
-        Map<Integer, Integer> answerSheet = new HashMap<>();
-        answerSheet.put(1, 3);
-        answerSheet.put(2, 3);
-        answerSheet.put(3, 3);
-        answerSheet.put(4, 3);
-        answerSheet.put(5, 3);
-        answerSheet.put(6, 3);
-        answerSheet.put(7, 3);
-        answerSheet.put(8, 3);
-        answerSheet.put(9, 3);
-        answerSheet.put(10, 3);
-        answerSheet.put(11, 3);
-        answerSheet.put(12, 3);
 
         // when
         exam.grade(answerSheet);
@@ -239,5 +241,33 @@ class ExamTest {
                     assertThat(answer.getSubmitCount()).isZero();
                 }
         );
+    }
+
+    @Test
+    @DisplayName("상위 데이터 계산(Mock)")
+    void testMockTopRate() {
+        // given
+        Exam exam = FixtureRepository.getMockExam(MemberFixture.APPLE_USER.get().getId());
+        exam.grade(answerSheet);
+
+        // when
+        Integer topRate = exam.getTopRate(exam.getProblemSummation());
+
+        // then
+        assertThat(topRate).isEqualTo(33);
+    }
+    
+    @Test
+    @DisplayName("취약한 과목 확인 테스트")
+    void testGetVulnerableEntry() {
+        // given
+        Exam exam = FixtureRepository.getMockExam(MemberFixture.APPLE_USER.get().getId());
+        exam.grade(answerSheet);
+
+        // when
+        List<Entry> vulnerableEntry = exam.getProblemSummation().getVulnerableEntry();
+
+        // then
+        assertThat(vulnerableEntry).containsOnly(Entry.MATH, Entry.REASONING);
     }
 }

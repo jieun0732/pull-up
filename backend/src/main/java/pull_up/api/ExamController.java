@@ -19,13 +19,13 @@ public class ExamController {
 
     @Operation(summary = "푼 시험 확인", description = "골고루 / 유형별 시험 현황을 확인합니다.", tags = {"골고루", "유형별"})
     @GetMapping("/entry/{entry}/solved")
-    public ResponseEntity<Solved.ByEntry.Response> getSolvedInfo(@RequestParam Long memberId, @PathVariable Entry entry) {
+    public ResponseEntity<Solved.ByEntryResponse> getSolvedInfo(@RequestParam Long memberId, @PathVariable Entry entry) {
         return new ResponseEntity<>(examService.getSolvedInfo(memberId, entry), HttpStatus.OK);
     }
 
     @Operation(summary = "푼 시험 확인", description = "모의고사 시험 현황을 확인합니다.", tags = "모의고사")
     @GetMapping("/mock-exam/solved")
-    public ResponseEntity<Solved.MockExam.Response> getMockExamSolvedInfo(@RequestParam Long memberId) {
+    public ResponseEntity<Solved.MockExamResponse> getMockExamSolvedInfo(@RequestParam Long memberId) {
         return new ResponseEntity<>(examService.getSolvedInfo(memberId), HttpStatus.OK);
     }
 
@@ -71,16 +71,28 @@ public class ExamController {
         return new ResponseEntity<>(examService.reset(examId), HttpStatus.OK);
     }
 
-    @Operation(summary = "채점", description = "답안을 채점합니다.", tags = "모의고사")
+    @Operation(summary = "채점 및 결과 레포트 조회", description = "답안을 채점 후 결과 레포트를 확인합니다.", tags = "모의고사")
     @PostMapping("/mock-exam/grade")
-    public ResponseEntity<Grade.Response> grade(@RequestBody Grade.Request request) {
+    public ResponseEntity<Report.mockExam> grade(@RequestBody Grade.Request request) {
         return new ResponseEntity<>(examService.grade(request), HttpStatus.OK);
     }
 
-    @Operation(summary = "시험 종료", description = "시험을 종료합니다.", tags = {"골고루", "유형별"})
+    @Operation(summary = "결과 레포트 조회", description = "결과 레포트를 확인합니다.", tags = "모의고사")
+    @GetMapping("/mock-exam/report/{examId}")
+    public ResponseEntity<Report.mockExam> getMockExamReport(@PathVariable Long examId) {
+        return new ResponseEntity<>(examService.getMockExamReport(examId), HttpStatus.OK);
+    }
+
+    @Operation(summary = "시험 결과 확인", description = "시험 결과를 확인합니다.", tags = "모의고사")
+    @GetMapping("/mock-exam/result/{examId}")
+    public ResponseEntity<End.MockExamResponse> getMockExamResult(@PathVariable Long examId) {
+        return new ResponseEntity<>(examService.getMockExamResult(examId), HttpStatus.OK);
+    }
+
+    @Operation(summary = "시험 종료", description = "시험을 종료하고 결과를 확인합니다.", tags = {"골고루", "유형별"})
     @PatchMapping("/end/{examId}")
-    public ResponseEntity<End.Response> end(@PathVariable Long examId) {
-        return new ResponseEntity<>(examService.end(examId), HttpStatus.OK);
+    public ResponseEntity<End.ByEntryResponse> end(@PathVariable Long examId) {
+        return new ResponseEntity<>(examService.endByEntryExam(examId), HttpStatus.OK);
     }
 
 }
