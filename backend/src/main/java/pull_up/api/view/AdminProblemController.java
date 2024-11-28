@@ -1,24 +1,27 @@
 package pull_up.api.view;
 
 
-import com.querydsl.core.types.Order;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.propertyeditors.URIEditor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 import pull_up.domain.problem.Entry;
 import pull_up.domain.problem.ProblemService;
 import pull_up.domain.problem.dto.ProblemDetailInfo;
 import pull_up.infra.database.jpa.dto.ProblemInfo;
 import pull_up.infra.database.jpa.dto.SearchParam;
-import pull_up.infra.database.jpa.dto.SearchType;
-import pull_up.infra.database.jpa.dto.SortType;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/admin/lists")
@@ -33,11 +36,21 @@ public class AdminProblemController {
                                   @RequestParam(required = false) String keyword,
                                   @RequestParam(required = false) String sortOrder,
                                   @RequestParam(required = false) String sortType,
+                                  HttpServletRequest request,
                                   Pageable pageable) {
-        List<ProblemInfo> problemInfos = problemService.getAll(SearchParam.getSearchParam(searchType, keyword, sortOrder, sortType, pageable));
+        Page<ProblemInfo> problemInfos = problemService.getAll(SearchParam.getSearchParam(searchType, keyword, sortOrder, sortType, pageable));
         model.addAttribute("problemInfos", problemInfos);
-        model.addAttribute("navBtnColor","list");
+        model.addAttribute("navBtnColor", "list");
+        model.addAttribute("baseURI", getBaseUrlWithQueryString(request));
+        model.addAttribute("pagination", IntStream.rangeClosed(1, problemInfos.getTotalPages()).boxed().toList());
         return "problems/list";
+    }
+
+    private String getBaseUrlWithQueryString(HttpServletRequest request) {
+        return UriComponentsBuilder.fromUriString(request.getRequestURI() + "?" + request.getQueryString())
+                .replaceQueryParam("page")
+                .replaceQueryParam("size")
+                .build().toString();
     }
 
     @GetMapping("/{problemId}")
@@ -45,7 +58,7 @@ public class AdminProblemController {
         ProblemDetailInfo problemInfo = problemService.get(problemId);
         model.addAttribute("problemInfo", problemInfo);
         model.addAttribute("entry", Entry.values());
-        model.addAttribute("navBtnColor","list");
+        model.addAttribute("navBtnColor", "list");
         return "problems/detail";
     }
 
@@ -53,7 +66,7 @@ public class AdminProblemController {
     public String problemCreatePage(Model model) {
         model.addAttribute("entry", Entry.values());
         model.addAttribute("choices", List.of(1, 2, 3, 4, 5));
-        model.addAttribute("navBtnColor","list");
+        model.addAttribute("navBtnColor", "list");
         return "problems/create";
     }
 
@@ -62,7 +75,7 @@ public class AdminProblemController {
         ProblemDetailInfo problemInfo = problemService.create(parameters);
         model.addAttribute("problemInfo", problemInfo);
         model.addAttribute("entry", Entry.values());
-        model.addAttribute("navBtnColor","list");
+        model.addAttribute("navBtnColor", "list");
         return "problems/detail";
     }
 
@@ -71,7 +84,7 @@ public class AdminProblemController {
         ProblemDetailInfo problemInfo = problemService.modify(problemId, parameters);
         model.addAttribute("problemInfo", problemInfo);
         model.addAttribute("entry", Entry.values());
-        model.addAttribute("navBtnColor","list");
+        model.addAttribute("navBtnColor", "list");
         return "problems/detail";
     }
 

@@ -1,6 +1,7 @@
 package pull_up.domain.problem;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pull_up.domain.problem.dto.Create;
@@ -22,7 +23,7 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
 
-    public List<ProblemInfo> getAll(SearchParam searchParam) {
+    public Page<ProblemInfo> getAll(SearchParam searchParam) {
         return problemRepository.searchProblem(searchParam);
     }
 

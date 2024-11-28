@@ -3,8 +3,12 @@ package pull_up.infra.database.jpa.repository.problem;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.dto.ProblemInfo;
@@ -45,8 +49,8 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
     }
 
     @Override
-    public List<ProblemInfo> searchProblem(SearchParam searchParam) {
-        return qf.select(new QProblemInfo(
+    public Page<ProblemInfo> searchProblem(SearchParam searchParam) {
+        List<ProblemInfo> problemInfos = qf.select(new QProblemInfo(
                         problem.id,
                         problem.entry,
                         problem.problemType,
@@ -59,6 +63,14 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                 .offset(searchParam.pageable().getOffset())
                 .limit(searchParam.pageable().getPageSize())
                 .fetch();
+
+        Long count = qf.select(problem.count())
+                .from(problem)
+                .where(search(searchParam))
+                .orderBy(order(searchParam))
+                .fetchFirst();
+
+        return new PageImpl<>(problemInfos,searchParam.pageable(), count);
     }
 
     private OrderSpecifier<?> order(SearchParam searchParam) {
