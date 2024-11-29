@@ -2,7 +2,6 @@ package pull_up.infra.database.jpa.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
-import org.springframework.format.datetime.DateFormatter;
 import pull_up.domain.problem.Entry;
 import pull_up.global.util.GlobalFormatter;
 

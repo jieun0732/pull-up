@@ -23,8 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import static pull_up.api.util.BaseUrlParser.getBaseUrlWithQueryString;
+
 @Controller
-@RequestMapping("/admin/lists")
+@RequestMapping("/admin/problems")
 @RequiredArgsConstructor
 public class AdminProblemController {
 
@@ -40,7 +42,7 @@ public class AdminProblemController {
                                   Pageable pageable) {
         Page<ProblemInfo> problemInfos = problemService.getAll(SearchParam.getSearchParam(searchType, keyword, sortOrder, sortType, pageable));
         model.addAttribute("problemInfos", problemInfos);
-        model.addAttribute("navBtnColor", "list");
+        model.addAttribute("navBtnColor", "problems");
         model.addAttribute("baseURI", getBaseUrlWithQueryString(request));
         model.addAttribute("keyword", keyword);
         model.addAttribute("searchType", searchType);
@@ -48,19 +50,12 @@ public class AdminProblemController {
         return "problems/list";
     }
 
-    private String getBaseUrlWithQueryString(HttpServletRequest request) {
-        return UriComponentsBuilder.fromUriString(request.getRequestURI() + "?" + request.getQueryString())
-                .replaceQueryParam("page")
-                .replaceQueryParam("size")
-                .build().toString();
-    }
-
     @GetMapping("/{problemId}")
     public String problemListDetail(Model model, @PathVariable Long problemId) {
         ProblemDetailInfo problemInfo = problemService.get(problemId);
         model.addAttribute("problemInfo", problemInfo);
         model.addAttribute("entry", Entry.values());
-        model.addAttribute("navBtnColor", "list");
+        model.addAttribute("navBtnColor", "problems");
         return "problems/detail";
     }
 
@@ -68,7 +63,7 @@ public class AdminProblemController {
     public String problemCreatePage(Model model) {
         model.addAttribute("entry", Entry.values());
         model.addAttribute("choices", List.of(1, 2, 3, 4, 5));
-        model.addAttribute("navBtnColor", "list");
+        model.addAttribute("navBtnColor", "problems");
         return "problems/create";
     }
 
@@ -77,7 +72,7 @@ public class AdminProblemController {
         ProblemDetailInfo problemInfo = problemService.create(parameters);
         model.addAttribute("problemInfo", problemInfo);
         model.addAttribute("entry", Entry.values());
-        model.addAttribute("navBtnColor", "list");
+        model.addAttribute("navBtnColor", "problems");
         return "problems/detail";
     }
 
@@ -86,7 +81,7 @@ public class AdminProblemController {
         ProblemDetailInfo problemInfo = problemService.modify(problemId, parameters);
         model.addAttribute("problemInfo", problemInfo);
         model.addAttribute("entry", Entry.values());
-        model.addAttribute("navBtnColor", "list");
+        model.addAttribute("navBtnColor", "problems");
         return "problems/detail";
     }
 

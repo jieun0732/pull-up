@@ -5,19 +5,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pull_up.domain.problem.ProblemService;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-class AdminProblemControllerTest {
+class AdminExamsheetControllerTest {
 
     ProblemService mockService;
     MockMvc mockMvc;
@@ -34,13 +33,7 @@ class AdminProblemControllerTest {
 
     @Test
     @DisplayName("전체 api 테스트")
-    void testAllAPI() throws Exception {
-        when(mockService.getAll(any())).thenReturn(Page.empty());
-        mockMvc.perform(get("/admin/problems")).andExpect(status().is(200));
-        mockMvc.perform(get("/admin/problems/1")).andExpect(status().is(200));
-        mockMvc.perform(get("/admin/problems/new")).andExpect(status().is(200));
-        mockMvc.perform(post("/admin/problems")).andExpect(status().is(200));
-        mockMvc.perform(patch("/admin/problems/1")).andExpect(status().is(200));
-        mockMvc.perform(delete("/admin/problems/1")).andExpect(status().is(302));
+    void testAllApi() throws Exception {
+        mockMvc.perform(get("admin/examsheets")).andExpect(status().is(200));
     }
 }

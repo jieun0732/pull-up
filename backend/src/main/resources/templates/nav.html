@@ -13,14 +13,14 @@
                     <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"/>
                 </svg>
             </button>
-            <button onclick="location.href='/admin/lists'" type="button" class="btn"
-                    th:classappend="${navBtnColor == 'list'? 'btn btn-primary' : 'btn btn-outline-primary'}">문제 관리</button>
+            <button onclick="location.href='/admin/problems'" type="button" class="btn"
+                    th:classappend="${navBtnColor == 'problems'? 'btn btn-primary' : 'btn btn-outline-primary'}">문제 관리</button>
+            <button onclick="location.href='/admin/examsheets'" type="button" class="btn"
+                    th:classappend="${navBtnColor == 'examsheets'? 'btn btn-warning' : 'btn btn-outline-warning'}">시험지 관리</button>
             <button onclick="javascript: alert('준비중입니다.')" type="button" class="btn"
-                    th:classappend="${navBtnColor == 'examsheet'? 'btn btn-warning' : 'btn btn-outline-warning'}">시험지 관리</button>
+                    th:classappend="${navBtnColor == 'exams'? 'btn btn-danger' : 'btn btn-outline-danger'}">시험 관리</button>
             <button onclick="javascript: alert('준비중입니다.')" type="button" class="btn"
-                    th:classappend="${navBtnColor == 'exam'? 'btn btn-danger' : 'btn btn-outline-danger'}">시험 관리</button>
-            <button onclick="javascript: alert('준비중입니다.')" type="button" class="btn"
-                    th:classappend="${navBtnColor == 'member'? 'btn btn-success' : 'btn btn-outline-success'}">사용자 관리</button>
+                    th:classappend="${navBtnColor == 'members'? 'btn btn-success' : 'btn btn-outline-success'}">사용자 관리</button>
         </div>
     </nav>
 </div>
