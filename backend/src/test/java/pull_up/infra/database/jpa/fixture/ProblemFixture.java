@@ -39,6 +39,7 @@ public enum ProblemFixture implements Fixture<Problem>{
     private final byte[] explanation;
 
     public Problem get() {
-        return new Problem(id, totalAttempts, incorrectAttempts, incorrectRate, entry, problemType, question, new String(question), example, choice1, choice2, choice3, choice4, choice5, correctAnswer, explanation);
+        String questionSummary = new String(question);
+        return new Problem(id, totalAttempts, incorrectAttempts, incorrectRate, entry, problemType, question, questionSummary.length() <= 100? questionSummary : questionSummary.substring(0, 100), example, choice1, choice2, choice3, choice4, choice5, correctAnswer, explanation);
     }
 }

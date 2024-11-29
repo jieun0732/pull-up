@@ -24,6 +24,6 @@ public class IncorrectQueryDto {
         this.examType =  exam.getExamType();
         this.problemNumber =  answer.getProblemNumber();
         this.solvedDate =  answer.getSolvedDate();
-        this.questionSubstring =  problem.getQuestionAsString();
+        this.questionSubstring =  problem.getQuestionSummary();
     }
 }

@@ -111,12 +111,6 @@ public class Problem extends BaseEntity{
         return new String(question);
     }
 
-    public String getQuestionAsSubstring() {
-        String questionAsString = getQuestionAsString();
-        if (questionAsString.length() > 100) return questionAsString.substring(0, 100);
-        return questionAsString;
-    }
-
     public String getExampleAsString() {
         return new String(example);
     }
