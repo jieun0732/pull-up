@@ -139,9 +139,11 @@ public class Problem extends BaseEntity{
     }
 
     private void map(Map<String, String> parameters) {
+        String q = parameters.get("question");
         this.entry = Entry.getEntry(parameters.get("entry"));
         this.problemType = parameters.get("problemType");
-        this.question = parameters.get("question").getBytes(UTF_8);
+        this.question = q.getBytes(UTF_8);
+        this.questionSummary = q.length() <= 100? q : q.substring(0, 100);
         this.example = parameters.get("example").getBytes(UTF_8);
         this.choice1 = parameters.get("choice1");
         this.choice2 = parameters.get("choice2");

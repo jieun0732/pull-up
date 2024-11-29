@@ -4,7 +4,6 @@ import pull_up.domain.problem.Entry;
 import pull_up.global.util.GlobalFormatter;
 import pull_up.infra.database.jpa.entity.Problem;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public record ProblemDetailInfo(
@@ -20,7 +19,7 @@ public record ProblemDetailInfo(
         String explanation,
         String createdTime,
         String updatedTime
-        ) {
+) {
 
     public static ProblemDetailInfo toDto(Problem problem) {
         return new ProblemDetailInfo(
