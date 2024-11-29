@@ -1,0 +1,13 @@
+[ADMIN]
+TODO Examsheet 조회 구현
+TODO Examsheet 수정 구현
+TODO Examsheet 생성 구현
+TODO Examsheet 삭제 구현
+
+[API]
+
+[INFRA]
+TODO DB 서버 계정 분리 root -> pullup
+
+[ETC]
+TODO JPA Query N + 1 문제 최적화
