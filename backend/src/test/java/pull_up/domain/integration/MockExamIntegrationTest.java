@@ -14,6 +14,8 @@ import pull_up.domain.exam.dto.*;
 import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.examsheet.dto.CreateExamsheet;
 import pull_up.domain.examsheet.ExamsheetService;
+import pull_up.domain.member.MemberService;
+import pull_up.domain.member.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
 import pull_up.api.dto.MessageDto;
 import pull_up.infra.database.jpa.entity.Examsheet;
@@ -41,11 +43,13 @@ public class MockExamIntegrationTest {
 
     ExamsheetService examsheetService;
     ExamService examService;
+    MemberService memberService;
 
     @BeforeEach
     void init() {
         examsheetService = new ExamsheetService(examsheetRepository);
         examService = new ExamService(examRepository, memberRepository, problemRepository, examsheetRepository);
+        memberService = new MemberService(memberRepository,examRepository,problemRepository);
     }
 
     @Test
@@ -72,7 +76,7 @@ public class MockExamIntegrationTest {
 
         /* 모의고사 조회 */
 
-        Solved.MockExamResponse solvedInfo = examService.getSolvedInfo(member.getId());
+        SolvedInfo.MockExamResponse solvedInfo = memberService.getSolvedInfo(member.getId());
         assertThat(solvedInfo.examId()).isNull();
         assertThat(solvedInfo.isMockExamGraded()).isFalse();
 
@@ -102,7 +106,7 @@ public class MockExamIntegrationTest {
 
         /* 모의고사 조회 2 */
 
-        solvedInfo = examService.getSolvedInfo(member.getId());
+        solvedInfo = memberService.getSolvedInfo(member.getId());
         assertThat(solvedInfo.examId()).isEqualTo(startRes.examId());
         assertThat(solvedInfo.isMockExamGraded()).isFalse();
 
@@ -144,7 +148,7 @@ public class MockExamIntegrationTest {
 
         /* 모의고사 조회 3 */
 
-        solvedInfo = examService.getSolvedInfo(member.getId());
+        solvedInfo = memberService.getSolvedInfo(member.getId());
         assertThat(solvedInfo.examId()).isEqualTo(startRes.examId());
         assertThat(solvedInfo.isMockExamGraded()).isTrue();
 

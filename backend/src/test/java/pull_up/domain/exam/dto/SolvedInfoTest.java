@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.TempExam;
+import pull_up.domain.member.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Exam;
 import pull_up.infra.database.jpa.fixture.FixtureRepository;
@@ -12,7 +13,7 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SolvedTest {
+class SolvedInfoTest {
 
     @Test
     @DisplayName("Map -> ProblemTypeInfo 변환 테스트")
@@ -25,7 +26,7 @@ class SolvedTest {
         problemMap.put(problemType2, FixtureRepository.getEmptyProblemTypeExam(Entry.MATH, problemType2));
 
         // when
-        List<Solved.ByEntryResponse.ProblemTypeExamInfo> list = Solved.ByEntryResponse.ProblemTypeExamInfo.toList(problemMap);
+        List<SolvedInfo.ByEntryResponse.ProblemTypeExamInfo> list = SolvedInfo.ByEntryResponse.ProblemTypeExamInfo.toList(problemMap);
 
         // then
         assertThat(list).hasSize(2);
@@ -44,7 +45,7 @@ class SolvedTest {
 
 
         // when
-        Solved.ByEntryResponse response = Solved.ByEntryResponse.toDto(entry, examMap);
+        SolvedInfo.ByEntryResponse response = SolvedInfo.ByEntryResponse.toDto(entry, examMap);
 
         // then
         assertThat(response.evenlyExamInfo().isStarted()).isFalse();
@@ -64,7 +65,7 @@ class SolvedTest {
         examMap.put("용액의 농도", problemTypeExam);
 
         // when
-        Solved.ByEntryResponse response = Solved.ByEntryResponse.toDto(entry, examMap);
+        SolvedInfo.ByEntryResponse response = SolvedInfo.ByEntryResponse.toDto(entry, examMap);
 
         // then
         assertThat(response.evenlyExamInfo().isStarted()).isFalse();
@@ -92,7 +93,7 @@ class SolvedTest {
         examMap.put("용액의 농도",problemTypeExam);
 
         // when
-        Solved.ByEntryResponse response = Solved.ByEntryResponse.toDto(entry, examMap);
+        SolvedInfo.ByEntryResponse response = SolvedInfo.ByEntryResponse.toDto(entry, examMap);
 
         // then
         assertThat(response.evenlyExamInfo().isStarted()).isTrue();

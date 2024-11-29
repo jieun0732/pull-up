@@ -1,6 +1,6 @@
 package pull_up.infra.database.jpa.repository.exam;
 
-import pull_up.domain.exam.dto.Solved;
+import pull_up.domain.member.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Exam;
 
@@ -12,5 +12,5 @@ public interface CustomExamRepository {
 
     Optional<Exam> findMockExamByMemberId(Long memberId);
 
-    Solved.MockExamResponse findSolvedMockExamInfo(Long memberId);
+    SolvedInfo.MockExamResponse findSolvedMockExamInfo(Long memberId);
 }

@@ -1,4 +1,5 @@
 server:
+
   servlet:
     encoding:
       charset: UTF-8
@@ -85,6 +86,7 @@ auth:
     max-age: 1234
   domain:
     frontend: http://localhost:8080
+    backend: http://localhost:8080
   with-credential: false
   admin:
     id: test

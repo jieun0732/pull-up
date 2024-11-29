@@ -4,7 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import pull_up.domain.exam.ExamType;
-import pull_up.domain.exam.dto.Solved;
+import pull_up.domain.member.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Exam;
 
@@ -66,8 +66,8 @@ public class CustomExamRepositoryImpl implements CustomExamRepository {
     }
 
     @Override
-    public Solved.MockExamResponse findSolvedMockExamInfo(Long memberId) {
-        return qf.select(Projections.constructor(Solved.MockExamResponse.class,
+    public SolvedInfo.MockExamResponse findSolvedMockExamInfo(Long memberId) {
+        return qf.select(Projections.constructor(SolvedInfo.MockExamResponse.class,
                         exam.id,
                         exam.isFinished,
                         member.tutorialFinished))

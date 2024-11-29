@@ -30,23 +30,6 @@ public class ExamService {
     private final ProblemRepository problemRepository;
     private final ExamsheetRepository examsheetRepository;
 
-    public Solved.ByEntryResponse getSolvedInfo(Long memberId, Entry entry) {
-        Map<String, Exam> examMap = examRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry);
-        Map<String, Integer> problemTypesMap = problemRepository.findAllProblemTypeAndCountByEntry(entry);
-        for (Map.Entry<String, Integer> problemTypeEntry : problemTypesMap.entrySet()) {
-            if (examMap.containsKey(problemTypeEntry.getKey())) continue;
-            examMap.put(problemTypeEntry.getKey(), new TempExam(problemTypeEntry.getValue()));
-        }
-        return Solved.ByEntryResponse.toDto(entry, examMap);
-    }
-
-    public Solved.MockExamResponse getSolvedInfo(Long memberId) {
-        boolean tutorialFinished = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER)).getTutorialFinished();
-        Optional<Exam> exam = examRepository.findMockExamByMemberId(memberId);
-        return exam.map(e -> Solved.MockExamResponse.toDto(tutorialFinished, e))
-                .orElseGet(() -> Solved.MockExamResponse.empty(tutorialFinished));
-    }
-
     @Transactional
     public Start.Response start(Start.EvenlyRequest startReq) {
         Member startMember = memberRepository.findById(startReq.memberId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));

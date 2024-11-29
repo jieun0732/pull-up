@@ -128,6 +128,7 @@ auth:
     max-age: ${security.cookie.max-age}
   domain:
     frontend: ${basic-server.frontend-domain}
+    backend: ${basic-server.backend-domain}
   with-credential: ${security.with-credential}
   admin:
     id: ${security.admin.id}
@@ -135,3 +136,4 @@ auth:
 
 springdoc:
   use-fqn: true
+

@@ -6,17 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pull_up.config.annotation.IntegrationTest;
 import pull_up.domain.exam.ExamType;
-import pull_up.domain.exam.dto.Solved;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Answer;
 import pull_up.infra.database.jpa.entity.Exam;
-import pull_up.infra.database.jpa.entity.Member;
-import pull_up.infra.database.jpa.fixture.MemberFixture;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

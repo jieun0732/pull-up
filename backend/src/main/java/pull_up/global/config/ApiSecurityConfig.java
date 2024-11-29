@@ -7,29 +7,17 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import pull_up.domain.auth.Role;
-import pull_up.global.security.handler.AuthenticationExceptionHandler;
-import pull_up.global.security.handler.AuthorizationEntryPoint;
+import pull_up.global.security.handler.AuthorizationExceptionHandler;
+import pull_up.global.security.handler.CustomAuthenticationEntryPoint;
 import pull_up.global.security.filter.JwtAuthenticationFilter;
 import pull_up.global.security.handler.OAuth2SuccessHandler;
 import pull_up.domain.auth.service.CustomOAuth2UserService;
@@ -50,12 +38,11 @@ public class ApiSecurityConfig {
 
     private final CustomOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
-    private final AuthenticationExceptionHandler exceptionHandler;
-    private final AuthorizationEntryPoint authorizationEntryPoint;
+    private final AuthorizationExceptionHandler exceptionHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    @Order(1)
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .securityMatcher("/api/**")
@@ -80,7 +67,7 @@ public class ApiSecurityConfig {
 
                 .exceptionHandling(exception ->
                         exception.accessDeniedHandler(exceptionHandler)
-                                .authenticationEntryPoint(authorizationEntryPoint))
+                                .authenticationEntryPoint(customAuthenticationEntryPoint))
 
                 .build();
     }

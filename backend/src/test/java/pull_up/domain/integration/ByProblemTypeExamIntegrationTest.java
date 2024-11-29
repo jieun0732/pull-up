@@ -10,6 +10,8 @@ import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.dto.*;
+import pull_up.domain.member.MemberService;
+import pull_up.domain.member.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Member;
 import pull_up.infra.database.jpa.fixture.MemberFixture;
@@ -19,8 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @IntegrationTest
 public class ByProblemTypeExamIntegrationTest {
 
-    ExamService examService;
-
     @Autowired
     ExamRepository examRepository;
     @Autowired
@@ -28,9 +28,13 @@ public class ByProblemTypeExamIntegrationTest {
     @Autowired
     ProblemRepository problemRepository;
 
+    ExamService examService;
+    MemberService memberService;
+
     @BeforeEach
     void init() {
         examService = new ExamService(examRepository, memberRepository, problemRepository, null);
+        memberService = new MemberService(memberRepository,examRepository,problemRepository);
     }
 
     @Test
@@ -46,7 +50,7 @@ public class ByProblemTypeExamIntegrationTest {
         Entry entry = Entry.MATH;
 
         // when [ExamService] 사용자 ID, Entry 로 시험 현황 확인
-        Solved.ByEntryResponse solvedInfoRes = examService.getSolvedInfo(memberId, entry);
+        SolvedInfo.ByEntryResponse solvedInfoRes = memberService.getSolvedInfo(memberId, entry);
 
         // then [백] 시험현황 전송
         assertThat(solvedInfoRes.evenlyExamInfo().examId()).isNotNull();

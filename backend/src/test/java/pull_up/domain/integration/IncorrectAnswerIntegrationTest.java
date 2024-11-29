@@ -41,7 +41,7 @@ public class IncorrectAnswerIntegrationTest {
 
     @BeforeEach
     void init() {
-        memberService = new MemberService(memberRepository, examRepository);
+        memberService = new MemberService(memberRepository, examRepository, problemRepository);
         examService = new ExamService(examRepository, memberRepository, problemRepository, examsheetRepository);
     }
 

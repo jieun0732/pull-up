@@ -17,18 +17,6 @@ public class ExamController {
 
     private final ExamService examService;
 
-    @Operation(summary = "푼 시험 확인", description = "골고루 / 유형별 시험 현황을 확인합니다.", tags = {"골고루", "유형별"})
-    @GetMapping("/entry/{entry}/solved")
-    public ResponseEntity<Solved.ByEntryResponse> getSolvedInfo(@RequestParam Long memberId, @PathVariable Entry entry) {
-        return new ResponseEntity<>(examService.getSolvedInfo(memberId, entry), HttpStatus.OK);
-    }
-
-    @Operation(summary = "푼 시험 확인", description = "모의고사 시험 현황을 확인합니다.", tags = "모의고사")
-    @GetMapping("/mock-exam/solved")
-    public ResponseEntity<Solved.MockExamResponse> getMockExamSolvedInfo(@RequestParam Long memberId) {
-        return new ResponseEntity<>(examService.getSolvedInfo(memberId), HttpStatus.OK);
-    }
-
     @Operation(summary = "시험 시작", description = "시험을 시작합니다.", tags = "골고루")
     @PostMapping("/evenly/start")
     public ResponseEntity<Start.Response> start(@RequestBody Start.EvenlyRequest evenlyRequest) {

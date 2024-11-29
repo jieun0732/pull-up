@@ -67,4 +67,8 @@ public class Member extends BaseEntity {
         if (Pattern.matches("^[ㄱ-ㅎ가-힣]*$", firstName)) return lastName + firstName;
         else return firstName + " " + lastName;
     }
+
+    public void finishTutorial() {
+        this.tutorialFinished = true;
+    }
 }

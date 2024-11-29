@@ -42,7 +42,7 @@ public class MemberInfoIntegrationTest {
 
     @BeforeEach
     void init() {
-        memberService = new MemberService(memberRepository, examRepository);
+        memberService = new MemberService(memberRepository, examRepository, problemRepository);
         examService = new ExamService(examRepository, memberRepository, problemRepository, examsheetRepository);
     }
 

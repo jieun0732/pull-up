@@ -1,4 +1,4 @@
-package pull_up.domain.exam.dto;
+package pull_up.domain.member.dto;
 
 import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.ProblemSummation;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public record Solved() {
+public record SolvedInfo() {
     public record MockExamResponse(
             Long examId,
             Boolean isMockExamGraded,
