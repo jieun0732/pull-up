@@ -1,9 +1,12 @@
 [ADMIN]
-TODO) Problem 검색, 정렬, 페이지네이션 구현
-TODO) Examsheet 조회 구현
+TODO Problem 검색, 정렬, 페이지네이션 구현
+TODO Problem 생성일 컬럼 및 정렬 구현
+TODO Examsheet 조회 구현
+TODO Examsheet 수정 구현
+TODO Examsheet 생성 구현
+TODO Examsheet 삭제 구현
 
 [API]
-TODO) 로컬, 서버 테스트 및 버그 수정
 
 [INFRA]
-TODO) 서버 계정 분리 root -> pullup
+TODO DB 서버 계정 분리 root -> pullup

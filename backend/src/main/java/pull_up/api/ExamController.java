@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import pull_up.api.dto.MessageDto;
 import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.dto.*;
-import pull_up.domain.problem.Entry;
 
 @RestController
 @RequestMapping("/api/exams")
