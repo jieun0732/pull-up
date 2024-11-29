@@ -1,4 +1,4 @@
-package pull_up.api;
+package pull_up.api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

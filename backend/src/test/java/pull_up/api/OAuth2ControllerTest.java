@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.RedirectView;
+import pull_up.api.controller.OAuth2Controller;
 import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.global.security.util.CookieUtil;
