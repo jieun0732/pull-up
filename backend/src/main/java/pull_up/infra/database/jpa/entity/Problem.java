@@ -1,8 +1,11 @@
 package pull_up.infra.database.jpa.entity;
 
+import com.querydsl.core.annotations.PropertyType;
+import com.querydsl.core.annotations.QueryType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.context.annotation.Lazy;
 import pull_up.domain.problem.Entry;
 
 import java.util.Map;
@@ -43,6 +46,9 @@ public class Problem extends BaseEntity{
     @Lob
     @Column(nullable = false, columnDefinition = "BLOB")
     private byte[] question;
+
+    @Column(nullable = false, length = 100)
+    private String questionSummary;
 
     @Lob
     @Column(columnDefinition = "BLOB")

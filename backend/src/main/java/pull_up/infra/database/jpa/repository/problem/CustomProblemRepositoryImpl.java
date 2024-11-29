@@ -2,13 +2,10 @@ package pull_up.infra.database.jpa.repository.problem;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.dto.ProblemInfo;
@@ -54,7 +51,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                         problem.id,
                         problem.entry,
                         problem.problemType,
-                        problem.question,
+                        problem.questionSummary,
                         problem.totalAttempts,
                         problem.incorrectRate))
                 .from(problem)
@@ -70,7 +67,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                 .orderBy(order(searchParam))
                 .fetchFirst();
 
-        return new PageImpl<>(problemInfos,searchParam.pageable(), count);
+        return new PageImpl<>(problemInfos, searchParam.pageable(), count);
     }
 
     private OrderSpecifier<?> order(SearchParam searchParam) {
@@ -87,8 +84,8 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
         if (searchParam.keyword().equals("EMPTY")) return null;
         return switch (searchParam.searchType()) {
             case NONE -> null;
-            case PROBLEM_TYPE -> problem.problemType.like(searchParam.keyword());
-            case QUESTION -> Expressions.booleanTemplate("CAST(question AS CHAR) LIKE '%?%'", searchParam.keyword());
+            case PROBLEM_TYPE -> problem.problemType.likeIgnoreCase("%" + searchParam.keyword() + "%");
+            case QUESTION -> problem.questionSummary.likeIgnoreCase("%" + searchParam.keyword() + "%");
         };
     }
 }

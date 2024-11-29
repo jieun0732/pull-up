@@ -42,6 +42,8 @@ public class AdminProblemController {
         model.addAttribute("problemInfos", problemInfos);
         model.addAttribute("navBtnColor", "list");
         model.addAttribute("baseURI", getBaseUrlWithQueryString(request));
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("searchType", searchType);
         model.addAttribute("pagination", IntStream.rangeClosed(1, problemInfos.getTotalPages()).boxed().toList());
         return "problems/list";
     }

@@ -26,15 +26,14 @@
                         </a>
                         </div>
                         <div class="col">
-                            <form class="input-group">
-                                <select class="form-select" id="search-col">
-                                    <option selected>검색 옵션</option>
-                                    <option value="1">영역</option>
-                                    <option value="2">유형</option>
-                                    <option value="3">문제</option>
+                            <form class="input-group" method="get" th:action="@{/admin/lists}">
+                                <select class="form-select" id="search-col" name="searchType">
+                                    <option th:selected="${searchType} == 'NONE'" value="NONE">검색 옵션을 선택히세요.</option>
+                                    <option th:selected="${searchType} == 'PROBLEM_TYPE'" value="PROBLEM_TYPE">유형</option>
+                                    <option th:selected="${searchType} == 'QUESTION'" value="QUESTION">문제</option>
                                 </select>
-                                <input type="text" class="form-control" placeholder="검색어를 입력하세요." aria-label="search-keyword">
-                                <button onclick="javascript: alert('준비중입니다.')" class="btn btn-outline-secondary" type="button" id="search-button">검색</button>
+                                <input type="text" class="form-control" placeholder="검색어를 입력하세요." aria-label="search-keyword" name="keyword" th:value="${keyword}">
+                                <button class="btn btn-outline-secondary" type="submit" id="search-button">검색</button>
                             </form>
                         </div>
                     </div>
