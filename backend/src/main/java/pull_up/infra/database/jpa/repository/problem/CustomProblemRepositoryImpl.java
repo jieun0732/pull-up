@@ -51,12 +51,14 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                         problem.id,
                         problem.entry,
                         problem.problemType,
+                        problem.createdTime,
                         problem.questionSummary,
                         problem.totalAttempts,
                         problem.incorrectRate))
                 .from(problem)
                 .where(search(searchParam))
                 .orderBy(order(searchParam))
+                .orderBy(problem.id.desc())
                 .offset(searchParam.pageable().getOffset())
                 .limit(searchParam.pageable().getPageSize())
                 .fetch();
@@ -75,6 +77,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
             case ID -> new OrderSpecifier<>(searchParam.sortOrder(), problem.id);
             case ENTRY -> new OrderSpecifier<>(searchParam.sortOrder(), problem.entry);
             case PROBLEM_TYPE -> new OrderSpecifier<>(searchParam.sortOrder(), problem.problemType);
+            case CREATED_DATE -> new OrderSpecifier<>(searchParam.sortOrder(), problem.createdTime);
             case ATTEMPT -> new OrderSpecifier<>(searchParam.sortOrder(), problem.totalAttempts);
             case CORRECT_RATE -> new OrderSpecifier<>(searchParam.sortOrder(), problem.incorrectRate);
         };

@@ -1,6 +1,7 @@
 package pull_up.domain.problem.dto;
 
 import pull_up.domain.problem.Entry;
+import pull_up.global.util.GlobalFormatter;
 import pull_up.infra.database.jpa.entity.Problem;
 
 import java.time.LocalDateTime;
@@ -17,8 +18,8 @@ public record ProblemDetailInfo(
         List<String> choices,
         String correctAnswer,
         String explanation,
-        LocalDateTime createdTime,
-        LocalDateTime updatedTime
+        String createdTime,
+        String updatedTime
         ) {
 
     public static ProblemDetailInfo toDto(Problem problem) {
@@ -33,8 +34,8 @@ public record ProblemDetailInfo(
                 List.of(problem.getChoice1(), problem.getChoice2(), problem.getChoice3(), problem.getChoice4(), problem.getChoice5()),
                 problem.getCorrectAnswer(),
                 problem.getExplanationAsString(),
-                problem.getCreatedTime(),
-                problem.getUpdatedTime()
+                problem.getCreatedTime().format(GlobalFormatter.KOREAN_DATE_FORMATTER),
+                problem.getUpdatedTime().format(GlobalFormatter.KOREAN_DATE_FORMATTER)
         );
     }
 }

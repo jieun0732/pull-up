@@ -2,23 +2,29 @@ package pull_up.infra.database.jpa.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
+import org.springframework.format.datetime.DateFormatter;
 import pull_up.domain.problem.Entry;
+import pull_up.global.util.GlobalFormatter;
+
+import java.time.LocalDateTime;
 
 @Getter
 public class ProblemInfo {
     private Long id;
     private Entry entry;
     private String problemType;
+    private String createdDate;
     private String question;
     private Integer totalAttempts;
     private String correctRate;
 
     @QueryProjection
-    public ProblemInfo(Long id, Entry entry, String problemType, String questionSummary, Integer totalAttempts, Double correctRate) {
+    public ProblemInfo(Long id, Entry entry, String problemType, LocalDateTime createTime, String questionSummary, Integer totalAttempts, Double correctRate) {
         if (questionSummary.length() > 30) questionSummary = questionSummary.substring(0, 30) + "...";
         this.id = id;
         this.entry = entry;
         this.problemType = problemType;
+        this.createdDate = createTime.format(GlobalFormatter.KOREAN_DATE_FORMATTER);
         this.question = questionSummary;
         this.totalAttempts = totalAttempts;
         this.correctRate = String.format("%.0f", correctRate);

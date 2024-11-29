@@ -3,6 +3,7 @@ package pull_up.infra.database.jpa.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import pull_up.global.util.GlobalFormatter;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -84,7 +85,6 @@ public class Answer extends BaseEntity {
     }
 
     public String getSolvedDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일");
-        return this.submitTime.format(formatter);
+        return this.submitTime.format(GlobalFormatter.KOREAN_DATE_FORMATTER);
     }
 }

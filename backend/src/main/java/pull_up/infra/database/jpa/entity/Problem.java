@@ -80,6 +80,7 @@ public class Problem extends BaseEntity{
         this.entry = entry;
         this.problemType = problemType;
         this.question = question.getBytes(UTF_8);
+        this.questionSummary = question.length() <= 100? question : question.substring(0, 100);
         this.example = example.getBytes(UTF_8);
         this.choice1 = choice1;
         this.choice2 = choice2;
