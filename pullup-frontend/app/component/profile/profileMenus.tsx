@@ -1,12 +1,15 @@
 import Link from "next/link";
 import Text from "../ui/Text";
 import { DepthIcon } from "@/assets/icon/Icons";
-import {  ServiceUsageIcon,
+import {
+  ServiceUsageIcon,
   PrivacyPolicyIcon,
   LogoutIcon,
   SignOutIcon,
-  VersionIcon, } from "@/assets/icon/ProfileMenusIcons";
-
+  VersionIcon,
+} from "@/assets/icon/ProfileMenusIcons";
+import useUserStore from "@/stores/useUserStore";
+import { useRouter } from "next/navigation";
 
 const etcItems = [
   {
@@ -36,10 +39,14 @@ const etcItems = [
 ];
 
 export default function ProfileMenus() {
+  const { resetUserData } = useUserStore();
+  const router = useRouter();
+
   const handleLogout = (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault(); // 기본 링크 동작 방지
-      localStorage.clear(); // 로컬 스토리지 비우기
-      window.location.href = "/"; // 로그아웃 후 이동할 페이지
+    e.preventDefault(); // 기본 링크 동작 방지
+    localStorage.clear();
+    resetUserData();
+    router.replace("/");
   };
 
   return (
@@ -54,7 +61,7 @@ export default function ProfileMenus() {
               href={item.link}
               key={item.name}
               className="flex items-center border border-b border-solid border-[#F4F3F8] px-6 py-5"
-              onClick={item.name === "로그아웃" ? handleLogout : undefined} 
+              onClick={item.name === "로그아웃" ? handleLogout : undefined}
             >
               <item.icon />
               <Text size="body-03" className="w-[80%]">
@@ -74,7 +81,7 @@ export default function ProfileMenus() {
       </div>
     </div>
   );
-} 
+}
 
 // target={item.hasNextPage ? undefined : "_blank"}
 // rel={item.hasNextPage ? undefined : "noopener noreferrer"}

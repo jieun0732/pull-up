@@ -63,7 +63,10 @@ export default function Page({
           {data.choices.map((choice, idx) => {
             let choiceStyle;
             let choiceNumStyle;
-            if (idx + 1 === data.explanation.submitAnswer) {
+            if (
+              data.explanation.submitAnswer &&
+              idx + 1 === data.explanation.submitAnswer
+            ) {
               choiceStyle = "bg-green02 text-green01";
               choiceNumStyle = "bg-green01 text-white";
             } else if (idx + 1 === data.explanation.correctAnswer) {

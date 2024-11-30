@@ -32,19 +32,6 @@ export default function Page() {
     fetcher,
   );
 
-  useEffect(() => {
-    if (data?.tutorialFinished) {
-      setTutorialFinished(true);
-    }
-  }, [data]);
-
-  // if (data?.examId) {
-
-  //   setExamId(data.examId);
-  // }
-
-  console.log(data);
-
   return (
     <>
       {data ? (
@@ -107,6 +94,9 @@ export default function Page() {
                 className="mb-11"
                 onClick={async () => {
                   resetSelectedAnswers();
+                  if (data.tutorialFinished) {
+                    setTutorialFinished(true);
+                  }
                   try {
                     const response = await fetch(
                       `${API}/exams/mock-exam/start`,

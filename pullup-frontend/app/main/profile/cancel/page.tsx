@@ -6,22 +6,21 @@ import LocalStorage from "@/utils/LocalStorage";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { API } from "@/lib/API";
+import useUserStore from "@/stores/useUserStore";
 
 export default function Page() {
   const router = useRouter();
   const [activeCancel, setActiveCancel] = useState<boolean>(false);
-
-  const userName = LocalStorage.getItem("name") || "";
-  const memberId = LocalStorage.getItem("memberId") || "";
+  const { user, resetUserData } = useUserStore();
 
   const term = [
     {
-      title: `${userName}님의 모의고사 점수는 삭제되지 않아요!`,
+      title: `${user.name}님의 모의고사 점수는 삭제되지 않아요!`,
       content:
         "모의고사 점수는 풀업에서 모의고사 전체 통계를 위해 사용되기 때문이에요.",
     },
     {
-      title: `이외에 ${userName}님의 모든 정보는 바로 삭제되요!`,
+      title: `이외에 ${user.name}님의 모든 정보는 바로 삭제되요!`,
       content: "다시 가입해도 이용내역은 복구되지 않아요.",
     },
   ];
@@ -33,7 +32,7 @@ export default function Page() {
           정말 풀업을 탈퇴하실 건가요?
         </p>
         <p className="mb-9 text-[15px] font-medium text-gray01">
-          탈퇴 전 {userName}님께서 확인하실 정보가 있어요!
+          탈퇴 전 {user.name}님께서 확인하실 정보가 있어요!
         </p>
       </div>
 
@@ -84,26 +83,9 @@ export default function Page() {
         color={activeCancel ? "active" : "nonactive"}
         className="mt-auto"
         onClick={() => {
-          fetch(`${API}/members/${memberId}/delete`, {
-            method: "DELETE",
-            credentials: "include",
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error("Network response was not ok");
-              }
-              return response.json();
-            })
-            .then((data) => {
-              console.log("Success:", data);
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-            })
-            .finally(() => {
-              localStorage.clear();
-              router.replace("/");
-            });
+          localStorage.clear();
+          resetUserData();
+          router.replace("/");
         }}
       >
         탈퇴하기

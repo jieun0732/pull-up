@@ -13,12 +13,13 @@ function KakaoRedirect() {
     const kakaoLogin = async () => {
       const queryParams = new URLSearchParams(window.location.search);
 
-      // console.log(window.location.href);
+      console.log(window.location.href);
       const firstLogin = queryParams.get("firstLogin");
       const memberId = queryParams.get("memberId");
       const email = queryParams.get("email");
       const name = queryParams.get("name");
       const provider = queryParams.get("provider");
+      console.log(firstLogin, memberId, email, name, provider);
 
       setUser({
         memberId: Number(memberId),

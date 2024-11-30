@@ -84,14 +84,14 @@ export default function Home() {
       <Text size="body-04" color="text-gray01" className="mb-12">
         인적성 검사 준비는 풀업에서
       </Text>
-      <div
+      {/* <div
         onClick={() => {
           mockLogin();
         }}
         className="bg-pink-400 p-4 text-lg"
       >
         로컬 로그인~~~
-      </div>
+      </div> */}
       <div
         onClick={async () => {
           if (typeof window !== "undefined") {

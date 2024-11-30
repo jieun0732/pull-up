@@ -36,7 +36,7 @@ export default function Page() {
           />
           <MyScoreAverage data={data} />
           <MyTimeAverage data={data} />
-          {/* <MyWeakPart data={data} /> */}
+          <MyWeakPart data={data} />
           <Link href="/main/mockexam/result" className="mt-6">
             <Button size="large" color="active">
               해설 확인하기

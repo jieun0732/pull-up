@@ -21,6 +21,7 @@ function AppleRedirect() {
       const email = queryParams.get("email");
       const name = queryParams.get("name");
       const provider = queryParams.get("provider");
+      console.log(firstLogin, memberId, email, name, provider);
 
       setUser({
         memberId: Number(memberId),

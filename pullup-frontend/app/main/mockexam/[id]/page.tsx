@@ -22,7 +22,6 @@ import {
 import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
 import useTimer from "@/hooks/useTimer";
-import LocalStorage from "@/utils/LocalStorage";
 import Spinner from "@/component/ui/Spinner";
 import SubmitButton from "@/component/mockexam/tutorial/SubmitButton";
 import useExamStore from "@/stores/useExamStore";
@@ -80,11 +79,6 @@ export default function Page() {
           answerSheets: selectedAnswers,
         }),
       });
-      console.log({
-        examId: examId,
-        answerSheets: selectedAnswers,
-      });
-      console.log(response);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

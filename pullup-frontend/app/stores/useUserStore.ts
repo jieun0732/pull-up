@@ -28,10 +28,10 @@ const useUserStore = create<UserStore>()(
       },
       resetUserData: () => {
         const defaultUser = {
-          memberId: 99999999,
-          name: "test user",
-          email: "test@example.com",
-          snsProvider: "apple",
+          memberId: 0,
+          name: "",
+          email: "",
+          snsProvider: "",
         };
         set({ user: defaultUser });
       },

@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/component/ui/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Text from "@/component/ui/Text";
 import formatNumber from "@/utils/formatNumber";
 import { BackIcon } from "@/assets/icon/Icons";
@@ -9,28 +9,22 @@ import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
 import { roundUpNumber } from "@/utils/roundUpNumber";
 import { FormatQuestion } from "@/utils/FormatQuestion";
-import useProblemStore from "@/stores/useProblemStore";
+import useExamStore from "@/stores/useExamStore";
 import { SectionalNextResponseType } from "@/types/sectionalType";
 import { Entry } from "@/types/problemType";
 import Spinner from "@/component/ui/Spinner";
 
-export default function Page({
-  params,
-}: {
-  params: {
-    entry: Entry;
-    category: "EVENLY" | "BY_PROBLEM_TYPE";
-    id: string;
-  };
-}) {
+export default function Page() {
+  const params = useParams<{ id: string }>();
   const router = useRouter();
-  const { examId } = useProblemStore();
+  const { examId } = useExamStore();
 
   const { data, error } = useSWR<SectionalNextResponseType>(
     `${API}/exams/next/${examId}?problemNumber=${params.id}`,
     fetcher,
   );
 
+  console.log(data);
   return (
     <>
       {data ? (
@@ -90,7 +84,7 @@ export default function Page({
             );
           })}
 
-          <div className="relative px-5">
+          <div className="relative mt-4 px-5">
             <Text size="caption-01" className="mb-3 text-end">
               정답률 {roundUpNumber(data.explanation.incorrectRate || 0)}%
             </Text>

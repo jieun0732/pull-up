@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { CloseIcon } from "@/assets/icon/Icons";
 import Text from "@/component/ui/Text";
 import Button from "@/component/ui/Button";
@@ -29,16 +29,13 @@ const initialSolution: Explanation = {
   explanation: "",
 };
 
-export default function Page({
-  params,
-}: {
-  params: {
+export default function Page() {
+  const router = useRouter();
+  const params = useParams<{
     entry: Entry;
     category: "EVENLY" | "BY_PROBLEM_TYPE";
     id: string;
-  };
-}) {
-  const router = useRouter();
+  }>();
   const { examId } = useProblemStore();
   const searchParams = useSearchParams();
   const [isSubmitted, setIsSubmitted] = useState<boolean>(
