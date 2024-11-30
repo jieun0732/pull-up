@@ -1,50 +1,48 @@
 "use client";
 
 import Text from "../ui/Text";
-import { MockExamReportPropType } from "@/types/mockexam/mockexamReport";
-import LocalStorage from "@/utils/LocalStorage";
+import { MockExamReportType } from "@/types/mockexam/mockexamReport";
+import { entryMap } from "@/constants/constants";
 
-function MyWeakPart({ recentReportInfo }: MockExamReportPropType) {
-  const memberID = LocalStorage.getItem("memberId") || "";
+type MyWeakPartProps = {
+  data: MockExamReportType;
+};
 
-  const sections = recentReportInfo.problemTypeResults;
-
-  let weakest = "수리";
-  let maxIncorrect = -1;
-
-  sections.forEach((item, index) => {
-    const incorrectCount = item.totalProblems - item.correctProblems;
-
-    if (incorrectCount > maxIncorrect) {
-      maxIncorrect = incorrectCount;
-      weakest = item.entry;
-    }
-  });
+function MyWeakPart({ data }: MyWeakPartProps) {
+  const sections = ["Language", "Reasoning", "Math"] as const;
 
   return (
     <div className="my-5 flex w-full flex-col rounded-2xl bg-white p-6">
       <Text size="head-04">가장 취약한 파트는</Text>
       <Text size="head-02" className="inline">
-        {weakest} 영역 이에요!
+        {data.vulnerableEntryInfo.vulnerableEntry.map((item) => {
+          return item + " 영역, ";
+        })}
+        이에요!
       </Text>
       <Text size="caption-02" color="text-gray01" className="mt-1">
         * 오답 개수 기준이에요.
       </Text>
       <div className="flex w-full justify-around">
         {sections.map((item) => {
-          const height = `${(item.correctProblems / item.totalProblems) * 100}%`;
+          const incorrectCount =
+            data.vulnerableEntryInfo[`incorrect${item}Count`];
+          const totalCount = data.vulnerableEntryInfo[`total${item}Count`];
+          // 0으로 나누는 오류 방지
+          const height =
+            totalCount > 0 ? `${(incorrectCount / totalCount) * 100}%` : "0%";
           return (
             <div
-              key={item.entry}
+              key={item}
               className="flex w-14 flex-col items-center justify-end gap-1"
             >
-              {item.entry === weakest && (
+              {data.vulnerableEntryInfo.vulnerableEntry.includes(item) && (
                 <div className="relative mb-1 mt-6 flex h-7 w-14 items-center justify-center rounded-[.4em] bg-[#3d4150] text-center text-[11px] text-white">
                   취약파트
                 </div>
               )}
               <Text size="caption-02" color="text-gray01">
-                {item.correctProblems}/{item.totalProblems}
+                {incorrectCount}/{totalCount}
               </Text>
               <div className="relative h-32 w-8 rounded-md bg-red02">
                 <div
@@ -53,7 +51,7 @@ function MyWeakPart({ recentReportInfo }: MockExamReportPropType) {
                 ></div>
               </div>
               <Text size="caption-02" color="text-gray01">
-                {item.entry}
+                {entryMap[item.toUpperCase()]}
               </Text>
             </div>
           );

@@ -3,12 +3,16 @@
 import Header from "@/component/ui/Header";
 import Button from "@/component/ui/Button";
 import LocalStorage from "@/utils/LocalStorage";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { API } from "@/lib/API";
 
 export default function Page() {
+  const router = useRouter();
   const [activeCancel, setActiveCancel] = useState<boolean>(false);
 
   const userName = LocalStorage.getItem("name") || "";
+  const memberId = LocalStorage.getItem("memberId") || "";
 
   const term = [
     {
@@ -79,6 +83,28 @@ export default function Page() {
         size="large"
         color={activeCancel ? "active" : "nonactive"}
         className="mt-auto"
+        onClick={() => {
+          fetch(`${API}/members/${memberId}/delete`, {
+            method: "DELETE",
+            credentials: "include",
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Success:", data);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            })
+            .finally(() => {
+              localStorage.clear();
+              router.replace("/");
+            });
+        }}
       >
         탈퇴하기
       </Button>

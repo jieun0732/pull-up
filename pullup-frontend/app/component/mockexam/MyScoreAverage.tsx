@@ -8,17 +8,18 @@ import higherlogo from "@/assets/logo/higherLogo.png";
 import samelogo from "@/assets/logo/sameLogo.png";
 import lowerlogo from "@/assets/logo/lowerLogo.png";
 import useComponentSize from "@/hooks/useComponentSize";
-import { MockExamReportPropType } from "@/types/mockexam/mockexamReport";
+import { MockExamReportType } from "@/types/mockexam/mockexamReport";
 import LocalStorage from "@/utils/LocalStorage";
 
-function MyScoreAverage({ recentReportInfo }: MockExamReportPropType) {
+type MyScoreAverageProps = {
+  data: MockExamReportType;
+};
+
+function MyScoreAverage({ data }: MyScoreAverageProps) {
   const [componentRef, size] = useComponentSize();
-  const memberID = LocalStorage.getItem("memberId") || "";
 
-  LocalStorage.setItem("examId", String(recentReportInfo?.examId));
-
-  const progress = recentReportInfo.score;
-  const averageProgress = recentReportInfo.averageScore;
+  const progress = data.scoreInfo.myScore;
+  const averageProgress = data.scoreInfo.averageScore;
   const status = compareScores(averageProgress, progress);
 
   const scoreStatus = {
@@ -89,9 +90,9 @@ function MyScoreAverage({ recentReportInfo }: MockExamReportPropType) {
               />
               <div className="mx-auto mt-5 flex w-full items-center justify-center gap-3">
                 <Button size="small" color="activeLight">
-                  {recentReportInfo.rankPercent}
+                  {data.scoreInfo.topRate}
                 </Button>
-                <Text size="head-02">{recentReportInfo?.score}점</Text>
+                <Text size="head-02">{data.scoreInfo.myScore}점</Text>
               </div>
             </div>
           </div>

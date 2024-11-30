@@ -41,14 +41,14 @@ export const TutorialStep0Text = ({ step }: TutorialStep0TextProps) => {
       <Text
         size="body-02"
         color="text-white"
-        className="absolute -top-7 left-4 z-20"
+        style={{ position: "absolute", top: "-8px", left: "16px", zIndex: 20 }}
       >
         화살표를 누르면
       </Text>
       <Text
         size="body-02"
         color="text-white"
-        className="absolute -top-0 left-4 z-20"
+        style={{ position: "absolute", top: "16px", left: "16px", zIndex: 20 }}
       >
         쉽게 문제 이동을 할 수 있는 창이 나타나요!
       </Text>

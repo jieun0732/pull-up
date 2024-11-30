@@ -2,211 +2,164 @@
 
 import Button from "../ui/Button";
 import { useRouter } from "next/navigation";
-import { API } from "@/lib/API";
-import { ProblemInfo } from "@/types/problemType";
+import { postSubmitAnswer } from "@/lib/sectionalAPI";
+import { SectionalNextResponseType, Explanation } from "@/types/sectionalType";
+import { Dispatch } from "react";
+import { SetStateAction } from "react";
 
 interface QuestionProps {
-  problemInfo: ProblemInfo;
-  selectedId: number | null;
-  params: {
-    subject: string;
-    category: string;
-    id: string;
-  };
-  problemsCnt: number;
+  data: SectionalNextResponseType;
+  selectedId: number;
+  category: "EVENLY" | "BY_PROBLEM_TYPE";
+  setSolution: Dispatch<SetStateAction<Explanation>>;
+  setIsSubmitted: Dispatch<SetStateAction<boolean>>;
 }
 
 const QuestionFooterButton: React.FC<QuestionProps> = ({
-  problemInfo,
+  data,
   selectedId,
-  params,
-  problemsCnt,
-}) => {
+  category,
+  setSolution,
+  setIsSubmitted,
+}: QuestionProps) => {
   const router = useRouter();
-  const { subject, category, id } = params;
-
-  const handleNextProblem = async () => {
-    try {
-      if (selectedId === null) return;
-
-      const selectedIdString = String(selectedId + 1);
-      let chosenAnswer;
-
-      while (true) {
-        const response = await fetch(`${API}/exams/answer`, {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            chosenAnswer: selectedIdString,
-            id: problemInfo.id,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const result = await response.json();
-        chosenAnswer = result.chosenAnswer;
-
-        if (chosenAnswer) break;
-      }
-      router.push(
-        `/main/sectional/${subject}/${category}/${id}/solution?chosenAnswer=${chosenAnswer}`,
-      );
-    } catch (error) {
-      console.error("Fetch operation error:", error);
-      // 에러가 발생해도 router.push를 호출
-      // router.push(`/main/sectional/${subject}/${category}/${id}/solution`);
-    }
-  };
 
   const handleSubmit = async () => {
-    try {
-      let chosenAnswer;
-      let selectedIdString;
+    const response = await postSubmitAnswer(
+      data.examId,
+      data.problemNumber,
+      selectedId + 1,
+    );
 
-      if (selectedId !== null) {
-        selectedIdString = String(selectedId + 1);
-      }
-
-      do {
-        const response = await fetch(`${API}/exams/answer`, {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            chosenAnswer: selectedIdString,
-            id: problemInfo.id,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        chosenAnswer = result.chosenAnswer;
-        console.log("Response:", result);
-      } while (chosenAnswer === undefined);
-
-      router.push(`/main/sectional/${subject}/${category}/result`);
-    } catch (error) {
-      console.error("fetch operation:", error);
+    const explanation = await response;
+    if (explanation) {
+      setSolution(explanation);
+      router.push(`/main/sectional/${data.entry}/${category}/result`);
     }
   };
 
-  if (params.id === "1") {
-    if (selectedId !== null) {
-      return (
-        <Button
-          size="large"
-          color="active"
-          className="mt-4"
-          onClick={problemsCnt === 1 ? handleSubmit : handleNextProblem}
-        >
-          채점하기
-        </Button>
-      );
+  const handleNextProblem = async () => {
+    const response = await postSubmitAnswer(
+      data.examId,
+      data.problemNumber,
+      selectedId + 1,
+    );
+    const explanation = await response;
+    if (explanation) {
+      setSolution(explanation);
+      setIsSubmitted(true);
     }
-    if (selectedId === null) {
-      return (
-        <Button size="large" color="nonactive" className="mt-4">
-          채점하기
-        </Button>
-      );
-    }
-  }
-  if (params.id !== "1" && Number(params.id) !== problemsCnt) {
-    if (selectedId === null) {
-      return (
-        <div className="mt-4 flex gap-2">
-          <Button
-            size="medium"
-            color="activeBorder"
-            onClick={() =>
-              router.push(
-                `/main/sectional/${subject}/${category}/${Number(id) - 1}/solution`,
-              )
-            }
-          >
-            이전 문제
-          </Button>
-          <Button size="medium" color="nonactive">
-            채점하기
-          </Button>
-        </div>
-      );
-    }
-    if (selectedId !== null) {
-      return (
-        <div className="mt-4 flex gap-2">
-          <Button
-            size="medium"
-            color="activeBorder"
-            onClick={() =>
-              router.push(
-                `/main/sectional/${subject}/${category}/${Number(id) - 1}/solution`,
-              )
-            }
-          >
-            이전 문제
-          </Button>
-          <Button size="medium" color="active" onClick={handleNextProblem}>
-            채점하기
-          </Button>
-        </div>
-      );
-    }
-  }
+  };
 
-  if (Number(params.id) === problemsCnt) {
-    if (selectedId === null) {
-      return (
-        <div className="mt-4 flex gap-2">
+  const ButtonGroupComponent = ({
+    onClickPrev,
+    onClickNext,
+    isActive,
+  }: {
+    onClickPrev: () => void;
+    onClickNext: () => void;
+    isActive: boolean;
+  }) => (
+    <div className="mt-4 flex gap-2">
+      <Button size="medium" color="activeBorder" onClick={onClickPrev}>
+        이전 문제
+      </Button>
+      <Button
+        size="medium"
+        color={isActive ? "active" : "nonactive"}
+        onClick={onClickNext}
+      >
+        채점하기
+      </Button>
+    </div>
+  );
+
+  const handleStateBranching = () => {
+    switch (true) {
+      // 1) problemNumber가 1인 경우
+      case data.problemNumber === 1:
+        // 1-1) selectedId가 -1인 경우
+        if (selectedId === -1) {
+          return (
+            <Button size="large" color="nonactive">
+              채점하기
+            </Button>
+          );
+        }
+        // 1-2) selectedId가 -1이 아닌 경우
+        return (
           <Button
-            size="medium"
-            color="activeBorder"
-            onClick={() =>
-              router.push(
-                `/main/sectional/${subject}/${category}/${Number(id) - 1}/solution`,
-              )
+            size="large"
+            color="active"
+            onClick={
+              data.totalProblemCount === 1 ? handleSubmit : handleNextProblem
             }
           >
-            이전 문제
-          </Button>
-          <Button size="medium" color="nonactive">
             채점하기
           </Button>
-        </div>
-      );
-    }
-    if (selectedId !== null) {
-      return (
-        <div className="mt-4 flex gap-2">
-          <Button
-            size="medium"
-            color="activeBorder"
-            onClick={() =>
+        );
+
+      // 2) data.totalProblemCount가 problemNumber와 같은 경우
+      case data.totalProblemCount === data.problemNumber:
+        // 2-1) selectedId가 -1인 경우
+        if (selectedId === -1) {
+          return (
+            <ButtonGroupComponent
+              onClickPrev={() =>
+                router.push(
+                  `/main/sectional/${data.entry}/${category}/${data.problemNumber - 1}`,
+                )
+              }
+              onClickNext={() => {}}
+              isActive={false}
+            />
+          );
+        }
+        // 2-2) selectedId가 -1이 아닌 경우
+        return (
+          <ButtonGroupComponent
+            onClickPrev={() =>
               router.push(
-                `/main/sectional/${subject}/${category}/${Number(id) - 1}/solution`,
+                `/main/sectional/${data.entry}/${category}/${data.problemNumber - 1}`,
               )
             }
-          >
-            이전 문제
-          </Button>
-          <Button size="medium" color="active" onClick={handleSubmit}>
-            채점하기
-          </Button>
-        </div>
-      );
+            onClickNext={handleSubmit}
+            isActive={true}
+          />
+        );
+
+      // 3) 그 외의 경우
+      default:
+        // 3-1) selectedId가 -1인 경우
+        if (selectedId === -1) {
+          return (
+            <ButtonGroupComponent
+              onClickPrev={() =>
+                router.push(
+                  `/main/sectional/${data.entry}/${category}/${data.problemNumber - 1}`,
+                )
+              }
+              onClickNext={() => {}}
+              isActive={false}
+            />
+          );
+        }
+        // 3-2) selectedId가 -1이 아닌 경우
+        return (
+          <ButtonGroupComponent
+            onClickPrev={() =>
+              router.push(
+                `/main/sectional/${data.entry}/${category}/${data.problemNumber - 1}`,
+              )
+            }
+            onClickNext={handleNextProblem}
+            isActive={true}
+          />
+        );
     }
-  }
+  };
+
+  return handleStateBranching();
 };
 
 export default QuestionFooterButton;

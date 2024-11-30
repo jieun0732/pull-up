@@ -2,78 +2,56 @@
 
 import Text from "../ui/Text";
 import { entryMap } from "@/constants/constants";
-import { ProblemInfo } from "@/types/problemType";
-import useSWR from "swr";
-import { API, fetcher } from "@/lib/API";
-import { User } from "@/types/userType";
-import LocalStorage from "@/utils/LocalStorage";
+import { UserLogin } from "@/types/userType";
+import { SectionalResultResponseType } from "@/types/sectionalType";
 
-interface QuestionProps {
-  problems: ProblemInfo[];
-  params: {
-    subject: string;
-    category: string;
-  };
+interface SectionalResultHeaderProps {
+  data: SectionalResultResponseType;
+  user: UserLogin;
+  category: "EVENLY" | "BY_PROBLEM_TYPE";
 }
 
-const SectionalResultHeader: React.FC<QuestionProps> = ({
-  problems,
-  params,
-}) => {
-  const { subject, category } = params;
-  const totalProblemsCount = problems.length;
-  const isFinished = problems.every((item) => item.chosenAnswer !== null);
-  const solvedCount = problems.filter(
-    (item) => item.chosenAnswer !== null,
-  ).length;
-  const isCorrectCount = problems.filter(
-    (item) => item.isCorrect == true,
-  ).length;
-
-  const type = LocalStorage.getItem("type");
-
-  const { data: user } = useSWR<User>(
-    `${API}/members/${LocalStorage.getItem("memberId")}`,
-    fetcher,
-  );
-
-  if (isFinished == false && user) {
+export default function SectionalResultHeader({
+  data,
+  user,
+  category,
+}: SectionalResultHeaderProps) {
+  if (!data.isFinished) {
     return (
       <>
         <Text size="head-02" className="self-start">
-          {category === "mix"
-            ? `    ${user.data.name}님은 ${entryMap[subject]}영역 ${totalProblemsCount}문제 중`
-            : `    ${user.data.name}님은 ${type} 유형 ${totalProblemsCount}문제 중`}
+          {category === "EVENLY"
+            ? `    ${user.name}님은 ${entryMap[data.entry]}영역 ${data.totalProblemCount}문제 중`
+            : `    ${user.name}님은 ${entryMap[data.entry]} 유형 ${data.totalProblemCount}문제 중`}
         </Text>
         <Text size="head-02" className="self-start">
-          {solvedCount}개의 학습을 완료했어요
+          {data.totalProblemCount - data.leftProblemCount}개의 학습을 완료했어요
         </Text>
         <Text
           size="head-05"
           color="text-gray01"
           className="mb-6 mt-2 self-start"
         >
-          {category === "mix"
-            ? `남은 문제를 풀고 ${entryMap[subject]}영역을 정복해보세요`
-            : `남은 문제를 풀고  ${type} 유형을 정복해보세요`}
+          {category === "BY_PROBLEM_TYPE"
+            ? `남은 문제를 풀고 ${data.results[0].problemType}영역을 정복해보세요`
+            : `남은 문제를 풀고  ${data.results[0].problemType} 유형을 정복해보세요`}
         </Text>
       </>
     );
   }
-  if (isFinished == true && user) {
+  if (data.isFinished == true) {
     return (
       <>
         <Text size="head-02" className="self-start">
-          {category === "mix"
-            ? `${user.data.name}님은 ${entryMap[subject]}영역`
-            : `${user.data.name}님은 ${type} 유형`}
+          {category === "EVENLY"
+            ? `${user.name}님은 ${entryMap[data.entry]}영역`
+            : `${user.name}님은 ${data.results[0].problemType} 유형`}
         </Text>
         <Text size="head-02" className="self-start">
-          총 {totalProblemsCount}제 중 {isCorrectCount}문제를 맞췄어요!
+          총 {data.totalProblemCount}문제 중 {data.correctProblemCount}문제를
+          맞췄어요!
         </Text>
       </>
     );
   }
-};
-
-export default SectionalResultHeader;
+}

@@ -11,13 +11,13 @@ import {  ServiceUsageIcon,
 const etcItems = [
   {
     name: "서비스 이용약관",
-    link: "https://www.notion.so/a6b5e171acc54c35a7b22ee439c4de4a",
+    link: "/main/profile/termsOfUse",
     hasNextPage: false,
     icon: ServiceUsageIcon,
   },
   {
     name: "개인정보처리방침",
-    link: "https://www.notion.so/acb60693bb66458faa62f3e57792e756",
+    link: "/main/profile/privacyPolicy",
     hasNextPage: false,
     icon: PrivacyPolicyIcon,
   },
@@ -36,6 +36,12 @@ const etcItems = [
 ];
 
 export default function ProfileMenus() {
+  const handleLogout = (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault(); // 기본 링크 동작 방지
+      localStorage.clear(); // 로컬 스토리지 비우기
+      window.location.href = "/"; // 로그아웃 후 이동할 페이지
+  };
+
   return (
     <div className="mb-4">
       <Text size="body-01" className="mb-2">
@@ -47,9 +53,8 @@ export default function ProfileMenus() {
             <Link
               href={item.link}
               key={item.name}
-              target={item.hasNextPage ? undefined : "_blank"}
-              rel={item.hasNextPage ? undefined : "noopener noreferrer"}
               className="flex items-center border border-b border-solid border-[#F4F3F8] px-6 py-5"
+              onClick={item.name === "로그아웃" ? handleLogout : undefined} 
             >
               <item.icon />
               <Text size="body-03" className="w-[80%]">
@@ -69,4 +74,7 @@ export default function ProfileMenus() {
       </div>
     </div>
   );
-}
+} 
+
+// target={item.hasNextPage ? undefined : "_blank"}
+// rel={item.hasNextPage ? undefined : "noopener noreferrer"}

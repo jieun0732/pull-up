@@ -2,16 +2,22 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LocalStorage from "@/utils/LocalStorage";
 import { API } from "@/lib/API";
+import useExamStore from "@/stores/useExamStore";
+import { MockExamReportType } from "@/types/mockexam/mockexamReport";
 
-const useTimer = (dep: string, durationInMinutes: number) => {
+const useTimer = (dep: string, durationInMinutes: number, step: number) => {
   const router = useRouter();
   const durationInSeconds = durationInMinutes * 60; // 분을 초로 변환
   const [timeLeft, setTimeLeft] = useState(durationInSeconds);
+  const { selectedAnswers, examId, time: createdDate } = useExamStore();
 
   useEffect(() => {
-    const createdDate = localStorage.getItem("time");
-    const currentTime = Date.now();
+    if (step < 2) {
+      setTimeLeft(durationInSeconds); // step이 2 미만일 때는 초기 시간 설정
+      return;
+    }
 
+    const currentTime = Date.now();
     if (!createdDate) {
       const currentTimeISO = new Date().toISOString(); // 현재 시간을 ISO 형식으로 저장
       localStorage.setItem("time", currentTimeISO); // localStorage에 현재 시간 저장
@@ -20,32 +26,46 @@ const useTimer = (dep: string, durationInMinutes: number) => {
     }
 
     const createdTime = new Date(createdDate).getTime();
-    const thirtyMinutes = 30 * 60 * 1000; // 30분을 밀리초로 변환
-
+    const limitTime = durationInMinutes * 60 * 1000;
     // 30분이 지나면 이동
-    if (currentTime - createdTime > thirtyMinutes) {
+    if (currentTime - createdTime > limitTime) {
+      console.log("Current Time:", new Date(currentTime).toLocaleString());
+      console.log("Created Time:", new Date(createdTime).toLocaleString());
+      console.log(
+        currentTime - createdTime,
+        "--------------------------------",
+      );
+
       const handleExamResult = async () => {
-        console.log("handleExamResult");
+        console.log(
+          currentTime,
+          createdTime,
+          limitTime,
+          "--------------------------------",
+        );
         try {
-          const examId = LocalStorage.getItem("examId");
-          const response = await fetch(
-            `${API}/exams/mock-exam/${examId}/complete`,
-            {
-              method: "POST",
-              credentials: "include",
-              headers: {
-                "Content-Type": "application/json",
-              },
+          console.log("Grade-------------------------");
+          const response = await fetch(`${API}/exams/mock-exam/grade`, {
+            method: "POST",
+            // credentials: "include",
+            headers: {
+              Accept: "*/*",
+              "Content-Type": "application/json",
             },
-          );
+            body: JSON.stringify({
+              examId: examId,
+              answerSheets: selectedAnswers,
+            }),
+          });
 
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-          const result = await response.json();
-          router.push("/main/mockexam/report");
+          const result: MockExamReportType = await response.json();
         } catch (error) {
-          console.error("Error fetching access check:", error);
+          console.error(error);
+        } finally {
+          router.push("/main/mockexam/report");
         }
       };
 
@@ -68,7 +88,7 @@ const useTimer = (dep: string, durationInMinutes: number) => {
     // 타이머 설정
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
-        if (prev <= 1) {
+        if (prev <= 1 && step >= 2) {
           clearInterval(interval);
           router.push("/main/mockexam/report"); // 타이머가 끝나면 이동
           return 0; // 타이머가 끝났음을 표시
@@ -78,7 +98,7 @@ const useTimer = (dep: string, durationInMinutes: number) => {
     }, 1000);
 
     return () => clearInterval(interval); // 컴포넌트 언마운트 시 정리
-  }, [router, durationInSeconds]);
+  }, [router, durationInSeconds, step]);
 
   // 시간 포맷팅 함수
   const formatTime = (seconds: number) => {

@@ -5,10 +5,14 @@ import { DepthIcon } from "@/assets/icon/Icons";
 import Text from "../ui/Text";
 
 interface MyActivitiesProp {
-  testScore: number | null;
+  mockExamScore: number | null;
+  mockExamSolved: boolean;
 }
 
-export default function MyActivities({ testScore }: MyActivitiesProp) {
+export default function MyActivities({
+  mockExamScore,
+  mockExamSolved,
+}: MyActivitiesProp) {
   return (
     <div>
       <Text size="body-01" className="mb-2">
@@ -38,7 +42,7 @@ export default function MyActivities({ testScore }: MyActivitiesProp) {
               <Text size="head-04">모의고사 점수</Text>
             </div>
             <Text size="head-02" color="text-blue01">
-              {testScore !== null && testScore !== 0 ? `${testScore}점` : "-"}
+              {mockExamSolved ? `${mockExamScore}점` : "-"}
             </Text>
           </div>
         </Link>

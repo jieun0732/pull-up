@@ -12,28 +12,28 @@ import {
 } from "@/assets/defaultImages/sectional";
 
 export default function Page() {
-  const sections = [
+  const entries = [
     {
       name: "언어영역",
-      link: "/main/sectional/language",
+      link: "/main/sectional/LANGUAGE",
       isClosed: false,
       img: language,
     },
     {
       name: "추리영역",
-      link: "/main/sectional/reasoning",
+      link: "/main/sectional/REASONING",
       isClosed: false,
       img: reasoning,
     },
     {
       name: "수리영역",
-      link: "/main/sectional/math",
+      link: "/main/sectional/MATH",
       isClosed: false,
       img: math,
     },
     {
       name: "공간지각영역",
-      link: "/main/sectional",
+      link: "/main/sectional/SPATIAL",
       isClosed: true,
       img: spatial,
     },
@@ -46,7 +46,7 @@ export default function Page() {
       <Text size="head-05" color="text-gray01" className="mb-[26px]">
         나의 취약한 영역을 공략해 효율적으로 학습해요
       </Text>
-      {sections.map((item) => {
+      {entries.map((item) => {
         return (
           <Link
             key={item.name}

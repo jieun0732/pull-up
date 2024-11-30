@@ -20,13 +20,13 @@ import {
   TutorialStep1SpeechBubble,
 } from "@/component/mockexam/tutorial";
 import useSWR from "swr";
-import { API } from "@/lib/API";
-import {
-  MockExamProblemType,
-  ProblemBeingSolved,
-} from "@/types/mockexam/mockexamQuestion";
+import { API, fetcher } from "@/lib/API";
 import useTimer from "@/hooks/useTimer";
 import LocalStorage from "@/utils/LocalStorage";
+import Spinner from "@/component/ui/Spinner";
+import SubmitButton from "@/component/mockexam/tutorial/SubmitButton";
+import useExamStore from "@/stores/useExamStore";
+import { MockExamResponseType } from "@/types/mockexam/mockexamQuestion";
 
 export default function Page() {
   const router = useRouter();
@@ -35,260 +35,211 @@ export default function Page() {
   const [showQuestions, setShowQuestions] = useState<boolean>(false);
   const { openModal, closeModal, Modal } = useModal({ initialOpen: false });
   const [step, setStep] = useState(4);
+  const timeLeft = useTimer(params.id, 20, step);
+  const {
+    examId,
+    isFinished,
+    selectedAnswers,
+    tutorialFinished,
+    setTutorialFinished,
+  } = useExamStore();
 
-  const timeLeft = useTimer(params.id, 30);
-  const examId = LocalStorage.getItem("examId");
-
-  const { data: nowProblem, error } = useSWR<MockExamProblemType>(
-    `${API}/exams/mock-exam/problem?examInformationId=${examId}&problemNumber=${params.id}`,
-  );
-  const { data: problemList, error: questionListError } = useSWR<
-    ProblemBeingSolved[]
-  >(
-    showQuestions
-      ? `${API}/exams/mock-exam/problems?examInformationId=${examId}`
-      : null,
+  const { data: nowProblem, error } = useSWR<MockExamResponseType>(
+    `${API}/exams/next/${examId}?problemNumber=${params.id}`,
   );
 
   useEffect(() => {
-    const checkAccess = async () => {
-      if (params.id !== "1") return;
-      if (params.id === "1") {
-        try {
-          const response = await fetch(
-            `${API}/members/${LocalStorage.getItem("memberId")}/access-check`,
-            {
-              method: "PUT",
-              credentials: "include",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            },
-          );
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const result = await response.json();
-          if (result.data.accessCheck) {
-            setStep(4);
-          } else {
-            setStep(0);
-          }
-        } catch (error) {
-          console.error("Error fetching access check:", error);
-          setStep(0);
-        }
+    if (params.id === "1") {
+      if (!tutorialFinished) {
+        setStep(0);
       }
-    };
-    checkAccess();
+    }
+  }, []);
+
+  // SELECTED ANSWER
+  useEffect(() => {
+    const getSelectedId = selectedAnswers[Number(params.id) - 1].submitAnswer;
+    if (getSelectedId !== null) {
+      setSelectedId(getSelectedId - 1);
+    } else {
+      setSelectedId(null);
+    }
   }, [params.id]);
 
-  const handleNextQuestion = async () => {
-    let postSelectedId = selectedId;
-    if (postSelectedId !== null) {
-      String(postSelectedId + 1);
-    }
-
+  const handleExamResult = async () => {
     try {
-      const response = await fetch(`${API}/exams/mock-exam/answer`, {
+      const response = await fetch(`${API}/exams/mock-exam/grade`, {
         method: "POST",
-        credentials: "include",
+        // credentials: "include",
         headers: {
           Accept: "*/*",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          examInformationId: Number(LocalStorage.getItem("examId")),
-          problemNumber: Number(nowProblem?.problemNumber),
-          chosenAnswer: postSelectedId,
+          examId: examId,
+          answerSheets: selectedAnswers,
         }),
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log(result);
-      LocalStorage.setItem("createdDate", result.examInformation.createdDate);
-      console.log(result.examInformation.createdDate);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      router.push(`/main/mockexam/${Number(params.id) + 1}`);
-    }
-  };
-
-  const handleExamResult = async () => {
-    console.log("handleExamResult");
-    try {
-      const response = await fetch(
-        `${API}/exams/mock-exam/${examId}/complete`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-
+      console.log({
+        examId: examId,
+        answerSheets: selectedAnswers,
+      });
+      console.log(response);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
       router.push("/main/mockexam/report");
     } catch (error) {
-      console.error("Error fetching access check:", error);
+      console.error(error);
+    } finally {
+      // router.push("/main/mockexam/report");
     }
   };
 
-  // 사용자가 기존에 선택한 값이 있다면 null로 보내기
-  useEffect(() => {
-    if (nowProblem && nowProblem.ChosenAnswer !== null) {
-      setSelectedId(Number(nowProblem.ChosenAnswer));
-    }
-  }, [nowProblem]);
-  if (!nowProblem) return;
-
-  const isFinished = problemList?.every((item) => item.chosenAnswer !== null);
-
   return (
     <>
-      <div className="bg-whtie relative flex h-full flex-col items-center overflow-x-auto">
-        <TutorialOverlay problemId={params.id} step={step} setStep={setStep} />
-        <TutorialStep0 problemId={params.id} step={step} setStep={setStep} />
-        <QuestionList
-          showQuestions={showQuestions}
-          setShowQuestions={setShowQuestions}
-          handleExamResult={handleExamResult}
-          problemList={problemList}
-        />
+      {nowProblem ? (
+        <>
+          <div className="bg-whtie relative flex h-full flex-col items-center overflow-x-auto">
+            <TutorialOverlay
+              problemId={params.id}
+              step={step}
+              setStep={setStep}
+              setTutorialFinished={setTutorialFinished}
+            />
+            <TutorialStep0
+              problemId={params.id}
+              step={step}
+              setStep={setStep}
+            />
+            <QuestionList
+              showQuestions={showQuestions}
+              setShowQuestions={setShowQuestions}
+              handleExamResult={handleExamResult}
+              isFinished={isFinished}
+            />
 
-        <div className="relative flex w-full flex-col overflow-x-auto px-5 pt-20">
-          <div className="relative mb-8 w-full text-center">
-            <CloseIcon onClick={openModal} />
-            <span
-              className={`relative rounded bg-white p-3 text-[17px] font-bold ${
-                params.id === "1" && step == 1 ? "z-20" : ""
-              }`}
-            >
-              {timeLeft}
-            </span>
-            <TutorialStep1 problemId={params.id} step={step} />
-          </div>
-          <span
-            onClick={() => setShowQuestions(true)}
-            className={`relative mb-4 flex w-fit items-center gap-1 rounded bg-white text-[17px] ${
-              params.id === "1" && step == 0 ? "z-20 p-2" : ""
-            }`}
-          >
-            문제 {formatNumber(params.id)} <ToggleIcon />
-          </span>
-
-          <Text size="body-03" className="relative mb-4">
-            {nowProblem.question}
-          </Text>
-
-          {nowProblem.explanation && nowProblem.explanation.length > 0 && (
-            <div className="relative mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 px-5 py-5">
-              <Text size="body-03">{nowProblem.explanation}</Text>
-              <TutorialStep0Text step={step} />
-            </div>
-          )}
-        </div>
-
-        {nowProblem.choices.map((item, idx) => (
-          <ChoiceItem
-            key={item}
-            choice={item}
-            idx={idx}
-            isSelected={selectedId === idx}
-            selectedId={selectedId}
-            setSelectedId={setSelectedId}
-            type="mockexam"
-            problemNumber={nowProblem.problemNumber}
-            paramsId={params.id}
-          />
-        ))}
-
-        <div className="absolute bottom-0 mb-11 flex w-full flex-col px-5 py-4">
-          <TutorialStep1SpeechBubble step={step} problemId={params.id} />
-
-          {isFinished ? (
-            <button
-              onClick={handleExamResult}
-              className="ml-auto rounded-t-2xl rounded-bl-2xl bg-blue03 px-6 py-2 text-blue01 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]"
-            >
-              제출하기
-            </button>
-          ) : (
-            <button className="ml-auto rounded-t-2xl rounded-bl-2xl bg-gray03 px-6 py-2 text-gray02 shadow-[2px_2px_20px_0px_rgba(0,0,0,0.16)]">
-              제출하기
-            </button>
-          )}
-          {(() => {
-            if (params.id === "1") {
-              return (
-                <Button
-                  size="large"
-                  color="active"
-                  className="mt-4"
-                  onClick={handleNextQuestion}
+            <div className="relative flex w-full flex-col overflow-x-auto px-5 pt-20">
+              <div className="relative mb-8 w-full text-center">
+                <CloseIcon onClick={openModal} />
+                <span
+                  className={`relative rounded bg-white p-3 text-[17px] font-bold ${
+                    params.id === "1" && step == 1 ? "z-20" : ""
+                  }`}
                 >
-                  다음 문제
-                </Button>
-              );
-            } else if (params.id !== "1" && params.id !== "20") {
-              return (
-                <div className="mt-4 flex gap-2">
-                  <Button
-                    size="medium"
-                    color="activeBorder"
-                    onClick={() =>
-                      router.push(`/main/mockexam/${Number(params.id) - 1}`)
-                    }
-                  >
-                    이전 문제
-                  </Button>
-                  <Button
-                    size="medium"
-                    color="active"
-                    onClick={handleNextQuestion}
-                  >
-                    다음 문제
-                  </Button>
+                  {params.id === "1" && step == 1 ? "20:00" : timeLeft}
+                </span>
+                <TutorialStep1 problemId={params.id} step={step} />
+              </div>
+              <span
+                onClick={() => setShowQuestions(true)}
+                className={`relative mb-4 flex w-fit items-center gap-1 rounded bg-white text-[17px] ${
+                  params.id === "1" && step == 0 ? "z-20 p-2" : ""
+                }`}
+              >
+                문제 {formatNumber(params.id)} <ToggleIcon />
+              </span>
+
+              <Text size="body-03" className="relative mb-4">
+                {nowProblem.question}
+                <TutorialStep0Text step={step} />
+              </Text>
+
+              {nowProblem.example && nowProblem.example.length > 0 && (
+                <div className="relative mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 px-5 py-5">
+                  <Text size="body-03">{nowProblem.example}</Text>
                 </div>
-              );
-            } else if (params.id === "20") {
-              return (
-                <Button
-                  size="large"
-                  color="activeBorder"
-                  className="mt-4"
-                  onClick={() =>
-                    router.push(`/main/mockexam/${Number(params.id) - 1}`)
-                  }
-                >
-                  이전 문제
-                </Button>
-              );
-            }
-          })()}
-        </div>
-        <Modal>
-          <ConfirmModal
-            onLeft={() => router.push("/main/mockexam")}
-            onRight={closeModal}
-            title="모의고사를 그만 푸실 건가요?"
-            description="나가면 현재까지 푼 문제들은 저장되지 않아요!"
-            left="나갈래요"
-            right="계속 풀래요"
-          />
-        </Modal>
-      </div>
+              )}
+            </div>
+
+            {nowProblem.choices.map((item, idx) => (
+              <ChoiceItem
+                key={item}
+                choice={item}
+                idx={idx}
+                isSelected={selectedId === idx}
+                selectedId={selectedId}
+                setSelectedId={setSelectedId}
+                problemNumber={Number(params.id)}
+              />
+            ))}
+
+            <div className="absolute bottom-0 mb-11 flex w-full flex-col px-5 py-4">
+              <TutorialStep1SpeechBubble step={step} problemId={params.id} />
+
+              <SubmitButton
+                handleExamResult={handleExamResult}
+                isFinished={isFinished}
+              />
+              {(() => {
+                if (params.id === "1") {
+                  return (
+                    <Button
+                      size="large"
+                      color="active"
+                      className="mt-4"
+                      onClick={() =>
+                        router.push(`/main/mockexam/${Number(params.id) + 1}`)
+                      }
+                    >
+                      다음 문제
+                    </Button>
+                  );
+                } else if (params.id !== "1" && params.id !== "20") {
+                  return (
+                    <div className="mt-4 flex gap-2">
+                      <Button
+                        size="medium"
+                        color="activeBorder"
+                        onClick={() =>
+                          router.push(`/main/mockexam/${Number(params.id) - 1}`)
+                        }
+                      >
+                        이전 문제
+                      </Button>
+                      <Button
+                        size="medium"
+                        color="active"
+                        onClick={() =>
+                          router.push(`/main/mockexam/${Number(params.id) + 1}`)
+                        }
+                      >
+                        다음 문제
+                      </Button>
+                    </div>
+                  );
+                } else if (params.id === "20") {
+                  return (
+                    <Button
+                      size="large"
+                      color="activeBorder"
+                      className="mt-4"
+                      onClick={() =>
+                        router.push(`/main/mockexam/${Number(params.id) - 1}`)
+                      }
+                    >
+                      이전 문제
+                    </Button>
+                  );
+                }
+              })()}
+            </div>
+            <Modal>
+              <ConfirmModal
+                onLeft={() => router.push("/main/mockexam")}
+                onRight={closeModal}
+                title="모의고사를 그만 푸실 건가요?"
+                description="나가면 현재까지 푼 문제들은 저장되지 않아요!"
+                left="나갈래요"
+                right="계속 풀래요"
+              />
+            </Modal>
+          </div>
+        </>
+      ) : (
+        <Spinner />
+      )}
     </>
   );
 }

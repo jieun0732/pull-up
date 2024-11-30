@@ -1,17 +1,19 @@
-export interface User {
-  status: number;
-  message: string;
-  data: userStatus;
-}
-
-export interface userStatus {
-  id: number;
+export interface UserLogin {
+  memberId: number;
   name: string;
   email: string;
-  accessCheck: boolean;
-  role: string;
-  latestScore: number;
+  snsProvider: string;
 }
+
+export interface User {
+  memberId: number;
+  name: string;
+  email: string;
+  snsProvider: string;
+  mockExamSolved: boolean;
+  mockExamScore: number;
+}
+
 export interface UserLoginStatus {
   firstLogin: boolean;
   memberId: number;

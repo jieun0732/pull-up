@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Text from "./component/ui/Text";
+import { useRouter } from "next/navigation";
 import introLogo from "./assets/logo/introLogo.png";
+import LocalStorage from "./utils/LocalStorage";
 import {
   APPLE_REDIRECT_URI,
   KAKAO_REDIRECT_URI,
@@ -10,6 +12,7 @@ import {
   API,
 } from "./lib/API";
 import { useState, useEffect } from "react";
+import useUserStore from "./stores/useUserStore";
 
 interface AppleAuthenticationResponseType {
   authorization: {
@@ -26,15 +29,17 @@ interface AppleAuthenticationResponseType {
 }
 
 export default function Home() {
+  const router = useRouter();
   const totalPercent = 91;
-
   const [kakaoLoaded, setKakaoLoaded] = useState(false);
+  const [appleLoaded, setAppleLoaded] = useState(false);
+  const { user, updateUser, resetUserData } = useUserStore();
 
   useEffect(() => {
     const handleKakaoInit = () => {
       if (window.Kakao) {
         if (!window.Kakao.isInitialized()) {
-          window.Kakao.init("ebfd504b765655d935edf9d25c288afa");
+          window.Kakao.init(KAKAO_KEY);
         }
       } else {
         console.error("Kakao SDK not loaded");
@@ -45,6 +50,27 @@ export default function Home() {
       handleKakaoInit();
     }
   }, [kakaoLoaded]);
+
+  // useEffect(() => {
+  //   if (LocalStorage.getItem("memberId")) {
+  //     router.push("/main/sectional");
+  //   }
+  // }, []);
+
+  const mockLogin = async () => {
+    const response = await fetch(
+      `http://pullup-api.shop:3000/api/oauth2/callback/local`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    const result = await response.json();
+    router.push("/main/sectional");
+  };
 
   return (
     <main className="flex h-full w-full flex-col items-center justify-center bg-white px-5">
@@ -59,33 +85,35 @@ export default function Home() {
         인적성 검사 준비는 풀업에서
       </Text>
       <div
+        onClick={() => {
+          mockLogin();
+        }}
+        className="bg-pink-400 p-4 text-lg"
+      >
+        로컬 로그인~~~
+      </div>
+      <div
         onClick={async () => {
           if (typeof window !== "undefined") {
             const { Kakao } = window;
-            Kakao.init("ebfd504b765655d935edf9d25c288afa");
+            Kakao.init(KAKAO_KEY);
             console.log(String(Kakao.isInitialized()));
             if (Kakao.isInitialized()) {
               try {
                 Kakao.Auth.authorize({
                   redirectUri:
-                    "https://pullup-api.shop/api/pull-up/oauth2/callback/kakao",
+                    "https://pullup-api.shop/api/oauth2/callback/kakao",
                   throughTalk: Boolean(navigator.userAgent.match(/Android/i))
                     ? false
                     : true,
                 });
-              } catch (error) {
-                console.log("kakaoLoginError");
-                console.log(error);
-                alert("kakaoLoginError");
-                alert(error);
-              }
+              } catch (error) {}
             } else {
-              console.log("kakao init", KAKAO_KEY);
-              await Kakao.init("ebfd504b765655d935edf9d25c288afa");
+              await Kakao.init(KAKAO_KEY);
             }
           }
         }}
-        className="relative mb-5 flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-[#fee500]"
+        className="relative mb-5 flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-[#fee500] text-[20px]"
       >
         <svg
           className="absolute left-10"
@@ -102,31 +130,36 @@ export default function Home() {
             fill="black"
           />
         </svg>
-        <p className="text-center text-base font-semibold text-black">
-          카카오로 로그인
-        </p>
+        <p className="text-[20px]">카카오로 로그인</p>
       </div>
       <div
         onClick={async () => {
-          window?.AppleID.auth.init({
-            clientId: "com.pull-up.services",
-            scope: "name email",
-            redirectURI:
-              "https://pullup-api.shop/api/pull-up/oauth2/callback/apple",
-            usePopup: false,
-          });
-          try {
-            const res: AppleAuthenticationResponseType =
-              await window.AppleID.auth.signIn();
-            console.log("appleSignIn");
-            console.log(res);
-          } catch (error) {
-            console.log("appleSignInError");
-            console.log(error);
-            alert("appleSignInError");
-            alert(error);
-            alert((error as any)?.message);
-            alert((error as any)?.code);
+          console.log("click");
+          if (!appleLoaded) {
+            await window?.AppleID.auth.init({
+              clientId: "com.pull-up.services",
+              scope: "name email",
+              redirectURI: APPLE_REDIRECT_URI,
+              usePopup: false,
+            });
+            setAppleLoaded(true);
+            console.log(String(appleLoaded));
+
+            // 초기화 후 바로 로그인 시도
+            try {
+              const res: AppleAuthenticationResponseType =
+                await window.AppleID.auth.signIn();
+            } catch (error) {
+              console.log(error);
+            }
+          } else {
+            // 이미 초기화된 경우 바로 로그인 시도
+            try {
+              const res: AppleAuthenticationResponseType =
+                await window.AppleID.auth.signIn();
+            } catch (error) {
+              console.log(error);
+            }
           }
         }}
         className="relative flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-black text-white"

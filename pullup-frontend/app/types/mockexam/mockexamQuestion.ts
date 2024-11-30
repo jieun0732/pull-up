@@ -1,10 +1,18 @@
+export interface MockExamSolvedResponseType {
+  examId: number;
+  isMockExamGraded: boolean;
+  tutorialFinished: boolean;
+}
 export interface MockExamResponseType {
-  id: number;
-  member: Member;
-  entry: null;
-  category: string;
-  type: null;
-  problemIds: ProblemId[];
+  examId: number;
+  totalProblemCount: number;
+  leftProblemCount: number;
+  problemNumber: number;
+  entry: string;
+  problemType: string;
+  question: string;
+  example: string;
+  choices: string[];
 }
 
 export interface MockExamProblemsType {
@@ -48,10 +56,19 @@ export interface Problem {
 }
 
 export interface MockExamResultType {
-  id: number;
-  problem: Problem;
-  chosenAnswer: null;
-  isCorrect: null;
+  memberName: string;
+  totalProblemCount: number;
+  correctProblemCount: number;
+  score: number;
+  durationSecond: number;
+  results: Result[];
+}
+
+interface Result {
+  problemNumber: number;
+  problemType: string;
+  isSubmitted: boolean;
+  isCorrect: boolean;
 }
 
 export interface MockExamProblemType {

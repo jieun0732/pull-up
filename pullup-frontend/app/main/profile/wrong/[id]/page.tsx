@@ -7,9 +7,12 @@ import formatNumber from "@/utils/formatNumber";
 import { BackIcon } from "@/assets/icon/Icons";
 import { categoryMap, entryMap } from "@/constants/constants";
 import useSWR from "swr";
-import { ProblemInfo } from "@/types/problemType";
+import { IncorrectProblem } from "@/types/problemType";
 import { API, fetcher } from "@/lib/API";
 import { roundUpNumber } from "@/utils/roundUpNumber";
+import Spinner from "@/component/ui/Spinner";
+import useProblemStore from "@/stores/useProblemStore";
+import { SectionalNextResponseType } from "@/types/sectionalType";
 
 export default function Page({
   params,
@@ -20,13 +23,14 @@ export default function Page({
 }) {
   const router = useRouter();
   const { id } = params;
+  const { examId } = useProblemStore();
 
-  const { data, error } = useSWR<ProblemInfo>(
-    `${API}/exams/incorrect-answers/${id}`,
+  const { data, error } = useSWR<SectionalNextResponseType>(
+    `${API}/exams/next/${examId}?problemNumber=${params.id}`,
     fetcher,
   );
 
-  if (!data) return;
+  if (!data) return <Spinner />;
 
   return (
     <>
@@ -42,27 +46,27 @@ export default function Page({
               문제 {formatNumber(Number(params.id))}
             </Text>
             <Button size="small" color="nonactive">
-              {data.problem.type}
+              {data.problemType}
             </Button>
           </div>
 
           <Text size="body-03" className="relative mb-4 px-5">
-            {data.problem.question}
+            {data.question}
           </Text>
 
-          {data.problem.explanation && (
+          {data.example && (
             <div className="relative mx-5 mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
-              <Text size="body-03">{data.problem.explanation}</Text>
+              <Text size="body-03">{data.example}</Text>
             </div>
           )}
         </div>
-        {data.problem.choices.map((choice, idx) => {
+        {data.choices.map((choice, idx) => {
           let choiceStyle;
           let choiceNumStyle;
-          if (String(idx + 1) === data.problem.answer) {
+          if (idx + 1 === data.explanation.submitAnswer) {
             choiceStyle = "bg-green02 text-green01";
             choiceNumStyle = "bg-green01 text-white";
-          } else if (String(idx + 1) === data.chosenAnswer) {
+          } else if (idx + 1 === data.explanation.correctAnswer) {
             choiceStyle = "bg-red02 text-red01";
             choiceNumStyle = "bg-red01 text-white";
           } else {
@@ -86,14 +90,14 @@ export default function Page({
 
         <div className="relative px-5">
           <Text size="caption-01" className="mb-3 text-end">
-            정답률 {roundUpNumber(data?.problem.incorrectRate || 0)}%
+            정답률 {roundUpNumber(data.explanation.correctRate || 0)}%
           </Text>
           <div className="w-full rounded-lg bg-[#f2f3f6] px-5 py-7">
             <Text size="body-03" className="mb-3">
               해설
             </Text>
             <Text size="body-04" className="whitespace mb-3">
-              {data.problem.answerExplain}
+              {data.explanation.explanation}
             </Text>
           </div>
         </div>

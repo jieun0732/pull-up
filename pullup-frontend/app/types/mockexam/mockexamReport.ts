@@ -1,22 +1,29 @@
 export interface MockExamReportType {
   examId: number;
-  createdDate: string;
-  solvedDate: string;
-  requiredTime: number;
-  score: number;
-  problemTypeResults: ProblemTypeResult[];
+  name: string;
+  scoreInfo: ScoreInfo;
+  durationInfo: DurationInfo;
+  vulnerableEntryInfo: VulnerableEntryInfo;
+}
+
+interface VulnerableEntryInfo {
+  vulnerableEntry: string[];
+  incorrectLanguageCount: number;
+  incorrectReasoningCount: number;
+  incorrectMathCount: number;
+  totalLanguageCount: number;
+  totalReasoningCount: number;
+  totalMathCount: number;
+}
+
+interface DurationInfo {
+  timeLimit: number;
+  averageDurationMinute: number;
+  myDurationMinute: number;
+}
+
+interface ScoreInfo {
   averageScore: number;
-  averageTime: number;
-  totalCorrectAnswers: number;
-  rankPercent: string;
-}
-
-export interface ProblemTypeResult {
-  entry: string;
-  totalProblems: number;
-  correctProblems: number;
-}
-
-export interface MockExamReportPropType {
-  recentReportInfo: MockExamReportType;
+  myScore: number;
+  topRate: number;
 }

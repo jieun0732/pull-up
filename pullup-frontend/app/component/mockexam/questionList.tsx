@@ -1,27 +1,24 @@
 "use client";
 
-import { dummyQlist } from "./dummyQlist";
 import Button from "../ui/Button";
-import { API } from "@/lib/API";
 import { useRouter } from "next/navigation";
-import { ProblemBeingSolved } from "@/types/mockexam/mockexamQuestion";
-import useSWR from "swr";
+import useExamStore from "@/stores/useExamStore";
 
 interface QuestionListPropType {
   showQuestions: boolean;
   setShowQuestions: React.Dispatch<React.SetStateAction<boolean>>;
   handleExamResult: () => Promise<void>;
-  problemList: ProblemBeingSolved[] | undefined;
+  isFinished: boolean;
 }
 
 function QuestionList({
   showQuestions,
   setShowQuestions,
   handleExamResult,
-  problemList,
+  isFinished,
 }: QuestionListPropType) {
   const router = useRouter();
-  const examId = localStorage.getItem("examId");
+  const { selectedAnswers } = useExamStore();
 
   const handleClick = () => {
     setShowQuestions(false);
@@ -31,8 +28,6 @@ function QuestionList({
     setShowQuestions(false);
     router.push(`/main/mockexam/${id}`);
   };
-
-  const isFinished = problemList?.every((item) => item.chosenAnswer !== null);
 
   return (
     <>
@@ -66,8 +61,8 @@ function QuestionList({
           />
         </svg>
         <div className="grid w-full grid-cols-5 justify-items-center gap-y-4">
-          {problemList?.map((item, idx) => {
-            const boxStyle = item.chosenAnswer
+          {selectedAnswers?.map((item, idx) => {
+            const boxStyle = item.submitAnswer
               ? "border-blue01 bg-blue03 text-blue01"
               : "border-gray02 bg-gray03 text-gray02";
             return (
@@ -89,7 +84,7 @@ function QuestionList({
             size="large"
             color="active"
             className="mt-9"
-            onClick={handleExamResult}
+            onClick={() => handleExamResult()}
           >
             제출하기
           </Button>

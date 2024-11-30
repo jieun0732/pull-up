@@ -36,18 +36,18 @@ export const TextStyles = {
 };
 
 export const entryMap: Record<string, string> = {
-  language: "언어",
-  reasoning: "추리",
-  math: "수리",
-  spatial: "공간지각",
+  LANGUAGE: "언어",
+  REASONING: "추리",
+  MATH: "수리",
+  SPATIAL: "공간지각",
 };
 
 export const categoryMap: Record<string, string> = {
-  mix: "골고루",
-  type: "유형별",
+  EVENLY: "골고루",
+  BY_PROBLEM_TYPE: "유형별",
 };
 
 export const reversedCategoryMap: Record<string, string> = {
-  골고루: "mix",
-  유형별: "type",
+  골고루: "EVENLY",
+  유형별: "BY_PROBLEM_TYPE",
 };

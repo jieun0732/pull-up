@@ -9,32 +9,26 @@ interface ChoiceItemProps {
   idx: number;
   choice: string;
   isSelected: boolean;
-  selectedId: number | null;
-  setSelectedId?: Dispatch<SetStateAction<number | null>>;
-  problemNumber: number;
+  selectedId: number;
+  setSelectedId?: Dispatch<SetStateAction<number>>;
 }
 
-const ChoiceItem = ({
+const ChoiceItem1 = ({
   idx,
   choice,
   isSelected,
   selectedId,
   setSelectedId,
-  problemNumber,
 }: ChoiceItemProps) => {
   const { updateSelectedAnswer } = useExamStore();
 
   const handleClick = () => {
-    if (selectedId === idx) {
-      if (setSelectedId) {
-        setSelectedId(null);
-      }
-      updateSelectedAnswer(problemNumber, null);
-    } else {
-      if (setSelectedId) {
+    if (setSelectedId) {
+      if (idx == selectedId && setSelectedId) {
+        setSelectedId(-1);
+      } else {
         setSelectedId(idx);
       }
-      updateSelectedAnswer(problemNumber, idx + 1);
     }
   };
 
@@ -59,4 +53,4 @@ const ChoiceItem = ({
   );
 };
 
-export default ChoiceItem;
+export default ChoiceItem1;
