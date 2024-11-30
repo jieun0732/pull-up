@@ -101,7 +101,6 @@ export default function Home() {
             if (Kakao.isInitialized()) {
               try {
                 Kakao.Auth.authorize({
-                  prompt: "none",
                   serviceTerms: "account_email",
                   redirectUri:
                     "https://pullup-api.shop/api/oauth2/callback/kakao",
