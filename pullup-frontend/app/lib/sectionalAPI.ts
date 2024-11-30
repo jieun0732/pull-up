@@ -42,7 +42,8 @@ export const postStartSectionalExam = async (
   }
 };
 
-export const resetSelectedAnswers = async (examId: number) => {
+export const resetSelectedAnswers = async (examId: number | null) => {
+  if (!examId) return;
   type resetSelectedAnswersResponseType = {
     message: string;
   };
