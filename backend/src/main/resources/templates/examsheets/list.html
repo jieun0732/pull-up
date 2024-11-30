@@ -14,155 +14,40 @@
         <table class="table">
             <thead class="sticky-top top-0">
             <tr>
-                <th scope="col" class="text-center" colspan="6">
-                    <div class="row">
-                        <div class="col">
-                        <a href="/admin/examsheets/new">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7"/>
-                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
-                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
-                            </svg>
-                        </a>
-                        </div>
-                        <div class="col">
-                            <form class="input-group" method="get" th:action="@{/admin/examsheets}">
-                                <select class="form-select" id="search-col" name="searchType">
-                                    <option th:selected="${searchType} == 'NONE'" value="NONE">검색 옵션을 선택히세요.</option>
-                                    <option th:selected="${searchType} == 'PROBLEM_TYPE'" value="PROBLEM_TYPE">유형</option>
-                                    <option th:selected="${searchType} == 'QUESTION'" value="QUESTION">문제</option>
-                                </select>
-                                <input type="text" class="form-control" placeholder="검색어를 입력하세요." aria-label="search-keyword" name="keyword" th:value="${keyword}">
-                                <button class="btn btn-outline-secondary" type="submit" id="search-button">검색</button>
-                            </form>
-                        </div>
-                    </div>
+                <th scope="col" class="text-center" colspan="9">
+                    <a href="/admin/examsheets/new">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7"/>
+                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+                        </svg>
+                    </a>
                 </th>
             </tr>
             <tr>
-                <th scope="col">
-                    <div class="d-flex justify-content-center gap-2">
-                        <span class="align-self-center">ID</span>
-                        <div class="d-flex flex-column">
-                            <a href="/admin/examsheets?sortType=ID&sortOrder=ASC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                </svg>
-                            </a>
-                            <a href="/admin/examsheets?sortType=ID&sortOrder=DESC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </th>
-                <th scope="col">
-                    <div class="d-flex justify-content-center gap-2">
-                        <span class="align-self-center">영역</span>
-                        <div class="d-flex flex-column">
-                            <a href="/admin/examsheets?sortType=ENTRY&sortOrder=ASC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                </svg>
-                            </a>
-                            <a href="/admin/examsheets?sortType=ENTRY&sortOrder=DESC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </th>
-                <th scope="col">
-                    <div  class="d-flex justify-content-center gap-2">
-                        <span class="align-self-center">유형</span>
-                        <div class="d-flex flex-column">
-                            <a href="/admin/examsheets?sortType=PROBLEM_TYPE&sortOrder=ASC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                </svg>
-                            </a>
-                            <a href="/admin/examsheets?sortType=PROBLEM_TYPE&sortOrder=DESC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </th>
-                <th scope="col">
-                    <div  class="d-flex justify-content-center gap-2">
-                        <span class="align-self-center">생성일</span>
-                        <div class="d-flex flex-column">
-                            <a href="/admin/examsheets?sortType=CREATED_DATE&sortOrder=ASC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                </svg>
-                            </a>
-                            <a href="/admin/examsheets?sortType=CREATED_DATE&sortOrder=DESC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </th>
-                <th scope="col" class="text-center align-middle">문제</th>
-                <th scope="col">
-                    <div class="d-flex justify-content-center gap-2">
-                        <span class="align-self-center">시도</span>
-                        <div class="d-flex flex-column">
-                            <a href="/admin/examsheets?sortType=ATTEMPT&sortOrder=ASC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                </svg>
-                            </a>
-                            <a href="/admin/examsheets?sortType=ATTEMPT&sortOrder=DESC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </th>
-                <th scope="col">
-                    <div class="d-flex justify-content-center gap-2">
-                        <span class="align-self-center">정답률</span>
-                        <div class="d-flex flex-column">
-                            <a href="/admin/examsheets?sortType=CORRECT_RATE&sortOrder=ASC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                </svg>
-                            </a>
-                            <a href="/admin/examsheets?sortType=CORRECT_RATE&sortOrder=DESC">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </th>
-                <th scope="col" class="text-center align-middle">수정</th>
+                <th scope="col" class="text-center align-middle">ID</th>
+                <th scope="col" class="text-center align-middle">생성일</th>
+                <th scope="col" class="text-center align-middle">수정일</th>
+                <th scope="col" class="text-center align-middle">시험 제목</th>
+                <th scope="col" class="text-center align-middle">문제 수</th>
+                <th scope="col" class="text-center align-middle">응시 수</th>
+                <th scope="col" class="text-center align-middle">평균 점수</th>
+                <th scope="col" class="text-center align-middle">평균 소요시간</th>
+                <th scope="col" class="text-center align-middle">수정하기</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="problemInfo : ${problemInfos}">
-                <td class="text-center" th:text="${problemInfo.getId()}">1</td>
-                <td class="text-center" th:text="${problemInfo.getEntry()}">수리</td>
-                <td class="text-center" th:text="${problemInfo.getProblemType()}">속력</td>
-                <td class="text-center" th:text="${problemInfo.getCreatedDate()}">생성일</td>
-                <td th:text="${problemInfo.getQuestion()}">문제</td>
-                <td class="text-center" th:text="${problemInfo.getTotalAttempts()}">2</td>
-                <td class="text-center" th:text="${problemInfo.getCorrectRate()}">70%</td>
+            <tr th:each="examsheetInfo : ${examsheetInfos}">
+                <td class="text-center" th:text="${examsheetInfo.getId()}">1</td>
+                <td class="text-center" th:text="${examsheetInfo.getCreatedDate()}">11월 30일</td>
+                <td class="text-center" th:text="${examsheetInfo.getUpdatedDate()}">11월 30일</td>
+                <td class="text-center" th:text="${examsheetInfo.getExamTitle()}">모의고사</td>
+                <td class="text-center" th:text="${examsheetInfo.getProblemCount()}">20</td>
+                <td class="text-center" th:text="${examsheetInfo.getExamCount()}">1</td>
+                <td class="text-center" th:text="${examsheetInfo.getAverageScore()}">70</td>
+                <td class="text-center" th:text="${examsheetInfo.getAverageDuration()}">11:20</td>
                 <td class="text-center align-middle m-auto">
-                    <a href="#" th:href="@{/admin/examsheets/{problemId}(problemId=${problemInfo.getId()})}">
+                    <a href="#" th:href="@{/admin/examsheets/{problemId}(problemId=${examsheetInfo.getId()})}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                         <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>

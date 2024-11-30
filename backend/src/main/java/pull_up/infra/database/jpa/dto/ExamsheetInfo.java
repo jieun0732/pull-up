@@ -1,9 +1,9 @@
 package pull_up.infra.database.jpa.dto;
 
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import pull_up.global.util.GlobalFormatter;
+import pull_up.infra.database.jpa.entity.Examsheet;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -20,7 +20,6 @@ public class ExamsheetInfo {
     private String averageScore;
     private String averageDuration;
 
-    @QueryProjection
     public ExamsheetInfo(Long id, LocalDateTime createdTime, LocalDateTime updatedTime, String examTitle, Integer problemCount, Integer examCount, Double averageScore, Duration averageDuration) {
         this.id = id;
         this.createdDate = createdTime.format(GlobalFormatter.KOREAN_DATE_FORMATTER);
@@ -29,6 +28,17 @@ public class ExamsheetInfo {
         this.problemCount = problemCount;
         this.examCount = examCount;
         this.averageScore = String.format("%.1f", averageScore);
-        this.averageDuration = averageDuration.toMinutesPart() + ":" + averageDuration.toSecondsPart();
+        this.averageDuration = averageDuration.toMinutesPart() + ":" + String.format("%02d", averageDuration.toSecondsPart());
+    }
+
+    public static ExamsheetInfo toDto(Examsheet e) {
+        return new ExamsheetInfo(e.getId(),
+                e.getCreatedTime(),
+                e.getUpdatedTime(),
+                e.getExamTitle(),
+                e.getProblemsheets().size(),
+                e.getExamCount(),
+                e.getAverageScore(),
+                e.getAverageDuration());
     }
 }

@@ -10,6 +10,8 @@ import pull_up.infra.database.jpa.dto.ExamsheetInfo;
 import pull_up.infra.database.jpa.dto.SearchParam;
 import pull_up.infra.database.jpa.entity.Examsheet;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ExamsheetService {
@@ -17,14 +19,12 @@ public class ExamsheetService {
     private final ExamsheetRepository examsheetRepository;
 
     public MessageDto createExamsheet(CreateExamsheet.Request createExamsheetReq) {
-
         Examsheet examsheet = Examsheet.create(createExamsheetReq.examTitle(), createExamsheetReq.getProblemMap());
         examsheetRepository.save(examsheet);
-
         return new MessageDto("시험 문제 [id : " + examsheet.getId() + ", 제목 : " + examsheet.getExamTitle() + "] 가 정상 생성되었습니다.");
     }
 
-    public Page<ExamsheetInfo> getAll() {
-        return null;
+    public List<ExamsheetInfo> getAll() {
+        return examsheetRepository.searchExamsheet();
     }
 }

@@ -19,7 +19,7 @@ class ExamsheetInfoTest {
     @DisplayName("쿼리로 받아온 정보 변환 테스트")
     void testGetInfoByQuery() {
         // given
-        ExamsheetInfo goal = new ExamsheetInfo(1L, "11월 29일", "11월 29일", "MOCK_EXAM", 20, 0, "80", "12:00");
+        ExamsheetInfo goal = new ExamsheetInfo(1L, "11월 29일", "11월 29일", "MOCK_EXAM", 20, 0, "80.1", "12:00");
 
         // when
         ExamsheetInfo suit = new ExamsheetInfo(1L, LocalDateTime.of(LocalDate.of(2024, 11, 29), LocalTime.now()), LocalDateTime.of(LocalDate.of(2024, 11, 29), LocalTime.now()), "MOCK_EXAM", 20, 0, 80.123D, Duration.of(12, ChronoUnit.MINUTES));

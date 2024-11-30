@@ -14,6 +14,7 @@ import pull_up.infra.database.jpa.dto.ExamsheetInfo;
 import pull_up.infra.database.jpa.dto.ProblemInfo;
 import pull_up.infra.database.jpa.dto.SearchParam;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static pull_up.api.util.BaseUrlParser.getBaseUrlWithQueryString;
@@ -27,7 +28,7 @@ public class AdminExamsheetController {
 
     @GetMapping
     public String examsheetListPage(Model model) {
-        Page<ExamsheetInfo> examsheetInfos = examsheetService.getAll();
+        List<ExamsheetInfo> examsheetInfos = examsheetService.getAll();
         model.addAttribute("examsheetInfos", examsheetInfos);
         model.addAttribute("navBtnColor", "list");
         return "examsheets/list";
