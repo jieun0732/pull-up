@@ -33,7 +33,7 @@ export default function Page() {
     },
     {
       name: "공간지각영역",
-      link: "/main/sectional/SPATIAL",
+      link: "/main/sectional",
       isClosed: true,
       img: spatial,
     },
