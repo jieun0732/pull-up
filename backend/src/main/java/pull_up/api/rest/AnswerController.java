@@ -1,4 +1,4 @@
-package pull_up.api.controller;
+package pull_up.api.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;

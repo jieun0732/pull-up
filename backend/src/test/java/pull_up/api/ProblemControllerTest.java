@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pull_up.api.controller.ProblemController;
+import pull_up.api.rest.ProblemController;
 import pull_up.domain.problem.Entry;
 import pull_up.domain.problem.ProblemService;
 import pull_up.domain.problem.dto.Create;

@@ -1,4 +1,4 @@
-package pull_up.api.controller;
+package pull_up.api.rest;
 
 
 import io.swagger.v3.oas.annotations.Operation;

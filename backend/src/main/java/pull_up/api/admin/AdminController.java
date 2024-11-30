@@ -1,4 +1,4 @@
-package pull_up.api.view;
+package pull_up.api.admin;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
-import pull_up.global.security.util.CookieUtil;
-import pull_up.global.security.util.JwtUtil;
 
 import java.io.IOException;
 

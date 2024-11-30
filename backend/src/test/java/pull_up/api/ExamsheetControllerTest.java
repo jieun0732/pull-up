@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pull_up.api.controller.ExamsheetController;
+import pull_up.api.rest.ExamsheetController;
 import pull_up.domain.examsheet.ExamsheetService;
 import pull_up.domain.examsheet.dto.CreateExamsheet;
 

@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pull_up.api.controller.MemberController;
+import pull_up.api.rest.MemberController;
 import pull_up.domain.member.MemberService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

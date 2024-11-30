@@ -1,6 +1,5 @@
 [ADMIN]
 - 시험지(Examsheet)
-TODO list page view 재구성
 TODO DTO - list page 연동
 TODO list pagination 구현
 TODO 수정 구현(Update)
@@ -23,7 +22,6 @@ TODO 생성 구현(Create)
 TODO 삭제 구현(Delete)
 
 - 기타
-TODO Navbar 색칠용 interceptor 등록
 
 [API]
 
