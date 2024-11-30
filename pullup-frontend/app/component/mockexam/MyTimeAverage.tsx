@@ -6,13 +6,14 @@ import ProgressBar from "react-customizable-progressbar";
 import { compareTime, roundUpScore } from "@/utils/compareFunc";
 import useComponentSize from "@/hooks/useComponentSize";
 import { MockExamReportType } from "@/types/mockexam/mockexamReport";
-import LocalStorage from "@/utils/LocalStorage";
+import { UserLogin } from "@/types/userType";
 
 type MyTimeAverageProps = {
   data: MockExamReportType;
+  user: UserLogin;
 };
 
-function MyTimeAverage({ data }: MyTimeAverageProps) {
+function MyTimeAverage({ data, user }: MyTimeAverageProps) {
   const [componentRef, size] = useComponentSize();
 
   const mytime = data.durationInfo.myDurationMinute;
@@ -37,7 +38,7 @@ function MyTimeAverage({ data }: MyTimeAverageProps) {
         제한 시간은 총 20분이였어요.
       </Text>
       <Text size="caption-02" color="text-gray01">
-        이지은 님은 {mytime}분 만에 모든 문제를 풀어냈어요!
+        {user.name} 님은 {mytime}분 만에 모든 문제를 풀어냈어요!
       </Text>
       <div>
         <Button size="small" color="activeLight" className="ml-10 mt-5">

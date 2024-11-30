@@ -34,8 +34,8 @@ export default function Page() {
             content={`${user.name} 님의 모의고사`}
             link="/main/mockexam"
           />
-          <MyScoreAverage data={data} />
-          <MyTimeAverage data={data} />
+          <MyScoreAverage data={data} user={user} />
+          <MyTimeAverage data={data} user={user} />
           <MyWeakPart data={data} />
           <Link href="/main/mockexam/result" className="mt-6">
             <Button size="large" color="active">

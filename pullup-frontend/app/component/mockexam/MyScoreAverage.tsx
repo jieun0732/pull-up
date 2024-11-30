@@ -9,13 +9,14 @@ import samelogo from "@/assets/logo/sameLogo.png";
 import lowerlogo from "@/assets/logo/lowerLogo.png";
 import useComponentSize from "@/hooks/useComponentSize";
 import { MockExamReportType } from "@/types/mockexam/mockexamReport";
-import LocalStorage from "@/utils/LocalStorage";
+import { UserLogin } from "@/types/userType";
 
 type MyScoreAverageProps = {
   data: MockExamReportType;
+  user: UserLogin;
 };
 
-function MyScoreAverage({ data }: MyScoreAverageProps) {
+function MyScoreAverage({ data, user }: MyScoreAverageProps) {
   const [componentRef, size] = useComponentSize();
 
   const progress = data.scoreInfo.myScore;
@@ -49,7 +50,7 @@ function MyScoreAverage({ data }: MyScoreAverageProps) {
           {scoreStatus[status].title}
         </Text>
         <Text size="caption-02" color="text-gray01">
-          {scoreStatus[status].subtitle}
+          {user.name} {scoreStatus[status].subtitle}
         </Text>
         <div
           className="relative mt-3 flex w-full flex-col items-center justify-center"
@@ -90,7 +91,7 @@ function MyScoreAverage({ data }: MyScoreAverageProps) {
               />
               <div className="mx-auto mt-5 flex w-full items-center justify-center gap-3">
                 <Button size="small" color="activeLight">
-                  {data.scoreInfo.topRate}
+                  상위 {data.scoreInfo.topRate}%
                 </Button>
                 <Text size="head-02">{data.scoreInfo.myScore}점</Text>
               </div>
