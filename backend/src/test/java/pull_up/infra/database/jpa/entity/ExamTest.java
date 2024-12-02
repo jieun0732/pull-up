@@ -270,4 +270,17 @@ class ExamTest {
         // then
         assertThat(vulnerableEntry).containsOnly(Entry.MATH, Entry.REASONING);
     }
+
+    @Test
+    @DisplayName("사용자 회원탈퇴 테스트")
+    void testDeleteMember() {
+        // given
+        Exam exam = FixtureRepository.getMockExam(MemberFixture.APPLE_USER.get().getId());
+
+        // when
+        exam.deleteMember();
+
+        // then
+        assertThat(exam.getMember().getId()).isEqualTo(-1);
+    }
 }

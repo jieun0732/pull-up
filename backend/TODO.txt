@@ -22,8 +22,7 @@ TODO 삭제 구현(Delete)
 - 기타
 
 [API]
-TODO 모의고사 채점안된거 false로 변경(MemberInfo)
-TODO 멤버 탈퇴 API 구현
+TODO 취약 영역 정책 변경사항 구현
 
 [INFRA]
 TODO DB 서버 계정 분리 root -> pullup

@@ -33,15 +33,11 @@ class MemberControllerTest {
     @Test
     @DisplayName("전체 api 테스트")
     void testAllAPI() throws Exception {
-        mockMvc.perform(get("/api/members/entry-exam/MATH/solved").param("memberId", "1").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(200));
-        mockMvc.perform(get("/api/members/mock-exam/solved").param("memberId", "1"))
-                .andDo(print()).andExpect(status().is(200));
-        mockMvc.perform(get("/api/members/1"))
-                .andExpect(status().is(200));
-        mockMvc.perform(patch("/api/members/tutorial/1"))
-                .andExpect(status().is(200));
-        mockMvc.perform(get("/api/members/incorrect/1"))
-                .andExpect(status().is(200));
+        mockMvc.perform(get("/api/members/entry-exam/MATH/solved").param("memberId", "1").contentType(MediaType.APPLICATION_JSON)).andExpect(status().is(200));
+        mockMvc.perform(get("/api/members/mock-exam/solved").param("memberId", "1")).andDo(print()).andExpect(status().is(200));
+        mockMvc.perform(get("/api/members/1")).andExpect(status().is(200));
+        mockMvc.perform(patch("/api/members/tutorial/1")).andExpect(status().is(200));
+        mockMvc.perform(get("/api/members/incorrect/1")).andExpect(status().is(200));
+        mockMvc.perform(delete("/api/members/1")).andExpect(status().is(200));
     }
 }

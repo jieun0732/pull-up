@@ -69,4 +69,11 @@ public class MemberService {
         memberInDB.finishTutorial();
         return new MessageDto("튜토리얼을 완료했습니다.");
     }
+
+    @Transactional
+    public MessageDto delete(Long memberId) {
+        examRepository.findAllByMemberId(memberId).forEach(Exam::deleteMember);
+        memberRepository.deleteById(memberId);
+        return new MessageDto("회원탈퇴가 완료되었습니다.");
+    }
 }

@@ -37,7 +37,7 @@ public record OAuth2Login(
             String email
     ) {
         public static Response toDto(Member member, Boolean firstLogin) {
-            return new Response(firstLogin, member.getId(), member.getSnsProvider().getValue(), member.getName(), member.getPrivateEmail());
+            return new Response(firstLogin, member.getId(), member.getSnsProvider().name(), member.getName(), member.getPrivateEmail());
         }
     }
 }

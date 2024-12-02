@@ -6,7 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum SNSProvider {
-    APPLE("apple", "apple_user"), KAKAO("kakao", "kakao_user"), LOCAL("local", "local_user");
-    private final String value;
-    private final String role;
+    APPLE, KAKAO, LOCAL, NONE;
 }

@@ -4,6 +4,7 @@ import pull_up.domain.member.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Exam;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -13,4 +14,6 @@ public interface CustomExamRepository {
     Optional<Exam> findMockExamByMemberId(Long memberId);
 
     SolvedInfo.MockExamResponse findSolvedMockExamInfo(Long memberId);
+
+    List<Exam> findAllByMemberId(Long memberId);
 }

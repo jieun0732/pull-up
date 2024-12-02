@@ -70,7 +70,7 @@ public class CustomAccessTokenConverter implements Converter<OAuth2Authorization
   }
 
   private void setProviderLogic(OAuth2AuthorizationCodeGrantRequest source, MultiValueMap<String, String> params) {
-    if (source.getClientRegistration().getRegistrationId().contains(APPLE.getValue())) {
+    if (source.getClientRegistration().getRegistrationId().contains(APPLE.name())) {
       params.set("client_secret", createAppleClientSecret());
     }
   }

@@ -191,4 +191,8 @@ public class Exam extends BaseEntity {
         if (problemSummation.getTotalProblemCount() != 20) return problemSummation.getCorrectProblemCount() * 100 / problemSummation.getTotalProblemCount();
         return MockTopRateSheet.getTopRateSheet().get(problemSummation.getCorrectProblemCount());
     }
+
+    public void deleteMember() {
+        this.member = Member.getDeletedMember();
+    }
 }

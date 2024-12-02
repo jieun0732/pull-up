@@ -7,6 +7,7 @@ import pull_up.infra.database.jpa.entity.Member;
 
 @RequiredArgsConstructor
 public enum MemberFixture implements Fixture<Member> {
+    DELETED_USER(-1L, false, "DELETED_USER", "DELETED_USER", "DELETED_USER", SNSProvider.NONE, Role.NONE),
     APPLE_USER(1L, false, "apple test user", "test@apple.com", "test1234", SNSProvider.APPLE, Role.USER),
     KAKAO_USER(2L, false, "apple test user", "test@kakao.com", "test1234", SNSProvider.APPLE, Role.USER),
     TUTORIAL_FINISHED_USER(3L, true, "tutorial finished user", "test@apple.com", "test1234", SNSProvider.APPLE, Role.USER),

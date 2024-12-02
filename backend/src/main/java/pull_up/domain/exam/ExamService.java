@@ -54,12 +54,14 @@ public class ExamService {
         Examsheet examSheet = examsheetRepository.findByExamTitle(startReq.mockExamName());
         List<Problem> problemList = problemRepository.findAllById(examSheet.getProblemMap().values());
         Optional<Exam> exam = examRepository.findMockExamByMemberId(startReq.memberId());
+
         exam.ifPresent(Exam::reset);
         Exam newExam = exam.orElseGet(() -> {
             Exam startedExam = Exam.startMockExam(startMember, problemList, examSheet);
             examRepository.save(startedExam);
             return startedExam;
         });
+
         return Start.Response.toDto(newExam);
     }
 

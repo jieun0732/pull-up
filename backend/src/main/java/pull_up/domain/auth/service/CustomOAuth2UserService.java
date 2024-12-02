@@ -23,7 +23,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
   public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
     String provider = userRequest.getClientRegistration().getRegistrationId();
 
-    if (provider.equalsIgnoreCase(KAKAO.getValue())) {
+    if (provider.equalsIgnoreCase(KAKAO.name())) {
       return loadKakaoUser(userRequest);
     }
 

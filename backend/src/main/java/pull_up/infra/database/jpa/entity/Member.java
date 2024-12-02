@@ -55,6 +55,16 @@ public class Member extends BaseEntity {
         return email;
     }
 
+    public void finishTutorial() {
+        this.tutorialFinished = true;
+    }
+
+    public static Member getDeletedMember() {
+        Member member = new Member(false, "DELETED_USER", "DELETED_USER", "DELETED_USER", SNSProvider.NONE, Role.NONE);
+        member.setId(-1L);
+        return member;
+    }
+
     public static Member getFirstLoginMember(String name, String email, String snsId, SNSProvider snsProvider) {
         return new Member(false, name, email, snsId, snsProvider, Role.USER);
     }
@@ -66,9 +76,5 @@ public class Member extends BaseEntity {
     private static String getFullName(String firstName, String lastName) {
         if (Pattern.matches("^[ㄱ-ㅎ가-힣]*$", firstName)) return lastName + firstName;
         else return firstName + " " + lastName;
-    }
-
-    public void finishTutorial() {
-        this.tutorialFinished = true;
     }
 }

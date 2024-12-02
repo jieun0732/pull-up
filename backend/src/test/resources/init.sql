@@ -8,6 +8,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 --  insert member fixture
 INSERT INTO member(id, tutorial_finished, name, email, sns_id, sns_provider, role) VALUES
+('-1', false, 'DELETED_USER', 'DELETED_USER', 'DELETED_USER', 'NONE', 'NONE'),
 ('1', false, 'apple test user', 'test@apple.com', 'test1234', 'apple', 'user'),
 ('2', false, 'apple test user', 'test@kakao.com', 'test1234', 'apple', 'user'),
 ('3', true, 'tutorial finished user', 'test@apple.com', 'test1234', 'apple', 'user'),
@@ -33,9 +34,7 @@ INSERT INTO exam(id, is_finished, score, exam_type, start_time, end_time, durati
 (1, false, 0, 'EVENLY', '2024-11-16 12:25:00', NULL, NULL, 1),
 (2, true, 50, 'EVENLY', '2024-11-16 12:25:00', '2024-11-16 12:35:00', '10.0', 1),
 (3, false, 0, 'BY_PROBLEM_TYPE', '2024-11-16 12:25:00', NULL, NULL, 1),
-(4, true, 50, 'BY_PROBLEM_TYPE', '2024-11-16 12:25:00', '2024-11-16 12:40:00', '15.0', 1),
-(5, true, 0, 'MOCK_EXAM', '2024-11-16 12:25:00', NULL, NULL, 1),
-(6, true, 70, 'MOCK_EXAM', '2024-11-16 12:25:00', '2024-11-16 12:45:00', '20.0', 1);
+(4, true, 50, 'BY_PROBLEM_TYPE', '2024-11-16 12:25:00', '2024-11-16 12:40:00', '15.0', 1);
 
 -- insert answer fixture
 INSERT INTO answer(id, is_correct, is_submitted, problem_number, submit_count, submit_answer, submit_time, exam_id, problem_id) VALUES
@@ -45,7 +44,7 @@ INSERT INTO answer(id, is_correct, is_submitted, problem_number, submit_count, s
 
 -- insert examsheet fixture
 INSERT INTO examsheet(id, exam_title, exam_count, average_score, average_duration) VALUES
-(1, "MOCK_EXAM", 0, 0, 0);
+(1, 'MOCK_EXAM', 0, 0, 0);
 
 -- insert problemsheet fixture
 INSERT INTO problemsheet(examsheet_id, problem_number, problem_id) VALUES
@@ -54,4 +53,12 @@ INSERT INTO problemsheet(examsheet_id, problem_number, problem_id) VALUES
 (1, 3, 7),
 (1, 4, 8);
 
+-- insert mock exam fixture
+INSERT INTO exam(id, is_finished, score, exam_type, start_time, end_time, duration, time_limit, member_id, examsheet_id) VALUES
+(5, true, 25, 'MOCK_EXAM', '2024-11-16 12:25:00', NULL, 200000, 200000, 1, 1);
 
+INSERT INTO answer(id, is_correct, is_submitted, problem_number, submit_count, submit_answer, submit_time, exam_id, problem_id) VALUES
+(4, null, false, 1, 0, null, '2024-12-02 09:46:00', 5,  5),
+(5, null, false, 2, 0, null, '2024-12-02 09:46:00', 5,  6),
+(6, null, false, 3, 0, null, '2024-12-02 09:46:00', 5,  7),
+(7, null, false, 4, 0, null, '2024-12-02 09:46:00', 5,  8);

@@ -77,4 +77,11 @@ public class CustomExamRepositoryImpl implements CustomExamRepository {
                         .and(exam.examType.eq(ExamType.MOCK_EXAM)))
                 .fetchFirst();
     }
+
+    @Override
+    public List<Exam> findAllByMemberId(Long memberId) {
+        return qf.selectFrom(exam)
+                .where(exam.member.id.eq(memberId))
+                .fetch();
+    }
 }
