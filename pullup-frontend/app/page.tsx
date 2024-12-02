@@ -4,7 +4,7 @@ import Image from "next/image";
 import Text from "./component/ui/Text";
 import { useRouter } from "next/navigation";
 import introLogo from "./assets/logo/introLogo.png";
-import LocalStorage from "./utils/LocalStorage";
+import Spinner from "./component/ui/Spinner";
 import {
   APPLE_REDIRECT_URI,
   KAKAO_REDIRECT_URI,
@@ -51,11 +51,11 @@ export default function Home() {
     }
   }, [kakaoLoaded]);
 
-  // useEffect(() => {
-  //   if (LocalStorage.getItem("memberId")) {
-  //     router.push("/main/sectional");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (user.memberId !== -1) {
+      router.push("/main/sectional");
+    }
+  }, [user]);
 
   const mockLogin = async () => {
     const response = await fetch(
@@ -85,19 +85,19 @@ export default function Home() {
         인적성 검사 준비는 풀업에서
       </Text>
       {/* <div
-        onClick={() => {
-          setUser({
-            memberId: 99999999,
-            name: "test user",
-            email: "test@example.com",
-            snsProvider: "apple",
-          });
-          mockLogin();
-        }}
-        className="bg-pink-400 p-4 text-lg"
-      >
-        로컬 로그인~~~
-      </div> */}
+          onClick={() => {
+            setUser({
+              memberId: 99999999,
+              name: "test user",
+              email: "test@example.com",
+              snsProvider: "apple",
+            });
+            mockLogin();
+          }}
+          className="bg-pink-400 p-4 text-lg"
+        >
+          로컬 로그인~~~
+        </div> */}
       <div
         onClick={async () => {
           if (typeof window !== "undefined") {
