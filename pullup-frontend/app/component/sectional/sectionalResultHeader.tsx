@@ -16,7 +16,7 @@ export default function SectionalResultHeader({
   user,
   category,
 }: SectionalResultHeaderProps) {
-  if (!data.isFinished) {
+  if (data.isFinished === false) {
     return (
       <>
         <Text size="head-02" className="self-start">
@@ -39,7 +39,7 @@ export default function SectionalResultHeader({
       </>
     );
   }
-  if (data.isFinished == true) {
+  if (data.isFinished === true) {
     return (
       <>
         <Text size="head-02" className="self-start">

@@ -30,7 +30,7 @@ export default function Page({
     `${API}/exams/next/${examId}?problemNumber=${params.id}`,
     fetcher,
   );
-
+  console.log(data);
   return (
     <>
       {data ? (
@@ -60,38 +60,37 @@ export default function Page({
               </div>
             )}
           </div>
-          {data.choices.map((choice, idx) => {
-            let choiceStyle;
-            let choiceNumStyle;
-            if (
-              data.explanation.submitAnswer &&
-              idx + 1 === data.explanation.submitAnswer
-            ) {
-              choiceStyle = "bg-green02 text-green01";
-              choiceNumStyle = "bg-green01 text-white";
-            } else if (idx + 1 === data.explanation.correctAnswer) {
-              choiceStyle = "bg-red02 text-red01";
-              choiceNumStyle = "bg-red01 text-white";
-            } else {
-              choiceStyle = "";
-              choiceNumStyle = "border border-solid border-black01";
-            }
-            return (
-              <div
-                key={idx}
-                className={`flex w-full items-center gap-4 px-5 py-4 ${choiceStyle}`}
-              >
+          {data.isSubmitted &&
+            data.choices.map((choice, idx) => {
+              let choiceStyle;
+              let choiceNumStyle;
+              if (
+                data.explanation?.submitAnswer &&
+                idx + 1 === data.explanation.submitAnswer
+              ) {
+                choiceStyle = "bg-green02 text-green01";
+                choiceNumStyle = "bg-green01 text-white";
+              } else if (idx + 1 === data.explanation.correctAnswer) {
+                choiceStyle = "bg-red02 text-red01";
+                choiceNumStyle = "bg-red01 text-white";
+              } else {
+                choiceStyle = "";
+                choiceNumStyle = "border border-solid border-black01";
+              }
+              return (
                 <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-full ${choiceNumStyle}`}
+                  key={idx}
+                  className={`flex w-full items-center gap-4 px-5 py-4 ${choiceStyle}`}
                 >
-                  {idx + 1}
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-full ${choiceNumStyle}`}
+                  >
+                    {idx + 1}
+                  </div>
+                  <div className="">{FormatQuestion(choice)}</div>
                 </div>
-                <div className="min-h-[40px] min-w-0 flex-1">
-                  {FormatQuestion(choice)}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
 
           <div className="relative px-5">
             <Text size="caption-01" className="mb-3 text-end">

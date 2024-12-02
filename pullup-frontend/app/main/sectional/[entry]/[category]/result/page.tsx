@@ -29,6 +29,7 @@ export default function Page({
     patchFetcher,
   );
 
+  console.log("result data", data);
   return (
     <>
       {data ? (

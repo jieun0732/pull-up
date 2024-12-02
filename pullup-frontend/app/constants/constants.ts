@@ -2,7 +2,7 @@ export const ButtonSizes = {
   xsmall: 22,
   small: "px-2 py-1 rounded-sm text-[13px]",
   medium: "w-[50%] rounded-md py-3",
-  large: "w-full rounded-md font-semibold text-base py-[15px]",
+  large: "w-full rounded-md font-semibold text-base py-[14px]",
 };
 
 export const ButtonStyles = {

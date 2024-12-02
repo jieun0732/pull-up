@@ -30,7 +30,10 @@ export default function SolutionComponent({
         if (idx + 1 === solution.correctAnswer) {
           choiceStyle = "bg-green02 text-green01";
           choiceNumStyle = "bg-green01 text-white";
-        } else if (idx + 1 === solution.submitAnswer) {
+        } else if (
+          solution?.submitAnswer &&
+          idx + 1 === solution.submitAnswer
+        ) {
           choiceStyle = "bg-red02 text-red01";
           choiceNumStyle = "bg-red01 text-white";
         } else {
@@ -47,9 +50,7 @@ export default function SolutionComponent({
             >
               {idx + 1}
             </div>
-            <div className="min-h-[40px] min-w-0 flex-1">
-              {FormatQuestion(choice)}
-            </div>
+            <div className="">{FormatQuestion(choice)}</div>
           </div>
         );
       })}

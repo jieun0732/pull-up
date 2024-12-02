@@ -57,7 +57,10 @@ export default function Page() {
           {data.choices.map((choice, idx) => {
             let choiceStyle;
             let choiceNumStyle;
-            if (idx + 1 === data.explanation.submitAnswer) {
+            if (
+              data.explanation?.submitAnswer &&
+              idx + 1 === data.explanation.submitAnswer
+            ) {
               choiceStyle = "bg-green02 text-green01";
               choiceNumStyle = "bg-green01 text-white";
             } else if (idx + 1 === data.explanation.correctAnswer) {
@@ -77,9 +80,7 @@ export default function Page() {
                 >
                   {idx + 1}
                 </div>
-                <div className="min-h-[40px] min-w-0 flex-1">
-                  {FormatQuestion(choice)}
-                </div>
+                <div className="">{FormatQuestion(choice)}</div>
               </div>
             );
           })}

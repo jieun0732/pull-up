@@ -33,7 +33,7 @@ export default function Home() {
   const totalPercent = 91;
   const [kakaoLoaded, setKakaoLoaded] = useState(false);
   const [appleLoaded, setAppleLoaded] = useState(false);
-  const { user, updateUser, resetUserData } = useUserStore();
+  const { user, updateUser, setUser } = useUserStore();
 
   useEffect(() => {
     const handleKakaoInit = () => {
@@ -86,6 +86,12 @@ export default function Home() {
       </Text>
       {/* <div
         onClick={() => {
+          setUser({
+            memberId: 99999999,
+            name: "test user",
+            email: "test@example.com",
+            snsProvider: "apple",
+          });
           mockLogin();
         }}
         className="bg-pink-400 p-4 text-lg"
