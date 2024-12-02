@@ -44,14 +44,15 @@ public class ProblemSummation {
     }
 
     public List<Entry> getVulnerableEntry() {
-        int maxIncorrect = 0;
+        double maxIncorrectRate = 0;
         List<Entry> ret = new ArrayList<>();
         for (EntrySummation entrySummation : entrySummations.values()) {
-            if (entrySummation.getIncorrectCount() > maxIncorrect) {
-                maxIncorrect = entrySummation.getIncorrectCount();
+            double incorrectRate = (double) entrySummation.incorrectCount / entrySummation.totalCount;
+            if (incorrectRate > maxIncorrectRate) {
+                maxIncorrectRate = incorrectRate;
                 ret.clear();
                 ret.add(entrySummation.entry);
-            } else if (entrySummation.getIncorrectCount() == maxIncorrect) {
+            } else if (incorrectRate == maxIncorrectRate) {
                 ret.add(entrySummation.entry);
             }
         }
