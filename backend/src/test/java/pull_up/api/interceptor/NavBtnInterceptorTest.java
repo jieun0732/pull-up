@@ -15,16 +15,20 @@ class NavBtnInterceptorTest {
     void testParseDomain() {
         // given
         NavBtnInterceptor suit = new NavBtnInterceptor();
+        MockHttpServletRequest adminReq = new MockHttpServletRequest();
+        adminReq.setRequestURI("/admin");
         MockHttpServletRequest problemReq = new MockHttpServletRequest();
         problemReq.setRequestURI("/admin/problems");
         MockHttpServletRequest examsheetReq = new MockHttpServletRequest();
         examsheetReq.setRequestURI("/admin/examsheets");
 
         // when
+        String admin = suit.getDomain(adminReq);
         String problems = suit.getDomain(problemReq);
         String examsheets = suit.getDomain(examsheetReq);
 
         // then
+        assertThat(admin).isEqualTo("");
         assertThat(problems).isEqualTo("problems");
         assertThat(examsheets).isEqualTo("examsheets");
     }

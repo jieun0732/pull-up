@@ -14,6 +14,7 @@ public class NavBtnInterceptor implements HandlerInterceptor {
 
     String getDomain(HttpServletRequest request) {
         String[] url = request.getRequestURI().split("/");
+        if (url.length <= 2) return "";
         return url[2];
     }
 }
