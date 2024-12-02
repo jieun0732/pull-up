@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.examsheet.dto.CreateExamsheet;
 import pull_up.api.dto.MessageDto;
+import pull_up.domain.examsheet.dto.ExamsheetDetailInfo;
+import pull_up.domain.problem.dto.ProblemDetailInfo;
+import pull_up.domain.problem.exception.ProblemErrorCode;
+import pull_up.domain.problem.exception.ProblemException;
 import pull_up.infra.database.jpa.dto.ExamsheetInfo;
 import pull_up.infra.database.jpa.dto.SearchParam;
 import pull_up.infra.database.jpa.entity.Examsheet;
@@ -26,5 +30,10 @@ public class ExamsheetService {
 
     public List<ExamsheetInfo> getAll() {
         return examsheetRepository.searchExamsheet();
+    }
+
+    public ExamsheetDetailInfo get(Long examsheetId) {
+        return examsheetRepository.findByIdWithProblem(examsheetId)
+                .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
     }
 }

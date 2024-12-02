@@ -50,6 +50,7 @@ public class Exam extends BaseEntity {
     private Duration duration;
 
     @Column
+    @Setter(AccessLevel.PRIVATE)
     private Duration timeLimit;
 
     @ManyToOne
@@ -68,7 +69,6 @@ public class Exam extends BaseEntity {
         this.score = 0;
         this.examType = examType;
         this.startTime = LocalDateTime.now();
-        this.timeLimit = Duration.ofMinutes(20);
         this.member = member;
     }
 
@@ -98,6 +98,7 @@ public class Exam extends BaseEntity {
         Exam exam = new Exam(MOCK_EXAM, member);
         setEmptyAnswers(Problemsheet.getProblemSheetMap(problemList, examSheet), exam);
         exam.examsheet = examSheet;
+        exam.setTimeLimit(Duration.ofMinutes(20));
         return exam;
     }
 

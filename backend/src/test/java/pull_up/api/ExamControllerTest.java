@@ -78,5 +78,4 @@ class ExamControllerTest {
         mockMvc.perform(patch("/api/exams/end/1"))
                 .andExpect(status().is(200));
     }
-
 }

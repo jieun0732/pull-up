@@ -1,7 +1,5 @@
 [ADMIN]
 - 시험지(Examsheet)
-TODO DTO - list page 연동
-TODO list pagination 구현
 TODO 수정 구현(Update)
 TODO 생성 구현(Create)
 TODO 삭제 구현(Delete)
@@ -24,6 +22,8 @@ TODO 삭제 구현(Delete)
 - 기타
 
 [API]
+TODO 모의고사 채점안된거 false로 변경(MemberInfo)
+TODO 멤버 탈퇴 API 구현
 
 [INFRA]
 TODO DB 서버 계정 분리 root -> pullup

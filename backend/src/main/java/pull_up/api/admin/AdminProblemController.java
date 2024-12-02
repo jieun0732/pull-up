@@ -47,7 +47,7 @@ public class AdminProblemController {
     }
 
     @GetMapping("/{problemId}")
-    public String problemListDetail(Model model, @PathVariable Long problemId) {
+    public String problemDetail(Model model, @PathVariable Long problemId) {
         ProblemDetailInfo problemInfo = problemService.get(problemId);
         model.addAttribute("problemInfo", problemInfo);
         model.addAttribute("entry", Entry.values());

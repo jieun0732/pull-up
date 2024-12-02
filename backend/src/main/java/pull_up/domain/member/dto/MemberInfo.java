@@ -19,7 +19,7 @@ public record MemberInfo() {
                     member.getName(),
                     member.getPrivateEmail(),
                     member.getSnsProvider(),
-                    true,
+                    exam.getIsFinished(),
                     exam.getScore()
             );
         }

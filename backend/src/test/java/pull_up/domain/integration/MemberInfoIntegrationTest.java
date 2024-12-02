@@ -62,11 +62,21 @@ public class MemberInfoIntegrationTest {
         assertThat(memberInfoRes.mockExamSolved()).isFalse();
         assertThat(memberInfoRes.mockExamScore()).isZero();
 
-        /* 2. 모의고사 풀기 */
+        /* 2. 모의고사 시작 */
 
         Start.MockExamRequest startReq = new Start.MockExamRequest(member.getId(), ExamType.MOCK_EXAM.name());
 
         Start.Response startRes = examService.start(startReq);
+
+        memberInfoRes = memberService.getMemberInfo(member.getId());
+
+        assertThat(memberInfoRes.memberId()).isEqualTo(member.getId());
+        assertThat(memberInfoRes.name()).isEqualTo(member.getName());
+        assertThat(memberInfoRes.email()).isEqualTo("CONCEALED_EMAIL");
+        assertThat(memberInfoRes.mockExamSolved()).isFalse();
+        assertThat(memberInfoRes.mockExamScore()).isZero();
+
+        /* 3. 모의고사 풀기 */
 
         Grade.Request gradeReq = new Grade.Request(startRes.examId(), List.of(
                 new Grade.Request.AnswerSheet(1, 3),
@@ -77,8 +87,6 @@ public class MemberInfoIntegrationTest {
         Report.mockExam gradeRes = examService.grade(gradeReq);
 
         assertThat(gradeRes.scoreInfo().myScore()).isEqualTo(25);
-
-        /* 3. 사용자 정보조회 */
 
         memberInfoRes = memberService.getMemberInfo(member.getId());
 

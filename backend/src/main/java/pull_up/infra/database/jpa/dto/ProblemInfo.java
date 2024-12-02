@@ -4,6 +4,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import pull_up.domain.problem.Entry;
 import pull_up.global.util.GlobalFormatter;
+import pull_up.infra.database.jpa.entity.Problem;
 
 import java.time.LocalDateTime;
 
@@ -27,5 +28,15 @@ public class ProblemInfo {
         this.question = questionSummary;
         this.totalAttempts = totalAttempts;
         this.correctRate = String.format("%.0f", correctRate);
+    }
+
+    public static ProblemInfo toDto(Problem problem){
+        return new ProblemInfo(problem.getId(),
+                problem.getEntry(),
+                problem.getProblemType(),
+                problem.getCreatedTime(),
+                problem.getQuestionSummary(),
+                problem.getTotalAttempts(),
+                problem.getCorrectRate());
     }
 }
