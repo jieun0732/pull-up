@@ -7,7 +7,7 @@ import pull_up.infra.database.jpa.entity.Exam;
 
 import java.util.List;
 
-public record End() {
+public record Result() {
     public record ByEntryResponse(
             Entry entry,
             Boolean isFinished,
@@ -16,7 +16,7 @@ public record End() {
             Integer leftProblemCount,
             Integer correctProblemCount,
             Integer score,
-            List<Result> results
+            List<ResultInfo> results
     ) {
 
         public static ByEntryResponse toDto(Exam examInDB) {
@@ -30,7 +30,7 @@ public record End() {
                     problemSummation.getLeftProblemCount(),
                     problemSummation.getCorrectProblemCount(),
                     examInDB.getScore(),
-                    examInDB.getAnswers().stream().map(Result::toDto).toList());
+                    examInDB.getAnswers().stream().map(ResultInfo::toDto).toList());
         }
     }
 
@@ -40,7 +40,7 @@ public record End() {
             Integer correctProblemCount,
             Integer score,
             Long durationSecond,
-            List<Result> results
+            List<ResultInfo> results
     ) {
         public static MockExamResponse toDto(Exam examInDB) {
             ProblemSummation problemSummation = examInDB.getProblemSummation();
@@ -50,18 +50,18 @@ public record End() {
                     problemSummation.getCorrectProblemCount(),
                     examInDB.getScore(),
                     examInDB.getDuration().toSeconds(),
-                    examInDB.getAnswers().stream().map(Result::toDto).toList());
+                    examInDB.getAnswers().stream().map(ResultInfo::toDto).toList());
         }
     }
 
-    public record Result(
+    public record ResultInfo(
             Integer problemNumber,
             String problemType,
             Boolean isSubmitted,
             Boolean isCorrect
     ) {
-        public static Result toDto(Answer answer) {
-            return new Result(
+        public static ResultInfo toDto(Answer answer) {
+            return new ResultInfo(
                     answer.getProblemNumber(),
                     answer.getProblem().getProblemType(),
                     answer.getIsSubmitted(),

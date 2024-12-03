@@ -72,14 +72,14 @@ public class ExamController {
 
     @Operation(summary = "시험 결과 확인", description = "시험 결과를 확인합니다.", tags = "모의고사")
     @GetMapping("/mock-exam/result/{examId}")
-    public ResponseEntity<End.MockExamResponse> getMockExamResult(@PathVariable Long examId) {
+    public ResponseEntity<Result.MockExamResponse> getMockExamResult(@PathVariable Long examId) {
         return new ResponseEntity<>(examService.getMockExamResult(examId), HttpStatus.OK);
     }
 
-    @Operation(summary = "시험 종료", description = "시험을 종료하고 결과를 확인합니다.", tags = {"골고루", "유형별"})
-    @PatchMapping("/end/{examId}")
-    public ResponseEntity<End.ByEntryResponse> end(@PathVariable Long examId) {
-        return new ResponseEntity<>(examService.endByEntryExam(examId), HttpStatus.OK);
+    @Operation(summary = "시험 결과 확인", description = "시험 결과를 확인합니다.", tags = {"골고루", "유형별"})
+    @GetMapping("/result/{examId}")
+    public ResponseEntity<Result.ByEntryResponse> getEntryExamResult(@PathVariable Long examId) {
+        return new ResponseEntity<>(examService.getEntryExamResult(examId), HttpStatus.OK);
     }
 
 }

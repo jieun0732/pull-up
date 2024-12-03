@@ -137,7 +137,7 @@ public class MockExamIntegrationTest {
 
         /* 5. 모의고사 결과 확인(End) */
 
-        End.MockExamResponse endRes = examService.getMockExamResult(startRes.examId());
+        Result.MockExamResponse endRes = examService.getMockExamResult(startRes.examId());
 
         assertThat(endRes.memberName()).isEqualTo(member.getName());
         assertThat(endRes.score()).isEqualTo(25);

@@ -8,7 +8,6 @@ import pull_up.domain.exam.dto.*;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.exam.exception.ExamErrorCode;
-import pull_up.domain.member.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.infra.database.jpa.entity.Exam;
@@ -181,17 +180,17 @@ class ExamServiceTest {
 
     @Test
     @DisplayName("골고루/유형별 시험 종료 테스트")
-    void testEndByEntryExam() {
+    void testGetEntryExamResult() {
         // given
         Exam exam = FixtureRepository.getEvenlyExam(member.getId(), Entry.LANGUAGE);
 
         // when
         when(mockExamRepository.findById(any())).thenReturn(Optional.of(exam));
-        End.ByEntryResponse endRes = suit.endByEntryExam(exam.getId());
+        Result.ByEntryResponse endRes = suit.getEntryExamResult(exam.getId());
 
         // then
         assertThat(endRes.entry()).isEqualTo(Entry.LANGUAGE);
-        assertThat(endRes.isFinished()).isTrue();
+        assertThat(endRes.isFinished()).isFalse();
         assertThat(endRes.memberName()).isEqualTo(member.getName());
         assertThat(endRes.totalProblemCount()).isEqualTo(2);
         assertThat(endRes.leftProblemCount()).isEqualTo(2);
@@ -202,10 +201,10 @@ class ExamServiceTest {
 
         // when 2
         suit.submit(new Submit.Request(exam.getId(), 1, 2));
-        End.ByEntryResponse endRes2 = suit.endByEntryExam(exam.getId());
+        Result.ByEntryResponse endRes2 = suit.getEntryExamResult(exam.getId());
 
         // then2
-        assertThat(endRes2.isFinished()).isTrue();
+        assertThat(endRes2.isFinished()).isFalse();
         assertThat(endRes2.totalProblemCount()).isEqualTo(2);
         assertThat(endRes2.leftProblemCount()).isEqualTo(1);
         assertThat(endRes2.correctProblemCount()).isEqualTo(1);
@@ -214,7 +213,7 @@ class ExamServiceTest {
 
         // when 3
         suit.submit(new Submit.Request(exam.getId(), 2, 2));
-        End.ByEntryResponse endRes3 = suit.endByEntryExam(exam.getId());
+        Result.ByEntryResponse endRes3 = suit.getEntryExamResult(exam.getId());
 
         // then2
         assertThat(endRes3.isFinished()).isTrue();
@@ -294,7 +293,7 @@ class ExamServiceTest {
 
         // when 2(채점 후)
         exam.grade(answerSheet);
-        End.MockExamResponse endRes = suit.getMockExamResult(exam.getId());
+        Result.MockExamResponse endRes = suit.getMockExamResult(exam.getId());
 
         // then 2(결과 반환)
         assertThat(endRes.memberName()).isEqualTo(member.getName());

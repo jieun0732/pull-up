@@ -131,10 +131,10 @@ public class ByProblemTypeExamIntegrationTest {
         Long endExamId = submitReq2.examId();
 
         // [ExamService] 시험 종료
-        End.ByEntryResponse endRes = examService.endByEntryExam(endExamId);
+        Result.ByEntryResponse endRes = examService.getEntryExamResult(endExamId);
 
         // [백] 요청결과 전송
-        assertThat(endRes).isInstanceOf(End.ByEntryResponse.class);
+        assertThat(endRes).isInstanceOf(Result.ByEntryResponse.class);
         assertThat(endRes.entry()).isEqualTo(Entry.MATH);
         assertThat(endRes.isFinished()).isEqualTo(true);
         assertThat(endRes.score()).isEqualTo(50);

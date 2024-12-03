@@ -183,10 +183,6 @@ public class Exam extends BaseEntity {
         }
     }
 
-    public void end() {
-        isFinished = true;
-    }
-
     public Integer getTopRate(ProblemSummation problemSummation) {
         if (problemSummation.getTotalProblemCount() != 20) return problemSummation.getCorrectProblemCount() * 100 / problemSummation.getTotalProblemCount();
         return MockTopRateSheet.getTopRateSheet().get(problemSummation.getCorrectProblemCount());

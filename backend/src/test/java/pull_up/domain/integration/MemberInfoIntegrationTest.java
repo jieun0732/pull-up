@@ -1,6 +1,5 @@
 package pull_up.domain.integration;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.ExamType;
-import pull_up.domain.exam.dto.End;
 import pull_up.domain.exam.dto.Grade;
 import pull_up.domain.exam.dto.Report;
 import pull_up.domain.exam.dto.Start;

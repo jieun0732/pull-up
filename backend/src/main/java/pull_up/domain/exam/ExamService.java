@@ -12,11 +12,9 @@ import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.member.exception.MemberException;
-import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static pull_up.domain.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
@@ -97,17 +95,15 @@ public class ExamService {
         return Report.mockExam.toDto(examInDB);
     }
 
-    @Transactional
-    public End.ByEntryResponse endByEntryExam(Long examId) {
+    public Result.ByEntryResponse getEntryExamResult(Long examId) {
         Exam examInDB = examRepository.findById(examId).orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
-        examInDB.end();
-        return End.ByEntryResponse.toDto(examInDB);
+        return Result.ByEntryResponse.toDto(examInDB);
     }
 
-    public End.MockExamResponse getMockExamResult(Long examId) {
+    public Result.MockExamResponse getMockExamResult(Long examId) {
         Exam examInDB = examRepository.findById(examId).orElseThrow(() -> new ExamException(ExamErrorCode.NOT_FOUND_EXAM));
         if (!examInDB.getIsFinished()) throw new ExamException(ExamErrorCode.NOT_GRADED_MOCK_EXAM);
-        return End.MockExamResponse.toDto(examInDB);
+        return Result.MockExamResponse.toDto(examInDB);
     }
 
     @Transactional

@@ -22,7 +22,8 @@ TODO 삭제 구현(Delete)
 - 기타
 
 [API]
-TODO 취약 영역 정책 변경사항 구현
+TODO end에서 제출된 마지막 문제를 next로 들어가보면 풀지 않았다고 나오는 이슈
+TODO end api 조회 시 isFinished = true로 변경되는 이슈
 
 [INFRA]
 TODO DB 서버 계정 분리 root -> pullup
