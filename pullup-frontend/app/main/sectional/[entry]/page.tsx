@@ -200,14 +200,21 @@ export default function Page() {
                   <>
                     <Button
                       size="medium"
-                      color="activeLight"
-                      onClick={() =>
+                      color={
+                        item.solvedProblemCount === item.totalProblemCount
+                          ? "nonactive"
+                          : "activeLight"
+                      }
+                      onClick={() => {
+                        if (item.solvedProblemCount === item.totalProblemCount)
+                          return;
+
                         handleNext(
                           "BY_PROBLEM_TYPE",
                           item.examId,
                           item.solvedProblemCount,
-                        )
-                      }
+                        );
+                      }}
                     >
                       이어서 풀기
                     </Button>
