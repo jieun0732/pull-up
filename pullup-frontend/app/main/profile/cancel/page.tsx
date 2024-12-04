@@ -2,16 +2,15 @@
 
 import Header from "@/component/ui/Header";
 import Button from "@/component/ui/Button";
-import LocalStorage from "@/utils/LocalStorage";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { API } from "@/lib/API";
+import { useRouter } from "next/navigation";
 import useUserStore from "@/stores/useUserStore";
 
 export default function Page() {
-  const router = useRouter();
-  const [activeCancel, setActiveCancel] = useState<boolean>(false);
   const { user, resetUserData } = useUserStore();
+  const [activeCancel, setActiveCancel] = useState<boolean>(false);
+  const router = useRouter();
 
   const term = [
     {
@@ -24,15 +23,37 @@ export default function Page() {
       content: "다시 가입해도 이용내역은 복구되지 않아요.",
     },
   ];
+
+  const handleCancel = async () => {
+    try {
+      const response = await fetch(`${API}/members/${user.memberId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      localStorage.clear();
+      resetUserData();
+      router.push("/");
+    } catch (error) {
+      console.error("Error fetching access check:", error);
+    }
+  };
+
   return (
-    <div className="flex h-full w-full flex-col items-center bg-white px-5 pb-[91px] pt-20">
+    <div className="flex h-full w-full flex-col items-center bg-white px-5 pb-[91px] pt-14">
       <Header type="back" content="회원탈퇴" link="/main/profile/" />
       <div className="w-full">
         <p className="mb-2 text-[19px] font-bold">
           정말 풀업을 탈퇴하실 건가요?
         </p>
         <p className="mb-9 text-[15px] font-medium text-gray01">
-          탈퇴 전 {user.name}님께서 확인하실 정보가 있어요!
+          탈퇴 전 oo님께서 확인하실 정보가 있어요!
         </p>
       </div>
 
@@ -82,11 +103,7 @@ export default function Page() {
         size="large"
         color={activeCancel ? "active" : "nonactive"}
         className="mt-auto"
-        onClick={() => {
-          localStorage.clear();
-          resetUserData();
-          router.replace("/");
-        }}
+        onClick={handleCancel}
       >
         탈퇴하기
       </Button>
