@@ -52,7 +52,7 @@ export default function Home() {
   }, [kakaoLoaded]);
 
   useEffect(() => {
-    if (user.memberId !== -1) {
+    if (user.memberId !== 0) {
       router.push("/main/sectional");
     }
   }, [user]);
