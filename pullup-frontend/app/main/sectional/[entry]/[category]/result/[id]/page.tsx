@@ -8,11 +8,12 @@ import { BackIcon } from "@/assets/icon/Icons";
 import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
 import { roundUpNumber } from "@/utils/roundUpNumber";
-import { FormatQuestion } from "@/utils/FormatQuestion";
+import { SetUnderline } from "@/utils/SetUnderline";
 import useProblemStore from "@/stores/useProblemStore";
 import { SectionalNextResponseType } from "@/types/sectionalType";
 import { Entry } from "@/types/problemType";
 import Spinner from "@/component/ui/Spinner";
+import { useEffect } from "react";
 
 export default function Page({
   params,
@@ -26,14 +27,20 @@ export default function Page({
   const router = useRouter();
   const { examId } = useProblemStore();
 
-  const { data, error } = useSWR<SectionalNextResponseType>(
+  const { data, error, mutate } = useSWR<SectionalNextResponseType>(
     `${API}/exams/next/${examId}?problemNumber=${params.id}`,
     fetcher,
   );
-  console.log(data);
+
+  useEffect(() => {
+    if (data && !data.explanation) {
+      mutate();
+    }
+  }, [data, mutate]);
+
   return (
     <>
-      {data ? (
+      {data?.explanation ? (
         <div className="bg-whtie relative flex flex-col items-center pb-7 pt-20">
           <div className="h-11 w-full px-5">
             <div className="relative">
@@ -55,8 +62,8 @@ export default function Page({
             </Text>
 
             {data.example && (
-              <div className="relative mx-5 mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
-                <Text size="body-03">{data.example}</Text>
+              <div className="relative mx-5 mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 px-4 py-5">
+                <Text size="body-03">{SetUnderline(data.example)}</Text>
               </div>
             )}
           </div>
@@ -87,7 +94,7 @@ export default function Page({
                   >
                     {idx + 1}
                   </div>
-                  <div className="">{FormatQuestion(choice)}</div>
+                  <div className="">{SetUnderline(choice)}</div>
                 </div>
               );
             })}

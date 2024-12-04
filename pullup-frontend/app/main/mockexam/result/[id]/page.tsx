@@ -8,7 +8,7 @@ import { BackIcon } from "@/assets/icon/Icons";
 import useSWR from "swr";
 import { API, fetcher } from "@/lib/API";
 import { roundUpNumber } from "@/utils/roundUpNumber";
-import { FormatQuestion } from "@/utils/FormatQuestion";
+import { SetUnderline } from "@/utils/SetUnderline";
 import useExamStore from "@/stores/useExamStore";
 import { SectionalNextResponseType } from "@/types/sectionalType";
 import { Entry } from "@/types/problemType";
@@ -49,8 +49,8 @@ export default function Page() {
             </Text>
 
             {data.example && (
-              <div className="relative mx-5 mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
-                <Text size="body-03">{data.example}</Text>
+              <div className="relative mx-5 mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 px-4 py-5">
+                <Text size="body-03">{SetUnderline(data.example)}</Text>
               </div>
             )}
           </div>
@@ -80,7 +80,7 @@ export default function Page() {
                 >
                   {idx + 1}
                 </div>
-                <div className="">{FormatQuestion(choice)}</div>
+                <div className="">{SetUnderline(choice)}</div>
               </div>
             );
           })}

@@ -16,17 +16,3 @@ export const fetcher = (...args: [string]) =>
   fetch(...args, {
     // credentials: "include",
   }).then((res) => res.json());
-
-export const patchFetcher = (url: string) =>
-  fetch(url, {
-    method: "PATCH", // PATCH 요청으로 설정
-    headers: {
-      "Content-Type": "application/json", // 요청 본문의 타입 설정
-    },
-    // credentials: "include", // 필요시 주석 해제
-  }).then((res) => {
-    if (!res.ok) {
-      throw new Error("Network response was not ok"); // 에러 처리
-    }
-    return res.json(); // JSON으로 응답 처리
-  });

@@ -1,4 +1,4 @@
-import { FormatQuestion } from "@/utils/FormatQuestion";
+import { SetUnderline } from "@/utils/SetUnderline";
 import { API } from "@/lib/API";
 import LocalStorage from "@/utils/LocalStorage";
 import { ProblemBeingSolved } from "@/types/mockexam/mockexamQuestion";
@@ -52,9 +52,7 @@ const ChoiceItem = ({
       >
         {idx + 1}
       </div>
-      <div className="min-h-[40px] min-w-0 flex-1">
-        {FormatQuestion(choice)}
-      </div>
+      <div className="min-h-[40px] min-w-0 flex-1">{SetUnderline(choice)}</div>
     </div>
   );
 };

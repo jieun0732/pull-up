@@ -1,7 +1,7 @@
 "use client";
 
 // 밑줄 적용을 위함
-export const FormatQuestion = (question: string) => {
+export const SetUnderline = (question: string) => {
   const parts = question.split(/(@@.*?@@)/g);
 
   return (

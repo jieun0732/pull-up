@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { CloseIcon } from "@/assets/icon/Icons";
 import useSWR from "swr";
 import { SectionalResultResponseType } from "@/types/sectionalType";
-import { API, patchFetcher } from "@/lib/API";
+import { API, fetcher } from "@/lib/API";
 import useProblemStore from "@/stores/useProblemStore";
 import useUserStore from "@/stores/useUserStore";
 import Spinner from "@/component/ui/Spinner";
@@ -25,11 +25,10 @@ export default function Page({
   const { user } = useUserStore();
 
   const { data } = useSWR<SectionalResultResponseType>(
-    examId ? `${API}/exams/end/${examId}` : null,
-    patchFetcher,
+    examId ? `${API}/exams/result/${examId}` : null,
+    fetcher,
   );
 
-  console.log("result data", data);
   return (
     <>
       {data ? (

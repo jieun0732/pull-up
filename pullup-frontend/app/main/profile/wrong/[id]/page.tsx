@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 import Text from "@/component/ui/Text";
 import formatNumber from "@/utils/formatNumber";
 import { BackIcon } from "@/assets/icon/Icons";
-import { categoryMap, entryMap } from "@/constants/constants";
 import useSWR from "swr";
-import { IncorrectProblem } from "@/types/problemType";
+import { SetUnderline } from "@/utils/SetUnderline";
 import { API, fetcher } from "@/lib/API";
 import { roundUpNumber } from "@/utils/roundUpNumber";
 import Spinner from "@/component/ui/Spinner";
@@ -56,7 +55,7 @@ export default function Page({
 
           {data.example && (
             <div className="relative mx-5 mb-12 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
-              <Text size="body-03">{data.example}</Text>
+              <Text size="body-03">{SetUnderline(data.example)}</Text>
             </div>
           )}
         </div>

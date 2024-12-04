@@ -4,9 +4,8 @@ import Button from "@/component/ui/Button";
 import Text from "@/component/ui/Text";
 import { useRouter } from "next/navigation";
 import { roundUpNumber } from "@/utils/roundUpNumber";
-import { FormatQuestion } from "@/utils/FormatQuestion";
 import { SectionalNextResponseType, Explanation } from "@/types/sectionalType";
-
+import { SetUnderline } from "@/utils/SetUnderline";
 export default function SolutionComponent({
   data,
   solution,
@@ -50,7 +49,7 @@ export default function SolutionComponent({
             >
               {idx + 1}
             </div>
-            <div className="">{FormatQuestion(choice)}</div>
+            <div className="">{SetUnderline(choice)}</div>
           </div>
         );
       })}

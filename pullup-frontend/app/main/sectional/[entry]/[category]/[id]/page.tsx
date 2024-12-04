@@ -10,7 +10,7 @@ import { ConfirmModal } from "@/component/ui/ConfirmModal";
 import ThinProgressBar from "@/component/sectional/thinProgressbar";
 import { API, fetcher } from "@/lib/API";
 import useSWR from "swr";
-import { FormatQuestion } from "@/utils/FormatQuestion";
+import { SetUnderline } from "@/utils/SetUnderline";
 import { Entry } from "@/types/problemType";
 import { SectionalNextResponseType, Explanation } from "@/types/sectionalType";
 import Spinner from "@/component/ui/Spinner";
@@ -94,7 +94,7 @@ export default function Page() {
 
             {data.example && (
               <div className="relative mx-5 mb-7 flex items-center justify-center rounded-md border border-solid border-gray02 py-5">
-                <Text size="body-03">{FormatQuestion(data.example)}</Text>
+                <Text size="body-03">{SetUnderline(data.example)}</Text>
               </div>
             )}
           </div>
@@ -134,7 +134,11 @@ export default function Page() {
 
           <Modal>
             <ConfirmModal
-              onLeft={() => router.push(`/main/sectional/${params.entry}`)}
+              onLeft={() =>
+                router.push(
+                  `/main/sectional/${params.entry}/${params.category}/result`,
+                )
+              }
               onRight={closeModal}
               title="정말로 학습을 종료하실 건가요?"
               description="나가면 현재까지 푼 문제만 저장돼요!"
