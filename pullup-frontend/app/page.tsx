@@ -51,12 +51,6 @@ export default function Home() {
     }
   }, [kakaoLoaded]);
 
-  useEffect(() => {
-    if (user.memberId !== 0) {
-      router.push("/main/sectional");
-    }
-  }, [user]);
-
   const mockLogin = async () => {
     const response = await fetch(
       `http://pullup-api.shop:3000/api/oauth2/callback/local`,

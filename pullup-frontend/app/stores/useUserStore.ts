@@ -13,10 +13,10 @@ const useUserStore = create<UserStore>()(
   persist(
     (set) => ({
       user: {
-        memberId: -1,
-        name: "test user",
-        email: "test@example.com",
-        snsProvider: "apple",
+        memberId: 0,
+        name: "",
+        email: "",
+        snsProvider: "",
       },
       setUser: (user) => {
         set({ user });
