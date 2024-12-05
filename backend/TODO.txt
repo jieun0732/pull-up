@@ -1,6 +1,6 @@
 [ADMIN]
 - 시험지(Examsheet)
-TODO 수정 구현(Update)
+✅TODO 수정 구현(Update)
 TODO 생성 구현(Create)
 TODO 삭제 구현(Delete)
 
@@ -22,8 +22,7 @@ TODO 삭제 구현(Delete)
 - 기타
 
 [API]
-TODO end에서 제출된 마지막 문제를 next로 들어가보면 풀지 않았다고 나오는 이슈
-TODO end api 조회 시 isFinished = true로 변경되는 이슈
+✅TODO evenly, byProblemType, MockExam 시험 분리
 
 [INFRA]
 TODO DB 서버 계정 분리 root -> pullup

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 public class ProblemInfo {
     private Long id;
-    private Entry entry;
+    private String entry;
     private String problemType;
     private String createdDate;
     private String question;
@@ -22,7 +22,7 @@ public class ProblemInfo {
     public ProblemInfo(Long id, Entry entry, String problemType, LocalDateTime createTime, String questionSummary, Integer totalAttempts, Double correctRate) {
         if (questionSummary.length() > 30) questionSummary = questionSummary.substring(0, 30) + "...";
         this.id = id;
-        this.entry = entry;
+        this.entry = entry.getKorean();
         this.problemType = problemType;
         this.createdDate = createTime.format(GlobalFormatter.KOREAN_DATE_FORMATTER);
         this.question = questionSummary;

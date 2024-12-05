@@ -28,6 +28,10 @@ public abstract class BaseEntity {
     @ColumnDefault("0")
     protected boolean isDeleted = false;
 
+    protected void updateTime() {
+        updatedTime = LocalDateTime.now();
+    }
+
     public void softDelete() {
         if (isDeleted) {
             throw new IllegalStateException();

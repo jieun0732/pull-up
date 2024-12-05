@@ -3,24 +3,38 @@ package pull_up.domain.examsheet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pull_up.domain.dao.ExamsheetRepository;
+import pull_up.domain.dao.ProblemRepository;
+import pull_up.domain.exam.exception.ExamErrorCode;
+import pull_up.domain.exam.exception.ExamException;
 import pull_up.domain.examsheet.dto.CreateExamsheet;
 import pull_up.api.dto.MessageDto;
 import pull_up.domain.examsheet.dto.ExamsheetDetailInfo;
+import pull_up.domain.examsheet.exception.ExamsheetErrorCode;
+import pull_up.domain.examsheet.exception.ExamsheetException;
 import pull_up.domain.problem.dto.ProblemDetailInfo;
 import pull_up.domain.problem.exception.ProblemErrorCode;
 import pull_up.domain.problem.exception.ProblemException;
 import pull_up.infra.database.jpa.dto.ExamsheetInfo;
+import pull_up.infra.database.jpa.dto.ProblemInfo;
 import pull_up.infra.database.jpa.dto.SearchParam;
+import pull_up.infra.database.jpa.embedded.Problemsheet;
 import pull_up.infra.database.jpa.entity.Examsheet;
+import pull_up.infra.database.jpa.entity.Problem;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static pull_up.infra.database.jpa.entity.QProblem.problem;
 
 @Service
 @RequiredArgsConstructor
 public class ExamsheetService {
 
     private final ExamsheetRepository examsheetRepository;
+    private final ProblemRepository problemRepository;
 
     public MessageDto createExamsheet(CreateExamsheet.Request createExamsheetReq) {
         Examsheet examsheet = Examsheet.create(createExamsheetReq.examTitle(), createExamsheetReq.getProblemMap());
@@ -33,7 +47,36 @@ public class ExamsheetService {
     }
 
     public ExamsheetDetailInfo get(Long examsheetId) {
-        return examsheetRepository.findByIdWithProblem(examsheetId)
-                .orElseThrow(() -> new ProblemException(ProblemErrorCode.NOT_FOUND_PROBLEM));
+        Examsheet examsheet = examsheetRepository.findByIdWithProblem(examsheetId).orElseThrow(() -> new ExamsheetException(ExamsheetErrorCode.NOT_FOUND_EXAMSHEET));
+        List<Long> ids = examsheet.getProblemsheets().stream().map(Problemsheet::getProblemId).toList();
+        List<Problem> problems = problemRepository.findAllById(ids);
+
+        return ExamsheetDetailInfo.toDto(examsheet, examsheet.getProblemEntityMap(problems));
+    }
+
+    public Page<ProblemInfo> getAllProblems(SearchParam searchParam) {
+        return problemRepository.searchProblem(searchParam);
+    }
+
+    @Transactional
+    public ExamsheetDetailInfo update(Long examsheetId, Map<String, String> parameters) {
+        Examsheet examsheet = examsheetRepository.findById(examsheetId).orElseThrow(() -> new ExamsheetException(ExamsheetErrorCode.NOT_FOUND_EXAMSHEET));
+        examsheet.modify(parameters);
+
+        List<Long> ids = examsheet.getProblemsheets().stream().map(Problemsheet::getProblemId).toList();
+        List<Problem> problems = problemRepository.findAllById(ids);
+
+        return ExamsheetDetailInfo.toDto(examsheet, examsheet.getProblemEntityMap(problems));
+    }
+
+    @Transactional
+    public ExamsheetDetailInfo changeProblem(Long examsheetId, Integer problemNumber, Long newSelectedId) {
+        Examsheet examsheet = examsheetRepository.findById(examsheetId).orElseThrow(() -> new ExamsheetException(ExamsheetErrorCode.NOT_FOUND_EXAMSHEET));
+        examsheet.changeProblem(problemNumber, newSelectedId);
+
+        List<Long> ids = examsheet.getProblemsheets().stream().map(Problemsheet::getProblemId).toList();
+        List<Problem> problems = problemRepository.findAllById(ids);
+
+        return ExamsheetDetailInfo.toDto(examsheet, examsheet.getProblemEntityMap(problems));
     }
 }

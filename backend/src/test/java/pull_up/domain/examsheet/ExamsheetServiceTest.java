@@ -23,7 +23,7 @@ class ExamsheetServiceTest {
     @BeforeEach
     void init() {
         mockRepository = mock(ExamsheetRepository.class);
-        suit = new ExamsheetService(mockRepository);
+        suit = new ExamsheetService(mockRepository, null);
     }
 
     @Test

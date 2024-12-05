@@ -3,6 +3,9 @@ package pull_up.infra.database.jpa.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import pull_up.domain.examsheet.exception.ExamsheetErrorCode;
+import pull_up.domain.examsheet.exception.ExamsheetException;
+import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.embedded.Problemsheet;
 
 import java.time.Duration;
@@ -10,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.nimbusds.jose.util.StandardCharset.UTF_8;
 
 @Entity
 @Table(name = "examsheet")
@@ -68,6 +73,17 @@ public class Examsheet extends BaseEntity {
         return problemMap;
     }
 
+    public Map<Integer, Problem> getProblemEntityMap(List<Problem> problems) {
+        Map<Integer, Problem> problemMap = new HashMap<>();
+        for (Problemsheet problemsheet : problemsheets) {
+            for (Problem problem : problems) {
+                if (!problem.getId().equals(problemsheet.getProblemId())) continue;
+                problemMap.put(problemsheet.getProblemNumber(), problem);
+            }
+        }
+        return problemMap;
+    }
+
     public void mark(Integer score, Duration duration) {
         Double totalScore = averageScore * examCount;
         Duration totalDuration = averageDuration.multipliedBy(examCount);
@@ -75,5 +91,24 @@ public class Examsheet extends BaseEntity {
         this.examCount++;
         this.averageScore = (totalScore + score) / examCount;
         this.averageDuration = totalDuration.plus(duration).dividedBy(examCount);
+    }
+
+    public void modify(Map<String, String> parameters) {
+        map(parameters);
+    }
+
+    private void map(Map<String, String> parameters) {
+        this.examTitle = parameters.get("examTitle");
+    }
+
+    public void changeProblem(Integer problemNumber, Long newSelectedId) {
+        for (Problemsheet problemsheet : problemsheets) {
+            if (problemsheet.getProblemNumber().equals(problemNumber)) {
+                problemsheet.changeProblem(newSelectedId);
+                updateTime();
+                return;
+            }
+        }
+        throw new ExamsheetException(ExamsheetErrorCode.PROBLEM_NUMBER_EXCEED);
     }
 }

@@ -5,51 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="../../css/list.css" />
-    <title>PULL UP Problems</title>
+    <title>Change Problem</title>
 </head>
 <body>
 <div th:insert="~{nav :: nav}"></div>
 <div class="position-relative">
     <div class="container-md">
+        <form id="change-problem-form"
+              th:method="PATCH"
+              th:action="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId=${examsheetId}, problemNumber=${problemNumber})}"
+              onsubmit="return confirm('해당 문제로 변경합니까?');">
         <table class="table">
-            <thead class="sticky-top top-0">
+            <thead class="sticky-top top-0 table-warning">
             <tr>
-                <th scope="col" class="text-center" colspan="6">
-                    <div class="row">
-                        <div class="col">
-                        <a href="/admin/problems/new">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7"/>
-                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
-                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
-                            </svg>
-                        </a>
+                <th scope="col" class="text-center" colspan="8">
+                    <div class="row m-auto">
+                        <div class="col m-auto d-flex justify-content-center align-items-center">
+                            <div class="input-group" style="max-width: 350px">
+                                <span class="input-group-text">문제번호</span>
+                                <span class="input-group-text" th:text="${problemNumber}">문제번호</span>
+                                <span class="input-group-text">현재 문제 ID</span>
+                                <input class="form-control" style="max-width: 4rem" th:value="${selectedId}" disabled />
+                                <button class="btn btn-warning" type="submit" form="change-problem-form" >변경하기</button>
+                            </div>
+                            <span class="form-text text-start align-middle" style="min-width: 12rem">&nbsp;* 변경할 문제를 선택하세요.</span>
                         </div>
-                        <div class="col">
-                            <form class="input-group" method="get" th:action="@{/admin/problems}">
-                                <select class="form-select" id="search-col" name="searchType">
-                                    <option th:selected="${searchType} == 'NONE'" value="NONE">검색 옵션을 선택하세요.</option>
-                                    <option th:selected="${searchType} == 'PROBLEM_TYPE'" value="PROBLEM_TYPE">유형</option>
-                                    <option th:selected="${searchType} == 'QUESTION'" value="QUESTION">문제</option>
-                                </select>
-                                <input type="text" class="form-control" placeholder="검색어를 입력하세요." aria-label="search-keyword" name="keyword" th:value="${keyword}">
-                                <button class="btn btn-outline-secondary" type="submit" id="search-button">검색</button>
+                        <div class="col m-auto">
+                            <form id="search-form"
+                                  method="get"
+                                  th:action="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber})}">
+                                <div class="input-group">
+                                    <input type="hidden" name="selectedId" th:value="${selectedId}" />
+                                    <select class="form-select" id="search-col" name="searchType">
+                                        <option th:selected="${searchType} == 'NONE'" value="NONE">검색 옵션을 선택하세요.</option>
+                                        <option th:selected="${searchType} == 'PROBLEM_TYPE'" value="PROBLEM_TYPE">유형</option>
+                                        <option th:selected="${searchType} == 'QUESTION'" value="QUESTION">문제</option>
+                                    </select>
+                                    <input type="text" class="form-control" placeholder="검색어를 입력하세요." aria-label="search-keyword" name="keyword" th:value="${keyword}">
+                                    <button form="search-form" class="btn btn-outline-warning" type="submit" id="search-button">검색</button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </th>
             </tr>
             <tr>
+                <th scope="col" class="text-center align-middle">선택</th>
                 <th scope="col">
                     <div class="d-flex justify-content-center gap-2">
                         <span class="align-self-center">ID</span>
                         <div class="d-flex flex-column">
-                            <a href="/admin/problems?sortType=ID&sortOrder=ASC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId= ${selectedId}, sortType='ID', sortOrder='ASC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                                     <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                                 </svg>
                             </a>
-                            <a href="/admin/problems?sortType=ID&sortOrder=DESC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId= ${selectedId}, sortType='ID', sortOrder='DESC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
@@ -62,12 +73,12 @@
                     <div class="d-flex justify-content-center gap-2">
                         <span class="align-self-center">영역</span>
                         <div class="d-flex flex-column">
-                            <a href="/admin/problems?sortType=ENTRY&sortOrder=ASC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId=${selectedId}, sortType='ENTRY', sortOrder='ASC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                                     <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                                 </svg>
                             </a>
-                            <a href="/admin/problems?sortType=ENTRY&sortOrder=DESC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId=${selectedId}, sortType='ENTRY', sortOrder='DESC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
@@ -80,12 +91,12 @@
                     <div  class="d-flex justify-content-center gap-2">
                         <span class="align-self-center">유형</span>
                         <div class="d-flex flex-column">
-                            <a href="/admin/problems?sortType=PROBLEM_TYPE&sortOrder=ASC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId= ${selectedId}, sortType='PROBLEM_TYPE', sortOrder='ASC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                                     <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                                 </svg>
                             </a>
-                            <a href="/admin/problems?sortType=PROBLEM_TYPE&sortOrder=DESC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId= ${selectedId}, sortType='PROBLEM_TYPE', sortOrder='DESC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
@@ -98,12 +109,12 @@
                     <div  class="d-flex justify-content-center gap-2">
                         <span class="align-self-center">생성일</span>
                         <div class="d-flex flex-column">
-                            <a href="/admin/problems?sortType=CREATED_DATE&sortOrder=ASC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId= ${selectedId}, sortType='CREATED_DATE', sortOrder='ASC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                                     <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                                 </svg>
                             </a>
-                            <a href="/admin/problems?sortType=CREATED_DATE&sortOrder=DESC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId= ${selectedId}, sortType='CREATED_DATE', sortOrder='DESC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
@@ -117,12 +128,12 @@
                     <div class="d-flex justify-content-center gap-2">
                         <span class="align-self-center">시도</span>
                         <div class="d-flex flex-column">
-                            <a href="/admin/problems?sortType=ATTEMPT&sortOrder=ASC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId= ${selectedId}, sortType='ATTEMPT', sortOrder='ASC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                                     <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                                 </svg>
                             </a>
-                            <a href="/admin/problems?sortType=ATTEMPT&sortOrder=DESC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId= ${selectedId}, sortType='ATTEMPT', sortOrder='DESC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
@@ -135,12 +146,12 @@
                     <div class="d-flex justify-content-center gap-2">
                         <span class="align-self-center">정답률</span>
                         <div class="d-flex flex-column">
-                            <a href="/admin/problems?sortType=CORRECT_RATE&sortOrder=ASC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId= ${selectedId}, sortType='CORRECT_RATE', sortOrder='ASC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                                     <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                                 </svg>
                             </a>
-                            <a href="/admin/problems?sortType=CORRECT_RATE&sortOrder=DESC">
+                            <a th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetId}, problemNumber = ${problemNumber}, selectedId= ${selectedId}, sortType='CORRECT_RATE', sortOrder='DESC')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
@@ -149,11 +160,15 @@
                         </div>
                     </div>
                 </th>
-                <th scope="col" class="text-center align-middle">수정</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="problemInfo : ${problemInfos}">
+                <td class="text-center">
+                    <input class="form-check-input" type="radio" name="newSelectedId" id="selected-problem" required
+                           th:value="${problemInfo.getId()}"
+                           th:checked="${problemInfo.getId() == selectedId}">
+                </td>
                 <td class="text-center" th:text="${problemInfo.getId()}">1</td>
                 <td class="text-center" th:text="${problemInfo.getEntry()}">수리</td>
                 <td class="text-center" th:text="${problemInfo.getProblemType()}">속력</td>
@@ -161,17 +176,10 @@
                 <td th:text="${problemInfo.getQuestion()}">문제</td>
                 <td class="text-center" th:text="${problemInfo.getTotalAttempts()}">2</td>
                 <td class="text-center" th:text="${problemInfo.getCorrectRate()}">70%</td>
-                <td class="text-center align-middle m-auto">
-                    <a href="#" th:href="@{/admin/problems/{problemId}(problemId=${problemInfo.getId()})}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                        </svg>
-                    </a>
-                </td>
             </tr>
             </tbody>
         </table>
+        </form>
         <div class="d-flex justify-content-center">
             <nav aria-label="Page navigation example">
                 <ul class="pagination" th:if="${pagination}">

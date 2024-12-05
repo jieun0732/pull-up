@@ -2,13 +2,15 @@ package pull_up.infra.database.jpa.entity;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pull_up.domain.examsheet.exception.ExamsheetErrorCode;
 import pull_up.infra.database.jpa.fixture.FixtureRepository;
 
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.InstanceOfAssertFactories.map;
 
 class ExamsheetTest {
 
@@ -69,6 +71,31 @@ class ExamsheetTest {
         assertThat(examsheet.getExamCount()).isEqualTo(3);
         assertThat(examsheet.getAverageScore()).isEqualTo((double) 80 / 3);
         assertThat(examsheet.getAverageDuration()).isEqualTo(Duration.ofSeconds(10));
+    }
+
+    @Test
+    @DisplayName("시험문제 변경 테스트")
+    void testChangeProblem() {
+        // given
+        Examsheet examsheet = FixtureRepository.getExamsheet("모의고사");
+
+        // when
+        examsheet.changeProblem(1, 1000L);
+        examsheet.changeProblem(12, 1001L);
+
+        // then
+        assertThat(examsheet.getProblemMap())
+                .anySatisfy((k, v) -> {
+                    assertThat(k).isEqualTo(1);
+                    assertThat(v.longValue()).isEqualTo(1000L);
+                }).anySatisfy((k, v) -> {
+                    assertThat(k).isEqualTo(12);
+                    assertThat(v.longValue()).isEqualTo(1001L);
+                });
+
+        // then2 : 시험지 문제 개수 초과하는 시험
+        assertThatThrownBy(() -> examsheet.changeProblem(13, 1000L))
+                .hasMessage(ExamsheetErrorCode.PROBLEM_NUMBER_EXCEED.getMessage());
     }
 
 }

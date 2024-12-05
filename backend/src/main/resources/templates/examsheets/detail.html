@@ -12,52 +12,54 @@
 <div class="container">
     <form th:action="@{/admin/examsheets/{examsheetId}(examsheetId=${examsheetInfo.id()})}" th:method="patch" onsubmit="return confirm('수정하시겠습니까?');">
         <div class="input-group mb-3">
-            <span class="input-group-text" id="problem-id">문제 ID</span>
-            <input type="text" class="form-control" th:attr="value=${examsheetInfo.id()}" disabled>
-            <span class="input-group-text" id="entry">항목</span>
-            <select class="form-select" aria-label="entry-select" name="entry" required>
-                <option th:each="entry : ${entry}" th:value="${entry}" th:text="${entry.getKorean()}" th:selected="${entry}==${examsheetInfo.entry()}"></option>
-            </select>
-            <span class="input-group-text" id="problem-type" >문제 유형</span>
-            <input type="text" class="form-control" th:value="${examsheetInfo.problemType()}" aria-label="problem-type" name="problemType" required>
-            <span class="input-group-text" id="total-attempts">제출 횟수</span>
-            <input type="text" class="form-control" th:value="${examsheetInfo.totalAttempts()}" aria-label="total-attempts" disabled>
-            <span class="input-group-text" id="correct-rate" >정답률</span>
-            <input type="text" class="form-control text-end" th:value="${examsheetInfo.correctRate()}" aria-label="correct-rate" disabled>
-            <span class="input-group-text">%</span>
-            <span class="input-group-text" id="created-time">생성일</span>
-            <input type="text" class="form-control" th:value="${examsheetInfo.createdTime()}" aria-label="total-attempts" disabled>
-            <span class="input-group-text" id="updated-time">수정일</span>
-            <input type="text" class="form-control" th:value="${examsheetInfo.updatedTime()}" aria-label="total-attempts" disabled>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">질문</span>
-            <textarea class="form-control" aria-label="question" rows="3" th:text="${examsheetInfo.question()}" name="question" required></textarea>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">보기</span>
-            <textarea class="form-control" aria-label="example" rows="5" th:text="${examsheetInfo.example()}" name="example">></textarea>
-        </div>
-        <div th:each="choice : ${examsheetInfo.choices()}">
-            <div class="input-group mb-3">
-                <span class="input-group-text" th:text="${choiceStat.index + 1}"></span>
-                <input type="text" class="form-control" aria-label="choice" th:value="${choice}" th:name="${'choice' + (choiceStat.index + 1)}" required>
-            </div>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">정답</span>
-            <input type="text" class="form-control" aria-label="choice" th:value="${examsheetInfo.correctAnswer()}" th:name="correctAnswer" required>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text" th:name="explanation">해설</span>
-            <textarea class="form-control" rows="3" aria-label="explanation" name="explanation" th:text="${examsheetInfo.explanation()}" required></textarea>
-        </div>
-        <div class="d-flex justify-content-center">
-            <button type="button" onclick="window.location.href='/admin/examsheets'" class="btn btn-success m-3">목록으로</button>
-            <button type="submit" class="btn btn-primary m-3">수정하기</button>
-            <button type="submit" form="delete-form" class="btn btn-danger m-3">삭제하기</button>
+            <span class="input-group-text" id="problem-id">시험지 ID</span>
+            <input type="text" class="form-control" style="max-width: 3rem;" th:attr="value=${examsheetInfo.id()}" aria-label="problem-id" disabled>
+            <span class="input-group-text" id="created-date">생성일</span>
+            <input type="text" class="form-control" th:value="${examsheetInfo.createdDate()}" aria-label="created-date" disabled>
+            <span class="input-group-text" id="updated-date">수정일</span>
+            <input type="text" class="form-control" th:value="${examsheetInfo.updatedDate()}" aria-label="updated-date" disabled>
+            <span class="input-group-text" id="exam-title" >시험명</span>
+            <input type="text" class="form-control" th:value="${examsheetInfo.examTitle()}" aria-label="exam-title" name="examTitle" required>
+            <span class="input-group-text" id="exam-count">시험 횟수</span>
+            <input type="text" class="form-control" style="max-width: 3rem" th:value="${examsheetInfo.examCount()}" aria-label="exam-count" disabled>
+            <span class="input-group-text" id="average-score" >평균 점수</span>
+            <input type="text" class="form-control text-end" style="max-width: 5rem" th:value="${examsheetInfo.averageScore()}" aria-label="average-score" disabled>
+            <span class="input-group-text" id="average-duration" >평균 시간</span>
+            <input type="text" class="form-control text-center" style="max-width: 5rem" th:value="${examsheetInfo.averageDuration()}" aria-label="average-duration" disabled>
+            <button class="btn btn-warning" type="submit">시험정보 변경</button>
+            <button class="btn btn-danger" form="delete-form" type="submit">시험 삭제</button>
         </div>
     </form>
+
+    <table class="table">
+        <thead class="sticky-top top-0">
+        <tr>
+            <th scope="col" class="text-center align-middle table-warning">문제</th>
+            <th scope="col" class="text-center align-middle">ID</th>
+            <th scope="col" class="text-center align-middle">영역</th>
+            <th scope="col" class="text-center align-middle">유형</th>
+            <th scope="col" class="text-center align-middle">문제</th>
+            <th scope="col" class="text-center align-middle">문제 변경</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="problemInfo : ${examsheetInfo.problemInfos()}">
+            <th class="text-center table-warning" th:text="${problemInfo.problemNumber()}">1</th>
+            <td class="text-center" th:text="${problemInfo.problemId()}">1</td>
+            <td class="text-center" th:text="${problemInfo.entry()}">수리</td>
+            <td class="text-center" th:text="${problemInfo.problemType()}">속력</td>
+            <td th:text="${problemInfo.question()}">문제</td>
+            <td class="text-center align-middle m-auto">
+                <a href="#" th:href="@{/admin/examsheets/{examsheetId}/select-problem/{problemNumber}(examsheetId = ${examsheetInfo.id()}, problemNumber = ${problemInfo.problemNumber()}, selectedId = ${problemInfo.problemId()})}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                    </svg>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
     <form id="delete-form" th:action="@{/admin/examsheets/{examsheetId}(examsheetId=${examsheetInfo.id()})}" th:method="delete" onsubmit="return confirm('삭제하시겠습니까?');"></form>
 </div>
 

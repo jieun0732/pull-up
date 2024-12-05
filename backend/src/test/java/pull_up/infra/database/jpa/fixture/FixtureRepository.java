@@ -50,6 +50,10 @@ public class FixtureRepository {
         return problemMap;
     }
 
+    public static Problemsheet getProblemsheetEntity(Integer problemNumber, Long problemId) {
+        return new Problemsheet(problemNumber, problemId);
+    }
+
     public static Map<Integer, Problem> getProblemSheetMap() {
         List<Problem> problemList = FixtureRepository.getProblemList();
         Examsheet examsheet = FixtureRepository.getExamsheet("모의고사");

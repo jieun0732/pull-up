@@ -76,10 +76,15 @@ public class ExamController {
         return new ResponseEntity<>(examService.getMockExamResult(examId), HttpStatus.OK);
     }
 
+    @Operation(summary = "[Deprecated]시험 결과 확인", description = "시험 결과를 확인합니다.", tags = {"골고루", "유형별"})
+    @PatchMapping("/end/{examId}")
+    public ResponseEntity<Result.ByEntryResponse> end(@PathVariable Long examId) {
+        return new ResponseEntity<>(examService.getEntryExamResult(examId), HttpStatus.OK);
+    }
+
     @Operation(summary = "시험 결과 확인", description = "시험 결과를 확인합니다.", tags = {"골고루", "유형별"})
     @GetMapping("/result/{examId}")
     public ResponseEntity<Result.ByEntryResponse> getEntryExamResult(@PathVariable Long examId) {
         return new ResponseEntity<>(examService.getEntryExamResult(examId), HttpStatus.OK);
     }
-
 }

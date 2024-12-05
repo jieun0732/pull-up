@@ -41,4 +41,8 @@ public class Problemsheet {
         }
         return ret;
     }
+
+    public void changeProblem(Long newId) {
+        this.problemId = newId;
+    }
 }

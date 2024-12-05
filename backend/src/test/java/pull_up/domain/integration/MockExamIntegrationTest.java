@@ -47,7 +47,7 @@ public class MockExamIntegrationTest {
 
     @BeforeEach
     void init() {
-        examsheetService = new ExamsheetService(examsheetRepository);
+        examsheetService = new ExamsheetService(examsheetRepository, problemRepository);
         examService = new ExamService(examRepository, memberRepository, problemRepository, examsheetRepository);
         memberService = new MemberService(memberRepository,examRepository,problemRepository);
     }
