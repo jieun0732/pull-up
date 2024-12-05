@@ -44,6 +44,10 @@ class ExamControllerTest {
         mockMvc.perform(post("/api/exams/evenly/start").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(startEvenlyRequest)))
                 .andExpect(status().is(200));
 
+        Start.EvenlyRequestV2 startEvenlyRequestV2 = new Start.EvenlyRequestV2(1L, "EVENLY_MATH", Entry.MATH);
+        mockMvc.perform(post("/api/exams/evenly/start/V2").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(startEvenlyRequestV2)))
+                .andExpect(status().is(200));
+
         Start.ByProblemTypeRequest startByProblemTypeRequest = new Start.ByProblemTypeRequest(1L, Entry.MATH, "test");
         mockMvc.perform(post("/api/exams/by-problem-type/start").contentType(MediaType.APPLICATION_JSON).content(gson.toJson(startByProblemTypeRequest)))
                 .andExpect(status().is(200));

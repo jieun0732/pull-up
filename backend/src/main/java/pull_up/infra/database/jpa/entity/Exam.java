@@ -88,6 +88,13 @@ public class Exam extends BaseEntity {
         return exam;
     }
 
+    public static Exam startEvenlyExam(Member member, List<Problem> problemList, Examsheet examsheet) {
+        Exam exam = new Exam(EVENLY, member);
+        setEmptyAnswers(Problemsheet.getProblemSheetMap(problemList, examsheet), exam);
+        exam.examsheet = examsheet;
+        return exam;
+    }
+
     public static Exam startByProblemTypeExam(Member member, List<Problem> problems) {
         Exam exam = new Exam(BY_PROBLEM_TYPE, member);
         setEmptyAnswers(problems, exam);
@@ -117,7 +124,6 @@ public class Exam extends BaseEntity {
         exam.answers = answers;
     }
 
-    // 유형별로 1개의 문제씩 총 10개만 담기
     static List<Problem> selectEvenlyProblems(List<Problem> problemList) {
         List<Problem> problems = new ArrayList<>(10);
         HashSet<String> problemTypes = new HashSet<>();

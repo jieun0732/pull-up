@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface CustomExamRepository {
     Map<String, Exam> findAllEvenlyAndProblemTypeExamMap(Long memberId, Entry entry);
 
+    Optional<Exam> findEvenlyExamByMemberIdAndExamTitle(Long memberId, String examTitle);
+
     Optional<Exam> findMockExamByMemberId(Long memberId);
 
     SolvedInfo.MockExamResponse findSolvedMockExamInfo(Long memberId);

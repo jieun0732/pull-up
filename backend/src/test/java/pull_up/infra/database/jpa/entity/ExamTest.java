@@ -48,14 +48,26 @@ class ExamTest {
         // when
         List<Problem> problems = Exam.selectEvenlyProblems(problemList);
 
-        Duration duration = Duration.between(LocalDateTime.of(2022, 10, 15, 10, 20), LocalDateTime.of(2022, 10, 15, 10, 30));
-        System.out.println("Duration = " + duration);
-        String s = duration.toString();
-        System.out.println("Duration.parse(s) = " + Duration.parse(s));
-
         // then
         assertThat(problems).hasSize(2);
         assertThat(problems).allSatisfy(problem -> assertThat(problem.getEntry()).isEqualTo(Entry.LANGUAGE));
+    }
+
+    @Test
+    @DisplayName("골고루 문제 시험지에서 가져오기 테스트")
+    void testGetEvenlyProblemByExamsheet() {
+        // given
+        Member member = MemberFixture.APPLE_USER.get();
+        List<Problem> problemList = FixtureRepository.getProblemList();
+        Examsheet examsheet = FixtureRepository.getExamsheet("골고루");
+
+        // when
+        Exam start = Exam.startEvenlyExam(member, problemList, examsheet);
+
+        // then
+        assertThat(start.getExamType()).isEqualTo(ExamType.EVENLY);
+        assertThat(start.getMember()).isEqualTo(member);
+        assertThat(start.getAnswers()).hasSize(12);
     }
 
     @Test

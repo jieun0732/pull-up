@@ -7,6 +7,7 @@ import pull_up.domain.exam.ExamType;
 import pull_up.domain.member.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
 import pull_up.infra.database.jpa.entity.Exam;
+import pull_up.infra.database.jpa.entity.QExamsheet;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 import static pull_up.infra.database.jpa.entity.QAnswer.answer;
 import static pull_up.infra.database.jpa.entity.QExam.exam;
+import static pull_up.infra.database.jpa.entity.QExamsheet.examsheet;
 import static pull_up.infra.database.jpa.entity.QMember.member;
 import static pull_up.infra.database.jpa.entity.QProblem.problem;
 
@@ -54,6 +56,17 @@ public class CustomExamRepositoryImpl implements CustomExamRepository {
         }
 
         return examMap;
+    }
+
+    @Override
+    public Optional<Exam> findEvenlyExamByMemberIdAndExamTitle(Long memberId, String examTitle) {
+        return Optional.ofNullable(
+                qf.selectFrom(exam)
+                        .leftJoin(exam.examsheet, examsheet)
+                        .where(exam.member.id.eq(memberId)
+                                .and(exam.examType.eq(ExamType.MOCK_EXAM))
+                                .and(examsheet.examTitle.equalsIgnoreCase(examTitle)))
+                        .fetchFirst());
     }
 
     @Override

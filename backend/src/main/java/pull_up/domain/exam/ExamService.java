@@ -38,6 +38,23 @@ public class ExamService {
     }
 
     @Transactional
+    public Start.Response startV2(Start.EvenlyRequestV2 startReq) {
+        Optional<Exam> exam = examRepository.findEvenlyExamByMemberIdAndExamTitle(startReq.memberId(), startReq.evenlyExamName());
+
+        Exam newExam = exam.orElseGet(() -> {
+            Member startMember = memberRepository.findById(startReq.memberId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
+            Examsheet examSheet = examsheetRepository.findByExamTitle(startReq.evenlyExamName());
+            List<Problem> problemList = problemRepository.findAllById(examSheet.getProblemMap().values());
+
+            Exam startedExam = Exam.startEvenlyExam(startMember, problemList, examSheet);
+            examRepository.save(startedExam);
+            return startedExam;
+        });
+
+        return Start.Response.toDto(newExam);
+    }
+
+    @Transactional
     public Start.Response start(Start.ByProblemTypeRequest startReq) {
         Member startMember = memberRepository.findById(startReq.memberId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
         List<Problem> problemList = problemRepository.findAllByEntryAndProblemType(startReq.entry(), startReq.problemType());
@@ -48,13 +65,14 @@ public class ExamService {
 
     @Transactional
     public Start.Response start(Start.MockExamRequest startReq) {
-        Member startMember = memberRepository.findById(startReq.memberId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
-        Examsheet examSheet = examsheetRepository.findByExamTitle(startReq.mockExamName());
-        List<Problem> problemList = problemRepository.findAllById(examSheet.getProblemMap().values());
         Optional<Exam> exam = examRepository.findMockExamByMemberId(startReq.memberId());
 
         exam.ifPresent(Exam::reset);
         Exam newExam = exam.orElseGet(() -> {
+            Member startMember = memberRepository.findById(startReq.memberId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
+            Examsheet examSheet = examsheetRepository.findByExamTitle(startReq.mockExamName());
+            List<Problem> problemList = problemRepository.findAllById(examSheet.getProblemMap().values());
+
             Exam startedExam = Exam.startMockExam(startMember, problemList, examSheet);
             examRepository.save(startedExam);
             return startedExam;
