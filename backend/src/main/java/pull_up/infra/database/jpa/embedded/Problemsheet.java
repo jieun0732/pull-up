@@ -45,4 +45,8 @@ public class Problemsheet {
     public void changeProblem(Long newId) {
         this.problemId = newId;
     }
+
+    public static Problemsheet getEmpty(Integer integer) {
+        return new Problemsheet(integer, -1L);
+    }
 }

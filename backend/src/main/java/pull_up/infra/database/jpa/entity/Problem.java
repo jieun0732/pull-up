@@ -99,9 +99,15 @@ public class Problem extends BaseEntity{
     }
 
     public static Problem create(Map<String, String> parameters) {
-        Problem newProblem = new Problem(null, null, "", "", null, null, null, null, null, null, "");
+        Problem newProblem = new Problem(Entry.NONE, "", "", "", "", "", "", "", "", "", "");
         newProblem.map(parameters);
         return newProblem;
+    }
+
+    public static Problem createEmpty() {
+        Problem problem = new Problem(Entry.NONE, "", "", "", "", "", "", "", "", "", "");
+        problem.setId(-1L);
+        return problem;
     }
 
     public void modify(Map<String, String> parameters) {

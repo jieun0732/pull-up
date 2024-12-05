@@ -1,6 +1,6 @@
 package pull_up.infra.database.jpa.repository.examsheet;
 
-import pull_up.infra.database.jpa.dto.ExamsheetInfo;
+import pull_up.domain.examsheet.dto.ExamsheetInfo;
 import pull_up.infra.database.jpa.entity.Examsheet;
 
 import java.util.List;

@@ -2,6 +2,7 @@ package pull_up.infra.database.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.catalina.core.FrameworkListener;
 import org.hibernate.annotations.ColumnDefault;
 import pull_up.domain.examsheet.exception.ExamsheetErrorCode;
 import pull_up.domain.examsheet.exception.ExamsheetException;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 import static com.nimbusds.jose.util.StandardCharset.UTF_8;
 
@@ -28,7 +31,7 @@ public class Examsheet extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String examTitle;
 
     @Column(nullable = false)
@@ -61,8 +64,20 @@ public class Examsheet extends BaseEntity {
         this.averageDuration = Duration.ZERO;
     }
 
+    public Examsheet(String examTitle, Integer problemCount) {
+        this.examTitle = examTitle;
+        this.problemsheets = Stream.iterate(1, n -> n + 1).limit(problemCount).map(Problemsheet::getEmpty).toList();
+        this.examCount = 0;
+        this.averageScore = 0.0;
+        this.averageDuration = Duration.ZERO;
+    }
+
     public static Examsheet create(String examTitle, Map<Integer, Long> problemMap) {
         return new Examsheet(examTitle, problemMap);
+    }
+
+    public static Examsheet createEmpty(String examTitle, Integer problemCount) {
+        return new Examsheet(examTitle, problemCount);
     }
 
     public Map<Integer, Long> getProblemMap() {
@@ -76,6 +91,10 @@ public class Examsheet extends BaseEntity {
     public Map<Integer, Problem> getProblemEntityMap(List<Problem> problems) {
         Map<Integer, Problem> problemMap = new HashMap<>();
         for (Problemsheet problemsheet : problemsheets) {
+            if (problemsheet.getProblemId() == -1) {
+                problemMap.put(problemsheet.getProblemNumber(),Problem.createEmpty());
+                continue;
+            }
             for (Problem problem : problems) {
                 if (!problem.getId().equals(problemsheet.getProblemId())) continue;
                 problemMap.put(problemsheet.getProblemNumber(), problem);

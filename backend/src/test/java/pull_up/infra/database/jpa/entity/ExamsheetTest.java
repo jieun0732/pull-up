@@ -7,10 +7,10 @@ import pull_up.infra.database.jpa.fixture.FixtureRepository;
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.InstanceOfAssertFactories.map;
 
 class ExamsheetTest {
 
@@ -40,6 +40,53 @@ class ExamsheetTest {
                     assertThat(problemsheet.getProblemNumber()).isEqualTo(3);
                     assertThat(problemsheet.getProblemId()).isEqualTo(3L);
                 });
+    }
+
+    @Test
+    @DisplayName("빈 시험지 생성 테스트")
+    void testEmptyCreate() {
+        // given
+        String examTitle = "모의고사";
+        Integer problemCount = 10;
+
+        // when
+        Examsheet examsheet = Examsheet.createEmpty(examTitle, problemCount);
+
+        // then
+        assertThat(examsheet.getExamTitle()).isEqualTo(examTitle);
+        assertThat(examsheet.getExamCount()).isEqualTo(0);
+        assertThat(examsheet.getAverageScore()).isEqualTo(0);
+        assertThat(examsheet.getAverageDuration()).isEqualTo(Duration.ZERO);
+        assertThat(examsheet.getProblemsheets()).hasSize(10).allSatisfy(
+                problemsheet -> assertThat(problemsheet.getProblemId()).isEqualTo(-1L));
+    }
+
+    @Test
+    @DisplayName("시험지 문제 생성 테스트")
+    void testGetProblemEntityMap() {
+        // given
+        String examTitle = "모의고사";
+        Integer problemCount = 10;
+        Examsheet examsheet = Examsheet.createEmpty(examTitle, problemCount);
+
+        // when
+        Map<Integer, Problem> problemEntityMap = examsheet.getProblemEntityMap(List.of());
+
+        // then
+        assertThat(problemEntityMap).hasSize(10).allSatisfy((k, v) -> assertThat(v).usingRecursiveComparison().isEqualTo(Problem.createEmpty()));
+
+        // given 2
+        List<Problem> problemList = FixtureRepository.getProblemList(1);
+
+        // when 2
+        examsheet.changeProblem(1,1L);
+        problemEntityMap = examsheet.getProblemEntityMap(problemList);
+
+        // then 2
+        assertThat(problemEntityMap).hasSize(10).anySatisfy((k, v) -> {
+            assertThat(k.intValue()).isEqualTo(1);
+            assertThat(v.getId()).isEqualTo(1L);
+        });
     }
 
     @Test

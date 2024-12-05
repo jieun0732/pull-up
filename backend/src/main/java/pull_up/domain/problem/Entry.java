@@ -1,7 +1,7 @@
 package pull_up.domain.problem;
 
 public enum Entry {
-    LANGUAGE, REASONING, MATH, SPATIAL;
+    LANGUAGE, REASONING, MATH, SPATIAL, NONE;
 
     public static Entry getEntry(String entry) {
         entry = entry.replaceAll("\\s+", "");
@@ -26,6 +26,9 @@ public enum Entry {
             }
             case SPATIAL -> {
                 return "공간지각능력";
+            }
+            case NONE -> {
+                return "미정";
             }
         }
 

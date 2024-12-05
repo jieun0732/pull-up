@@ -1,4 +1,4 @@
-package pull_up.infra.database.jpa.dto;
+package pull_up.domain.examsheet.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

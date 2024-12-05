@@ -3,16 +3,13 @@ package pull_up.infra.database.jpa.repository.examsheet;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import pull_up.domain.examsheet.dto.ExamsheetDetailInfo;
-import pull_up.infra.database.jpa.dto.ExamsheetInfo;
-import pull_up.infra.database.jpa.embedded.Problemsheet;
+import pull_up.domain.examsheet.dto.ExamsheetInfo;
 import pull_up.infra.database.jpa.entity.Examsheet;
-import pull_up.infra.database.jpa.entity.Problem;
 
 import java.util.*;
 
 import static pull_up.infra.database.jpa.embedded.QProblemsheet.problemsheet;
 import static pull_up.infra.database.jpa.entity.QExamsheet.examsheet;
-import static pull_up.infra.database.jpa.entity.QProblem.problem;
 
 public class CustomExamsheetRepositoryImpl implements CustomExamsheetRepository {
 
@@ -32,6 +29,7 @@ public class CustomExamsheetRepositoryImpl implements CustomExamsheetRepository 
         for (Examsheet e : examsheets) {
             ret.add(ExamsheetInfo.toDto(e));
         }
+
         return ret;
     }
 

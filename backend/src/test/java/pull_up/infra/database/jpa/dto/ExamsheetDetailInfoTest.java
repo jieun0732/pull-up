@@ -1,8 +1,8 @@
 package pull_up.infra.database.jpa.dto;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pull_up.domain.examsheet.dto.ExamsheetInfo;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -11,9 +11,8 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-class ExamsheetInfoTest {
+class ExamsheetDetailInfoTest {
 
     @Test
     @DisplayName("쿼리로 받아온 정보 변환 테스트")

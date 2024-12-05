@@ -37,17 +37,17 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="examsheetInfo : ${examsheetInfos}">
-                <td class="text-center" th:text="${examsheetInfo.getId()}">1</td>
-                <td class="text-center" th:text="${examsheetInfo.getCreatedDate()}">11월 30일</td>
-                <td class="text-center" th:text="${examsheetInfo.getUpdatedDate()}">11월 30일</td>
-                <td class="text-center" th:text="${examsheetInfo.getExamTitle()}">모의고사</td>
-                <td class="text-center" th:text="${examsheetInfo.getProblemCount()}">20</td>
-                <td class="text-center" th:text="${examsheetInfo.getExamCount()}">1</td>
-                <td class="text-center" th:text="${examsheetInfo.getAverageScore()}">70</td>
-                <td class="text-center" th:text="${examsheetInfo.getAverageDuration()}">11:20</td>
+            <tr th:each="examsheetDetailInfo : ${examsheetInfos}">
+                <td class="text-center" th:text="${examsheetDetailInfo.getId()}">1</td>
+                <td class="text-center" th:text="${examsheetDetailInfo.getCreatedDate()}">11월 30일</td>
+                <td class="text-center" th:text="${examsheetDetailInfo.getUpdatedDate()}">11월 30일</td>
+                <td class="text-center" th:text="${examsheetDetailInfo.getExamTitle()}">모의고사</td>
+                <td class="text-center" th:text="${examsheetDetailInfo.getProblemCount()}">20</td>
+                <td class="text-center" th:text="${examsheetDetailInfo.getExamCount()}">1</td>
+                <td class="text-center" th:text="${examsheetDetailInfo.getAverageScore()}">70</td>
+                <td class="text-center" th:text="${examsheetDetailInfo.getAverageDuration()}">11:20</td>
                 <td class="text-center align-middle m-auto">
-                    <a href="#" th:href="@{/admin/examsheets/{problemId}(problemId=${examsheetInfo.getId()})}">
+                    <a href="#" th:href="@{/admin/examsheets/{problemId}(problemId=${examsheetDetailInfo.getId()})}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                         <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>

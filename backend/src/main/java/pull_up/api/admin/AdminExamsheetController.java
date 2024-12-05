@@ -1,6 +1,7 @@
 package pull_up.api.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,10 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pull_up.domain.examsheet.ExamsheetService;
 import pull_up.domain.examsheet.dto.ExamsheetDetailInfo;
-import pull_up.infra.database.jpa.dto.ExamsheetInfo;
+import pull_up.domain.examsheet.dto.ExamsheetInfo;
 import pull_up.infra.database.jpa.dto.ProblemInfo;
 import pull_up.infra.database.jpa.dto.SearchParam;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -35,20 +37,18 @@ public class AdminExamsheetController {
 
     @GetMapping("/{examsheetId}")
     public String examsheetDetail(@PathVariable Long examsheetId, Model model) {
-        ExamsheetDetailInfo examsheetInfo = examsheetService.get(examsheetId);
-        model.addAttribute("examsheetInfo", examsheetInfo);
+        ExamsheetDetailInfo examsheetDetailInfo = examsheetService.get(examsheetId);
+        model.addAttribute("examsheetInfo", examsheetDetailInfo);
         return "examsheets/detail";
     }
 
-    @PatchMapping("/{examsheetId}")
-    public String examsheetUpdate(@PathVariable Long examsheetId, @RequestParam Map<String, String> parameters, Model model) {
-        ExamsheetDetailInfo examsheetInfo = examsheetService.update(examsheetId, parameters);
-        model.addAttribute("examsheetInfo", examsheetInfo);
-        return "examsheets/detail";
+    @GetMapping("/new")
+    public String createExamsheetPage() {
+        return "examsheets/create";
     }
 
     @GetMapping("/{examsheetId}/select-problem/{problemNumber}")
-    public String problemListPage(Model model,
+    public String problemSelectPage(Model model,
                                   @PathVariable Long examsheetId,
                                   @PathVariable Integer problemNumber,
                                   @RequestParam Long selectedId,
@@ -68,13 +68,38 @@ public class AdminExamsheetController {
         return "examsheets/change-problem";
     }
 
+    @PostMapping
+    public String createExamsheet(
+            @RequestParam String examTitle,
+            @RequestParam Integer problemCount,
+            Model model
+    ) {
+        examsheetService.createEmptyExamsheet(examTitle, problemCount);
+        List<ExamsheetInfo> examsheetInfos = examsheetService.getAll();
+        model.addAttribute("examsheetInfos", examsheetInfos);
+        return "examsheets/list";
+    }
+
+    @PatchMapping("/{examsheetId}")
+    public String examsheetUpdate(@PathVariable Long examsheetId, @RequestParam Map<String, String> parameters, Model model) {
+        ExamsheetDetailInfo examsheetDetailInfo = examsheetService.update(examsheetId, parameters);
+        model.addAttribute("examsheetInfo", examsheetDetailInfo);
+        return "examsheets/detail";
+    }
+
     @PatchMapping("/{examsheetId}/select-problem/{problemNumber}")
     public String changeProblem(Model model,
                                   @PathVariable Long examsheetId,
                                   @PathVariable Integer problemNumber,
                                   @RequestParam Long newSelectedId) {
-        ExamsheetDetailInfo examsheetInfo = examsheetService.changeProblem(examsheetId, problemNumber, newSelectedId);
-        model.addAttribute("examsheetInfo", examsheetInfo);
+        ExamsheetDetailInfo examsheetDetailInfo = examsheetService.changeProblem(examsheetId, problemNumber, newSelectedId);
+        model.addAttribute("examsheetInfo", examsheetDetailInfo);
         return "examsheets/detail";
+    }
+
+    @DeleteMapping("/{examsheetId}")
+    public void delete(HttpServletResponse response, @PathVariable Long examsheetId) throws IOException {
+        examsheetService.delete(examsheetId);
+        response.sendRedirect("/admin/examsheets");
     }
 }

@@ -1,14 +1,26 @@
 package pull_up.infra.database.jpa.embedded;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pull_up.infra.database.jpa.fixture.FixtureRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ProblemsheetTest {
+
+    @Test
+    @DisplayName("빈 문제 생성 테스트")
+    void testCreateEmptyProblem() {
+        // given
+        Integer problemNumber = 1;
+
+        // when
+        Problemsheet emptyProblem = Problemsheet.getEmpty(problemNumber);
+
+        // then
+        assertThat(emptyProblem.getProblemId()).isEqualTo(-1);
+        assertThat(emptyProblem.getProblemNumber()).isEqualTo(problemNumber);
+    }
 
     @Test
     @DisplayName("문제 교체 테스트")

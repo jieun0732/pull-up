@@ -80,6 +80,6 @@ public class AdminProblemController {
     @DeleteMapping("/{problemId}")
     public void delete(HttpServletResponse response, @PathVariable Long problemId) throws IOException {
         problemService.delete(problemId);
-        response.sendRedirect("/admin/lists");
+        response.sendRedirect("/admin/problems");
     }
 }

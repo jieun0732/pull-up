@@ -1,8 +1,5 @@
 [ADMIN]
 - 시험지(Examsheet)
-✅TODO 수정 구현(Update)
-TODO 생성 구현(Create)
-TODO 삭제 구현(Delete)
 
 - 문제(Problem)
 TODO ProblemInfo 수정일 컬럼 추가

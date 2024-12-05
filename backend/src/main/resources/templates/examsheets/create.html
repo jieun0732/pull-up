@@ -1,0 +1,33 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <title>Examsheet Create</title>
+</head>
+<body>
+<div th:insert="~{nav :: nav}"></div>
+
+<div class="container-sm d-flex justify-content-center align-items-center" style="min-height: 80vh">
+    <form th:action="@{/admin/examsheets}" method="post">
+        <h2 class="text-center mb-3">시험지 생성</h2>
+        <div class="input-group has-validation mb-3" style="max-width: 50vw">
+            <span class="input-group-text" id="problem-type" >시험 제목</span>
+            <input type="text" class="form-control" aria-label="exam-title" name="examTitle" required>
+        </div>
+        <div class="input-group mb-3" style="max-width: 50vw">
+            <span class="input-group-text">문제 개수</span>
+            <input type="number" class="form-control" aria-label="problem-count" name="problemCount" max="100" required>
+        </div>
+        <span id="passwordHelpInline" class="form-text text-primary">
+            * 생성된 문제 개수는 변경할 수 없습니다.
+        </span>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-warning m-3">생성하기</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

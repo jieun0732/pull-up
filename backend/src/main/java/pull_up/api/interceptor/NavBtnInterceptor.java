@@ -9,7 +9,8 @@ public class NavBtnInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        modelAndView.addObject("navBtnColor", getDomain(request));
+        if (modelAndView != null)
+            modelAndView.addObject("navBtnColor", getDomain(request));
     }
 
     String getDomain(HttpServletRequest request) {
