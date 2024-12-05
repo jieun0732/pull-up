@@ -144,4 +144,11 @@ public class FixtureRepository {
         Exam exam = getEvenlyExam(1L, entry);
         return Answer.makeEmptyAnswer(exam, problem, problemNumber);
     }
+
+    public static Problem getProblemById(Long problemId) {
+        for (ProblemFixture fixture : ProblemFixture.values()) {
+            if (Objects.equals(fixture.get().getId(), problemId)) return fixture.get();
+        }
+        throw new IllegalArgumentException();
+    }
 }

@@ -50,41 +50,17 @@ class ExamServiceTest {
 
     @Test
     @DisplayName("시험 시작 테스트 - 골고루")
-    void testStartEvenlyExam() {
+    void testStartEvenlyExamV2() {
         // given
-        Problem problem1 = ProblemFixture.LANGUAGE_COMPARE_1.get();
+        Examsheet examSheet = FixtureRepository.getExamsheet(ExamType.MOCK_EXAM.name());
+        List<Problem> problemList = FixtureRepository.getProblemList();
         Start.EvenlyRequest startReq = new Start.EvenlyRequest(member.getId(), Entry.LANGUAGE);
 
         // when
         when(mockMemberRepository.findById(member.getId())).thenReturn(Optional.of(member));
-        when(mockProblemRepository.findAllByEntry(Entry.LANGUAGE)).thenReturn(FixtureRepository.getProblemList(Entry.LANGUAGE));
-        Start.Response startRes = suit.start(startReq);
-
-        // then
-        assertThat(startRes.totalProblemCount()).isEqualTo(2);
-        assertThat(startRes.leftProblemCount()).isEqualTo(1);
-        assertThat(startRes.problemNumber()).isEqualTo(1);
-        assertThat(startRes.entry()).isEqualTo(problem1.getEntry());
-        assertThat(startRes.problemType()).isEqualTo(problem1.getProblemType());
-        assertThat(startRes.question()).isEqualTo(problem1.getQuestionAsString());
-        assertThat(startRes.example()).isEqualTo(problem1.getExampleAsString());
-        assertThat(startRes.choices()).contains(problem1.getChoice1(), problem1.getChoice2(), problem1.getChoice3(), problem1.getChoice4(), problem1.getChoice5());
-    }
-
-    @Test
-    @DisplayName("시험 시작 테스트 - 골고루 V2")
-    void testStartEvenlyExamV2() {
-        // given
-        String evenlyExamName = "골고루_언어";
-        Examsheet examSheet = FixtureRepository.getExamsheet(ExamType.MOCK_EXAM.name());
-        List<Problem> problemList = FixtureRepository.getProblemList();
-        Start.EvenlyRequestV2 startReq = new Start.EvenlyRequestV2(member.getId(), evenlyExamName, Entry.LANGUAGE);
-
-        // when
-        when(mockMemberRepository.findById(member.getId())).thenReturn(Optional.of(member));
-        when(mockExamsheetRepository.findByExamTitle(evenlyExamName)).thenReturn(examSheet);
+        when(mockExamsheetRepository.findByExamTitle("EVENLY_LANGUAGE")).thenReturn(examSheet);
         when(mockProblemRepository.findAllById(any())).thenReturn(problemList);
-        Start.Response startRes = suit.startV2(startReq);
+        Start.Response startRes = suit.start(startReq);
 
         // then
         Problem problem1 = problemList.get(0);

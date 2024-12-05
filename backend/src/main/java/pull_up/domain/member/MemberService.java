@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pull_up.api.dto.ListDto;
 import pull_up.api.dto.MessageDto;
 import pull_up.domain.dao.ExamRepository;
+import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.TempExam;
@@ -33,7 +34,8 @@ public class MemberService {
 
     public SolvedInfo.ByEntryResponse getSolvedInfo(Long memberId, Entry entry) {
         Map<String, Exam> examMap = examRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry);
-        Map<String, Integer> problemTypesMap = problemRepository.findAllProblemTypeAndCountByEntry(entry);
+        Map<String, Integer> problemTypesMap = problemRepository.findAllProblemTypeAndCountExceptProblemsheetByEntry(entry);
+
         for (Map.Entry<String, Integer> problemTypeEntry : problemTypesMap.entrySet()) {
             if (examMap.containsKey(problemTypeEntry.getKey())) continue;
             examMap.put(problemTypeEntry.getKey(), new TempExam(problemTypeEntry.getValue()));

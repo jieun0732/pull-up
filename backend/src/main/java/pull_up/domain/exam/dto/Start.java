@@ -14,12 +14,6 @@ public record Start() {
             Entry entry
     ) {}
 
-    public record EvenlyRequestV2(
-            Long memberId,
-            String evenlyExamName,
-            Entry entry
-    ) {}
-
     public record ByProblemTypeRequest(
             Long memberId,
             Entry entry,

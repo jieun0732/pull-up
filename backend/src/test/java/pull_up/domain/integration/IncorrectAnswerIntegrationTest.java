@@ -14,6 +14,8 @@ import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.ExamType;
 import pull_up.domain.exam.dto.*;
+import pull_up.domain.examsheet.ExamsheetService;
+import pull_up.domain.examsheet.dto.CreateExamsheet;
 import pull_up.domain.member.MemberService;
 import pull_up.infra.database.jpa.dto.IncorrectQueryDto;
 import pull_up.domain.problem.Entry;
@@ -29,6 +31,8 @@ public class IncorrectAnswerIntegrationTest {
 
     MemberService memberService;
     ExamService examService;
+    ExamsheetService examsheetService;
+
 
     @Autowired
     ExamRepository examRepository;
@@ -43,15 +47,26 @@ public class IncorrectAnswerIntegrationTest {
     void init() {
         memberService = new MemberService(memberRepository, examRepository, problemRepository);
         examService = new ExamService(examRepository, memberRepository, problemRepository, examsheetRepository);
+        examsheetService = new ExamsheetService(examsheetRepository, problemRepository);
     }
 
     @Test
     @DisplayName("틀린문제 조회 통합테스트")
     void testIncorrectAnswer() {
 
-        /* 1. 사용자 틀린문제 조회 */
+        /* 0. 멤버 및 시험 초기화 */
 
         Member member = MemberFixture.APPLE_EMAIL_CONCEALED_USER.get();
+        String examTitle = "EVENLY_LANGUAGE";
+
+        CreateExamsheet.Request createExamsheetReq = new CreateExamsheet.Request(examTitle, List.of(
+                new CreateExamsheet.ProblemSheet(1, 9L),
+                new CreateExamsheet.ProblemSheet(2, 11L)));
+
+        examsheetService.createExamsheet(createExamsheetReq);
+
+        /* 1. 사용자 틀린문제 조회 */
+
 
         ListDto<IncorrectQueryDto> incorrectRes = memberService.getIncorrect(member.getId());
 

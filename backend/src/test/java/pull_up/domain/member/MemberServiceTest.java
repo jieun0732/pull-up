@@ -7,16 +7,17 @@ import pull_up.domain.dao.ExamRepository;
 import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
-import pull_up.domain.exam.ExamService;
 import pull_up.domain.exam.ExamType;
 import pull_up.domain.member.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
+import pull_up.infra.database.jpa.embedded.Problemsheet;
 import pull_up.infra.database.jpa.entity.Exam;
 import pull_up.infra.database.jpa.entity.Member;
 import pull_up.infra.database.jpa.fixture.FixtureRepository;
 import pull_up.infra.database.jpa.fixture.MemberFixture;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,6 +30,7 @@ class MemberServiceTest {
     ExamRepository mockExamRepository;
     MemberRepository mockMemberRepository;
     ProblemRepository mockProblemRepository;
+    ExamsheetRepository mockExamsheetRepository;
 
     Member member;
 
@@ -37,6 +39,7 @@ class MemberServiceTest {
         mockExamRepository = mock(ExamRepository.class);
         mockMemberRepository = mock(MemberRepository.class);
         mockProblemRepository = mock(ProblemRepository.class);
+        mockExamsheetRepository = mock(ExamsheetRepository.class);
         suit = new MemberService(mockMemberRepository, mockExamRepository, mockProblemRepository);
 
         member = MemberFixture.APPLE_USER.get();
@@ -53,7 +56,7 @@ class MemberServiceTest {
 
         // when
         when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(new HashMap<>());
-        when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
+        when(mockProblemRepository.findAllProblemTypeAndCountExceptProblemsheetByEntry(entry)).thenReturn(problemTypesMap);
         SolvedInfo.ByEntryResponse solvedInfo = suit.getSolvedInfo(memberId, entry);
 
         // then
@@ -87,7 +90,7 @@ class MemberServiceTest {
 
         // when
         when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(examMap);
-        when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
+        when(mockProblemRepository.findAllProblemTypeAndCountExceptProblemsheetByEntry(entry)).thenReturn(problemTypesMap);
         SolvedInfo.ByEntryResponse solvedInfo = suit.getSolvedInfo(memberId, entry);
 
         // then
@@ -123,7 +126,7 @@ class MemberServiceTest {
 
         // when
         when(mockExamRepository.findAllEvenlyAndProblemTypeExamMap(memberId, entry)).thenReturn(examMap);
-        when(mockProblemRepository.findAllProblemTypeAndCountByEntry(entry)).thenReturn(problemTypesMap);
+        when(mockProblemRepository.findAllProblemTypeAndCountExceptProblemsheetByEntry(entry)).thenReturn(problemTypesMap);
         SolvedInfo.ByEntryResponse solvedInfo = suit.getSolvedInfo(memberId, entry);
 
         // then

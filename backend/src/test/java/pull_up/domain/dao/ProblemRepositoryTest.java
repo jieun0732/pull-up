@@ -23,7 +23,7 @@ class ProblemRepositoryTest {
         Entry entry = Entry.MATH;
 
         // when
-        Map<String, Integer> allInDB = suit.findAllProblemTypeAndCountByEntry(entry);
+        Map<String, Integer> allInDB = suit.findAllProblemTypeAndCountExceptProblemsheetByEntry(entry);
 
         // then
         assertThat(allInDB).hasSize(2);

@@ -30,20 +30,13 @@ public class ExamService {
 
     @Transactional
     public Start.Response start(Start.EvenlyRequest startReq) {
-        Member startMember = memberRepository.findById(startReq.memberId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
-        List<Problem> problemList = problemRepository.findAllByEntry(startReq.entry());
-        Exam startedExam = Exam.startEvenlyExam(startMember, problemList);
-        examRepository.save(startedExam);
-        return Start.Response.toDto(startedExam);
-    }
+        String examTitle = "EVENLY_" + startReq.entry();
 
-    @Transactional
-    public Start.Response startV2(Start.EvenlyRequestV2 startReq) {
-        Optional<Exam> exam = examRepository.findEvenlyExamByMemberIdAndExamTitle(startReq.memberId(), startReq.evenlyExamName());
+        Optional<Exam> exam = examRepository.findEvenlyExamByMemberIdAndExamTitle(startReq.memberId(), examTitle);
 
         Exam newExam = exam.orElseGet(() -> {
             Member startMember = memberRepository.findById(startReq.memberId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
-            Examsheet examSheet = examsheetRepository.findByExamTitle(startReq.evenlyExamName());
+            Examsheet examSheet = examsheetRepository.findByExamTitle(examTitle);
             List<Problem> problemList = problemRepository.findAllById(examSheet.getProblemMap().values());
 
             Exam startedExam = Exam.startEvenlyExam(startMember, problemList, examSheet);
@@ -57,7 +50,7 @@ public class ExamService {
     @Transactional
     public Start.Response start(Start.ByProblemTypeRequest startReq) {
         Member startMember = memberRepository.findById(startReq.memberId()).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
-        List<Problem> problemList = problemRepository.findAllByEntryAndProblemType(startReq.entry(), startReq.problemType());
+        List<Problem> problemList = problemRepository.findAllByEntryAndProblemTypeExceptProblemsheet(startReq.entry(), startReq.problemType());
         Exam startedExam = Exam.startByProblemTypeExam(startMember, problemList);
         examRepository.save(startedExam);
         return Start.Response.toDto(startedExam);

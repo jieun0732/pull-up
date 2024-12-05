@@ -22,12 +22,6 @@ public class ExamController {
         return new ResponseEntity<>(examService.start(evenlyRequest), HttpStatus.OK);
     }
 
-    @Operation(summary = "시험 시작(V2)", description = "기존에 생성된 시험지를 가지고 시험을 시작합니다.", tags = "골고루")
-    @PostMapping("/evenly/start/V2")
-    public ResponseEntity<Start.Response> startV2(@RequestBody Start.EvenlyRequestV2 evenlyRequest) {
-        return new ResponseEntity<>(examService.startV2(evenlyRequest), HttpStatus.OK);
-    }
-
     @Operation(summary = "시험 시작", description = "시험을 시작합니다.", tags = "유형별")
     @PostMapping("/by-problem-type/start")
     public ResponseEntity<Start.Response> start(@RequestBody Start.ByProblemTypeRequest byProblemTypeRequest) {

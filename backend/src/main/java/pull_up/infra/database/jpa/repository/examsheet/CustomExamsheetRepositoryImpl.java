@@ -2,11 +2,15 @@ package pull_up.infra.database.jpa.repository.examsheet;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import pull_up.domain.examsheet.dto.ExamsheetDetailInfo;
 import pull_up.domain.examsheet.dto.ExamsheetInfo;
+import pull_up.infra.database.jpa.embedded.Problemsheet;
 import pull_up.infra.database.jpa.entity.Examsheet;
+import pull_up.infra.database.jpa.entity.QExamsheet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static pull_up.infra.database.jpa.embedded.QProblemsheet.problemsheet;
 import static pull_up.infra.database.jpa.entity.QExamsheet.examsheet;
@@ -39,5 +43,13 @@ public class CustomExamsheetRepositoryImpl implements CustomExamsheetRepository 
                 .leftJoin(examsheet.problemsheets, problemsheet).fetchJoin()
                 .where(examsheet.id.eq(examsheetId))
                 .fetchFirst());
+    }
+
+    @Override
+    public List<Problemsheet> findAllProblemIdInProblemsheet() {
+        List<Examsheet> examsheets = qf.selectFrom(examsheet)
+                .leftJoin(examsheet.problemsheets, problemsheet).fetchJoin()
+                .fetch();
+        return examsheets.stream().map(Examsheet::getProblemsheets).flatMap(List::stream).toList();
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pull_up.api.dto.MessageDto;
 import pull_up.config.annotation.IntegrationTest;
 import pull_up.domain.dao.ExamRepository;
+import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.exam.ExamService;
@@ -15,9 +16,14 @@ import pull_up.domain.exam.dto.Next;
 import pull_up.domain.exam.dto.Start;
 import pull_up.domain.exam.dto.Submit;
 import pull_up.domain.exam.exception.ExamErrorCode;
+import pull_up.domain.examsheet.ExamsheetService;
+import pull_up.domain.examsheet.dto.CreateExamsheet;
 import pull_up.domain.problem.Entry;
+import pull_up.infra.database.jpa.entity.Examsheet;
 import pull_up.infra.database.jpa.entity.Member;
 import pull_up.infra.database.jpa.fixture.MemberFixture;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -25,6 +31,7 @@ import static org.assertj.core.api.Assertions.*;
 public class ContinueExamIntegrationTest {
 
     ExamService examService;
+    ExamsheetService examsheetService;
 
     @Autowired
     ExamRepository examRepository;
@@ -32,22 +39,33 @@ public class ContinueExamIntegrationTest {
     MemberRepository memberRepository;
     @Autowired
     ProblemRepository problemRepository;
+    @Autowired
+    ExamsheetRepository examsheetRepository;
 
     @BeforeEach
     void init() {
-        examService = new ExamService(examRepository, memberRepository, problemRepository, null);
+        examService = new ExamService(examRepository, memberRepository, problemRepository, examsheetRepository);
+        examsheetService = new ExamsheetService(examsheetRepository, problemRepository);
     }
 
     @Test
     @DisplayName("시험 이어하기 통합 테스트")
     void testContinueExam() {
 
+        /* 0. 멤버 및 시험 초기화 */
+
         Member member = MemberFixture.APPLE_USER.get();
+        String examTitle = "EVENLY_LANGUAGE";
+
+        CreateExamsheet.Request createExamsheetReq = new CreateExamsheet.Request(examTitle, List.of(
+                new CreateExamsheet.ProblemSheet(1, 9L),
+                new CreateExamsheet.ProblemSheet(2, 11L)));
+
+        examsheetService.createExamsheet(createExamsheetReq);
 
         /* 1. 시험 시작 */
 
         Start.EvenlyRequest startReq = new Start.EvenlyRequest(member.getId(), Entry.LANGUAGE);
-
         Start.Response startRes = examService.start(startReq);
 
         assertThat(startRes).isInstanceOf(Start.Response.class);
