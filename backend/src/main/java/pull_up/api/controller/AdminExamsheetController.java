@@ -1,4 +1,4 @@
-package pull_up.api.admin;
+package pull_up.api.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

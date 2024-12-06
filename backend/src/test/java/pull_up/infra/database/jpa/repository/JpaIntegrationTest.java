@@ -1,5 +1,6 @@
 package pull_up.infra.database.jpa.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,8 +10,7 @@ import pull_up.domain.dao.AnswerRepository;
 import pull_up.domain.dao.ExamRepository;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
-import pull_up.infra.database.jpa.entity.Member;
-import pull_up.infra.database.jpa.entity.Problem;
+import pull_up.infra.database.jpa.entity.*;
 import pull_up.infra.database.jpa.fixture.Fixture;
 import pull_up.infra.database.jpa.fixture.MemberFixture;
 import pull_up.infra.database.jpa.fixture.ProblemFixture;
@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static pull_up.infra.database.jpa.entity.QAnswer.*;
+import static pull_up.infra.database.jpa.entity.QExam.*;
 
 @IntegrationTest
 public class JpaIntegrationTest {

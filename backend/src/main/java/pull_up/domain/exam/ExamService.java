@@ -1,6 +1,7 @@
 package pull_up.domain.exam;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pull_up.api.dto.MessageDto;
@@ -12,6 +13,7 @@ import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.domain.dao.ExamsheetRepository;
 import pull_up.domain.member.exception.MemberException;
+import pull_up.infra.database.jpa.dto.SearchParam;
 import pull_up.infra.database.jpa.entity.*;
 
 import java.util.List;
@@ -27,6 +29,11 @@ public class ExamService {
     private final MemberRepository memberRepository;
     private final ProblemRepository problemRepository;
     private final ExamsheetRepository examsheetRepository;
+
+    @Transactional
+    public Page<ExamInfo> getAll(SearchParam searchParam) {
+        return examRepository.searchExam(searchParam);
+    }
 
     @Transactional
     public Start.Response start(Start.EvenlyRequest startReq) {

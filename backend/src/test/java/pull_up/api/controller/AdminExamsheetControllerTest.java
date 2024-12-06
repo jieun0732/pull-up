@@ -1,4 +1,4 @@
-package pull_up.api.admin;
+package pull_up.api.controller;
 
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,11 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pull_up.domain.exam.ExamService;
 import pull_up.domain.examsheet.ExamsheetService;
-import pull_up.domain.problem.ProblemService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;

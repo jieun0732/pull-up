@@ -3,11 +3,14 @@ package pull_up.infra.database.jpa.repository.exam;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import pull_up.domain.exam.ExamType;
+import pull_up.domain.exam.dto.ExamInfo;
 import pull_up.domain.member.dto.SolvedInfo;
 import pull_up.domain.problem.Entry;
+import pull_up.infra.database.jpa.dto.SearchParam;
 import pull_up.infra.database.jpa.entity.Exam;
-import pull_up.infra.database.jpa.entity.QExamsheet;
 
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +88,7 @@ public class CustomExamRepositoryImpl implements CustomExamRepository {
                         exam.isFinished,
                         member.tutorialFinished))
                 .from(exam)
-                .leftJoin(exam.member,member)
+                .leftJoin(exam.member, member)
                 .where(member.id.eq(memberId)
                         .and(exam.examType.eq(ExamType.MOCK_EXAM)))
                 .fetchFirst();
@@ -96,5 +99,26 @@ public class CustomExamRepositoryImpl implements CustomExamRepository {
         return qf.selectFrom(exam)
                 .where(exam.member.id.eq(memberId))
                 .fetch();
+    }
+
+    @Override
+    public Page<ExamInfo> searchExam(SearchParam searchParam) {
+        List<Exam> exams = qf.selectFrom(exam)
+                .leftJoin(exam.member, member).fetchJoin()
+                .leftJoin(exam.examsheet, examsheet).fetchJoin()
+//                .where(problemSearch(searchParam))
+//                .orderBy(problemOrder(searchParam))
+                .offset(searchParam.pageable().getOffset())
+                .limit(searchParam.pageable().getPageSize())
+                .fetch();
+        List<ExamInfo> examInfos = exams.stream().map(ExamInfo::new).toList();
+
+        Long count = qf.select(exam.count())
+                .from(exam)
+//                .where(problemSearch(searchParam))
+//                .orderBy(problemOrder(searchParam))
+                .fetchFirst();
+
+        return new PageImpl<>(examInfos, searchParam.pageable(), count);
     }
 }

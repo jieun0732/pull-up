@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 
 @Getter
 public class ProblemInfo {
-    private Long id;
-    private String entry;
-    private String problemType;
-    private String createdDate;
-    private String updatedDate;
-    private String question;
-    private Integer totalAttempts;
-    private String correctRate;
+    private final Long id;
+    private final String entry;
+    private final String problemType;
+    private final String createdDate;
+    private final String updatedDate;
+    private final String question;
+    private final Integer totalAttempts;
+    private final String correctRate;
 
     @QueryProjection
     public ProblemInfo(Long id, Entry entry, String problemType, LocalDateTime createdTime, LocalDateTime updatedTime, String questionSummary, Integer totalAttempts, Double correctRate) {

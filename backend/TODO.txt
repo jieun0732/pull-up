@@ -4,20 +4,17 @@
 - 문제(Problem)
 
 - 시험(Exam)
-TODO 조회 구현(Read)
-TODO 수정 구현(Update)
-TODO 생성 구현(Create)
-TODO 삭제 구현(Delete)
+TODO 페이지네이션, 검색기능 구현
 
 - 사용자(Member)
 TODO 조회 구현(Read)
-TODO 수정 구현(Update)
-TODO 생성 구현(Create)
 TODO 삭제 구현(Delete)
+TODO 페이지네이션, 검색기능 구현
 
 - 기타
 
 [API]
+TODO Duration 통일
 
 [INFRA]
 TODO DB 서버 계정 분리 root -> pullup

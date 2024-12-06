@@ -1,4 +1,4 @@
-package pull_up.api.admin;
+package pull_up.api.controller;
 
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
