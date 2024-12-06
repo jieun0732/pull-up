@@ -104,28 +104,16 @@ const QuestionFooterButton: React.FC<QuestionProps> = ({
         // 2-1) selectedId가 -1인 경우
         if (selectedId === -1) {
           return (
-            <ButtonGroupComponent
-              onClickPrev={() =>
-                router.push(
-                  `/main/sectional/${data.entry}/${category}/${data.problemNumber - 1}`,
-                )
-              }
-              onClickNext={() => {}}
-              isActive={false}
-            />
+            <Button size="large" color="nonactive">
+              전체 결과 보러가기
+            </Button>
           );
         }
-        // 2-2) selectedId가 -1이 아닌 경우
+        // 1-2) selectedId가 -1이 아닌 경우
         return (
-          <ButtonGroupComponent
-            onClickPrev={() =>
-              router.push(
-                `/main/sectional/${data.entry}/${category}/${data.problemNumber - 1}`,
-              )
-            }
-            onClickNext={handleSubmit}
-            isActive={true}
-          />
+          <Button size="large" color="active" onClick={handleSubmit}>
+            전체 결과 보러가기
+          </Button>
         );
 
       // 3) 그 외의 경우
