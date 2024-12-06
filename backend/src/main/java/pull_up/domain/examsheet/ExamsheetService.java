@@ -12,7 +12,7 @@ import pull_up.domain.examsheet.dto.ExamsheetDetailInfo;
 import pull_up.domain.examsheet.dto.ExamsheetInfo;
 import pull_up.domain.examsheet.exception.ExamsheetErrorCode;
 import pull_up.domain.examsheet.exception.ExamsheetException;
-import pull_up.infra.database.jpa.dto.ProblemInfo;
+import pull_up.domain.problem.dto.ProblemInfo;
 import pull_up.infra.database.jpa.dto.SearchParam;
 import pull_up.infra.database.jpa.embedded.Problemsheet;
 import pull_up.infra.database.jpa.entity.Examsheet;

@@ -2,7 +2,7 @@ package pull_up.infra.database.jpa.repository.problem;
 
 import org.springframework.data.domain.Page;
 import pull_up.domain.problem.Entry;
-import pull_up.infra.database.jpa.dto.ProblemInfo;
+import pull_up.domain.problem.dto.ProblemInfo;
 import pull_up.infra.database.jpa.dto.SearchParam;
 import pull_up.infra.database.jpa.entity.Problem;
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import pull_up.domain.problem.Entry;
 import pull_up.domain.problem.ProblemService;
 import pull_up.domain.problem.dto.ProblemDetailInfo;
-import pull_up.infra.database.jpa.dto.ProblemInfo;
+import pull_up.domain.problem.dto.ProblemInfo;
 import pull_up.infra.database.jpa.dto.SearchParam;
 
 import java.io.IOException;

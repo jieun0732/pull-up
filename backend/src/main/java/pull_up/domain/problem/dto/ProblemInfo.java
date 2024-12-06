@@ -1,4 +1,4 @@
-package pull_up.infra.database.jpa.dto;
+package pull_up.domain.problem.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
@@ -14,17 +14,19 @@ public class ProblemInfo {
     private String entry;
     private String problemType;
     private String createdDate;
+    private String updatedDate;
     private String question;
     private Integer totalAttempts;
     private String correctRate;
 
     @QueryProjection
-    public ProblemInfo(Long id, Entry entry, String problemType, LocalDateTime createTime, String questionSummary, Integer totalAttempts, Double correctRate) {
+    public ProblemInfo(Long id, Entry entry, String problemType, LocalDateTime createdTime, LocalDateTime updatedTime, String questionSummary, Integer totalAttempts, Double correctRate) {
         if (questionSummary.length() > 30) questionSummary = questionSummary.substring(0, 30) + "...";
         this.id = id;
         this.entry = entry.getKorean();
         this.problemType = problemType;
-        this.createdDate = createTime.format(GlobalFormatter.KOREAN_DATE_FORMATTER);
+        this.createdDate = createdTime.format(GlobalFormatter.KOREAN_DATE_FORMATTER);
+        this.updatedDate = updatedTime.format(GlobalFormatter.KOREAN_DATE_FORMATTER);
         this.question = questionSummary;
         this.totalAttempts = totalAttempts;
         this.correctRate = String.format("%.0f", correctRate);
@@ -35,6 +37,7 @@ public class ProblemInfo {
                 problem.getEntry(),
                 problem.getProblemType(),
                 problem.getCreatedTime(),
+                problem.getUpdatedTime(),
                 problem.getQuestionSummary(),
                 problem.getTotalAttempts(),
                 problem.getCorrectRate());

@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Repository;
 import pull_up.domain.problem.Entry;
-import pull_up.infra.database.jpa.dto.ProblemInfo;
-import pull_up.infra.database.jpa.dto.QProblemInfo;
+import pull_up.domain.problem.dto.ProblemInfo;
+import pull_up.domain.problem.dto.QProblemInfo;
 import pull_up.infra.database.jpa.dto.SearchParam;
 import pull_up.infra.database.jpa.embedded.Problemsheet;
 import pull_up.infra.database.jpa.entity.Examsheet;
@@ -79,6 +79,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                         problem.entry,
                         problem.problemType,
                         problem.createdTime,
+                        problem.updatedTime,
                         problem.questionSummary,
                         problem.totalAttempts,
                         problem.incorrectRate))
@@ -105,6 +106,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
             case ENTRY -> new OrderSpecifier<>(searchParam.sortOrder(), problem.entry);
             case PROBLEM_TYPE -> new OrderSpecifier<>(searchParam.sortOrder(), problem.problemType);
             case CREATED_DATE -> new OrderSpecifier<>(searchParam.sortOrder(), problem.createdTime);
+            case UPDATED_DATE -> new OrderSpecifier<>(searchParam.sortOrder(), problem.updatedTime);
             case ATTEMPT -> new OrderSpecifier<>(searchParam.sortOrder(), problem.totalAttempts);
             case CORRECT_RATE -> new OrderSpecifier<>(searchParam.sortOrder(), problem.incorrectRate);
         };

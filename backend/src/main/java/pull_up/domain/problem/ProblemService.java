@@ -8,7 +8,7 @@ import pull_up.domain.problem.dto.Create;
 import pull_up.domain.dao.ProblemRepository;
 import pull_up.api.dto.MessageDto;
 import pull_up.domain.problem.dto.ProblemDetailInfo;
-import pull_up.infra.database.jpa.dto.ProblemInfo;
+import pull_up.domain.problem.dto.ProblemInfo;
 import pull_up.domain.problem.exception.ProblemErrorCode;
 import pull_up.domain.problem.exception.ProblemException;
 import pull_up.infra.database.jpa.dto.SearchParam;

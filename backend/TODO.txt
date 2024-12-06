@@ -19,7 +19,6 @@ TODO 삭제 구현(Delete)
 - 기타
 
 [API]
-✅TODO evenly, byProblemType, MockExam 시험 분리
 
 [INFRA]
 TODO DB 서버 계정 분리 root -> pullup
