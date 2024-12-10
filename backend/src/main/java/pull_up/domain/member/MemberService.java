@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pull_up.api.dto.ListDto;
 import pull_up.api.dto.MessageDto;
+import pull_up.domain.auth.SNSProvider;
 import pull_up.domain.dao.ExamRepository;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.domain.dao.ProblemRepository;
@@ -79,7 +80,9 @@ public class MemberService {
     public MessageDto delete(Long memberId) {
         examRepository.findAllByMemberId(memberId).forEach(Exam::deleteMember);
         Member deleteMember = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER));
-        appleApi.revoke(deleteMember.getRefreshToken());
+
+        if (deleteMember.getSnsProvider().equals(SNSProvider.APPLE)) appleApi.revoke(deleteMember.getRefreshToken());
+
         memberRepository.delete(deleteMember);
 
         return new MessageDto("회원탈퇴가 완료되었습니다.");
