@@ -61,14 +61,13 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
 
     @Override
     public List<Problem> findAllByEntryAndProblemTypeExceptProblemsheet(Entry entry, String problemType) {
-        List<Problem> problems = qf.selectFrom(problem)
-                .where(problem.entry.eq(entry)
-                        .and(problem.problemType.equalsIgnoreCase(problemType)))
-                .fetch();
-
         List<Long> exceptProblemId = getProblemIdInProblemsheet();
 
-        return problems.stream().filter(p -> !exceptProblemId.contains(p.getId())).toList();
+        return qf.selectFrom(problem)
+                .where(problem.entry.eq(entry)
+                        .and(problem.problemType.equalsIgnoreCase(problemType))
+                        .and(problem.id.notIn(exceptProblemId)))
+                .fetch();
     }
 
     @Override
