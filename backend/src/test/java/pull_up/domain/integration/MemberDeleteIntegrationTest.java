@@ -1,9 +1,12 @@
 package pull_up.domain.integration;
 
 import jakarta.persistence.EntityManager;
+import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import pull_up.api.dto.MessageDto;
 import pull_up.config.annotation.IntegrationTest;
@@ -21,11 +24,15 @@ import pull_up.domain.member.MemberService;
 import pull_up.infra.database.jpa.entity.Exam;
 import pull_up.infra.database.jpa.entity.Member;
 import pull_up.infra.database.jpa.fixture.MemberFixture;
+import pull_up.infra.external_api.auth.AppleAuthRestApi;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 @IntegrationTest
 public class MemberDeleteIntegrationTest {
@@ -42,12 +49,15 @@ public class MemberDeleteIntegrationTest {
     @Autowired
     ExamsheetRepository examsheetRepository;
 
+    AppleAuthRestApi mockAppleApi;
+
     @Autowired
     EntityManager em;
 
     @BeforeEach
     void init() {
-        memberService = new MemberService(memberRepository, examRepository, problemRepository);
+        mockAppleApi = mock();
+        memberService = new MemberService(memberRepository, examRepository, problemRepository, mockAppleApi);
         examService = new ExamService(examRepository, memberRepository, problemRepository, examsheetRepository);
     }
 
@@ -81,5 +91,8 @@ public class MemberDeleteIntegrationTest {
         Exam exam = examRepository.findById(startRes.examId()).get();
         assertThat(exam.getMember().getId()).isEqualTo(-1L);
         assertThat(exam.getScore()).isEqualTo(25);
+
+        /* 4. 회원탈퇴 API Apple 1회 전송 */
+        verify(mockAppleApi, atLeastOnce()).revoke(any());
     }
 }

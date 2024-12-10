@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import pull_up.domain.auth.dto.OAuth2Login;
 import pull_up.domain.auth.service.OAuth2LoginService;
 import pull_up.domain.dao.MemberRepository;
 import pull_up.global.security.util.AppleTokenDecoder;
+import pull_up.infra.external_api.auth.AppleAuthRestApi;
 import pull_up.infra.external_api.auth.KakaoAuthRestApi;
 
 import java.util.ArrayList;
@@ -43,6 +43,9 @@ class OAuth2LoginServiceTest {
     @Mock
     KakaoAuthRestApi kakaoApi;
 
+    @Mock
+    AppleAuthRestApi appleApi;
+
     private static void assertUser(OAuth2Login.Response appleUser, String email, String provider, String name) {
         assertThat(appleUser.email()).isEqualTo(email);
         assertThat(appleUser.provider()).isEqualTo(provider);
@@ -51,7 +54,7 @@ class OAuth2LoginServiceTest {
 
     @BeforeEach
     void init() {
-        suit = new OAuth2LoginService(memberRepository, appleTokenDecoder, kakaoApi);
+        suit = new OAuth2LoginService(memberRepository, appleTokenDecoder, kakaoApi, appleApi);
     }
 
     @Test
@@ -113,19 +116,21 @@ class OAuth2LoginServiceTest {
         Claims sub = Jwts.claims().add("sub", "user sub").build();
 
         String idToken = "test token";
+        String code = "test code";
         OAuth2Login.Request.Apple dto = new OAuth2Login.Request.Apple(new OAuth2Login.Request.Apple.UserName("상엽", "남"), "spearoad15@gmail.com");
         String userJson = gson.toJson(dto);
 
         // when
-        when(appleTokenDecoder.decode(any())).thenReturn(sub);
-        OAuth2Login.Response appleUser = suit.getAppleUser(idToken, userJson);
+        when(appleTokenDecoder.decode(idToken)).thenReturn(sub);
+        when(appleApi.getRefreshToken(code)).thenReturn("refresh_token");
+        OAuth2Login.Response appleUser = suit.getAppleUser(idToken, code, userJson);
 
         // then : 처음 로그인 시도하면 첫번째 로그인 true
         assertUser(appleUser, "spearoad15@gmail.com", "APPLE", "남상엽");
         assertThat(appleUser.firstLogin()).isEqualTo(true);
 
         // when2 : 다시 로그인 시도
-        OAuth2Login.Response appleUser2 = suit.getAppleUser(idToken, "ALREADY_REGISTERED_USER");
+        OAuth2Login.Response appleUser2 = suit.getAppleUser(idToken, code, "ALREADY_REGISTERED_USER");
 
         // then2 : 다시 로그인하면 첫번째 로그인 false
         assertThat(appleUser2.firstLogin()).isEqualTo(false);
@@ -139,13 +144,15 @@ class OAuth2LoginServiceTest {
         Claims sub = Jwts.claims().add("sub", "user sub").build();
 
         String idToken = "test token";
+        String code = "test code";
         OAuth2Login.Request.Apple dto = new OAuth2Login.Request.Apple(new OAuth2Login.Request.Apple.UserName("상엽", "남"), "spearoad15@gmail.com");
         String userJson = gson.toJson(dto);
 
         // when
-        when(appleTokenDecoder.decode(any())).thenReturn(sub);
-        OAuth2Login.Response appleUser = suit.getAppleUser(idToken, userJson); // 회원가입
-        OAuth2Login.Response appleUser2 = suit.getAppleUser(idToken, userJson); // 다시 회원가입
+        when(appleTokenDecoder.decode(idToken)).thenReturn(sub);
+        when(appleApi.getRefreshToken(code)).thenReturn("refresh_token");
+        OAuth2Login.Response appleUser = suit.getAppleUser(idToken, code, userJson); // 회원가입
+        OAuth2Login.Response appleUser2 = suit.getAppleUser(idToken, code, userJson); // 다시 회원가입
 
         // then
         assertUser(appleUser, "spearoad15@gmail.com", "APPLE", "남상엽");

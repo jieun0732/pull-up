@@ -48,7 +48,7 @@ public class EvenlyExamIntegrationTest {
     void init() {
         examService = new ExamService(examRepository, memberRepository, problemRepository, examsheetRepository);
         examsheetService = new ExamsheetService(examsheetRepository, problemRepository);
-        memberService = new MemberService(memberRepository,examRepository,problemRepository);
+        memberService = new MemberService(memberRepository,examRepository,problemRepository, null);
     }
 
     @Test

@@ -48,7 +48,7 @@ public class ByProblemTypeExamIntegrationTestV2 {
     @BeforeEach
     void init() {
         examService = new ExamService(examRepository, memberRepository, problemRepository, null);
-        memberService = new MemberService(memberRepository,examRepository,problemRepository);
+        memberService = new MemberService(memberRepository,examRepository,problemRepository, null);
         examsheetService = new ExamsheetService(examsheetRepository, problemRepository);
 
     }

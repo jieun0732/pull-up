@@ -100,8 +100,8 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
           apple:
-            authorizationUri: https://appleid.apple.com/auth/authorize?response_mode=form_post&response_type=code%20id_token
-            tokenUri: https://appleid.apple.com/auth/token
+            authorization-uri: https://appleid.apple.com/auth/authorize?response_mode=form_post&response_type=code%20id_token
+            token-uri: https://appleid.apple.com/auth/token
             jwk-set-uri: https://appleid.apple.com/auth/keys
 
 # custom auth config

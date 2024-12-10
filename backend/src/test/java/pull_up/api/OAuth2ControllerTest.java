@@ -74,15 +74,15 @@ class OAuth2ControllerTest {
         OAuth2Login.Response appleUser = OAuth2Login.Response.toDto(member, true);
 
         // when
-        when(mockService.getAppleUser(any(), any())).thenReturn(appleUser);
-        ResultActions result = mockMvc.perform(post("/api/oauth2/callback/apple").param("id_token", "test"));
+        when(mockService.getAppleUser(any(), any(), any())).thenReturn(appleUser);
+        ResultActions result = mockMvc.perform(post("/api/oauth2/callback/apple").param("id_token", "test").param("code", "test"));
 
         // when 2
         Member member2 = MemberFixture.KAKAO_USER.get();
         member2.setId(1L);
         OAuth2Login.Response kakaoUser = OAuth2Login.Response.toDto(member2, true);
         when(mockService.getKakaoUser((String) any())).thenReturn(kakaoUser);
-        ResultActions result2 = mockMvc.perform(get("/api/oauth2/callback/kakao").param("code", "test"));
+        ResultActions result2 = mockMvc.perform(get("/api/oauth2/callback/kakao").param("id_token", "test").param("code", "test"));
 
         // then
         result.andExpect(cookie().exists("accessToken"))

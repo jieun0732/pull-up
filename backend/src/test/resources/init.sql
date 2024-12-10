@@ -7,12 +7,12 @@ TRUNCATE TABLE answer;
 SET FOREIGN_KEY_CHECKS = 1;
 
 --  insert member fixture
-INSERT INTO member(id, tutorial_finished, name, email, sns_id, sns_provider, role) VALUES
-('-1', false, 'DELETED_USER', 'DELETED_USER', 'DELETED_USER', 'NONE', 'NONE'),
-('1', false, 'apple test user', 'test@apple.com', 'test1234', 'apple', 'user'),
-('2', false, 'apple test user', 'test@kakao.com', 'test1234', 'apple', 'user'),
-('3', true, 'tutorial finished user', 'test@apple.com', 'test1234', 'apple', 'user'),
-('4', false, 'conceal email user', 'test@privaterelay.appleid.com', 'test1234', 'apple', 'user');
+INSERT INTO member(id, tutorial_finished, name, email, sns_id, refresh_token, sns_provider, role) VALUES
+('-1', false, 'DELETED_USER', 'DELETED_USER', 'DELETED_USER', null,'NONE', 'NONE'),
+('1', false, 'apple test user', 'test@apple.com', 'test1234', 'REFRESH_TOKEN','apple', 'user'),
+('2', false, 'kakao test user', 'test@kakao.com', 'test1234', null,'kakao', 'user'),
+('3', true, 'tutorial finished user', 'test@apple.com', 'test1234','REFRESH_TOKEN', 'apple', 'user'),
+('4', false, 'conceal email user', 'test@privaterelay.appleid.com', 'test1234', 'REFRESH_TOKEN','apple', 'user');
 
 -- insert problem fixture
 INSERT INTO problem (id, total_attempts, incorrect_attempts, incorrect_rate, entry, problem_type, question, question_summary, example, choice1, choice2, choice3, choice4, choice5, correct_answer, explanation) VALUES

@@ -28,7 +28,7 @@ public class TutorialCheckIntegrationTest {
 
     @BeforeEach
     void init() {
-        memberService = new MemberService(memberRepository, examRepository, null);
+        memberService = new MemberService(memberRepository, examRepository, null, null);
     }
 
     @Test

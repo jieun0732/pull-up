@@ -44,6 +44,7 @@ public class OAuth2Controller {
 
         OAuth2Login.Response appleUser = oAuth2LoginService.getAppleUser(
                 parameterMap.get("id_token")[0],
+                parameterMap.get("code")[0],
                 parameterMap.getOrDefault("user", new String[]{"ALREADY_REGISTERED_USER"})[0]
         );
 

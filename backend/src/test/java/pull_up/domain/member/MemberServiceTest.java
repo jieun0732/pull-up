@@ -40,7 +40,7 @@ class MemberServiceTest {
         mockMemberRepository = mock(MemberRepository.class);
         mockProblemRepository = mock(ProblemRepository.class);
         mockExamsheetRepository = mock(ExamsheetRepository.class);
-        suit = new MemberService(mockMemberRepository, mockExamRepository, mockProblemRepository);
+        suit = new MemberService(mockMemberRepository, mockExamRepository, mockProblemRepository, null);
 
         member = MemberFixture.APPLE_USER.get();
     }

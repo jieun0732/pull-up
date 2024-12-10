@@ -1,7 +1,6 @@
 package pull_up.domain.auth.service;
 
 import com.google.gson.Gson;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -14,6 +13,7 @@ import pull_up.domain.member.exception.MemberErrorCode;
 import pull_up.domain.member.exception.MemberException;
 import pull_up.global.security.util.AppleTokenDecoder;
 import pull_up.infra.database.jpa.entity.Member;
+import pull_up.infra.external_api.auth.AppleAuthRestApi;
 import pull_up.infra.external_api.auth.KakaoAuthRestApi;
 
 import java.util.Optional;
@@ -28,6 +28,7 @@ public class OAuth2LoginService {
     private final MemberRepository memberRepository;
     private final AppleTokenDecoder appleTokenDecoder;
     private final KakaoAuthRestApi kakaoAuthRestApi;
+    private final AppleAuthRestApi appleAuthRestApi;
     private final Gson gson = new Gson();
 
     @Transactional
@@ -51,14 +52,12 @@ public class OAuth2LoginService {
     }
 
     @Transactional
-    public OAuth2Login.Response getAppleUser(String idToken, String userJson) {
-        Claims decodedToken = appleTokenDecoder.decode(idToken);
-        String id = (String) decodedToken.get("sub");
-
-        Optional<Member> member = memberRepository.findBySnsId(id);
+    public OAuth2Login.Response getAppleUser(String idToken, String code, String userJson) {
+        String snsId = (String) appleTokenDecoder.decode(idToken).get("sub");
+        Optional<Member> member = memberRepository.findBySnsId(snsId);
 
         return member.map(value -> OAuth2Login.Response.toDto(value, false))
-                .orElseGet(() -> OAuth2Login.Response.toDto(registAppleMember(id, userJson), true));
+                .orElseGet(() -> OAuth2Login.Response.toDto(registAppleMember(snsId, code, userJson), true));
     }
 
     public OAuth2Login.Response getLocalUser() {
@@ -88,9 +87,13 @@ public class OAuth2LoginService {
         return firstLoginMember;
     }
 
-    private Member registAppleMember(String id, String userJson) {
+    private Member registAppleMember(String snsId, String code, String userJson) {
         OAuth2Login.Request.Apple dto = gson.fromJson(userJson, OAuth2Login.Request.Apple.class);
-        Member firstLoginMember = Member.getFirstLoginMember(dto.name().firstName(), dto.name().lastName(), dto.email(), id, APPLE);
+        String refreshToken = appleAuthRestApi.getRefreshToken(code);
+        log.info("Apple Refresh Token : {}", refreshToken);
+
+        Member firstLoginMember = Member.getFirstLoginMember(dto.name().firstName(), dto.name().lastName(), dto.email(), snsId, APPLE);
+        firstLoginMember.setRefreshToken(refreshToken);
         memberRepository.save(firstLoginMember);
 
         return firstLoginMember;

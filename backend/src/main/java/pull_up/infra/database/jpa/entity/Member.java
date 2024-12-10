@@ -33,6 +33,10 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String snsId;
 
+    @Column
+    @Setter
+    private String refreshToken;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private SNSProvider snsProvider;
