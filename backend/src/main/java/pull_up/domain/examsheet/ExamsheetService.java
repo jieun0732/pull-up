@@ -23,6 +23,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ExamsheetService {
 
     private final ExamsheetRepository examsheetRepository;

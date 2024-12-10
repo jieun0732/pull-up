@@ -23,6 +23,7 @@ import static pull_up.domain.member.exception.MemberErrorCode.NOT_FOUND_MEMBER;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class ExamService {
 
     private final ExamRepository examRepository;

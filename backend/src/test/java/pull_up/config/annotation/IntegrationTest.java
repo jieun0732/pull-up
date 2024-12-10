@@ -3,7 +3,9 @@ package pull_up.config.annotation;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 import pull_up.global.config.JpaConfig;
 
 import java.lang.annotation.ElementType;
@@ -17,5 +19,6 @@ import java.lang.annotation.Target;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql("/init.sql")
 @Import(JpaConfig.class)
+@Transactional
 public @interface IntegrationTest {
 }
