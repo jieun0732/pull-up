@@ -21,7 +21,6 @@ export default function Page() {
     fetcher,
   );
 
-  console.log("data", data);
   return (
     <>
       {data ? (
