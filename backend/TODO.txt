@@ -4,12 +4,8 @@
 - 문제(Problem)
 
 - 시험(Exam)
-TODO 페이지네이션, 검색기능 구현
 
 - 사용자(Member)
-TODO 조회 구현(Read)
-TODO 삭제 구현(Delete)
-TODO 페이지네이션, 검색기능 구현
 
 - 기타
 
@@ -18,7 +14,6 @@ TODO Duration 통일
 
 [INFRA]
 TODO DB 서버 계정 분리 root -> pullup
-TODO 깃허브 액션 CI/CD 연동
 
 [ETC]
 TODO JPA Query N + 1 문제 최적화
