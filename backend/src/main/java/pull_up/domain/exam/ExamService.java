@@ -31,7 +31,6 @@ public class ExamService {
     private final ProblemRepository problemRepository;
     private final ExamsheetRepository examsheetRepository;
 
-    @Transactional
     public Page<ExamInfo> getAll(SearchParam searchParam) {
         return examRepository.searchExam(searchParam);
     }

@@ -19,7 +19,7 @@
                     th:classappend="${navBtnColor == 'examsheets'? 'btn btn-warning' : 'btn btn-outline-warning'}">시험지 관리</button>
             <button onclick="location.href='/admin/exams'" type="button" class="btn"
                     th:classappend="${navBtnColor == 'exams'? 'btn btn-danger' : 'btn btn-outline-danger'}">시험 관리</button>
-            <button onclick="javascript: alert('준비중입니다.')" type="button" class="btn"
+            <button onclick="location.href='/admin/members'" type="button" class="btn"
                     th:classappend="${navBtnColor == 'members'? 'btn btn-success' : 'btn btn-outline-success'}">사용자 관리</button>
         </div>
     </nav>

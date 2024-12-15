@@ -1,0 +1,58 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/list.css" />
+    <title>PULL UP Members</title>
+</head>
+<body>
+<div th:insert="~{nav :: nav}"></div>
+<div class="position-relative">
+    <div class="container-md">
+        <table class="table">
+            <thead class="sticky-top top-0">
+            <tr>
+                <th scope="col" class="text-center align-middle">ID</th>
+                <th scope="col" class="text-center align-middle">튜토리얼 종료여부</th>
+                <th scope="col" class="text-center align-middle">가입일</th>
+                <th scope="col" class="text-center align-middle">이메일</th>
+                <th scope="col" class="text-center align-middle">이름</th>
+                <th scope="col" class="text-center align-middle">SNS 로그인</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="memberInfo : ${memberInfos}">
+                <td class="text-center" th:text="${memberInfo.id()}">1</td>
+                <td class="text-center" th:text="${memberInfo.tutorialFinished()? 'O' : 'X'}">O</td>
+                <td class="text-center" th:text="${memberInfo.createdTime()}">12월 15일</td>
+                <td class="text-center" th:text="${memberInfo.email()}">test@example.com</td>
+                <td class="text-center" th:text="${memberInfo.name()}">남상엽</td>
+                <td class="text-center" th:text="${memberInfo.snsProvider()}">카카오</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination" th:if="${pagination}">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{${baseURI}(size=${memberInfos.size}, page=${memberInfos.number - 1})}">Previous</a></li>
+                    <th:block th:each="idx : ${pagination}">
+                        <li class="page-item">
+                            <a class="page-link" th:classappend="${memberInfos.number + 1 == idx}? 'active'"
+                               th:href="@{${baseURI}(size=${memberInfos.size}, page=${idx - 1})}" th:text="${idx}">1</a>
+                        </li>
+                    </th:block>
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{${baseURI}(size=${memberInfos.size}, page=${memberInfos.number + 1})}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>
