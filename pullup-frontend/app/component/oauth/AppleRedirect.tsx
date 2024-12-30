@@ -2,8 +2,6 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import LocalStorage from "@/utils/LocalStorage";
-import { API } from "@/lib/API";
 import useUserStore from "@/stores/useUserStore";
 
 function AppleRedirect() {
@@ -11,7 +9,6 @@ function AppleRedirect() {
   const { setUser } = useUserStore();
 
   useEffect(() => {
-    // https://pull-up-snowy.vercel.app/oauth2/kakao?login=false&memberId=15&name=%EA%B9%80%EC%8A%B9%ED%9D%AC&email=senghee9801%40naver.com&provider=kakao
     const appleLogin = async () => {
       const queryParams = new URLSearchParams(window.location.search);
 
@@ -31,18 +28,6 @@ function AppleRedirect() {
       });
 
       if (firstLogin === "false") {
-        // const response = await fetch(
-        //   `${API}/memberAnswers/problems/problem-answers?memberId=${memberId}`,
-        //   {
-        //     method: "POST",
-        //     credentials: "include",
-        //     headers: {
-        //       "Content-Type": "application/json;charset=utf-8",
-        //     },
-        //   },
-        // );
-        router.push("/main/sectional");
-        // console.log(response);
       } else {
         router.push("/");
       }

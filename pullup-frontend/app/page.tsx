@@ -10,6 +10,7 @@ import {
   KAKAO_REDIRECT_URI,
   KAKAO_KEY,
   API,
+  APPLE_CLIENT_ID,
 } from "./lib/API";
 import { useState, useEffect } from "react";
 import useUserStore from "./stores/useUserStore";
@@ -51,21 +52,6 @@ export default function Home() {
     }
   }, [kakaoLoaded]);
 
-  const mockLogin = async () => {
-    const response = await fetch(
-      `http://pullup-api.shop:3000/api/oauth2/callback/local`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-
-    const result = await response.json();
-    router.push("/main/sectional");
-  };
-
   return (
     <main className="flex h-full w-full flex-col items-center justify-center bg-white px-5">
       <p className="text-[25px] font-bold text-black01">
@@ -74,24 +60,10 @@ export default function Home() {
       <p className="mb-16 text-[25px] font-bold text-black01">
         대기업 취업에 성공했어요!
       </p>
-      <Image src={introLogo} alt="로고" className="mb-12" />
+      <Image src={introLogo} alt="로고" className="mb-12 w-[260px]" />
       <Text size="body-04" color="text-gray01" className="mb-12">
         인적성 검사 준비는 풀업에서
       </Text>
-      {/* <div
-          onClick={() => {
-            setUser({
-              memberId: 99999999,
-              name: "test user",
-              email: "test@example.com",
-              snsProvider: "apple",
-            });
-            mockLogin();
-          }}
-          className="bg-pink-400 p-4 text-lg"
-        >
-          로컬 로그인~~~
-        </div> */}
       <div
         onClick={async () => {
           if (typeof window !== "undefined") {
@@ -102,8 +74,7 @@ export default function Home() {
               try {
                 Kakao.Auth.authorize({
                   serviceTerms: "account_email",
-                  redirectUri:
-                    "https://pullup-api.shop/api/oauth2/callback/kakao",
+                  redirectUri: KAKAO_REDIRECT_URI,
                   throughTalk: Boolean(navigator.userAgent.match(/Android/i))
                     ? false
                     : true,
@@ -138,7 +109,7 @@ export default function Home() {
           console.log("click");
           if (!appleLoaded) {
             await window?.AppleID.auth.init({
-              clientId: "com.pull-up.services",
+              clientId: APPLE_CLIENT_ID,
               scope: "name email",
               redirectURI: APPLE_REDIRECT_URI,
               usePopup: false,
