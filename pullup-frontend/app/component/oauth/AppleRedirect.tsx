@@ -28,6 +28,7 @@ function AppleRedirect() {
       });
 
       if (firstLogin === "false") {
+        router.push("/main/sectional");
       } else {
         router.push("/");
       }
