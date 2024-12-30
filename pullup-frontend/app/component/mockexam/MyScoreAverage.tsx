@@ -6,7 +6,7 @@ import Button from "../ui/Button";
 import { compareScores, roundUpScore } from "@/utils/compareFunc";
 import higherlogo from "@/assets/logo/higherLogo.png";
 import samelogo from "@/assets/logo/sameLogo.png";
-import lowerlogo from "@/assets/logo/lowerLogo.png";
+import lowerlogo1 from "@/assets/logo/lowerLogo.png";
 import useComponentSize from "@/hooks/useComponentSize";
 import { MockExamReportType } from "@/types/mockexam/mockexamReport";
 import { UserLogin } from "@/types/userType";
@@ -27,7 +27,7 @@ function MyScoreAverage({ data, user }: MyScoreAverageProps) {
     lower: {
       title: "더 많이 노력해야 해요!",
       subtitle: `님의 점수는 평균보다 ${roundUpScore(averageProgress - progress)}점 낮아요.`,
-      logo: lowerlogo,
+      logo: lowerlogo1,
     },
     same: {
       title: "조금만 더 노력하면 합격권이에요!",
