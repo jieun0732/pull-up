@@ -34,18 +34,29 @@ export default function Home() {
   const [kakaoLoaded, setKakaoLoaded] = useState(false);
   const [appleLoaded, setAppleLoaded] = useState(false);
 
+  const handleKakaoInit = () => {
+    if (window.Kakao) {
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init(KAKAO_KEY);
+      }
+    } else {
+      console.error("Kakao SDK not loaded");
+    }
+  };
+
+  const handleAppleInit = async () => {
+    if (!window?.AppleID) {
+      await window?.AppleID.auth.init({
+        clientId: "com.pull-up.services",
+        scope: "name email",
+        redirectURI: APPLE_REDIRECT_URI,
+        usePopup: false,
+      });
+      setAppleLoaded(true);
+    }
+  };
   // Kakao SDK 초기화
   useEffect(() => {
-    const handleKakaoInit = () => {
-      if (window.Kakao) {
-        if (!window.Kakao.isInitialized()) {
-          window.Kakao.init(KAKAO_KEY);
-        }
-      } else {
-        console.error("Kakao SDK not loaded");
-      }
-    };
-
     if (!kakaoLoaded) {
       handleKakaoInit();
     }
@@ -53,18 +64,6 @@ export default function Home() {
 
   // Apple SDK 초기화
   useEffect(() => {
-    const handleAppleInit = async () => {
-      if (!appleLoaded) {
-        await window?.AppleID.auth.init({
-          clientId: "com.pull-up.services",
-          scope: "name email",
-          redirectURI: APPLE_REDIRECT_URI,
-          usePopup: false,
-        });
-        setAppleLoaded(true);
-      }
-    };
-
     if (!appleLoaded) {
       handleAppleInit();
     }
@@ -170,7 +169,7 @@ export default function Home() {
       <div
         onClick={async () => {
           if (!appleLoaded) {
-            await handleAppleLogin();
+            await handleAppleInit();
           } else {
             await handleAppleLogin();
           }
