@@ -44,9 +44,16 @@ export default function Home() {
     }
   };
 
+  // Kakao SDK 초기화
+  useEffect(() => {
+    if (!kakaoLoaded) {
+      handleKakaoInit();
+    }
+  }, [kakaoLoaded]);
+
   const handleAppleInit = async () => {
-    if (!window?.AppleID) {
-      await window?.AppleID.auth.init({
+    if (window?.AppleID && !appleLoaded) {
+      await window.AppleID.auth.init({
         clientId: "com.pull-up.services",
         scope: "name email",
         redirectURI: APPLE_REDIRECT_URI,
@@ -55,19 +62,10 @@ export default function Home() {
       setAppleLoaded(true);
     }
   };
-  // Kakao SDK 초기화
-  useEffect(() => {
-    if (!kakaoLoaded) {
-      handleKakaoInit();
-    }
-  }, [kakaoLoaded]);
 
-  // Apple SDK 초기화
   useEffect(() => {
-    if (!appleLoaded) {
-      handleAppleInit();
-    }
-  }, [appleLoaded]);
+    handleAppleInit();
+  }, []);
 
   // 카카오 로그인 핸들러
   const handleKakaoLogin = async () => {
@@ -168,10 +166,10 @@ export default function Home() {
       </div>
       <div
         onClick={async () => {
-          if (!window?.AppleID) {
-            await handleAppleInit();
-          } else {
+          if (appleLoaded) {
             await handleAppleLogin();
+          } else {
+            await handleAppleInit();
           }
         }}
         className="relative flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-black text-white"
