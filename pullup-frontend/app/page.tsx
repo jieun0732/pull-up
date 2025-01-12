@@ -168,7 +168,7 @@ export default function Home() {
       </div>
       <div
         onClick={async () => {
-          if (!appleLoaded) {
+          if (!window?.AppleID) {
             await handleAppleInit();
           } else {
             await handleAppleLogin();
