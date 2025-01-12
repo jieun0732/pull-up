@@ -52,6 +52,27 @@ export default function Home() {
     }
   }, [kakaoLoaded]);
 
+  useEffect(() => {
+    // AppleID SDK 로드
+    const loadAppleID = () => {
+      if (window.AppleID) {
+        setAppleLoaded(true);
+      } else {
+        const script = document.createElement("script");
+        script.src =
+          "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid.auth.js";
+        script.onload = () => {
+          setAppleLoaded(true);
+        };
+        document.body.appendChild(script);
+      }
+    };
+
+    if (!appleLoaded) {
+      loadAppleID();
+    }
+  }, [appleLoaded]);
+
   return (
     <main className="flex h-full w-full flex-col items-center justify-center bg-white px-5">
       <p className="text-[25px] font-bold text-black01">
@@ -73,6 +94,7 @@ export default function Home() {
             if (Kakao.isInitialized()) {
               try {
                 Kakao.Auth.authorize({
+                  scope: "profile,nickname,email", // 요청할 권한 추가
                   serviceTerms: "account_email",
                   redirectUri: KAKAO_REDIRECT_URI,
                   throughTalk: Boolean(navigator.userAgent.match(/Android/i))
@@ -106,32 +128,17 @@ export default function Home() {
       </div>
       <div
         onClick={async () => {
-          console.log("click");
           if (!appleLoaded) {
-            await window?.AppleID.auth.init({
-              clientId: APPLE_CLIENT_ID,
-              scope: "name email",
-              redirectURI: APPLE_REDIRECT_URI,
-              usePopup: false,
-            });
-            setAppleLoaded(true);
-            console.log(String(appleLoaded));
+            console.error("Apple SDK is not loaded yet.");
+            return;
+          }
 
-            // 초기화 후 바로 로그인 시도
-            try {
-              const res: AppleAuthenticationResponseType =
-                await window.AppleID.auth.signIn();
-            } catch (error) {
-              console.log(error);
-            }
-          } else {
-            // 이미 초기화된 경우 바로 로그인 시도
-            try {
-              const res: AppleAuthenticationResponseType =
-                await window.AppleID.auth.signIn();
-            } catch (error) {
-              console.log(error);
-            }
+          try {
+            const res = await window.AppleID.auth.signIn();
+            console.log(res);
+            // 로그인 성공 후 처리 로직 추가
+          } catch (error) {
+            console.error("Apple Sign-In Error:", error);
           }
         }}
         className="relative flex min-h-[60px] w-full min-w-[140px] items-center justify-center rounded-lg bg-black text-white"
