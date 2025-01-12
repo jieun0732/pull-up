@@ -43,10 +43,10 @@ export default function RootLayout({
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
         ) : null}
         {children}
-        {/* <Script
+        <Script
           type="text/javascript"
           src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/ko_KR/appleid.auth.js"
-        /> */}
+        />
         <Script
           type="text/javascript"
           src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
