@@ -77,7 +77,7 @@ export default function Home() {
         try {
           Kakao.Auth.authorize({
             serviceTerms: "account_email",
-            scope: "profile,nickname,email",
+            scope: "profile_nickname,account_email",
             redirectUri: KAKAO_REDIRECT_URI,
             throughTalk: !Boolean(navigator.userAgent.match(/Android/i)),
           });
